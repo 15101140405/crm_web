@@ -1,0 +1,6 @@
+body{background-image:url("../../images/bg.jpg");background-color: transparent !important;}
+.logo{text-align:center;color:#fff;font-weight:bold;margin:100px 0 30px 0;}
+.help-block{color:#fff !important;}
+input{background-color:#333 !important;border-color:#666 !important;}
+input:focus{background-color:#fff !important;}
+.text-warning:hover{color:#71BDFF !important;}

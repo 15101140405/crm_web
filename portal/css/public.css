@@ -1,0 +1,293 @@
+body,ul,h1,h2,h3,h4,h5,h6,form,input,p{
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+}
+html{
+	font-size: 62.5%;
+}
+body{
+	max-width: 640px;
+	font-family: "\5FAE\8F6F\96C5\9ED1";
+	background-color: #f6f9f9;
+	margin: 0 auto;
+	padding-top:4.3rem!important;
+}
+a{
+	text-decoration: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0); 
+	   -moz-tap-highlight-color: rgba(0,0,0,0);  
+			tap-highlight-color: rgba(0,0,0,0);  
+	-webkit-focus-ring-color: rgba(0,0,0,0);  
+	   -moz-focus-ring-color: rgba(0,0,0,0); 
+	    		focus-ring-color: rgba(0,0,0,0);   
+}
+li{
+	list-style: none;
+}
+img{
+	vertical-align: middle;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.clear:after{
+	content: "";
+	display: block;
+	clear: both;
+}
+.clear{
+	zoom: 1;
+}
+.card{
+	border:1px solid #ebebeb;
+}
+.radius{
+	-webkit-border-radius: .4rem;
+	   -moz-border-radius: .4rem;
+	        border-radius: .4rem;
+}
+
+
+
+.container{
+	background-color: #f6f9f9;
+	padding: 3%;
+}
+
+/*头部*/
+.m-header{
+	position: fixed;
+	top:0rem;
+	left:0rem;
+	width:100%;
+	z-index: 2;
+	height: 4rem;
+	line-height: 4rem;
+	border-top: .3rem solid #37cb58;
+	text-align: center;
+}
+
+.home{
+	width: 6.6rem;
+	height: 2.3rem;
+	line-height:2.3rem;
+	margin-left:.8rem;
+	margin-top:.8rem;
+}
+.m-header-con{
+	position: relative;
+	z-index: 9;
+	height:100%;
+	background-color: #fff;
+	box-shadow: 0 1px 6px rgba(100, 100, 100, 0.2);
+}
+.m-header-con.noShadow{
+	box-shadow:none;
+}
+.header-nav{
+	display: inline-block;
+	width: 1.6rem;
+	height: 1.2rem;
+	background-image:url(../images/header-nav.png);
+	background-repeat:no-repeat ;
+	margin-top: 1.4rem;
+	margin-left: 1rem;
+	background-size: contain;
+}
+.header-nav.active{
+	background-image: url(../images/header-nav-active.png);
+}
+.m-logo{
+	width: 6.6rem;
+	height: 2.3rem;
+	margin-top: -.2rem;
+}
+.login-reg{
+	margin-right: 1rem;
+}
+.login-reg a,.login-reg span{
+	font-size: 1.4rem;
+	color: #37CB58;
+}
+.login-reg span{
+	margin: 0 .3rem;
+}
+.navbar-bg{
+	position: fixed;
+	top: 0rem;
+	left: 0rem;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.4;
+	filter:alpha(opacity=40);
+	display: none;
+}
+.navbar{
+	position: absolute;
+	top: 3.6rem;
+	left: 0rem;
+	z-index: 1;
+	width: 82%;
+	padding: 0 9%;
+	padding-top: .4rem;
+	background-color: #fff;
+	display: none;
+}
+.navbar-top{
+	padding: 3rem 0;
+	border-bottom: 1px solid #ccc;
+}
+.navbar-top a{
+	float: left;
+	line-height: 1.4rem;
+	font-size: 1.4rem;
+	color: #959a92;
+	border-right:1px solid #bcc1b9;
+}
+.navbar-top a.advise{
+	width: 30%;
+	text-align: left;
+}
+.navbar-top a.success{
+	width: 39%;
+	text-align: center;
+}
+.navbar-top a.ranking{
+	width: 30%;
+	text-align: right;
+}
+.navbar-top a.active{
+	color: #37CB58;
+}
+.navbar-top a.no-border{
+	border-right: none;
+}
+.navbar-bottom{
+	padding-bottom: 3rem;
+}
+.navbar-bottom a{
+	float: left;
+	width: 19%;
+	text-align: center;
+	color: #959a92;
+}
+.navbar-bottom a.active{
+	color: #37cb58;
+}
+.navbar-bottom a .link-bg{
+	float: left;
+	margin-top: 3rem;
+	margin-bottom: 1rem;
+	background-repeat: no-repeat;
+	background-size: contain;
+
+}
+.navbar-bottom a p{
+	float: left;
+	width: 100%;
+	font-size: 1.4rem;
+	line-height: 1.4rem;
+}
+.navbar-bottom a.header-game,.navbar-bottom a.header-fans{
+	width: 28%;
+	padding:0 17%;
+}
+
+.navbar-bottom a.header-all .link-bg{
+	width: 1.6rem;
+	height: 1.6rem;
+	margin-left: 38%;
+	background-image:url(../images/header-all.png) ;
+}
+.navbar-bottom .header-all.active .link-bg{
+	background-image: url(../images/header-all-active.png);
+}
+
+.navbar-bottom a.header-game .link-bg{
+	width: 1.5rem;
+	height: 1.6rem;
+	margin-left: 41%;
+	background-image:url(../images/header-game.png) ;
+}
+.navbar-bottom .header-game.active .link-bg{
+	background-image: url(../images/header-game-active.png);
+}
+
+.navbar-bottom a.header-anime .link-bg{
+	width: 1.4rem;
+	height: 1.6rem;
+	margin-left: 38%;
+	background-image:url(../images/header-anime.png) ;
+}
+.navbar-bottom .header-anime.active .link-bg{
+	background-image: url(../images/header-anime-active.png);
+}
+
+.navbar-bottom a.header-publish .link-bg{
+	width: 1.6rem;
+	height: 1.6rem;
+	margin-left: 38%;
+	background-image:url(../images/header-publish.png) ;
+}
+.navbar-bottom .header-publish.active .link-bg{
+	background-image: url(../images/header-publish-active.png);
+}
+
+.navbar-bottom a.header-fans .link-bg{
+	width: 1.5rem;
+	height: 1.6rem;
+	margin-left: 41%;
+	background-image:url(../images/header-fans.png) ;
+}
+.navbar-bottom .header-fans.active .link-bg{
+	background-image: url(../images/header-fans-active.png);
+}
+
+.navbar-bottom a.header-other .link-bg{
+	width: 1.4rem;
+	height: 1.6rem;
+	margin-left: 38%;
+	background-image:url(../images/header-other.png) ;
+}
+.navbar-bottom .header-other.active .link-bg{
+	background-image: url(../images/header-other-active.png);
+}
+/*页脚*/
+.m-footer{
+	position: relative;
+	width:100%;
+	height: 4.8rem;
+	line-height: 4.8rem;
+	color: #223318;
+	font-size: 1.6rem;
+	text-align: center;
+	border-top: 1px solid #ebebeb;
+	background-color: #fff;
+}
+.m-footer.fixed{
+	position:fixed;
+	bottom:0rem;
+	left:0rem;
+}
+.footer-con{
+	display: inline-block;
+}
+.footer-con a{
+	color: #37CB58;
+	margin-left: 1rem;
+}
+.footer-arrow{
+	position: absolute;
+	top: 1.4rem;
+	right: 2rem;
+	width: 2rem;
+	height: 2rem;
+	background: url(../images/footer-arrow.png) no-repeat;
+	background-size: contain;
+}

@@ -1,0 +1,28 @@
+.in_bl{
+	display:inline-block;
+}
+
+#hotel_type,#report_type,#staff,#sale_type{
+	background-color:#00b90c;
+	color:#fff;
+	font-size:1.6rem;
+}
+
+
+.mar_t3{
+	margin-top: 3rem;
+	font-size: 
+}
+.mar_b3{
+	margin-bottom: 3rem
+}
+
+.l_chart{
+	margin:3rem 0;
+	float: left;
+	display: inline-block;
+}
+.r_chart{
+	float: right;
+	display: inline-block;
+}

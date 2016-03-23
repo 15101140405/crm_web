@@ -1,0 +1,17 @@
+/* staff management */
+
+/* add_usr */
+input {
+    height: 100%
+}
+
+.position {
+    padding-left: 0;
+    padding-right: 1rem;
+}
+
+.dep_content {
+    width: 40%;
+    float: right;
+    padding-right: 8%;
+}

@@ -1,0 +1,39 @@
+* {
+    font-family: "微软雅黑", "宋体", Arial, sans-serif !important;
+}
+
+body {
+    background-color: white !important;
+    padding-top: 60px;
+}
+
+.form-control[readonly] {
+    cursor: text !important;
+}
+
+/*2013.09.10 添加了表格头部的背景色和链接颜色设置*/
+.grid-view th {
+    background: #41BAF1;;
+    color: #F5F5F5;;
+}
+
+.grid-view th a:link {
+    color: #F5F5F5;;
+}
+
+.grid-view .table-hover .th {
+    background: #41BAF1 !important;;
+    color: #F5F5F5 !important;;
+}
+
+.grid-view .table-hover th a:link {
+    color: #F5F5F5 !important;;
+}
+
+.span25 {
+    width: 180px;
+}
+
+.span95 {
+    width: 925px;
+}
