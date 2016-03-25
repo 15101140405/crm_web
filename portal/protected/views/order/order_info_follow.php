@@ -28,49 +28,42 @@
         <!--管理层显示该title -->
         <div class="r_btn" data-icon="&#xe767;"></div>
     </div>
-    <ul class="m-index-list" id="page_list">
-        
-        <li class="card " category="appear" status="进行中">
-            <h6 class="m-list-tit" style="color:#37CB58;font-size: 1.8rem;text-align: left;margin-left: 10px;">进店面谈 <span style="color:#b6babf;font-size:1rem;"> [李倩菱] [2016-3-5 16:30:21]</span></h6>
+    <ul class="m-index-list" id="page_list" style="position: relative;top: 20px;">
+<?php 
+    foreach ($follow as $key => $value) {
+?>
+        <li class="card " category="appear" status="进行中" followId='<?php echo $value['id']?>'>
+            <h6 class="m-list-tit" style="color:#37CB58;font-size: 1.8rem;text-align: left;margin-left: 10px;">进店面谈 <span style="color:#b6babf;font-size:1rem;"> [<?php echo $value['staff_name']?>] [<?php echo $value['time']?>]</span></h6>
             <div class="m-money clear" style="display:inline">
                 <div style="margin-top:5px;margin-left:5%;color:#37CB58;font-size:1rem;">
-                   [黄晓明&baby 2015-5-5] 
+                   [<?php echo $value['order_name']?> <?php echo $value['order_date']?>] 
                 </div>
             </div>
             <div class="m-money clear" style="display:inline">
                 <div style="display:inline-block;float:left;margin-left:5%;">
-                   阿隆索；看风景啊；洛杉矶的看法；老师的卷发；离开的
+                   <?php echo $value['remarks']?>
                 </div>
             </div>
         </li>
-
-        <li class="card " category="appear" status="进行中">
-            <h6 class="m-list-tit" style="color:#37CB58;font-size: 1.8rem;text-align: left;margin-left: 10px;">进店面谈 <span style="color:#b6babf;font-size:1rem;"> [李倩菱] [2016-3-5 16:30:21]</span></h6>
-            <div class="m-money clear" style="display:inline">
-                <div style="margin-top:5px;margin-left:5%;color:#37CB58;font-size:1rem;">
-                   [黄晓明&baby 2015-5-5] 
-                </div>
-            </div>
-            <div class="m-money clear" style="display:inline">
-                <div style="display:inline-block;float:left;margin-left:5%;">
-                   阿隆索；看风景啊；洛杉矶的看法；老师的卷发；离开的
-                </div>
-            </div>
-        </li>
-        
-        <li class="card " category="appear" status="进行中">
-            <h6 class="m-list-tit" style="color:#37CB58;font-size: 1.8rem;text-align: left;margin-left: 10px;">进店面谈 <span style="color:#b6babf;font-size:1rem;"> [李倩菱] [2016-3-5 16:30:21]</span></h6>
-            <div class="m-money clear" style="display:inline">
-                <div style="margin-top:5px;margin-left:5%;color:#37CB58;font-size:1rem;">
-                   [黄晓明&baby 2015-5-5] 
-                </div>
-            </div>
-            <div class="m-money clear" style="display:inline">
-                <div style="display:inline-block;float:left;margin-left:5%;">
-                   阿隆索；看风景啊；洛杉矶的看法；老师的卷发；离开的
-                </div>
-            </div>
-        </li>
-
+<?php } ?>
     </ul>
 </article>
+<script src="js/zepto.min.js"></script>
+<script src="js/zepto.calendar.js"></script>
+<script src="js/common.js"></script>
+<script>
+    $(function(){
+        $('.r_btn').on('click',function(){
+            location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=new';
+        });
+        $('li').on('click',function(){
+            location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=edit&order_id=<?php echo $_GET["order_id"]?>&followId=' + $(this).attr('followId');
+        });
+    });
+</script>
+</body>
+</html>
+
+
+
+

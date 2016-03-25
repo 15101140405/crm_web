@@ -606,17 +606,107 @@ class OrderController extends InitController
 
     public function actionOrderinfo()
     {
-        $this->render('order_info');
+        $order = Order::model()->findByPk($_GET['order_id']);
+        $staff = Staff::model()->findByPk($order['designer_id']);
+        $t = new OrderProductForm();
+        $order_total = $t -> total_price($_GET['order_id']);
+        /*print_r($order_total);die;*/
+        $order_data = array();
+        $order_data['order_name'] = $order['order_name'];
+        $order_data['order_date'] = $order['order_date'];
+        $order_data['designer_name'] = $staff['name'];
+        $follow = OrderMerchandiser::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        /*print_r($follow);die;*/
+        $in_door = 0;
+        $out_door = 0;
+        foreach ($follow as $key => $value) {
+            if($value['type'] == '0'){$in_door++;}else{$out_door++;};
+        }
+        /*$payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        $total_payment = 0;
+        foreach ($payment as $key => $value) {
+            $total_payment += $value['money'];
+        };
+        $payment_rate = $total_payment/$order_total['total_price'];*/
+
+        $this->render('order_info',array(
+                'order_data' => $order_data,
+                'order_total' => $order_total,
+                'in_door' => $in_door,
+                'out_door' => $out_door,
+                /*'total_payment' => $total_payment,
+                'payment_rate' => $payment_rate,*/
+            ));
     }
 
     public function actionOrderinfofollow()
     {
-        $this->render('order_info_follow');
+        $follow = OrderMerchandiser::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    ),
+                'order'=>'time'
+            ));
+
+        $this->render('order_info_follow',array(
+                'follow' => $follow
+            ));
     }
 
     public function actionOrderinfofollowdetail()
     {
-        $this->render('order_info_follow_detail');
+        
+        if($_GET['type'] == 'edit'){
+             $data = OrderMerchandiser::model()->findByPk($_GET['followId']);
+             $this->render('order_info_follow_detail',array(
+                    'data' => $data,
+                )); 
+        }else{
+            $this->render('order_info_follow_detail');    
+        }
+    }
+
+    public function actionFollowinsert()
+    {
+        $staff = Staff::model()->findByPk('"'.$_POST['staff_id'].'"');
+        $order = Order::model()->findByPk('"'.$_POST['order_id'].'"');
+
+        $follow=new OrderMerchandiser;         
+        $follow->order_id=$_POST['order_id']; 
+        $follow->staff_id=$_SESSION['userid'];
+        $follow->time=$_POST['time'];
+        $follow->remarks=$_POST['remarks'];
+        $follow->type=$_POST['type'];
+        $follow->staff_name=$staff['name'];
+        $follow->order_name=$order['order_name'];
+        $follow->order_date=$order['order_date'];
+        $follow->save();
+
+    }
+
+    public function actionFollowupdate()
+    {
+
+        OrderMerchandiser::model()->updateByPk($_POST['followId'],array('remarks'=>$_POST['remarks'],'time'=>$_POST['time'],'type'=>$_POST['type'])); 
+
+    }
+
+    public function actionFollowdel()
+    {
+
+        OrderMerchandiser::model()->deleteByPk($_POST['followId']); 
+
     }
 
 }

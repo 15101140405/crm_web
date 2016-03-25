@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 <article id="homepage">
     <div class="tool_bar fixed">
         <!-- <div class="l_btn" data-icon="&#xe69c;" id="filter"></div> -->
-        <h2 class="page_title" id="pa_title">我的订单123</h2>
+        <h2 class="page_title" id="pa_title">我的订单</h2>
         <!--管理层显示该title -->
         <?php
         $user_power = '3';//大于2代表管理层

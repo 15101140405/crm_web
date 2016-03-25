@@ -145,4 +145,9 @@ class ProductController extends InitController
         }
     } 
 
+    public function actionStore()
+    {
+        $this->render('store');
+    }
+
 }

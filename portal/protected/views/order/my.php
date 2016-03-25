@@ -714,7 +714,7 @@ function shuchu_html($result)
             /*if(order_status == 0 & order_type == 2){
                 location.href = "<?php echo $this->createUrl("plan/customerName");?>&order_id=" + order_id + "&from=my_order&t=plan";
             }else */if(order_type == 2){
-                location.href = "<?php echo $this->createUrl("design/detail");?>&order_id=" + order_id + "&from=my_order&t=plan";
+                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order&t=plan";
             }/*else if(order_status == 0 & order_type == 1){
                 location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&company_id=&order_id=" + order_id + "&from=my_order&t=plan";
             }*/else if(order_type == 1){
@@ -723,7 +723,7 @@ function shuchu_html($result)
         };
         //策划页面，跳转到订单详情页
         function design_jump (order_id) {
-            location.href = "<?php echo $this->createUrl("design/detail");?>&order_id=" + order_id + "&from=my_order&t=design";
+            location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order&t=design";
         };
         
         

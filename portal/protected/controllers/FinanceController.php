@@ -254,13 +254,13 @@ class FinanceController extends InitController
 
     public function actionCashier()
     {
-        $orderId = $_GET['order_id'];
+        /*$orderId = $_GET['order_id'];
         $payment = Order::model()->find(array(
             "condition" => "id = :id",
             "params" => array(":id" => $orderId)
         ));
-
-        $this->render('cashier',array(
+*/
+        $this->render('cashier'/*,array(
             "deposit" => $payment['feast_deposit'],
             "deposit_way" => $payment['feast_deposit_way'],
             "deposit_time" => $payment['feast_deposit_time'],
@@ -271,7 +271,7 @@ class FinanceController extends InitController
             "retainage_way" => $payment['final_payments_way'],
             "retainage_time" => $payment['final_payments_time'],
             "order_status" => $payment['order_status'],
-        ));
+        )*/);
     }
 
     public function actionSave()
@@ -344,14 +344,28 @@ class FinanceController extends InitController
 
     public function actionIndexdata()
     {
-        if($_POST['order_status'] == 0 || $_POST['order_status'] == 1){
+        /*if($_POST['order_status'] == 0 || $_POST['order_status'] == 1){
             Order::model()->updateByPk( $_POST['order_id'] ,array('order_status'=>2,'feast_deposit'=>$_POST['payment'],'feast_deposit_way'=>$_POST['payment_way'],'feast_deposit_time'=>$_POST['payment_time'])); 
 
         }else if($_POST['order_status'] == 2){
             Order::model()->updateByPk($_POST['order_id'],array('order_status'=>3,'medium_term'=>$_POST['payment'],'medium_term_way'=>$_POST['payment_way'],'medium_term_time'=>$_POST['payment_time'])); 
         }else if($_POST['order_status'] == 3){
             Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4,'final_payments'=>$_POST['payment'],'final_payments_way'=>$_POST['payment_way'],'final_payments_time'=>$_POST['payment_time'])); 
-        }
+        }*/
+
+        $payment= new OrderPayment;
+        $payment->order_id=$_POST['order_id'];
+        $payment->money=$_POST['payment'];
+        $payment->time=$_POST['payment_time'];
+        $payment->remarks=$_POST['remarks'];
+        $payment->way=$_POST['payment_way'];
+        $payment->type=$_POST['payment_type'];
+        $payment->save();
         
+    }
+
+    public function actionCashierList()
+    {
+        $this->render('cashier_list');
     }
 }
