@@ -69,7 +69,7 @@
         <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">收取现金</h2>
     </div>
-    <div style='position:relative;bottom:60px;top:60px;'>
+    <div style='position:relative;bottom:60px;top:60px;' id="top" paymentId="<?php echo $_GET['paymentId']?>">
         <div class="select_ulist_module" id="type">
             <ul class="select_ulist" id="type_ul">
                 <li class="select_ulist_item round_select round_select_selected" value="0">定金</li>
@@ -103,17 +103,31 @@
             <textarea maxlength="70" placeholder="请填写记录内容" id="remark"></textarea>
         </div>
     </div>
-    <div class="bottom_fixed_bar">
-    	<a class="r_btn" id="sure">确认收款</a>
-  	</div>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="r_btn" id="insert">确认收款</div>
+        <div class="r_btn" id="update">确认收款</div>
+        <div class="r_btn" id="del" style="background-color:red;">删除</div>
+    </div>
 </article>
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js" type="text/javascript"></script>
 <script>
     $(function () {
+        //页面初始化
+        if ("<?php echo $_GET['type']?>" == "edit") {
+            $("#insert").remove();
+            $("#type li").removeClass("round_select_selected");
+            $("[value='<?php echo $data['type']?>']").addClass("round_select_selected");
+            $("#remark").val("<?php echo $data['remarks']?>");
+            $("appDateTime").val("<?php echo $data['time']?>");
+            //此处用php从后端取数
+        } else if ("<?php echo $_GET['type']?>" == "new") {
+            $("#del").remove();
+            $("#update").remove();
+        };
 
-        //点击确认收款
-        $("#sure").on("click",function(){
+        //点击新增
+        $("#insert").on("click",function(){
 
             data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),order_id:<?php echo $_GET["order_id"]?>,remarks:$("#remark").val()};
             console.log(data);
@@ -127,6 +141,24 @@
                 //   }
             });
         });
+
+        //点击编辑
+        $("#insert").on("click",function(){
+
+            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),paymentId:<?php echo $_GET["paymentId"]?>,remarks:$("#remark").val()};
+            console.log(data);
+            $.post('<?php echo $this->createUrl("finance/indexdata");?>',data,function(retval){
+                //alert(retval);
+               // if(retval.success){
+                location.reload();
+               // }else{
+               //   alert('太累了，歇一歇，一秒后再试试！');
+                //     return false;
+                //   }
+            });
+        });
+
+
 
         //选择收款方式
         $("#way_ul li").on("click", function () {

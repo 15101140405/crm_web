@@ -254,24 +254,12 @@ class FinanceController extends InitController
 
     public function actionCashier()
     {
-        /*$orderId = $_GET['order_id'];
-        $payment = Order::model()->find(array(
-            "condition" => "id = :id",
-            "params" => array(":id" => $orderId)
+        $orderId = $_GET['order_id'];
+        $data = OrderPayment::model()->findByPk($_GET['paymentId']);        
+
+        $this->render('cashier',array(
+            'data' => $data,
         ));
-*/
-        $this->render('cashier'/*,array(
-            "deposit" => $payment['feast_deposit'],
-            "deposit_way" => $payment['feast_deposit_way'],
-            "deposit_time" => $payment['feast_deposit_time'],
-            "middle_section" => $payment['medium_term'],
-            "middle_section_way" => $payment['medium_term_way'],
-            "middle_section_time" => $payment['medium_term_time'],
-            "retainage" => $payment['final_payments'],
-            "retainage_way" => $payment['final_payments_way'],
-            "retainage_time" => $payment['final_payments_time'],
-            "order_status" => $payment['order_status'],
-        )*/);
     }
 
     public function actionSave()
@@ -362,6 +350,16 @@ class FinanceController extends InitController
         $payment->type=$_POST['payment_type'];
         $payment->save();
         
+    }
+
+    public function actionUpdatedata()
+    {
+        OrderMerchandiser::model()->updateByPk($_POST['paymentId'],array('remarks'=>$_POST['remarks'],'payment'=>$_POST['payment'],'payment_time'=>$_POST['payment_time'],'payment_type'=>$_POST['payment_type'],'payment_way'=>$_POST['payment_way']));  
+    }
+
+    public function actionDeldata()
+    {
+        OrderMerchandiser::model()->deleteByPk($_POST['paymentId']);  
     }
 
     public function actionCashierList()
