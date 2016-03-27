@@ -38,12 +38,6 @@
 
             <div class="itme">
                 <div class="wz"><p class="name"><span>已签订单</span></p>
-<!-- <pre>
-谈客户就像谈恋爱，因为懂得所以获得
-初见，相识，相知，打造客户跟进全记录
-语音，文字，图片，关联客户，碎片化信息随手记录不丢失
-服务过程记明白，销售业绩飞起来
-</pre> -->
                 </div>
                 
             	<div class="tu chart_bar" id="order_sure" style='width:640px;height:600px;' ></div>
@@ -51,24 +45,24 @@
             
             <div class="itme">
                 <div class="wz"><p class="name"><span>销售额</span></p></div>
-                <div style='display:inline-block;width:640' >
-                    <div style='display:inline-block;width:200px;'>
-                        <ul>
+                <div style='display:inline-block;width:640;' >
+                    <div style='display:inline-block;width:200px;float:left'>
+                        <ul class="sales_detail_ul">
                             <li>
-                                <p>目标</p>
-                                <p>67,000元</p>
+                                <span class='circle circle_color1' style="background-color:#FE8463"></span><p class="sales_detail_name">目标</p>
+                                <p class="sales_detail_num"><?php echo $sales['target'];?>万元</p>
                             </li>
                             <li>
-                                <p>预测</p>
-                                <p>67,000元</p>
+                                <span class='circle circle_color2' style="background-color:#9BCA63"></span><p class="sales_detail_name">预测</p>
+                                <p class="sales_detail_num"><?php echo $sales['forecast'];?>万元</p>
                             </li>
                             <li>
-                                <p>成交</p>
-                                <p>67,000元</p>
+                                <span class='circle circle_color3' style="background-color:#FAD860"></span><p class="sales_detail_name">成交</p>
+                                <p class="sales_detail_num"><?php echo $sales['deal'];?>万元</p>
                             </li>
                             <li>
-                                <p>回款</p>
-                                <p>67,000元</p>
+                                <span class='circle circle_color4' style="background-color:#60C0DD"></span><p class="sales_detail_name">回款</p>
+                                <p class="sales_detail_num"><?php echo $sales['payment'];?>万元</p>
                             </li>
                         </ul>
                     </div>
@@ -302,17 +296,20 @@ $(function(){
 
         var sales_data = new Array();
         sales_data[0]=target, sales_data[1] = forecast, sales_data[2] = deal, sales_data[3] = payment;
+        draw_mychart_sales();
+
         function draw_mychart_sales(){
             var myChart_sales = echarts.init(document.getElementById('sales')); 
             var option = {
                 tooltip: {
                     trigger: 'item'
                 },
-                grid : {  
-                            x : 40,
-                            y : 40,
-                            x2: 40,
-                            y2: 40
+                grid : {         borderWidth: 0,
+                    x:0,
+                    x2:0,
+        y: 0,
+        y2: 0 
+                     
                 },
                 xAxis: [
                     {
@@ -335,18 +332,20 @@ $(function(){
                             normal: {
                                 color: function(params) {
                                     // build a color map as your need.
-                                    var colorList = [
-                                      '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
-                                       '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
-                                       '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
-                                    ];
+                                    // var colorList = [
+                                    //   '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                                    //    '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                                    //    '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                                    // ];
+                                    var colorList = ['#FE8463','#9BCA63','#FAD860','#60C0DD']
                                     return colorList[params.dataIndex]
                                 },
                                 label: {
                                     show: true,
                                     position: 'top',
                                     formatter: '{b}\n{c}'
-                                }
+                                },
+                                barBorderRadius :[5, 5, 0, 0]
                             }
                         },
                         data: sales_data

@@ -82,6 +82,30 @@ a{color:#000;}
 .contact .fss p.an a{ display:inline-block; padding:5px 60px; color:#fff; background:#7cb300; border-radius:15px;}
 .contact .itme{ padding:20px 0; border-bottom:1px solid #dbdbdb}
 
+.sales_detail_name{}
+.sales_detail_num{margin-left: 20px;font-size:35px;margin-bottom: 10px}
+.sales_detail_ul{margin-top: 20px;}
+.circle {    
+	border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    float: left;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.circle_color1{
+    background-color: '#FE8463'
+}
+.circle_color2{
+	background-color: '#9BCA63'
+}
+.circle_color3{
+	background-color: '#FAD860'
+}
+.circle_color4{
+	background-color: '#60C0DD'
+}
 
 
 
