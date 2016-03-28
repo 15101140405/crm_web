@@ -1002,7 +1002,84 @@ class PlanController extends InitController
 
     public function actionChooseChannel()
     {
-        $this->render("chooseChannel");
+
+        $orderId   = $_GET['order_id'];
+        $supplier_type_id = 16 ;//supplier_type_id为16的即“推单渠道”
+
+        $list = SupplierProduct::model()->findAll(array(
+            "condition" => "supplier_type_id=:id",
+            "params"    => array( ":id" => $supplier_type_id), 
+                                                       )
+                                                 );
+        $product_id = array();
+        foreach ($list as $key => $value) {
+            $product_id[$key] = $value['id'];
+        }
+
+        $criteria3 = new CDbCriteria; 
+        $criteria3 -> addInCondition("product_id",$product_id);
+        $criteria3 -> addCondition("order_id=:id");
+        $criteria3 ->params[':id']=$orderId; 
+        $select = OrderProduct::model()->find($criteria3);
+
+
+        $select_reference = SupplierProduct::model()->find(array(
+            "condition" => "id=:id",
+            "params" => array( ":id" => $select['product_id'])
+                                                       )
+                                                 );
+        
+
+        
+        $this->render("chooseChannel",  array(
+            "arr"       =>  $list,
+            "select"    =>  $select_reference));
+        
+    }
+
+    public function actionSavechannel()//有变化才有post
+    {
+        if ( $_POST['select_id'] == 0){//有变化，选“无”时删除
+        
+        OrderProduct::model()->deleteAll(
+            'order_id=:order_id && product_id=:product_id',array(
+                'order_id'      =>  $_POST['order_id'],
+                'product_id'    =>  $_POST['initial_id']));
+        }
+
+        if ($_POST['initial_id'] == 0 ){//有变化，原为空时新增
+        
+            $orderproduct= new OrderProduct;  
+            /*print_r($data);die;*/
+            $orderproduct->account_id = $_POST['account_id'];
+            $orderproduct->order_id = $_POST['order_id'];
+            $orderproduct->product_id = $_POST['select_id'];
+            $orderproduct->actual_price = $_POST['actual_price'];
+            $orderproduct->unit = $_POST['unit'];
+            $orderproduct->actual_unit_cost = $_POST['actual_unit_cost'];
+            $orderproduct->actual_service_ratio = $_POST['actual_service_ratio'];
+
+            $orderproduct->save();
+        }
+
+        if ($_POST['initial_id'] != 0 && $_POST['select_id'] != 0){//有变化，初始和最终都不为“无”时修改
+
+            $data = array(
+                'product_id'    => $_POST['select_id'],
+                'update_time'   => date('Y-m-d H:i:s'),
+            );
+
+            OrderProduct::model()->updateAll(
+                $data,
+                'order_id=:order_id && product_id=:product_id',
+                array(
+                    'order_id'      => $_POST['order_id'],
+                    'product_id'    => $_POST['initial_id']));
+
+        }
+
+        
+        
     }
 
     public function actionChooseDiscount()

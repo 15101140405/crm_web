@@ -45,7 +45,7 @@ $arr_locate = array(
         <ul class="ulist">
             <li class="ulist_item list_more department" id="channel">
                 <span class="label">推   单：</span>
-                <div class="align_r dep_content" id="channel_content"></div>
+                <div class="align_r1 dep_content" id="channel_content"><?php echo $select_reference['name']; ?></div>
             </li>
         </ul>
     </div>
@@ -493,6 +493,12 @@ $arr_locate = array(
             }
             
         });
+
+        //跳推单页面
+        $("#channel").on("click", function () {
+            location.href = "<?php echo $this->createUrl("plan/chooseChannel", array("from"     =>  "design",
+                                                                                     "order_id" =>  $_GET['order_id']));?>";
+        })
 
         //跳折扣页面
         $("#feast_discount").on("click", function () {

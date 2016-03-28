@@ -30,9 +30,9 @@ class OrderProduct extends InitActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('account_id, order_id, product_id, actual_price, unit, update_time', 'required'),
-			array('account_id, order_id, product_id, unit', 'numerical', 'integerOnly'=>true),
-			array('actual_price', 'numerical'),
+			// array('account_id, order_id, product_id, actual_price, unit, update_time', 'required'),
+			// array('account_id, order_id, product_id, unit', 'numerical', 'integerOnly'=>true),
+			// array('actual_price', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, account_id, order_id, product_id, actual_price, unit, update_time', 'safe', 'on'=>'search'),
@@ -92,6 +92,9 @@ class OrderProduct extends InitActiveRecord
 		$criteria->compare('actual_price',$this->actual_price);
 		$criteria->compare('unit',$this->unit);
 		$criteria->compare('update_time',$this->update_time,true);
+		$criteria->compare('actual_unit_cost',$this->actual_unit_cost);
+		$criteria->compare('actual_service_ratio',$this->actual_service_ratio);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
