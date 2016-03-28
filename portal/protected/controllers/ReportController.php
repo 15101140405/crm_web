@@ -359,19 +359,20 @@ class ReportController extends InitController
         $html .='            </div>';*/
 
 
-        $touser="@all";
-        //$content="中文怎么解决";
-        $title="昨日经营日报（大郊亭店）";
+        $touser="100";
+        $content="中文怎么解决";
+        $title="今日经营日报（大郊亭店）";
         $agentid=9;
-        // $url="https://www.baidu.com/";
+        $url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
-
+        $description="这是一个升级后报表";
+        $picur="/var/www/html/school/crm_web/image/thumb.jpg";
         // $t=new ReportController;
 
         // $content = $t->actionDayreport();
         // print_r($content);die;
-        $content=$html;
+        //$content=$html;
         // $content=ReportController::actionDayreport();
         $digest="描述";
         //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
@@ -380,17 +381,17 @@ class ReportController extends InitController
 
         echo "</br>";
         $author="";
-        $content_source_url="";
+        $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
         $show_cover_pic="";
         $safe="";
         $toparty="";
         $totag="";
         $result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
-        $result2=WPrequest::sendMessage_Mpnews(
-                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
+        /*$result2=WPrequest::sendMessage_Mpnews(
+                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
         // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
         //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
-
+        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur);
         //$result=WPRequest::mediaupload($media,$type);
         echo "result1:";
         print_r($result1);
@@ -514,13 +515,13 @@ class ReportController extends InitController
         //取销售额
         //********************************************************************************************
         $year = date("Y");
-        $order_status1 = array(0,1,2,3,4);
-        $order_status2 = array(2,3,4);
+        $order_status_forecast = array(0,1,2,3,4);
+        $order_status_deal = array(2,3,4);
         $sales=array();
         $sales['target']=800;
-        $sales['forecast']=$this->hotel_total_sales(1,$year,$order_status1);
-        $sales['deal']=$this->hotel_total_sales(1,$year,$order_status2);
-        $sales['payment']=0;
+        $sales['forecast']=number_format(($this->hotel_total_sales(1,$year,$order_status_forecast))/10000, 1);;
+        $sales['deal']=number_format(($this->hotel_total_sales(1,$year,$order_status_deal))/10000,1);
+        $sales['payment']=number_format(($this->hotel_total_payment(1,$year,$order_status_deal))/10000,1);
 
 
 
@@ -531,6 +532,16 @@ class ReportController extends InitController
                 'sales' => $sales,
 
             ));
+
+        //生成静态页面
+        /*$controller = new controller('report');
+        $content  = $controller->render('dayreport',array(
+                'order_sure' => $data,
+                'sales' => $sales,
+            ));
+    
+        $filePath = YiiBase::getPathOfAlias('webroot') . '/'. Generator::myHtmlLink($model) . '/itranslation.html';
+        return Generator::save($filePath, $content);*/
     }
 
     public function hotel_total_sales($hotel_id,$year,$order_status)
@@ -1716,6 +1727,36 @@ class ReportController extends InitController
             }
         }
         return $t;
+    }
+
+    public function hotel_total_payment($hotel_id,$year,$order_status)
+    {
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("order_status",$order_status);
+        $criteria1->addCondition("staff_hotel_id=:staff_hotel_id");
+        $criteria1->params[':staff_hotel_id']=$hotel_id; 
+        $order = Order::model()->findAll($criteria1);
+        $order_id = array();
+        
+        foreach ($order as $key => $value) {
+            $t1 = explode(' ',$value['order_date']);
+            $t2 = explode('-',$t1[0]);
+            /*print_r($value['id'].$year."|".$t2[0]."</br>");*/
+            if($year == $t2[0]){
+                $order_id[$key] = (int)$value['id'];
+            };
+        }
+
+        $criteria2 = new CDbCriteria; 
+        $criteria2->addInCondition("order_id",$order_id);
+        $payment = OrderPayment::model()->findAll($criteria2);
+        $hotel_total_payment = 0;
+
+        foreach ($payment as $key => $value) {
+            $hotel_total_payment += $value['money'];
+        };               
+
+        return $hotel_total_payment;
     }
 
 }  
