@@ -22,15 +22,14 @@ $arr_locate = array(
 <body>
 <article style='position: relative;bottom: 100px;top: 1px;'>
     <div class="tool_bar">
-        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">报价单</h2>
-
+        <div class="r_btn" id="print">打印</div>
     </div>
     <div class="ulist_module">
         <ul class="ulist">
-            <li class="ulist_item">
+            <li class="ulist_item list_more" id="detailinfo">
                 <span class="big_font">婚礼信息</span>
-                <a href='<?php echo $this->createUrl("print/designbill", array("order_id" => $_GET['order_id']));?>' class="singup right btn_disable" id="print" href="">打印</a>
+                <!-- <a href='' class="singup right btn_disable" id="print" href="">打印</a> -->
                 <!-- <a class="singup right btn_red" id="examined" href="">审批通过</a>
                 <a class="singup right btn_disable" id="examining" href="">审批中</a>
                 <a class="singup right" id="non_examine" href="">核算审批</a> -->
@@ -77,7 +76,7 @@ $arr_locate = array(
     </div>
     <!-- 回款信息 -->
     <div class="table_module">
-        <h4 class="module_title">回款纪录</h4>
+        <h4 class="module_title list_more" id="payment">回款纪录</h4>
         <table class="mar_b10">
             <tbody>
             <tr>
@@ -99,12 +98,13 @@ $arr_locate = array(
         </table>
     </div>
     <!-- 餐饮 -->
+
+    <div class="bill_item_module" id="feast">
+        <h4 class="module_title list_more">婚宴</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_wed_feast)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title list_more">婚宴</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <li class="ulist_item">
                     <div class="dishes">
@@ -119,25 +119,33 @@ $arr_locate = array(
                     <span class="account">X <?php echo $arr_wed_feast['table_num']; ?></span>
                 </li>
             </ul>
+    <?php
+        }
+    ?>
             <!-- <p class="remark"><i class="t_green">[备注]</i> </p> -->
+    <?php 
+        if(!empty($arr_wed_feast)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_wed_feast['total_price']; ?></p>
                 <i class="profits">毛利：&yen;<?php echo $arr_wed_feast['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_wed_feast['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
-    <?php
+    <?php 
         }
     ?>
+        </div>
+    </div>
+    
 
     <!--灯光-->
+    
+    <div class="bill_item_module">
+        <h4 class="module_title list_more" id="lighting">灯光</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_light)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title">灯光</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <?php
                     foreach ($arr_light as $key => $value) {
@@ -156,23 +164,31 @@ $arr_locate = array(
                     </li>
                 <?php } ?>
             </ul>
+    <?php
+        }
+    ?>
+    <?php 
+        if(!empty($arr_light_total)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_light_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_light_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_light_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
-    <?php
+    <?php 
         }
     ?>
+        </div>
+    </div>
+    
     <!--视频-->
+    
+    <div class="bill_item_module">
+        <h4 class="module_title list_more" id="screen">视频</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_video)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title">视频</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <?php
                     foreach ($arr_video as $key => $value) {
@@ -191,21 +207,28 @@ $arr_locate = array(
                     </li>
                 <?php } ?>
             </ul>
+    <?php
+        }
+    ?>
+    <?php 
+        if(!empty($arr_video_total)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_video_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_video_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_video_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
     <?php
         }
     ?>
+        </div>
+    </div>
+    
 
 
             <!-- 人员-->
             <div class="bill_item_module">
-                <h4 class="module_title">人员</h4>
+                <h4 class="module_title list_more" id="service">人员</h4>
                 <div class="ulist_module">
                     <ul class="ulist menu_list">
                         <!-- 主持 -->
@@ -314,17 +337,23 @@ $arr_locate = array(
                         }
                         ?>
                     </ul>
+    <?php 
+        if(!empty($arr_service_total)){
+    ?>
                     <div class="subtotal">
                         <p>小计：&yen;<?php echo $arr_service_total['total_price']; ?></p>
                         <i class="profits">利润：&yen;<?php echo $arr_service_total['gross_profit']; ?></i>
                         <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_service_total['gross_profit_rate']*100).'%'; ?></i>
                     </div>
+    <?php 
+        }
+    ?>
                 </div>
             </div>
 
             <!-- 场地布置 -->
             <div class="bill_item_module ">
-                <h4 class="module_title">场地布置</h4>
+                <h4 class="module_title list_more" id="decoration">场地布置</h4>
                 <div class="ulist_module">
                     <ul class="ulist menu_list">
                         <?php
@@ -351,21 +380,28 @@ $arr_locate = array(
                         }
                         ?>
                     </ul>
+    <?php 
+        if(!empty($arr_decoration_total)){
+    ?>
                     <div class="subtotal">
                         <p>小计：&yen;<?php echo $arr_decoration_total['total_price']; ?></p>
                         <i class="profits">利润：&yen;<?php echo $arr_decoration_total['gross_profit']; ?></i>
                         <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_decoration_total['gross_profit_rate']*100).'%'; ?></i>
                     </div>
+    <?php 
+        }
+    ?>
                 </div>
             </div>
 
     <!--平面设计-->
+    
+    <div class="bill_item_module">
+        <h4 class="module_title list_more" id="graphic">平面设计</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_graphic)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title">平面设计</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <?php
                     foreach ($arr_graphic as $key => $value) {
@@ -384,24 +420,32 @@ $arr_locate = array(
                     </li>
                 <?php } ?>
             </ul>
+    <?php
+        }
+    ?>
+    <?php 
+        if(!empty($arr_graphic_total)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_graphic_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_graphic_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_graphic_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
     <?php
         }
     ?>
+        </div>
+    </div>
+    
 
     <!--视频设计-->
+    
+    <div class="bill_item_module">
+        <h4 class="module_title list_more" id = "film">视频设计</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_film)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title">视频设计</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <?php
                     foreach ($arr_film as $key => $value) {
@@ -420,24 +464,32 @@ $arr_locate = array(
                     </li>
                 <?php } ?>
             </ul>
+    <?php
+        }
+    ?>
+    <?php 
+        if(!empty($arr_film_total)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_film_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_film_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_film_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
     <?php
         }
     ?>
+        </div>
+    </div>
+    
 
     <!--策划费&杂费-->
+    
+    <div class="bill_item_module">
+        <h4 class="module_title list_more" id="planother">策划费&杂费</h4>
+        <div class="ulist_module">
     <?php
         if (!empty($arr_designer)) {
     ?>
-    <div class="bill_item_module">
-        <h4 class="module_title">策划费&杂费</h4>
-        <div class="ulist_module">
             <ul class="ulist menu_list">
                 <?php
                     foreach ($arr_designer as $key => $value) {
@@ -456,19 +508,27 @@ $arr_locate = array(
                     </li>
                 <?php } ?>
             </ul>
+    <?php
+        }
+    ?>
+    <?php 
+        if(!empty($arr_designer_total)){
+    ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_designer_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_designer_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_designer_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
-        </div>
-    </div>
     <?php
         }
     ?>
+        </div>
+    </div>
            
 
-            
+    <?php 
+        if(!empty($arr_order_total)){
+    ?>
             <div class="bottom_fixed_bar">
                 <p class="total_right">总价：<i class="t_green">&yen;<?php echo $arr_order_total['total_price'] ?></i></p>
                 <div class="total_left">
@@ -476,6 +536,9 @@ $arr_locate = array(
                     <i><p>毛利率：&yen;<?php echo sprintf("%01.2f", $arr_order_total['gross_profit_rate']*100).'%'?></i>
                 </div>
             </div>
+    <?php
+        }
+    ?>
 </article>
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js" type="text/javascript"></script>
@@ -494,6 +557,17 @@ $arr_locate = array(
             
         });
 
+        //打印
+        $("#print").on("click",function(){
+            
+            location.href="<?php echo $this->createUrl("print/designbill", array("order_id" => $_GET['order_id']));?>";
+        });
+
+        //跳转详细信息
+        $("#detailinfo").on("click",function(){
+            location.href="<?php echo $this->createUrl("plan/detailinfo", array("order_id" => $_GET['order_id']));?>"
+        })
+
         //跳折扣页面
         $("#feast_discount").on("click", function () {
             location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "feast"));?>";
@@ -507,24 +581,57 @@ $arr_locate = array(
             location.href = "<?php echo $this->createUrl("order/changefree", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id']));?>";
         });
 
-        //修改订单
-        $("#service").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/servicePersonnel", array("from" => "bill", "tab" => ""));?>";
+        //跳收款列表
+        $("#payment").on("click",function(){
+            location.href="<?php echo $this->createUrl("finance/cashierlist", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>"
+        })
+
+        //跳转产品分类
+        $("#feast").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/feast", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
         });
-        $("#decoration").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "bill", "tab" => ""));?>";
-        });
+
         $("#lighting").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/designLightingScree", array("from" => "bill", "tab" => ""));?>";
+            location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => "lighting","order_id" => $_GET['order_id']));?>";
         });
+        $("#screen").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => 'screen',"order_id" => $_GET['order_id']));?>";
+        });
+
+        $("#service").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/ServicePersonnel", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+        });
+
+        $("#decoration").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+        });
+
         $("#graphic").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/graphicFilm", array("from" => "bill", "tab" => ""));?>";
+            location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "graphic","order_id" => $_GET['order_id']));?>";
         });
+        $("#film").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "film","order_id" => $_GET['order_id']));?>";
+        });
+
         $("#dress").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => ""));?>";
+            location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "dress","order_id" => $_GET['order_id']));?>";
         });
+        $("#appliance").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "appliance","order_id" => $_GET['order_id']));?>";
+        });
+
         $("#drinks").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => ""));?>";
+            location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "drinks","order_id" => $_GET['order_id']));?>";
+        });
+        $("#car").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "car","order_id" => $_GET['order_id']));?>";
+        });
+        
+        $("#plan").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "plan","order_id" => $_GET['order_id']));?>";
+        });
+        $("#other").on("click", function () {
+            location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "other","order_id" => $_GET['order_id']));?>";
         });
 
         //判断订单状态，改变审批按钮
