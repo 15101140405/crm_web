@@ -150,7 +150,7 @@ class WPRequest
             'toparty'   => $toparty,
             'totag'     => "",
             'msgtype'   => "news",
-            'agentid'   => 0,
+            'agentid'   => 9,
             'news'      => array(               
                 'articles'  => array(array(   //若要实现一次发多条，需要修改
                     'title'         => $title,

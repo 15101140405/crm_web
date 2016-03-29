@@ -47,10 +47,10 @@ class OrderController extends InitController
 
     public function actionIndex()
     {
-        Yii::app()->session['userid']=100;
+        /*Yii::app()->session['userid']=100;
         Yii::app()->session['code']=123123123;
         Yii::app()->session['account_id']=1;
-        Yii::app()->session['staff_hotel_id']=1;
+        Yii::app()->session['staff_hotel_id']=1;*/
         /*$_SESSION['userid']=100;
         $_SESSION['code']=123123123;
         $_SESSION['account_id']=1;
@@ -76,7 +76,7 @@ class OrderController extends InitController
                 $d = date("d");
                 //print_r($y.$m.$d);
                 $this->render("index",array(
-                    //'userId' => $_SESSION['userid'],
+                    'userId' => $_SESSION['userid'],
                     'first_show_year' => $y,
                     'first_show_month' => $m,
                     'first_show_day' => $d,
@@ -472,8 +472,11 @@ class OrderController extends InitController
             $item['order_type'] = $value['order_type'];
             $item['order_name'] = $value['order_name'];
             $item['order_status'] = $value['order_status'];
-            $item['planner_id'] = $value['planner_id'];
-            $item['designer_id'] = $value['designer_id'];
+            $t1=Staff::model()->findByPk($value['planner_id']);
+            $item['planner_name'] = $t1['name'];
+            $t2=Staff::model()->findByPk($value['designer_id']);
+            $item['designer_name'] = $t2['name'];
+
             /*if($value['planner_id'] != 0){
                 $planner = Staff::model()->find(array(
                     "condition" => "id=:id",
@@ -614,6 +617,7 @@ class OrderController extends InitController
         $order_data = array();
         $order_data['order_name'] = $order['order_name'];
         $order_data['order_date'] = $order['order_date'];
+        $order_data['order_status'] = $order['order_status'];
         $order_data['designer_name'] = $staff['name'];
         $follow = OrderMerchandiser::model()->findAll(array(
                 'condition' => 'order_id=:order_id',

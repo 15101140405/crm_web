@@ -255,11 +255,20 @@ class FinanceController extends InitController
     public function actionCashier()
     {
         $orderId = $_GET['order_id'];
-        $data = OrderPayment::model()->findByPk($_GET['paymentId']);        
+        if($_GET['type'] == "edit"){
+            $data = OrderPayment::model()->findByPk($_GET['paymentId']);   
+            $this->render('cashier',array(
+                'data' => $data,
+                'type' => $_GET['type']
+            ));   
+        }else{
+            $this->render('cashier',array(
+                'type' => $_GET['type']
+            )); 
+        }
+              
 
-        $this->render('cashier',array(
-            'data' => $data,
-        ));
+        
     }
 
     public function actionSave()
@@ -364,6 +373,15 @@ class FinanceController extends InitController
 
     public function actionCashierList()
     {
-        $this->render('cashier_list');
+        $payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+
+        $this->render('cashier_list',array(
+                'payment' => $payment
+            ));
     }
 }

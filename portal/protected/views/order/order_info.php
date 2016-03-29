@@ -44,7 +44,7 @@
                 </div>
             </div>
         </li>
-        <li class="card list_more" category="appear" status="进行中">
+        <li class="card list_more" category="appear" status="进行中" id="now_bill">
             <h6 class="m-list-tit" style="color:#37CB58;font-size: 2rem;">当前报价</h6>
             <div class="m-money clear">
                 <p class="m-money-num fl" >￥<span><?php echo $order_total['total_price']?></span></p>
@@ -56,7 +56,7 @@
                 <p class="rest-time fr">利润：￥<span class="show_time_1746"><?php echo $order_total['gross_profit']?></span></p>
             </div>
         </li>
-        <li class="card list_more" category="appear" status="进行中">
+        <li class="card " category="appear" status="进行中" id="sure_bill">
             <h6 class="m-list-tit" style="color:#37CB58;;font-size: 1.8rem;text-align: left;margin-left: 10px;">成交</h6>
             <div class="m-money clear" style="display:inline">
                 <div style="display:inline-block;float:left;margin-left:5%;">
@@ -78,9 +78,26 @@
 <script src="js/common.js"></script>
 <script>
     $(function(){
+        //跳转到跟单页面
         $("#follow").on('click',function(){
-            location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&order_id=<?php echo $_GET["order_id"]?>'
+            location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&order_id=<?php echo $_GET["order_id"]?>';
         });
+
+        //跳转到当前报价（bill）
+        $("#now_bill").on("click",function(){
+            location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
+        });
+        
+        //初始渲染
+        var order_status=1;
+        if(order_status != 0 && order_status != 1 ){
+            $("#sure_bill").addClass('list_more');
+            $("#now_bill").remove();
+            $("#sure_bill").on("click",function(){
+                location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
+            });
+
+        }
     });
 </script>
 

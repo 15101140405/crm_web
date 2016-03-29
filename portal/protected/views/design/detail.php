@@ -219,7 +219,7 @@ small {
             $("#booking").remove();
         };
 
-        //订单状态按钮，出事渲染
+        //订单状态按钮，初始渲染
         var order_status = <?php echo $arr['order_status'];?>;
         if(order_status == 1){
             $('.lcs_checkbox_switch').removeClass('lcs_off');
