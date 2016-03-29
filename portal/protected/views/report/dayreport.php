@@ -32,12 +32,12 @@
         </div>
         <div class="nrt">
         	<div class="itme">
-                <div class="wz"><p class="name"><span>进店走势</span></p></div>
+                <div class="wz"><p class="name"><span>进店走势</span><span id='open_trends'></span></p></div>
                 <div class="chart_bar" id="chart" style='width:640px;height:320px;'></div>
             </div>
 
             <div class="itme">
-                <div class="wz"><p class="name"><span>已签订单</span></p>
+                <div class="wz"><p class="name"><span>已签订单</span><span id='order_sure'></span></p>
                 </div>
                 
             	<div class="tu chart_bar" id="order_sure" style='width:640px;height:600px;' ></div>
@@ -357,6 +357,12 @@ $(function(){
 
         }
 
+        //月份（进店走势）、年份（已签订单）
+        var mydate = new Date();
+        var year = mydate.getFullYear(); 
+        var month = mydate.getMonth(); 
+        $("#open_trends").html("["+month+"月]");
+        $("#order_sure").html("["+year+"]");
 
 });
 </script>

@@ -359,7 +359,7 @@ class ReportController extends InitController
         $html .='            </div>';*/
 
 
-        $touser="100";
+        $touser="@all";
         $content="中文怎么解决";
         $title="今日经营日报（大郊亭店）";
         $agentid=9;
@@ -367,7 +367,7 @@ class ReportController extends InitController
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
         $description="这是一个升级后报表";
-        $picur="/var/www/html/school/crm_web/image/thumb.jpg";
+        $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
         // $t=new ReportController;
 
         // $content = $t->actionDayreport();

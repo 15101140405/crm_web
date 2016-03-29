@@ -110,10 +110,12 @@ function order_stat($arr, $stat)
     return $result;
 }
 
-function shuchu_html($result)
+function shuchu_html($result,$order_status)
 {
-    $html = "<li class=\"ulist_item swipeout\" order-id=\"" . $result['id'] . "\" order-type=\"" . $result['order_type'] . "\">" . "<div class=\"item-content\">" .
-        "<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>" .
+    if($order_status == 0 || $order_status == 1){
+        $html = "<li class=\"ulist_item swipeout\"  order-type=\"" . $result['order_type'] . "\">" . "<div class=\"item-content\">" .
+        /*"<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>"*/ 
+        "<p  style=\"margin-left: 20px;\" ><input order_status=\"". $result['order_status'] ."\" order-id=\"" . $result['id'] . "\" id=\"switch\" type=\"checkbox\" name=\"check-1\" value=\"4\" class=\"lcs_check\" autocomplete=\"off\" /></p>".
         /*"<span class=\"order_status " . $result['order_color'] . "\">" . $result['order_stat'] . "</span>" .*/
         "<div class=\"order_info\">" .
         "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 0rem;\">" . $result['order_name'] . "</i></p>" .
@@ -122,6 +124,20 @@ function shuchu_html($result)
         /*"<p class=\"desc\" style＝'color:#fff; display:none'> ". $result['order_time'] . "</p>" .*/
         "</div>" ."<div class=\"swipeout-actions-right\">" . "<a class=\"swipeout-delete del\">删除订单</a>" . "</div></div>" .
         "</li>";  //更多行，依次复制即可
+    }else{
+        $html = "<li class=\"ulist_item swipeout\" order-id=\"" . $result['id'] . "\" order-type=\"" . $result['order_type'] . "\">" . "<div class=\"item-content\">" .
+        "<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>". 
+        /*'<p><input id="switch" type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="off" /></p>'*/
+        /*"<span class=\"order_status " . $result['order_color'] . "\">" . $result['order_stat'] . "</span>" .*/
+        "<div class=\"order_info\">" .
+        "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 0rem;\">" . $result['order_name'] . "</i></p>" .
+       /* "<p class=\"customer\"><i class=" . $result['order_new'] . ">" . $result['account_id'] . "</i></p>" .*/
+        "<p class=\"desc\" style=\"margin-top: 8px;margin-bottom: 0;font-size:1rem;\" >" . $result['order_date'] . "</p>" .
+        /*"<p class=\"desc\" style＝'color:#fff; display:none'> ". $result['order_time'] . "</p>" .*/
+        "</div>" ."<div class=\"swipeout-actions-right\">" . "<a class=\"swipeout-delete del\">删除订单</a>" . "</div></div>" .
+        "</li>";  //更多行，依次复制即可
+    }
+    
     return $html;
 }
 
@@ -144,6 +160,51 @@ function shuchu_html($result)
     <link rel="stylesheet" href="css/framework7.material.colors.min.css">
     <link rel="stylesheet" href="css/upscroller.css">
     <link rel="stylesheet" href="css/my-app.css">
+    <link rel="stylesheet" href="css/lc_switch.css">
+<style type="text/css">
+body * {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+h1 {
+  margin-bottom: 10px;
+  padding-left: 35px;
+}
+a {
+  color: #888;
+  text-decoration: none;
+}
+small {
+  font-size: 13px;
+  font-weight: normal;
+  padding-left: 10px;
+}
+#first_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 50px auto 0;
+  color: #444;
+}
+#second_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 50px auto 0;
+  background: #f3f3f3;
+  border: 6px solid #eaeaea;
+  padding: 20px 40px 40px;
+  text-align: center;
+  border-radius: 2px;
+}
+#third_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 10px auto 0;
+}
+</style>
 </head>
 <body>
 <article id="homepage">
@@ -217,7 +278,7 @@ function shuchu_html($result)
             <?php //全部订单
             $html = '';
             foreach ($my_order_total as $key => $value) {
-                $html .= shuchu_html($value);
+                $html .= shuchu_html($value,$value['order_status']);
             }
 
             echo $html;
@@ -266,6 +327,8 @@ function shuchu_html($result)
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.calendar.js"></script>
 <script src="js/common.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/lc_switch.js" type="text/javascript"></script>
 
 
 <script type="text/javascript" src="js/framework7.min.js"></script>
@@ -309,6 +372,7 @@ function shuchu_html($result)
 
         //判断角色，隐藏或显示选择店面
         select_shop();
+        buttonclick_xuanran();
         function select_shop(){
             var staff_type = "策划师";
             if(staff_type == "管理层" || staff_type == "财务"){
@@ -352,32 +416,24 @@ function shuchu_html($result)
 
 
         //判断  统筹／策划
-        if($.util.param("t") == "plan"){
+        if("<?php echo $_GET['t'];?>" == "plan"){
             order_status_xuanran ();
-            $(".ulist_item").on("click", function () {
-                //判断order－type，进入不同页面
-                var order_status = $(this).find("span").attr("order_status");
-                var order_type = $(this).attr("order-type");
-                var order_id = escape($(this).attr("order-id"));
-                plan_jump (order_type,order_status,order_id);
-            });
-
+            buttonclick_xuanran();
             //选中"全部"订单，打印全部订单
             $("#total").on("click", function () {
                 var html;
                 <?php
-
                 $html = '';
                 foreach ($my_order_total as $key => $value) {
-                    $html .= shuchu_html($value);
+                    $html .= shuchu_html($value,$value['order_status']);
                 }
                 echo "html ='" . $html . "';";
-
                 ?>
                 $("#second_tab").remove();
                 $(".order_list").empty(); //清空订单列表
                 $(".order_list").prepend(html); //打印新的订单列表
                 order_status_xuanran ();
+                buttonclick_xuanran();
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
@@ -397,6 +453,7 @@ function shuchu_html($result)
                 $("[order-type='1']").addClass("hid");
                 $("[order-type='2']").removeClass("hid");
                 order_status_xuanran ();
+                buttonclick_xuanran();
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
@@ -416,6 +473,7 @@ function shuchu_html($result)
                     $(".ulist_item").removeClass("hid");
                     $("[order-type='1']").addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -435,6 +493,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -454,6 +513,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -473,6 +533,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='1']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -492,6 +553,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='1']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -513,6 +575,7 @@ function shuchu_html($result)
                 $("[order-type='2']").addClass("hid");
                 $("[order-type='1']").removeClass("hid");
                 order_status_xuanran ();
+                buttonclick_xuanran();
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
@@ -532,6 +595,7 @@ function shuchu_html($result)
                     $(".ulist_item").removeClass("hid");
                     $("[order-type='2']").addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -550,6 +614,7 @@ function shuchu_html($result)
                     $("[order-type='1']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='1']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -568,6 +633,7 @@ function shuchu_html($result)
                     $("[order-type='1']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='1']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -586,6 +652,7 @@ function shuchu_html($result)
                     $("[order-type='1']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='1']").find("[order_status='1']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
@@ -597,7 +664,7 @@ function shuchu_html($result)
                 })
             });
 
-        }else if($.util.param("t") == "design"){
+        }else if("<?php echo $_GET['t'];?>" == "design"){
             
             var html_tab = '<div class="tab_module fixed4" id="second_tab"><p class="tab_btn act" id="second_total"><span>全部</span></p><p class="tab_btn" id="front"><span>已交订金</span></p><p class="tab_btn" id="middle"><span>付中期款</span></p><p class="tab_btn" id="end"><span>已完成</span></p></div>'
             $("#top_tab").after(html_tab);
@@ -608,7 +675,7 @@ function shuchu_html($result)
                 <?php   //全部婚礼订单
                 $html = '';
                 foreach ($arr_order as $key => $value) {
-                    $html .= shuchu_html($value);
+                    $html .= shuchu_html($value,$value['order_status']);
                 }
                 echo "html ='" . $html . "';";
                 ?>
@@ -617,6 +684,7 @@ function shuchu_html($result)
                 $(".order_list").prepend(html); //打印新的订单列表
                 $("[order-type='1']").addClass("hid");
                 order_status_xuanran ();
+                buttonclick_xuanran();
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_id = escape($(this).attr("order-id"));
@@ -634,6 +702,7 @@ function shuchu_html($result)
                     $(".ulist_item").removeClass("hid");
                     $("[order-type='1']").addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = escape($(this).attr("order-id"));
@@ -650,6 +719,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = escape($(this).attr("order-id"));
@@ -666,6 +736,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='2']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = escape($(this).attr("order-id"));
@@ -682,6 +753,7 @@ function shuchu_html($result)
                     $("[order-type='2']").find("[order_status='2']").parent().addClass("hid");
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     order_status_xuanran ();
+                    buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = escape($(this).attr("order-id"));
@@ -690,6 +762,43 @@ function shuchu_html($result)
 
                 })
         };
+
+        
+
+        //订单状态按钮，初始渲染
+        /*$("[order_status='1']").find(".lcs_checkbox_switch").removeClass('lcs_off');
+        $("[order_status='1']").find(".lcs_checkbox_switch").addClass('lcs_on');*/
+
+        function buttonclick_xuanran(){
+            $('#switch').lc_switch();
+            // triggered each time a field changes status
+            $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+            var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+            console.log('field changed status: '+ status );
+            });
+
+            // triggered each time a field is checked
+            $('body').delegate('.lcs_check', 'lcs-on', function() {
+                console.log('field is checked');
+                $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:1},function(){
+                    alert("档期已预订");
+                });
+            });
+
+            // triggered each time a is unchecked
+            $('body').delegate('.lcs_check', 'lcs-off', function(){
+                console.log('field is unchecked');
+                $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:0},function(){
+                    alert("预订已取消");
+                });
+            });     
+        }
+        
+
+        //根据order_status,渲染订单状态
+        //订单状态按钮，初始渲染
+        $("[order_status='1']").next().removeClass('lcs_off');
+        $("[order_status='1']").next().addClass('lcs_on');
 
         //把对应的订单状态，转换为对应颜色和文字
         function order_status_xuanran () {
@@ -714,22 +823,17 @@ function shuchu_html($result)
             /*if(order_status == 0 & order_type == 2){
                 location.href = "<?php echo $this->createUrl("plan/customerName");?>&order_id=" + order_id + "&from=my_order&t=plan";
             }else */if(order_type == 2){
-                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order&t=plan";
+                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order";
             }/*else if(order_status == 0 & order_type == 1){
                 location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&company_id=&order_id=" + order_id + "&from=my_order&t=plan";
             }*/else if(order_type == 1){
-                location.href = "<?php echo $this->createUrl("meeting/detail");?>&order_id=" + order_id + "&from=my_order&t=plan";
+                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order";
             }
         };
         //策划页面，跳转到订单详情页
         function design_jump (order_id) {
             location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order&t=design";
         };
-        
-        
-
-    
-
     })
 
 </script>

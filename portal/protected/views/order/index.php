@@ -176,7 +176,7 @@ $(function() {
               var html = '<li order-id="'+order[i].order_id+'" type="'+order[i].order_type+'" status="'+order[i].order_status+'" day="'+order[i].order_day+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
               /*html += '<div class="order_desc"><p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span>';*/
               html += '<div class="order_desc"><p style="display:table;" >';
-              html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span></p></div>';
+              html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> <i> ['+order[i].planner_name+']</i></p></div>';
               html += '<span class="index_order_status '+order_status[order[i].order_status].class_type+'">'+order_status[order[i].order_status].content+'</span></li>';
               $('.order_ulist').append(html);
             }
