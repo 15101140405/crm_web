@@ -1230,6 +1230,34 @@ class DesignController extends InitController
         $planer= Staff::model()->find($criteria3);
         /*print_r($designer);*/
 
+        // *********************************************************************************************************************
+        // 查已选的推单渠道
+        // *********************************************************************************************************************
+        $supplier_type_id = 16 ;//supplier_type_id为16的即“推单渠道”
+
+        $list = SupplierProduct::model()->findAll(array(
+            "condition" => "supplier_type_id=:id",
+            "params"    => array( ":id" => $supplier_type_id), 
+                                                       )
+                                                 );
+        $product_id = array();
+        foreach ($list as $key => $value) {
+            $product_id[$key] = $value['id'];
+        }
+
+        $criteria3 = new CDbCriteria; 
+        $criteria3 -> addInCondition("product_id",$product_id);
+        $criteria3 -> addCondition("order_id=:id");
+        $criteria3 ->params[':id']=$orderId; 
+        $select = OrderProduct::model()->find($criteria3);
+
+
+        $select_reference = SupplierProduct::model()->find(array(
+            "condition" => "id=:id",
+            "params" => array( ":id" => $select['product_id'])
+                                                       )
+                                                 );
+
 
 
 
@@ -1259,6 +1287,7 @@ class DesignController extends InitController
             "arr_order_data" => $order_data,
             "designer" => $designer['name'],
             "planner" => $planer['name'],
+            "select_reference"  => $select_reference
             
         ));
 
