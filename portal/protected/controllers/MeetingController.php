@@ -62,7 +62,7 @@ class MeetingController extends InitController
         $companyForm = new CompanyForm();
         $post['account_id']  =  $this->getAccountId();
         $post['company_name']    = $_POST['new_customer'];
-        $post['update_time']      = date('y-m-d h:i:s',time());
+        $post['update_time']      = time();
         $arr = $companyForm->companyInsert($post);
         echo json_encode($arr);
  
@@ -196,17 +196,17 @@ class MeetingController extends InitController
                                                              )
                                                        );
         
-        $orderData = Order::model()->find(array(
+        $orderDate = Order::model()->find(array(
             "condition" => "id=:id",
             "params" => array( ":id" => $orderId),
        ));
 
 
         $this->render("detailInfo",array(
-            "linkmanname" => $linkmanData['name'],
-            "linkmanphone" => $linkmanData['telephone'],
-            "layout" =>  $layoutData['title'],
-            "time_type" =>   $orderData['order_time'],
+            "linkmanname"   =>  $linkmanData['name'],
+            "linkmanphone"  =>  $linkmanData['telephone'],
+            "layout"        =>  $layoutData['title'],
+            "time"          =>  $orderDate     
             ));
     }
 
@@ -597,21 +597,51 @@ class MeetingController extends InitController
             $arr_total['gross_profit_rate'] = $arr_total['gross_profit']/$arr_total['total_price'];    
         }
         
+
+
+        // *********************************************************************************************************************
+        // 查已选的推单渠道
+        // *********************************************************************************************************************
+        $supplier_type_id = 16 ;//supplier_type_id为16的即“推单渠道”
+
+        $list = SupplierProduct::model()->findAll(array(
+            "condition" => "supplier_type_id=:id",
+            "params"    => array( ":id" => $supplier_type_id), 
+                                                       )
+                                                 );
+        $product_id = array();
+        foreach ($list as $key => $value) {
+            $product_id[$key] = $value['id'];
+        }
+
+        $criteria3 = new CDbCriteria; 
+        $criteria3 -> addInCondition("product_id",$product_id);
+        $criteria3 -> addCondition("order_id=:id");
+        $criteria3 ->params[':id']=$orderId; 
+        $select = OrderProduct::model()->find($criteria3);
+
+
+        $select_reference = SupplierProduct::model()->find(array(
+            "condition" => "id=:id",
+            "params" => array( ":id" => $select['product_id'])
+                                                       )
+                                                 );
         
         /*********************************************************************************************************************/
         /*向 VIEW 传数据*/
         /*********************************************************************************************************************/
         $this->render("bill",array(
-            "arr_wed_feast" => $arr_wed_feast,
-            "arr_changdi_fee" => $arr_changdi_fee,
-            "arr_video" => $arr_video,
-            "arr_video_total" => $arr_video_total,
-            "arr_light" => $arr_light,
-            "arr_light_total" => $arr_light_total,
-            "arr_total" => $arr_total,
-            "arr_order_data" => $order_data,
-            "designer" => $designer['name'],
-            "planner" => $planer['name'],
+            "arr_wed_feast"     => $arr_wed_feast,
+            "arr_changdi_fee"   => $arr_changdi_fee,
+            "arr_video"         => $arr_video,
+            "arr_video_total"   => $arr_video_total,
+            "arr_light"         => $arr_light,
+            "arr_light_total"   => $arr_light_total,
+            "arr_total"         => $arr_total,
+            "arr_order_data"    => $order_data,
+            "designer"          => $designer['name'],
+            "planner"           => $planer['name'],
+            "select_reference"  => $select_reference
         ));
     }
 

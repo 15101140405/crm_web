@@ -23,7 +23,7 @@ $arr_locate = array(
 <article style='position: relative;bottom: 100px;top: 1px;'>
     <div class="tool_bar">
         <h2 class="page_title">报价单</h2>
-        <div class="r_btn" id="print">打印</div>
+
     </div>
     <div class="ulist_module">
         <ul class="ulist">
@@ -44,7 +44,7 @@ $arr_locate = array(
         <ul class="ulist">
             <li class="ulist_item list_more department" id="channel">
                 <span class="label">推   单：</span>
-                <div class="align_r dep_content" id="channel_content"></div>
+                <div class="align_r1 dep_content" id="channel_content"><?php echo $select_reference['name']; ?></div>
             </li>
         </ul>
     </div>
@@ -556,6 +556,12 @@ $arr_locate = array(
             }
             
         });
+
+        //跳推单页面
+        $("#channel").on("click", function () {
+            location.href = "<?php echo $this->createUrl("plan/chooseChannel", array("from"     =>  "design",
+                                                                                     "order_id" =>  $_GET['order_id']));?>";
+        })
 
         //打印
         $("#print").on("click",function(){
