@@ -72,9 +72,9 @@
     <div style='position:relative;bottom:60px;top:60px;' id="top" paymentId="<?php echo $_GET['paymentId']?>">
         <div class="select_ulist_module" id="type">
             <ul class="select_ulist" id="type_ul">
-                <li class="select_ulist_item round_select round_select_selected" value="0">定金</li>
-                <li class="select_ulist_item round_select" value="1">中期款</li>
-                <li class="select_ulist_item round_select" value="2">尾款</li>
+                <li class="select_ulist_item round_select round_select_selected" type-value="0">定金</li>
+                <li class="select_ulist_item round_select" type-value="1">中期款</li>
+                <li class="select_ulist_item round_select" type-value="2">尾款</li>
             </ul>
         </div>
         <div class="ulist_module">
@@ -90,9 +90,9 @@
         </div>
         <div class="select_ulist_module" id="way">
             <ul class="select_ulist" id="way_ul">
-                <li class="select_ulist_item round_select round_select_selected" value="0">现金</li>
-                <li class="select_ulist_item round_select" value="1">公户</li>
-                <li class="select_ulist_item round_select" value="2">支票</li>
+                <li class="select_ulist_item round_select round_select_selected" way-value="0">现金</li>
+                <li class="select_ulist_item round_select" way-value="1">公户</li>
+                <li class="select_ulist_item round_select" way-value="2">支票</li>
             </ul>
         </div>
         <div class="demos" id="time">
@@ -105,7 +105,7 @@
     </div>
     <div class="bottom_fixed_bar" id='bottom'>
         <div class="r_btn" id="insert">确认收款</div>
-        <div class="r_btn" id="update">确认收款</div>
+        <div class="r_btn" id="update">确认</div>
         <div class="r_btn" id="del" style="background-color:red;">删除</div>
     </div>
 </article>
@@ -115,13 +115,18 @@
     $(function () {
         //页面初始化
         if ("<?php echo $_GET['type']?>" == "edit") {
+            /*alert('edit');*/
             $("#insert").remove();
             $("#type li").removeClass("round_select_selected");
-            $("[value='<?php echo $data['type']?>']").addClass("round_select_selected");
+            $("[type-value='<?php echo $data['type']?>']").addClass("round_select_selected");
+            $("#cashier").val("<?php echo $data['money'];?>")
+            $("#way li").removeClass("round_select_selected");
+            $("[way-value='<?php echo $data['way']?>']").addClass("round_select_selected");
             $("#remark").val("<?php echo $data['remarks']?>");
             $("appDateTime").val("<?php echo $data['time']?>");
             //此处用php从后端取数
         } else if ("<?php echo $_GET['type']?>" == "new") {
+            /*alert('new');*/
             $("#del").remove();
             $("#update").remove();
         };
@@ -132,31 +137,29 @@
             data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),order_id:<?php echo $_GET["order_id"]?>,remarks:$("#remark").val()};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/indexdata");?>',data,function(retval){
-                //alert(retval);
-               // if(retval.success){
-                location.reload();
-               // }else{
-               //   alert('太累了，歇一歇，一秒后再试试！');
-                //     return false;
-                //   }
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
             });
         });
 
         //点击编辑
-        $("#insert").on("click",function(){
+        $("#update").on("click",function(){
 
-            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),paymentId:<?php echo $_GET["paymentId"]?>,remarks:$("#remark").val()};
+            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),paymentId:"<?php echo $_GET["paymentId"]?>",remarks:$("#remark").val()};
             console.log(data);
-            $.post('<?php echo $this->createUrl("finance/indexdata");?>',data,function(retval){
-                //alert(retval);
-               // if(retval.success){
-                location.reload();
-               // }else{
-               //   alert('太累了，歇一歇，一秒后再试试！');
-                //     return false;
-                //   }
+            $.post('<?php echo $this->createUrl("finance/orderpaymentupdate");?>',data,function(retval){
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
             });
         });
+
+        //点击删除
+        $("#del").on("click",function(){
+            data = {paymentId:"<?php echo $_GET["paymentId"]?>"};
+            console.log(data);
+            $.post('<?php echo $this->createUrl("finance/orderpaymentdel");?>',data,function(retval){
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
+            });
+        });
+
 
 
 

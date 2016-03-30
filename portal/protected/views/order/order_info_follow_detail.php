@@ -70,6 +70,16 @@
         <h2 class="page_title">跟进记录</h2>
     </div>
     <div class="select_ulist_module" id="way" followId="<?php echo $_GET['followId']?>">
+        <ul class="select_ulist" id="type" >
+            
+            <li class="select_ulist_item round_select round_select_selected" value="0">进店面谈</li>
+            <li class="select_ulist_item round_select" value="1">打电话</li>
+            <li class="select_ulist_item round_select" value="2">发微信</li>
+        </ul>
+        <div class="demos" id="time" style='margin-top:15px;border-top:1px solid #eee;border-bottom:1px solid #eee;line-height: 2.5rem;'> 
+            <label for="appDateTime" style="margin-left:4%;">跟进时间</label>
+            <input style="width:60%;margin-left:5%;" value="2015-05-01 15:42:02" class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text">
+        </div>
         <ul class="select_ulist">
             <li class="ulist_item">记录内容</li> 
             <li class="remark">
@@ -78,16 +88,6 @@
                 </div>
             </li> 
         </ul>
-        <ul class="select_ulist" id="type" >
-            
-            <li class="select_ulist_item round_select round_select_selected" value="0">进店面谈</li>
-            <li class="select_ulist_item round_select" value="1">打电话</li>
-            <li class="select_ulist_item round_select" value="2">发微信</li>
-        </ul>
-        <div class="demos" id="time">
-            <label for="appDateTime">收款时间</label>
-            <input value="2015-05-01 15:42:02" class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text">
-        </div>
     </div>
     <div class="bottom_fixed_bar" id='bottom'>
         <div class="r_btn" id="insert">确定</div>

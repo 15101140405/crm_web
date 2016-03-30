@@ -89,12 +89,12 @@
         });
         
         //初始渲染
-        var order_status=1;
+        var order_status=<?php echo $order_data['order_status'];?>;
         if(order_status != 0 && order_status != 1 ){
             $("#sure_bill").addClass('list_more');
-            $("#now_bill").remove();
+            /*$("#now_bill").remove();*/
             $("#sure_bill").on("click",function(){
-                location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
             });
 
         }

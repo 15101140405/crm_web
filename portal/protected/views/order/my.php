@@ -113,7 +113,7 @@ function order_stat($arr, $stat)
 function shuchu_html($result,$order_status)
 {
     if($order_status == 0 || $order_status == 1){
-        $html = "<li class=\"ulist_item swipeout\"  order-type=\"" . $result['order_type'] . "\">" . "<div class=\"item-content\">" .
+        $html = "<li class=\"ulist_item swipeout\"  order-type=\"" . $result['order_type'] . "\" order-id=\"" . $result['id'] . "\">" . "<div class=\"item-content\">" .
         /*"<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>"*/ 
         "<p  style=\"margin-left: 20px;\" ><input order_status=\"". $result['order_status'] ."\" order-id=\"" . $result['id'] . "\" id=\"switch\" type=\"checkbox\" name=\"check-1\" value=\"4\" class=\"lcs_check\" autocomplete=\"off\" /></p>".
         /*"<span class=\"order_status " . $result['order_color'] . "\">" . $result['order_stat'] . "</span>" .*/
@@ -419,6 +419,13 @@ small {
         if("<?php echo $_GET['t'];?>" == "plan"){
             order_status_xuanran ();
             buttonclick_xuanran();
+            $(".ulist_item").on("click", function () {
+                    //判断order－type，进入不同页面
+                    var order_status = $(this).find("span").attr("order_status");
+                    var order_type = $(this).attr("order-type");
+                    var order_id = $(this).attr("order-id");
+                    plan_jump (order_type,order_status,order_id);
+                });
             //选中"全部"订单，打印全部订单
             $("#total").on("click", function () {
                 var html;
@@ -434,11 +441,12 @@ small {
                 $(".order_list").prepend(html); //打印新的订单列表
                 order_status_xuanran ();
                 buttonclick_xuanran();
+                alert(1);
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
                     var order_type = $(this).attr("order-type");
-                    var order_id = escape($(this).attr("order-id"));
+                    var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
                 });
             })
@@ -458,7 +466,7 @@ small {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
                     var order_type = $(this).attr("order-type");
-                    var order_id = escape($(this).attr("order-id"));
+                    var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
                 });
 
@@ -478,7 +486,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -498,10 +506,9 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
-
                 })
 
                 //选中“婚礼”－“已交订金”
@@ -518,7 +525,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -538,7 +545,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -558,7 +565,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -580,7 +587,7 @@ small {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
                     var order_type = $(this).attr("order-type");
-                    var order_id = escape($(this).attr("order-id"));
+                    var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
                 });
 
@@ -600,7 +607,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -619,7 +626,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -638,7 +645,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -657,7 +664,7 @@ small {
                         //判断order－type，进入不同页面
                         var order_status = $(this).find("span").attr("order_status");
                         var order_type = $(this).attr("order-type");
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
                     });
 
@@ -687,7 +694,7 @@ small {
                 buttonclick_xuanran();
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
-                    var order_id = escape($(this).attr("order-id"));
+                    var order_id = $(this).attr("order-id");
                     design_jump (order_id);
                 });
 
@@ -705,7 +712,7 @@ small {
                     buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         design_jump (order_id);
                     });
 
@@ -722,7 +729,7 @@ small {
                     buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         design_jump (order_id);
                     });
 
@@ -739,7 +746,7 @@ small {
                     buttonclick();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         design_jump (order_id);
                     });
 
@@ -756,7 +763,7 @@ small {
                     buttonclick_xuanran();
                     $(".ulist_item").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_id = escape($(this).attr("order-id"));
+                        var order_id = $(this).attr("order-id");
                         design_jump (order_id);
                     });
 

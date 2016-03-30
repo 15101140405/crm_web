@@ -256,19 +256,25 @@ class FinanceController extends InitController
     {
         $orderId = $_GET['order_id'];
         if($_GET['type'] == "edit"){
-            $data = OrderPayment::model()->findByPk($_GET['paymentId']);   
+            $data = OrderPayment::model()->findByPk($_GET['paymentId']);  
+            /*echo "edit";die;  */  
+            /*print_r($data);die;*/
             $this->render('cashier',array(
                 'data' => $data,
                 'type' => $_GET['type']
-            ));   
+            ));
         }else{
+            $data = array(
+                'type' => '',
+                'remarks' => 'ceshi',
+                'time' => '',
+                );
+            /*echo "new";die;*/
             $this->render('cashier',array(
+                'data' => $data,
                 'type' => $_GET['type']
             )); 
         }
-              
-
-        
     }
 
     public function actionSave()
@@ -320,6 +326,17 @@ class FinanceController extends InitController
 
         /*if($payment->save() > 0){echo"添加成功"; }else{echo"添加失败"; }*/
     }
+
+    public function actionOrderpaymentupdate()
+    {
+        OrderPayment::model()->updateByPk($_POST['paymentId'],array('money'=>$_POST['payment'],'time'=>$_POST['payment_time'],'remarks'=>$_POST['remarks'],'way'=>$_POST['payment_way'],'type'=>$_POST['payment_type']));
+    }
+
+    public function actionOrderpaymentdel()
+    {
+        OrderPayment::model()->deleteByPk($_POST['paymentId']);
+    }
+
 
     public function actionOrder()
     {
@@ -379,6 +396,7 @@ class FinanceController extends InitController
                         ':order_id' => $_GET['order_id']
                     )
             ));
+        /*print_r($payment);die;*/
 
         $this->render('cashier_list',array(
                 'payment' => $payment
