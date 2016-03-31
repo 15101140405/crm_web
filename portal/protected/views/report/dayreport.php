@@ -3,10 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>昨日经营日报</title>
-<meta name="viewport" content="width=640,target-densitydpi=device-dpi,user-scalable=no">
+<meta name="viewport" content="width=640,user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
-<script type="text/javascript" src="js/thorn.js"></script>
 <link rel="stylesheet" href="css/thorn.css">
 <link href="css/base.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -70,9 +68,7 @@
                         <div style='display:inline-block;width:430px;height:400px;' id='sales'></div>
                     </div>
                 </div>
-            </div>
-            
-            
+            </div>            
         </div>
     </div>
 
@@ -86,10 +82,11 @@
     <div class="wz">©北京浩瀚一方互联网科技有限责任公司</div>
 </div>
 </article>
-
+<script type="text/javascript" src="js/jquery.min.js"></script>
 <script src="js/zepto.min.js"></script>
 <script src="js/charts/echarts.min.js"></script>
-<!-- <script src="js/charts/line.js"></script> -->
+
+<!-- <script type="text/javascript" src="js/thorn.js"></script> -->
 <script src="js/common.js"></script>
 <script>
 $(function(){

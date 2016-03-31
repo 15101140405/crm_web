@@ -391,7 +391,7 @@ class ReportController extends InitController
                 $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
         // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
         //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
-        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur);
+        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
         //$result=WPRequest::mediaupload($media,$type);
         echo "result1:";
         print_r($result1);

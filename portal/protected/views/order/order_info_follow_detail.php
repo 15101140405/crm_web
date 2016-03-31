@@ -126,9 +126,8 @@
             }
             console.log(data);
             $.post("<?php echo $this->createUrl('order/followinsert');?>",data,function(){
-
                 alert("添加成功");
-                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET["order_id"]?>";
+                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET['order_id']?>";
             })
         });
         //点击编辑

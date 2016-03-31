@@ -609,48 +609,126 @@ class OrderController extends InitController
 
     public function actionOrderinfo()
     {
-        $order = Order::model()->findByPk($_GET['order_id']);
-        $staff = Staff::model()->findByPk($order['designer_id']);
-        $t = new OrderProductForm();
-        $order_total = $t -> total_price($_GET['order_id']);
-        /*print_r($order_total);die;*/
-        $order_data = array();
-        $order_data['order_name'] = $order['order_name'];
-        $order_data['order_date'] = $order['order_date'];
-        $order_data['order_status'] = $order['order_status'];
-        $order_data['designer_name'] = $staff['name'];
-        $follow = OrderMerchandiser::model()->findAll(array(
-                'condition' => 'order_id=:order_id',
-                'params' => array(
-                        ':order_id' => $_GET['order_id']
-                    )
-            ));
-        /*print_r($follow);die;*/
-        $in_door = 0;
-        $out_door = 0;
-        foreach ($follow as $key => $value) {
-            if($value['type'] == '0'){$in_door++;}else{$out_door++;};
-        }
-        /*$payment = OrderPayment::model()->findAll(array(
-                'condition' => 'order_id=:order_id',
-                'params' => array(
-                        ':order_id' => $_GET['order_id']
-                    )
-            ));
-        $total_payment = 0;
-        foreach ($payment as $key => $value) {
-            $total_payment += $value['money'];
-        };
-        $payment_rate = $total_payment/$order_total['total_price'];*/
+        /*Yii::app()->session['userid']=100;
+        Yii::app()->session['code']='asjfdlk123';
+        Yii::app()->session['account_id']=1;
+        Yii::app()->session['staff_hotel_id']=1;*/
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            //echo '已登陆';
+            $order = Order::model()->findByPk($_GET['order_id']);
+            $staff = Staff::model()->findByPk($order['designer_id']);
+            $staff_user = Staff::model()->findByPk($_SESSION['userid']);
+            $t = new OrderProductForm();
+            $order_total = $t -> total_price($_GET['order_id']);
+            /*print_r($order_total);die;*/
+            $order_data = array();
+            $order_data['order_name'] = $order['order_name'];
+            $order_data['order_date'] = $order['order_date'];
+            $order_data['order_status'] = $order['order_status'];
+            $order_data['designer_name'] = $staff['name'];
+            $order_data['user_department_list'] = $staff_user['department_list'];
+            $follow = OrderMerchandiser::model()->findAll(array(
+                    'condition' => 'order_id=:order_id',
+                    'params' => array(
+                            ':order_id' => $_GET['order_id']
+                        )
+                ));
+            /*print_r($follow);die;*/
+            $in_door = 0;
+            $out_door = 0;
+            foreach ($follow as $key => $value) {
+                if($value['type'] == '0'){$in_door++;}else{$out_door++;};
+            }
+            $payment = OrderPayment::model()->findAll(array(
+                    'condition' => 'order_id=:order_id',
+                    'params' => array(
+                            ':order_id' => $_GET['order_id']
+                        )
+                ));
+            $total_payment = 0;
+            foreach ($payment as $key => $value) {
+                $total_payment += $value['money'];
+            };
+            $payment_rate = 0;
+            if($order_total['total_price'] != 0){
+                $payment_rate = $total_payment/$order_total['total_price'];    
+            }
+            
+            $this->render('order_info',array(
+                    'order_data' => $order_data,
+                    'order_total' => $order_total,
+                    'in_door' => $in_door,
+                    'out_door' => $out_door,
+                    'total_payment' => $total_payment,
+                    'payment_rate' => $payment_rate,
+                ));
+        }else{ //未登录
+            //echo '未登陆';
+            $code = $_GET['code'];
+            Yii::app()->session['code']=$code;
+            if($code == ''){
+                $url1 = "http://www.cike360.com/school/crm_web/portal/index.php?r=order/orderinfo&code=&order_id=".$_GET['order_id'];
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                echo "<script>window.location='".$url."';</script>";
+            };
 
-        $this->render('order_info',array(
-                'order_data' => $order_data,
-                'order_total' => $order_total,
-                'in_door' => $in_door,
-                'out_door' => $out_door,
-                /*'total_payment' => $total_payment,
-                'payment_rate' => $payment_rate,*/
-            ));
+            $t=new WPRequest;
+            $userId = $t->getUserId($code);
+            $adder=array("UserId"=>"222","DeviceId"=>"");
+            $adder=json_decode($userId,true);
+            if(!empty($adder['UserId'])) {
+                Yii::app()->session['userid']=$adder['UserId'];
+                $staff = Staff::model()->findByPk($adder['UserId']);
+                Yii::app()->session['account_id']=$staff['account_id'];
+                Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+                
+                $order = Order::model()->findByPk($_GET['order_id']);
+                $staff = Staff::model()->findByPk($order['designer_id']);
+                $staff_user = Staff::model()->findByPk($_SESSION['userid']);
+                $t = new OrderProductForm();
+                $order_total = $t -> total_price($_GET['order_id']);
+                /*print_r($order_total);die;*/
+                $order_data = array();
+                $order_data['order_name'] = $order['order_name'];
+                $order_data['order_date'] = $order['order_date'];
+                $order_data['order_status'] = $order['order_status'];
+                $order_data['designer_name'] = $staff['name'];
+                $order_data['user_department_list'] = $staff_user['department_list'];
+                $follow = OrderMerchandiser::model()->findAll(array(
+                        'condition' => 'order_id=:order_id',
+                        'params' => array(
+                                ':order_id' => $_GET['order_id']
+                            )
+                    ));
+                /*print_r($follow);die;*/
+                $in_door = 0;
+                $out_door = 0;
+                foreach ($follow as $key => $value) {
+                    if($value['type'] == '0'){$in_door++;}else{$out_door++;};
+                }
+                /*$payment = OrderPayment::model()->findAll(array(
+                        'condition' => 'order_id=:order_id',
+                        'params' => array(
+                                ':order_id' => $_GET['order_id']
+                            )
+                    ));
+                $total_payment = 0;
+                foreach ($payment as $key => $value) {
+                    $total_payment += $value['money'];
+                };
+                $payment_rate = $total_payment/$order_total['total_price'];*/
+
+                $this->render('order_info',array(
+                        'order_data' => $order_data,
+                        'order_total' => $order_total,
+                        'in_door' => $in_door,
+                        'out_door' => $out_door,
+                        /*'total_payment' => $total_payment,
+                        'payment_rate' => $payment_rate,*/
+                    ));
+            }
+        };
+        
     }
 
     public function actionOrderinfofollow()
@@ -662,9 +740,12 @@ class OrderController extends InitController
                     ),
                 'order'=>'time'
             ));
+        $order = Order::model()->findByPk($_GET['order_id']);
+        /*print_r($follow);die;*/
 
         $this->render('order_info_follow',array(
-                'follow' => $follow
+                'follow' => $follow,
+                'order' => $order
             ));
     }
 
@@ -683,8 +764,8 @@ class OrderController extends InitController
 
     public function actionFollowinsert()
     {
-        $staff = Staff::model()->findByPk('"'.$_POST['staff_id'].'"');
-        $order = Order::model()->findByPk('"'.$_POST['order_id'].'"');
+        $staff = Staff::model()->findByPk($_POST['staff_id']);
+        $order = Order::model()->findByPk($_POST['order_id']);
 
         $follow=new OrderMerchandiser;         
         $follow->order_id=$_POST['order_id']; 
@@ -713,4 +794,78 @@ class OrderController extends InitController
 
     }
 
+    public function actionCheckoutpost(){
+        Order::model()->updateByPk($_POST['order_id'],array('order_status'=>5));
+        $order = Order::model()->findByPk($_POST['order_id']);
+        $StaffDepartment = StaffDepartment::model()->find(array(
+                'condition' => 'account_id = :account_id && name = :name',
+                'params' => array(
+                        ':account_id' => $order['account_id'],
+                        ':name' => '财务'
+                    )
+            ));
+        $staff_list = substr($StaffDepartment['staff_list'],0,strlen($StaffDepartment['staff_list'])-1); 
+        
+
+        $touser= '100';
+        $content= "中文怎么解决";
+        $title= '"'."结算申请:".$order['order_name'].'|'.'"';
+        $agentid=35;
+        $url="http://www.cike360.com/school/crm_web/portal/index.php?r=order/orderinfo&code=&order_id=".$_POST['order_id'];
+        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+        $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
+        $description="结算申请";
+        $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
+        // $t=new ReportController;
+
+        // $content = $t->actionDayreport();
+        // print_r($content);die;
+        //$content=$html;
+        // $content=ReportController::actionDayreport();
+        $digest="描述";
+        //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
+        // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
+        // $type="image";
+
+        echo "</br>";
+        $author="";
+        $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
+        $show_cover_pic="";
+        $safe="";
+        $toparty="";
+        $totag="";
+        //$result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        /*$result2=WPrequest::sendMessage_Mpnews(
+                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
+        // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
+        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
+        //$result=WPRequest::mediaupload($media,$type);
+        echo "result1:";
+        print_r($result1);
+        echo "result2:";
+        print_r($result2);
+    }
+
+    public function actionCheckoutagree()
+    {
+        $order = Order::model()->findByPk($_POST['order_id']);
+        $final= new OrderFinal;
+        $final->order_id = $_POST['order_id'];
+        $final->account_id = $order['account_id'];
+        $final->staff_hotel_id = $order['staff_hotel_id'];
+        $final->final_price = $_POST['final_price'];
+        $final->final_payment = $_POST['final_payment'];
+        $final->final_cost = $_POST['final_cost'];
+        $final->final_profit = $_POST['final_profit'];
+        $final->final_profit_rate = $_POST['final_profit_rate'];
+        $final->save(); 
+
+        Order::model()->updateByPk($_POST['order_id'],array('order_status'=>6));
+    }
+
+    public function actionCheckoutrefuse()
+    {
+        Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4));
+    }
 }

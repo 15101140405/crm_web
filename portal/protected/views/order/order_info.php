@@ -45,7 +45,7 @@
             </div>
         </li>
         <li class="card list_more" category="appear" status="进行中" id="now_bill">
-            <h6 class="m-list-tit" style="color:#37CB58;font-size: 2rem;">当前报价</h6>
+            <h6 class="m-list-tit" style="color:#37CB58;font-size: 2rem;" id="offer">当前报价</h6>
             <div class="m-money clear">
                 <p class="m-money-num fl" >￥<span><?php echo $order_total['total_price']?></span></p>
                 <p class="m-money-per fr">利润率：<span rate="1746"><?php echo $order_total['gross_profit_rate']*100?>%</span>%</p>
@@ -66,18 +66,37 @@
                 </div>
                 <div style="display:inline-block;float:right;margin-right:15%;">
                     <p class="m-money-per ">累计回款</p>
-                    <p class="m-money-num " style="color: #37CB58;font-size: 1.8rem;" >￥<span></span></p>
-                    <p class="m-money-per ">回款比例：<i></i></p>
+                    <p class="m-money-num " style="color: #37CB58;font-size: 1.8rem;" >￥<span><?php echo $total_payment?></span></p>
+                    <p class="m-money-per ">回款比例：<i><?php echo $payment_rate*100?>%</i></p>
                 </div>
             </div>
         </li>
     </ul>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="r_btn" id="checkout">申请结算</div>
+        <div class="r_btn" id="agree">同意</div>
+        <div class="r_btn " id="refuse" style='background-color:#da0f22;'>拒绝</div>
+        <div class="r_btn " id="checkingout" style='background-color:#b6babf'>结算中</div>
+        <div class="r_btn " id="checkedout" style='background-color:#b6babf'>已完成</div>
+    </div>
 </article>
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.calendar.js"></script>
 <script src="js/common.js"></script>
 <script>
     $(function(){
+<?php 
+    $newstr = rtrim($order_data['user_department_list'], "]");
+    $newstr = ltrim($order_data['user_department_list'], "[");
+    $arr_type = explode(",",$newstr);
+    $t = 0;
+    foreach ($arr_type as $key => $value) {
+        if($value == 5){
+            $t++;
+        }
+    };
+    if($t == 0){
+?>
         //跳转到跟单页面
         $("#follow").on('click',function(){
             location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&order_id=<?php echo $_GET["order_id"]?>';
@@ -87,17 +106,78 @@
         $("#now_bill").on("click",function(){
             location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
         });
-        
+
+        //点击申请结算
+        $("#checkout").on("click",function(){
+            $.post("<?php echo $this->createUrl('order/checkoutpost');?>",{order_id:<?php echo $_GET['order_id']?>},function(){
+                location.reload();
+            });
+        });
+
         //初始渲染
         var order_status=<?php echo $order_data['order_status'];?>;
-        if(order_status != 0 && order_status != 1 ){
+        if(order_status == 0 || order_status == 1){//预定、待定
+            $("#bottom").remove();
+        };
+        if(order_status == 2 || order_status == 3 ){//已付订金、已付中期款
+            $("#bottom").remove();
             $("#sure_bill").addClass('list_more');
             /*$("#now_bill").remove();*/
             $("#sure_bill").on("click",function(){
                 location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET["order_id"]?>&from=orderinfo';
             });
+        };
+        if (order_status == 4) {//已付尾款
+            $("#offer").html("最终报价");
+            $("#agree").remove();
+            $("#refuse").remove();
+            $("#checkingout").remove();
+            $("#checkedout").remove();
+        };
+        if(order_status == 5){//结算中
+            $("#agree").remove();
+            $("#refuse").remove();
+            $("#checkout").remove();
+            $("#checkedout").remove();
+        };
+<?php
+    }else{
+?>
+        //点击同意结算
+        $("#agree").on("click",function(){
+            //console.log({order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $order_total['total_price']?>,final_cost:<?php echo $order_total['total_cost']?>,final_profit:<?php echo $order_total['gross_profit']?>,final_profit_rate:<?php echo $order_total['gross_profit_rate']?>,final_payment:<?php echo $total_payment?>});
+            $.post("<?php echo $this->createUrl('order/checkoutagree');?>",{order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $order_total['total_price']?>,final_cost:<?php echo $order_total['total_cost']?>,final_profit:<?php echo $order_total['gross_profit']?>,final_profit_rate:<?php echo $order_total['gross_profit_rate']?>,final_payment:<?php echo $total_payment?>},function(){
+                location.reload();
+            });
+        });
+        //点击拒绝结算
+        $("#refuse").on("click",function(){
+            //console.log({order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $order_total['total_price']?>,final_cost:<?php echo $order_total['total_cost']?>,final_profit:<?php echo $order_total['gross_profit']?>,final_profit_rate:<?php echo $order_total['gross_profit_rate']?>,final_payment:<?php echo $total_payment?>});
+            $.post("<?php echo $this->createUrl('order/checkoutrefuse');?>",{order_id:<?php echo $_GET['order_id']?>},function(){
+                location.reload();
+            });
+        });
 
-        }
+        //初始渲染
+        var order_status=<?php echo $order_data['order_status'];?>;
+        if(order_status == 0 || order_status == 1 || order_status == 2 || order_status == 3 || order_status == 4){//预定、待定
+            $("#bottom").remove();
+            $(".list_more").removeClass("list_more");
+        };
+        if(order_status == 5){//结算中
+            $("#checkingout").remove();
+            $("#checkout").remove();
+            $("#checkedout").remove();
+        };
+<?php 
+    };
+?>
+        if(order_status == 6){//已结算
+            $("#agree").remove();
+            $("#refuse").remove();
+            $("#checkingout").remove();
+            $("#checkout").remove();
+        };
     });
 </script>
 

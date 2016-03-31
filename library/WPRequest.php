@@ -142,7 +142,7 @@ class WPRequest
     // url         点击后跳转的链接。
     // picurl      图文消息的图片链接，支持JPG、PNG格式，较好的效果为大图640*320，小图80*80。如不填，在客户端不显示图片
     // 此处只能发一条图文消息，若要实现多条，需要修改
-    public static function sendMessage_News($touser, $toparty, $title, $description, $url, $picur)
+    public static function sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid)
     {
         $obj = json_encode(array(
 
@@ -150,7 +150,7 @@ class WPRequest
             'toparty'   => $toparty,
             'totag'     => "",
             'msgtype'   => "news",
-            'agentid'   => 9,
+            'agentid'   => $agentid,
             'news'      => array(               
                 'articles'  => array(array(   //若要实现一次发多条，需要修改
                     'title'         => $title,

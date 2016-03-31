@@ -75,28 +75,28 @@ $arr_locate = array(
         </ul>
     </div>
     <!-- 回款信息 -->
-    <div class="table_module">
+    <!-- <div class="table_module">
         <h4 class="module_title list_more" id="payment">回款纪录</h4>
         <table class="mar_b10">
             <tbody>
             <tr>
                 <td>定金</td>
-                <td>&yen;<?php echo $arr_order_data['feast_deposit']; ?></td>
+                <td>&yen;<?php /*echo $arr_order_data['feast_deposit'];*/ ?></td>
                 <td><?php /*echo $arr_order_data['first']['order_date'];*/ ?></td>
             </tr>
             <tr>
                 <td>中期款</td>
-                <td>&yen;<?php echo $arr_order_data['medium_term']; ?></td>
+                <td>&yen;<?php /*echo $arr_order_data['medium_term'];*/ ?></td>
                 <td><?php /*echo $arr_order_data['second']['order_date']; */?></td>
             </tr>
             <tr>
                 <td>尾款</td>
-                <td>&yen;<?php echo $arr_order_data['final_payments']; ?></td>
+                <td>&yen;<?php /*echo $arr_order_data['final_payments'];*/ ?></td>
                 <td><?php /*echo $arr_order_data['third']['order_date']; */?></td>
             </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
     <!-- 餐饮 -->
 
     <div class="bill_item_module" id="feast">
@@ -557,88 +557,95 @@ $arr_locate = array(
             
         });
 
-        //跳推单页面
-        $("#channel").on("click", function () {
-            location.href = "<?php echo $this->createUrl("plan/chooseChannel", array("from"     =>  "design",
-                                                                                     "order_id" =>  $_GET['order_id']));?>";
-        })
+        var order_status = <?php echo $arr_order_data['order_status']?>;
 
-        //打印
-        $("#print").on("click",function(){
+        if(order_status != 5 && order_status != 6){
+            //跳推单页面
+            $("#channel").on("click", function () {
+                location.href = "<?php echo $this->createUrl("plan/chooseChannel", array("from" => "design", "order_id" => $_GET['order_id']));?>";
+            })
+
+            //打印
+            $("#print").on("click",function(){
+                location.href="<?php echo $this->createUrl("print/designbill", array("order_id" => $_GET['order_id']));?>";
+            });
+
+            //跳转详细信息
+            $("#detailinfo").on("click",function(){
+                location.href="<?php echo $this->createUrl("plan/detailinfo", array("order_id" => $_GET['order_id']));?>"
+            })
+
+            //跳折扣页面
+            $("#feast_discount").on("click", function () {
+                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "feast"));?>";
+            });
+            $("#other_discount").on("click", function () {
+                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "wedding_other"));?>";
+            });
+
+            //跳免零页面
+            $("#changefree").on("click", function () {
+                location.href = "<?php echo $this->createUrl("order/changefree", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id']));?>";
+            });
+
+            //跳收款列表
+            $("#payment").on("click",function(){
+                location.href="<?php echo $this->createUrl("finance/cashierlist", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>"
+            })
+
+            //跳转产品分类
+            $("#feast").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/feast", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#lighting").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => "lighting","order_id" => $_GET['order_id']));?>";
+            });
+            $("#screen").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => 'screen',"order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#service").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/ServicePersonnel", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#decoration").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#graphic").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "graphic","order_id" => $_GET['order_id']));?>";
+            });
+            $("#film").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "film","order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#dress").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "dress","order_id" => $_GET['order_id']));?>";
+            });
+            $("#appliance").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "appliance","order_id" => $_GET['order_id']));?>";
+            });
+
+            $("#drinks").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "drinks","order_id" => $_GET['order_id']));?>";
+            });
+            $("#car").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "car","order_id" => $_GET['order_id']));?>";
+            });
             
-            location.href="<?php echo $this->createUrl("print/designbill", array("order_id" => $_GET['order_id']));?>";
-        });
+            $("#plan").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "plan","order_id" => $_GET['order_id']));?>";
+            });
 
-        //跳转详细信息
-        $("#detailinfo").on("click",function(){
-            location.href="<?php echo $this->createUrl("plan/detailinfo", array("order_id" => $_GET['order_id']));?>"
-        })
+            $("#other").on("click", function () {
+                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "other","order_id" => $_GET['order_id']));?>";
+            });
+        }else{
+            $(".list_more").removeClass('list_more');
+        }
 
-        //跳折扣页面
-        $("#feast_discount").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "feast"));?>";
-        });
-        $("#other_discount").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "wedding_other"));?>";
-        });
-
-        //跳免零页面
-        $("#changefree").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/changefree", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id']));?>";
-        });
-
-        //跳收款列表
-        $("#payment").on("click",function(){
-            location.href="<?php echo $this->createUrl("finance/cashierlist", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>"
-        })
-
-        //跳转产品分类
-        $("#feast").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/feast", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#lighting").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => "lighting","order_id" => $_GET['order_id']));?>";
-        });
-        $("#screen").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => 'screen',"order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#service").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/ServicePersonnel", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#decoration").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#graphic").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "graphic","order_id" => $_GET['order_id']));?>";
-        });
-        $("#film").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "film","order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#dress").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "dress","order_id" => $_GET['order_id']));?>";
-        });
-        $("#appliance").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "appliance","order_id" => $_GET['order_id']));?>";
-        });
-
-        $("#drinks").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "drinks","order_id" => $_GET['order_id']));?>";
-        });
-        $("#car").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "car","order_id" => $_GET['order_id']));?>";
-        });
         
-        $("#plan").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "plan","order_id" => $_GET['order_id']));?>";
-        });
-        $("#other").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "other","order_id" => $_GET['order_id']));?>";
-        });
 
         //判断订单状态，改变审批按钮
         <?php     //background data
