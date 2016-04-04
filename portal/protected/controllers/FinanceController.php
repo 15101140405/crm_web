@@ -268,6 +268,8 @@ class FinanceController extends InitController
                 'type' => '',
                 'remarks' => 'ceshi',
                 'time' => '',
+                'money' => '',
+                'way' => '',
                 );
             /*echo "new";die;*/
             $this->render('cashier',array(
@@ -375,6 +377,14 @@ class FinanceController extends InitController
         $payment->way=$_POST['payment_way'];
         $payment->type=$_POST['payment_type'];
         $payment->save();
+
+        if($_POST['payment_type'] == 0){
+            Order::model()->updateByPk($_POST['order_id'],array('order_status' => 2));
+        }else if($_POST['payment_type'] == 1){
+            Order::model()->updateByPk($_POST['order_id'],array('order_status' => 3));
+        }else if($_POST['payment_type'] == 2){
+            Order::model()->updateByPk($_POST['order_id'],array('order_status' => 4));
+        }
         
     }
 

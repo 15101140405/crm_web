@@ -90,13 +90,14 @@
             showdata($(this).attr("type-id"));
         })
 
-        //点击返回按钮，判断from，返回对应页面
+        //返回
         $(".l_btn").on("click", function () {
-            if ($.util.param("from") == "detail") {
-                location.href = "<?php echo $this->createUrl("design/detail");?>";
-            } else {
-                location.href = "<?php echo $this->createUrl("design/bill", array());?>";
+            if("<?php echo $_GET['from']?>" == "design"){
+                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+            }else if("<?php echo $_GET['from']?>" == "meeting"){
+                location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
             }
+                
         });
 
         //渲染对应内容

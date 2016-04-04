@@ -53,7 +53,7 @@ foreach ($arr_order as $key => $value) {
                 'account_id' => '',
                 'order_status' => '',
                 'order_new' => ''
-            )
+                )
             );
         }
     }
@@ -210,6 +210,7 @@ small {
 <article id="homepage">
     <div class="tool_bar fixed">
         <!-- <div class="l_btn" data-icon="&#xe69c;" id="filter"></div> -->
+        <div class="l_btn" id="index" style='width:30%'>档期快查</div>
         <h2 class="page_title" id="pa_title">我的订单</h2>
         <!--管理层显示该title -->
         <?php
@@ -237,7 +238,7 @@ small {
             echo '</select></h2>';
         }
         ?>
-        <!-- <div class="r_btn" data-icon="&#xe767;"></div> -->
+        <div class="r_btn" data-icon="&#xe767;" style='width: 3.5rem;'></div>
     </div>
     <?php
     if ($user_power > 1) {
@@ -365,9 +366,14 @@ small {
             $(this).siblings().removeClass("act");
         });
 
+        //点击档期快查
+        $(".l_btn").on("click", function () {
+            location.href = "<?php echo $this->createUrl("order/index", array());?>&from=&code=";
+        });
+
         //点击增加订单
         $(".r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/index", array());?>&from=my";
+            location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
         });
 
         //判断角色，隐藏或显示选择店面
@@ -441,7 +447,7 @@ small {
                 $(".order_list").prepend(html); //打印新的订单列表
                 order_status_xuanran ();
                 buttonclick_xuanran();
-                alert(1);
+                /*alert(1);*/
                 $(".ulist_item").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_status = $(this).find("span").attr("order_status");
@@ -819,10 +825,16 @@ small {
             $("[order_status='2']").addClass("status_green");
 
             $("[order_status='3']").html("付中期款");
-            $("[order_status='3']").addClass("status_orange");
+            $("[order_status='3']").addClass("status_green");
 
-            $("[order_status='4']").html("已完成");
-            $("[order_status='4']").addClass("status_darkgray");
+            $("[order_status='4']").html("已付尾款");
+            $("[order_status='4']").addClass("status_green");
+
+            $("[order_status='5']").html("结算中");
+            $("[order_status='5']").addClass("status_orange");
+
+            $("[order_status='6']").html("已完成");
+            $("[order_status='6']").addClass("status_darkgray");
         };
 
         //统筹页面，跳转新建订单／订单详情页
@@ -830,11 +842,11 @@ small {
             /*if(order_status == 0 & order_type == 2){
                 location.href = "<?php echo $this->createUrl("plan/customerName");?>&order_id=" + order_id + "&from=my_order&t=plan";
             }else */if(order_type == 2){
-                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order";
+                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=" + order_id + "&from=my_order";
             }/*else if(order_status == 0 & order_type == 1){
                 location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&company_id=&order_id=" + order_id + "&from=my_order&t=plan";
             }*/else if(order_type == 1){
-                location.href = "<?php echo $this->createUrl("order/orderinfo");?>&order_id=" + order_id + "&from=my_order";
+                location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=" + order_id + "&from=my_order";
             }
         };
         //策划页面，跳转到订单详情页

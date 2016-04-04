@@ -13,7 +13,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">选择推单渠道</h2>
     </div>
     <div class="select_ulist_module pad_b50">
@@ -56,12 +56,12 @@
         });
 
         //点击返回
-        $(".l_btn").on("click", function () {
+        /*$(".l_btn").on("click", function () {
             var u_info = $.parseJSON(localStorage.getItem("u_info"));
             var choosePosition = escape(u_info.department);
             location.href = "<?php echo $this->createUrl("staff/add");?>&choose_dept=" + choosePosition;
         });
-
+*/
 
         //获取用户选择了哪些部门
         function get_dept () {

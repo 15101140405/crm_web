@@ -101,11 +101,7 @@
     $(function () {
         //点击返回按钮，判断from，返回对应页面
         $(".l_btn").on("click", function () {
-            if ($.util.param("from") == "detail") {
-                location.href = "<?php echo $this->createUrl("design/detail", array());?>&order_id=" + $.util.param("order_id");
-            } else {
-                location.href = "<?php echo $this->createUrl("design/bill", array());?>&order_id=" + $.util.param("order_id");
-            }
+            location.href = "<?php echo $this->createUrl("design/bill", array());?>&order_id=" + $.util.param("order_id");
         });
 
         //添加商品

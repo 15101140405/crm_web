@@ -92,11 +92,7 @@
 
         //点击返回按钮，判断from，返回对应页面
         $(".l_btn").on("click", function () {
-            if ($.util.param("from") == "detail") {
-                location.href = "<?php echo $this->createUrl("design/detail");?>";
-            } else {
-                location.href = "<?php echo $this->createUrl("design/bill", array());?>";
-            }
+            location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
         });
 
         //渲染对应内容

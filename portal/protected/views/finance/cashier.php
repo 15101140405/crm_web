@@ -60,7 +60,6 @@
         padding: 15px;
         background: #fff;
     }
-   
 </style>
 </head>
 <body>
@@ -133,21 +132,20 @@
 
         //点击新增
         $("#insert").on("click",function(){
-
-            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),order_id:<?php echo $_GET["order_id"]?>,remarks:$("#remark").val()};
+            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').attr('way-value'),payment_type:$('#type_ul .round_select_selected').attr('type-value'),order_id:<?php echo $_GET["order_id"]?>,remarks:$("#remark").val()};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/indexdata");?>',data,function(retval){
-                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>&from=<?php echo $_GET['from']?>';
             });
         });
 
         //点击编辑
         $("#update").on("click",function(){
 
-            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').val(),payment_type:$('#type_ul .round_select_selected').val(),paymentId:"<?php echo $_GET["paymentId"]?>",remarks:$("#remark").val()};
+            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').attr('way-value'),payment_type:$('#type_ul .round_select_selected').attr('type-value'),paymentId:"<?php echo $_GET["paymentId"]?>",remarks:$("#remark").val()};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/orderpaymentupdate");?>',data,function(retval){
-                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>&from=<?php echo $_GET['from']?>';
             });
         });
 
@@ -156,12 +154,9 @@
             data = {paymentId:"<?php echo $_GET["paymentId"]?>"};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/orderpaymentdel");?>',data,function(retval){
-                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>';
+                location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>&from=<?php echo $_GET['from']?>';
             });
         });
-
-
-
 
         //选择收款方式
         $("#way_ul li").on("click", function () {

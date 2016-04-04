@@ -13,7 +13,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">选择推单</h2>
     </div>
     <div class="select_ulist_module pad_b50">

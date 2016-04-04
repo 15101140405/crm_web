@@ -18,7 +18,7 @@
 <body>
 <article>
   <div class="tool_bar">
-    <div class="l_btn" data-icon="&#xe679;"></div>
+    <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
     <h2 class="page_title">订单填写</h2>
   </div>
   <div class="ulist_module pad_b50">
@@ -175,13 +175,13 @@ $(function(){
         $.post("<?php echo $this->createUrl('meeting/savetp');?>",get_info,function(data){  //bacground data
             alert("提交成功!");
             if($.util.param("tab") == "feast"){
-                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');    
+                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";    
             }else if($.util.param("tab") == "changdifei"){
-                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "lighting"){
-                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "screen"){
-                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }
             
         });
@@ -210,13 +210,13 @@ $(function(){
         $.post("<?php echo $this->createUrl('meeting/updatetp');?>",get_info,function(data){  //bacground data    
             alert("提交成功!");
             if($.util.param("tab") == "feast"){
-                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');    
+                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";    
             }else if($.util.param("tab") == "changdifei"){
-                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "lighting"){
-                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "screen"){
-                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }
         });
         
@@ -245,13 +245,13 @@ $(function(){
         $.post("<?php echo $this->createUrl('meeting/deltp');?>",get_info,function(data){
             alert('删除成功');
             if($.util.param("tab") == "feast"){
-                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');    
+                location.href = "<?php echo $this->createUrl("meeting/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";    
             }else if($.util.param("tab") == "changdifei"){
-                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "lighting"){
-                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/changdifei", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "screen"){
-                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
+                location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }
         });
     });

@@ -212,7 +212,41 @@ class MeetingController extends InitController
 
     public function actionBill()
     {
-        $orderId = $_GET['order_id'];
+        /*Yii::app()->session['userid']=100;
+        Yii::app()->session['code']='asjfdlk123';
+        Yii::app()->session['account_id']=1;
+        Yii::app()->session['staff_hotel_id']=1;*/
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            echo '已登陆';
+            $this->Bill($_GET['order_id']);
+        }else{ //未登录
+            echo '未登陆';
+            $code = $_GET['code'];
+            Yii::app()->session['code']=$code;
+            if($code == ''){
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&order_id='.$_GET['order_id'].'&code=';
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                echo "<script>window.location='".$url."';</script>";
+            };
+
+            $t=new WPRequest;
+            $userId = $t->getUserId($code);
+            $adder=array("UserId"=>"222","DeviceId"=>"");
+            $adder=json_decode($userId,true);
+            if(!empty($adder['UserId'])) {
+                Yii::app()->session['userid']=$adder['UserId'];
+                $staff = Staff::model()->findByPk($adder['UserId']);
+                Yii::app()->session['account_id']=$staff['account_id'];
+                Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+                
+                $this->Bill($_GET['order_id']);
+            };
+        };
+    }
+
+    public function Bill($orderId)
+    {
+        
         $supplier_product_id = array();
         $wed_feast = array();
         $arr_wed_feast = array();
@@ -282,6 +316,7 @@ class MeetingController extends InitController
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
                 'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100),
+                'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
                 'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100,
                 'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100)),
                 /*'remark' => $wed_feast['']*/
@@ -350,6 +385,7 @@ class MeetingController extends InitController
                 'unit' => $supplier_product2['unit'],
                 'amount' => $changdi_fee[0]['unit'],
                 'total_price' => $changdi_fee[0]['actual_price']*$changdi_fee[0]['unit'],
+                'total_cost' => $changdi_fee[0]['actual_unit_cost']*$changdi_fee[0]['unit'],
                 'gross_profit' => ($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'],
                 'gross_profit_rate' => (($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'])/($changdi_fee[0]['actual_price']*$changdi_fee[0]['unit']),
                 /*'table_num' => $wed_feast[0]['unit'],
@@ -357,7 +393,7 @@ class MeetingController extends InitController
                 /*'remark' => $wed_feast['']*/
             );
         }
-        /*print_r($arr_changdi_fee);*/
+        /*print_r($arr_changdi_fee);die;*/
 
 
 
@@ -408,9 +444,9 @@ class MeetingController extends InitController
                 $light[] = $item;
             };
         }
+        $arr_light_total['total_price']=0;
+        $arr_light_total['total_cost']=0;
         if (!empty($light)) {
-            $arr_light_total['total_price']=0;
-            $arr_light_total['total_cost']=0;
             foreach ($light as $key => $value) {
                 $criteria3 = new CDbCriteria; 
                 $criteria3->addCondition("id=:id");
@@ -433,7 +469,7 @@ class MeetingController extends InitController
             $arr_light_total['gross_profit_rate']=$arr_light_total['gross_profit']/$arr_light_total['total_price'];
         }
 
-        /*print_r($arr_light_total);*/
+        /*print_r($arr_light_total);die;*/
 
         
 
@@ -486,9 +522,9 @@ class MeetingController extends InitController
             };
             /*print_r($video);*/
         }
+        $arr_video_total['total_price']=0;
+        $arr_video_total['total_cost']=0;
         if (!empty($video)) {
-            $arr_video_total['total_price']=0;
-            $arr_video_total['total_cost']=0;
             foreach ($video as $key => $value) {
                 $criteria3 = new CDbCriteria; 
                 $criteria3->addCondition("id=:id");
@@ -522,25 +558,12 @@ class MeetingController extends InitController
         /*********************************************************************************************************************/
 
         $criteria3 = new CDbCriteria; 
-        $criteria3->addCondition("id=:id");
-        $criteria3->params[':id']=$orderId; 
-        $order_data = Order::model()->find($criteria3);
+        $criteria3->addCondition("order_id=:order_id");
+        $criteria3->params[':order_id']=$orderId; 
+        $order_meeting = OrderMeeting::model()->find($criteria3);
         /*print_r($order_data);die;*/
 
-        //查找策划师姓名
-        $criteria3 = new CDbCriteria; 
-        $criteria3->addCondition("id=:id");
-        $criteria3->params[':id']=$order_data['designer_id']; 
-        $designer= Staff::model()->find($criteria3);
-        /*print_r($designer);*/
-
-
-        //查找策划师姓名
-        $criteria3 = new CDbCriteria; 
-        $criteria3->addCondition("id=:id");
-        $criteria3->params[':id']=$order_data['planner_id']; 
-        $planer= Staff::model()->find($criteria3);
-        /*print_r($planer);die;*/
+        $company_linkman = OrderMeetingCompanyLinkman::model()->findByPk($order_meeting['company_linkman_id']);
 
 
 
@@ -551,21 +574,25 @@ class MeetingController extends InitController
         /*********************************************************************************************************************/
         $arr_total = array(
             'total_price' => 0 ,
+            'total_cost' => 0 ,
             'gross_profit' => 0 ,
             'gross_profit_rate' => 0 ,
         );
         if(!empty($arr_wed_feast)){
             $arr_total['total_price'] += $arr_wed_feast['total_price'] * $order_discount['feast_discount'] * 0.1;
             $arr_total['gross_profit'] += $arr_wed_feast['gross_profit'];
+            $arr_total['total_cost'] += $arr_wed_feast['total_cost'];
         }
 
         if(!empty($arr_changdi_fee)){
             if($this->judge_discount(19,$orderId) == 0){
                 $arr_total['total_price'] += $arr_changdi_fee['total_price'];
                 $arr_total['gross_profit'] += $arr_changdi_fee['gross_profit'];
+                $arr_total['total_cost'] += $arr_changdi_fee['total_cost'];
             }else{
                 $arr_total['total_price'] += $arr_changdi_fee['total_price'] * $order_discount['other_discount'] * 0.1;
                 $arr_total['gross_profit'] += $arr_changdi_fee['gross_profit'];
+                $arr_total['total_cost'] += $arr_changdi_fee['total_cost'];
             }
         }
 
@@ -573,9 +600,11 @@ class MeetingController extends InitController
             if($this->judge_discount(9,$orderId) == 0){
                 $arr_total['total_price'] += $arr_video_total['total_price'];
                 $arr_total['gross_profit'] += $arr_video_total['gross_profit'];
+                $arr_total['total_cost'] += $arr_video_total['total_cost'];
             }else{
                 $arr_total['total_price'] += $arr_video_total['total_price'] * $order_discount['other_discount'] * 0.1;
                 $arr_total['gross_profit'] += $arr_video_total['gross_profit'];
+                $arr_total['total_cost'] += $arr_video_total['total_cost'];
             }
         }
 
@@ -583,9 +612,11 @@ class MeetingController extends InitController
             if($this->judge_discount(8,$orderId) == 0){
                 $arr_total['total_price'] += $arr_light_total['total_price'];
                 $arr_total['gross_profit'] += $arr_light_total['gross_profit'];
+                $arr_total['total_cost'] += $arr_light_total['total_cost'];
             }else{
                 $arr_total['total_price'] += $arr_light_total['total_price'] * $order_discount['other_discount'] * 0.1;
                 $arr_total['gross_profit'] += $arr_light_total['gross_profit'];
+                $arr_total['total_cost'] += $arr_light_total['total_cost'];
             }
         }
 
@@ -626,6 +657,47 @@ class MeetingController extends InitController
             "params" => array( ":id" => $select['product_id'])
                                                        )
                                                  );
+
+        $follow = OrderMerchandiser::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        /*print_r($follow);die;*/
+        $in_door = 0;
+        $out_door = 0;
+
+        // *********************************************************************************************************************
+        // 查回款数据
+        // *********************************************************************************************************************
+        $order_data = Order::model()->findByPk($orderId);
+        $planner = Staff::model()->findByPk($order_data['planner_id']);
+        $ordre_payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        foreach ($ordre_payment as $key => $value) {
+            if($value['type'] == 0){
+                $order_data['feast_deposit'] += $value['money'];
+            };
+            if($value['type'] == 1){
+                $order_data['medium_term'] += $value['money'];
+            };
+            if($value['type'] == 2){
+                $order_data['final_payments'] += $value['money'];
+            };
+        }
+
+        $payment_total = $order_data['feast_deposit']+$order_data['medium_term']+$order_data['final_payments'];
+
+        // *********************************************************************************************************************
+        // 查访问者，所在部门
+        // *********************************************************************************************************************
+        $staff_user = Staff::model()->findByPk($_SESSION['userid']);
+        $user_department_list= $staff_user['department_list'];
         
         /*********************************************************************************************************************/
         /*向 VIEW 传数据*/
@@ -639,9 +711,13 @@ class MeetingController extends InitController
             "arr_light_total"   => $arr_light_total,
             "arr_total"         => $arr_total,
             "arr_order_data"    => $order_data,
-            "designer"          => $designer['name'],
-            "planner"           => $planer['name'],
-            "select_reference"  => $select_reference
+            "payment_total"     => $payment_total,
+            "linkman"           => $company_linkman['name'],
+            "select_reference"  => $select_reference,
+            "planner"           => $planner['name'],
+            'in_door' => $in_door,
+            'out_door' => $out_door,
+            'user_department_list' => $user_department_list
         ));
     }
 

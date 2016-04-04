@@ -133,9 +133,9 @@
                 //alert(retval);
                // if(retval.success){
                 if("<?php echo $_GET['from1']?>" == 'meeting'){
-                    location.href='<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET["order_id"];?>&from=<?php echo $_GET["from"];?>';
+                    location.href='<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET["order_id"];?>';
                 }else{
-                    location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"];?>&from=<?php echo $_GET["from"];?>';
+                    location.href='<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET["order_id"];?>';
                 }
                // }else{
                //   alert('太累了，歇一歇，一秒后再试试！');

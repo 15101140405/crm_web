@@ -104,11 +104,7 @@
         });
         //点击返回按钮，判断from，返回对应页面
         $(".l_btn").on("click", function () {
-            if ($.util.param("from") == "detail") {
-                location.href = "<?php echo $this->createUrl("design/detail");?>";
-            } else {
-                location.href = "<?php echo $this->createUrl("design/bill", array());?>";
-            }
+            location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
         });
         $("#product li.selected").on("click", function () {
             location.href = "<?php echo $this->createUrl("meeting/tpDetail", array());?>&product_id=" + $(this).attr("product-id") + "&type=edit&tab=feast&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");

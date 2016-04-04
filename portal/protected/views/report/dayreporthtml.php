@@ -29,17 +29,128 @@
 		</div> -->
         </div>
         <div class="nrt">
-        	<div class="itme">
+            <div class="wz"><p class="name"><span>订单总表</span><span id='order_total'></span></p></div>
+        	<div class="rich_media_content " id="js_content">  
+                <section style="box-sizing: border-box; background-color: rgb(255, 255, 255);"> 
+                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;"> 
+                        <section class="" style="margin: 0.5em 0px; position: static; box-sizing: border-box;"> 
+                            <section class="" style="border-top-width: 2px; border-top-style: solid; border-color: #fa5e00; padding-top: 3px; box-sizing: border-box;"> 
+                                <section class="" style="display: inline-block; vertical-align: top; height: 2em; line-height: 2em; padding: 0px 0.5em; color: rgb(255, 255, 255); box-sizing: border-box; background-color: #fa5e00;"> 
+                                    <section style="box-sizing: border-box;">昨日进店［ <?php echo $yesterday_open_order ?> ］单</section> 
+                                    <section style="box-sizing: border-box;"><br style="box-sizing: border-box;"  /></section>
+                                    <section style="box-sizing: border-box;"><br style="box-sizing: border-box;"  /></section> 
+                                </section>
+                                <section style="width: 0px; display: inline-block; vertical-align: top; border-left-width: 0.8em; border-left-style: solid; border-left-color: #fa5e00; border-top-width: 1em; border-top-style: solid; border-top-color: #fa5e00; border-right-width: 0.8em !important; border-right-style: solid !important; border-right-color: transparent !important; border-bottom-width: 1em !important; border-bottom-style: solid !important; border-bottom-color: transparent !important; box-sizing: border-box;"> </section>
+                            </section>
+                        </section>
+                    </section>
+
+    <?php 
+        foreach ($order_open as $key => $value) {
+    ?>
+                    <section class="" style="position: static; box-sizing: border-box;"> 
+                        <section class="" style="display: inline-block; vertical-align: top; width: 20%; box-sizing: border-box;"> 
+                            <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
+                                <section class="" style=" transform: translate3d(10px, 0px, 0px); -webkit-transform: translate3d(10px, 0px, 0px); -moz-transform: translate3d(10px, 0px, 0px); -o-transform: translate3d(10px, 0px, 0px); margin: 12px 0% 0px; position: static; box-sizing: border-box;"> 
+                                    <img style="max-width: 100%; width: 50%; box-sizing: border-box; vertical-align: middle;" class="" src="http://img.xiumi.us/xmi/ua/yTtV/i/7f3379102852667b03d0b4d539e2819e-sz_14151.png@1l_640w.png"  />
+                                </section>
+                            </section>
+                        </section>
+                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">
+                            <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
+                                <section class="" style="margin: 0px; position: static; box-sizing: border-box;"> 
+                                    <section class="" style="display: inline-block; float: left; width: 1em; height: 1em; margin: 1.5em 0px -2em -0.5em; border: 1px solid #fa5e00; border-radius: 100%; box-sizing: border-box; background-color: #fa5e00;"></section> 
+                                    <section class="" style="border-left-width: 1px; border-left-style: solid; height: 1.2em; border-color: #fa5e00; box-sizing: border-box;"></section>
+                                    <section class="" style="border-left-width: 1px; border-left-style: solid; border-color: #fa5e00; box-sizing: border-box;">
+                                        <section class="" style="padding: 0px 0px 10px 15px; box-sizing: border-box;">
+                                            <section class="Powered-by-XIUMI V5" style="box-sizing: border-box;">
+                                                <section class="" style="position: static; box-sizing: border-box;"> 
+                                                    <section class="" style="box-sizing: border-box;">
+                                                        <section style="box-sizing: border-box;"><?php echo  $value['date']. ' (' .$value['type']. ') ｜ 开单人：' .$value['name'] ?> </section>
+                                                    </section>
+                                                </section>
+                                            </section>
+                                        </section>
+                                    </section>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+<?php        
+        };
+?>  
+
+                    <section class="Powered-by-XIUMI V5" style="box-sizing: border-box;">
+                        <section class="" style="position: static; box-sizing: border-box;"> 
+                            <section class="" style="box-sizing: border-box;">
+                                <section style="box-sizing: border-box;"><br style="box-sizing: border-box;"  /></section>
+                            </section>
+                        </section>
+                    </section>
+                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
+                        <section class="" style="margin: 0.5em 0px; position: static; box-sizing: border-box;">
+                            <section class="" style="border-top-width: 2px; border-top-style: solid; border-color: #fa5e00; padding-top: 3px; box-sizing: border-box;">
+                                <section class="" style="display: inline-block; vertical-align: top; height: 2em; line-height: 2em; padding: 0px 0.5em; color: rgb(255, 255, 255); box-sizing: border-box; background-color: #fa5e00;">
+                                    <section style="box-sizing: border-box;">已签订单｜婚礼［<?php echo $wedding_num. '］场／会议［ ' .$meeting_num ?>］场</section>
+                                </section>
+                                <section style="width: 0px; display: inline-block; vertical-align: top; border-left-width: 0.8em; border-left-style: solid; border-left-color: #fa5e00; border-top-width: 1em; border-top-style: solid; border-top-color: #fa5e00; border-right-width: 0.8em !important; border-right-style: solid !important; border-right-color: transparent !important; border-bottom-width: 1em !important; border-bottom-style: solid !important; border-bottom-color: transparent !important; box-sizing: border-box;"></section>
+                            </section>
+                        </section>
+                    </section>
+
+<?php 
+    foreach ($order_all as $key => $value) {
+?>
+        
+                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
+                        <section class="" style="margin: 0px; position: static; box-sizing: border-box;">
+                            <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">
+                                <section style="border-right-width: 1px; border-right-style: solid; border-color: #fa5e00; height: 1.2em; box-sizing: border-box;"></section>
+                                <section style="display: inline-block; float: right; width: 1em; height: 1em; margin: 0px -0.5em -2em 0px; border: 1px solid #fa5e00; border-radius: 100%; box-sizing: border-box; background-color: #fa5e00;"></section>
+                                <section style="border-right-width: 1px; border-right-style: solid; border-color: #fa5e00; box-sizing: border-box;">
+                                    <section class="" style="padding: 0px 20px 10px 0px; box-sizing: border-box;">
+                                        <section class="Powered-by-XIUMI V5" style="box-sizing: border-box;">
+                                            <section class="" style="position: static; box-sizing: border-box;">
+                                                <section class="" style="text-align: right; font-size: 12px; box-sizing: border-box;">
+<?php 
+        if($value['type'] == "会议"){
+?>
+                                                    <section style="box-sizing: border-box;">统筹师：<?php echo $value["planner_name"]. '|（推单：'.$value["tuidan_name"].') '.$value["type"]?> </section>
+<?php
+        }else {
+?>                        
+                                                    <section style="box-sizing: border-box;">策划师：<?php echo $value["designer_name"]. '|（推单：'.$value["tuidan_name"].') '.$value["type"]?> </section>
+<?php
+        }
+?>
+                                                </section>
+                                            </section>
+                                        </section>
+                                    </section>
+                                </section>
+                            </section>
+                            <section class="" style="display: inline-block; vertical-align: top; width: 18%; box-sizing: border-box;">
+                                <span style="display: inline-block; margin-top: 1.2em; margin-left: 1em; font-size: 14px; box-sizing: border-box;" class="">
+                                    <section style="box-sizing: border-box;"><?php echo $value["date"]?></section>
+                                </span> 
+                            </section>
+                        </section>
+                    </section>
+<?php
+    };
+?>
+        
+            <div class="itme">
                 <div class="wz"><p class="name"><span>进店走势</span><span id='open_trends'></span></p></div>
                 <div class="chart_bar" id="chart" style='width:640px;height:320px;'></div>
             </div>
 
-            <div class="itme">
+            <!-- <div class="itme">
                 <div class="wz"><p class="name"><span>已签订单</span><span id='order_sure'></span></p>
                 </div>
                 
             	<div class="tu chart_bar" id="order_sure" style='width:640px;height:600px;' ></div>
-            </div>
+            </div> -->
             
             <div class="itme">
                 <div class="wz"><p class="name"><span>销售额</span></p></div>
@@ -228,7 +339,7 @@ $(function(){
         console.log(meeting);
         console.log(wedding);
 
-        draw_mychart_ordersure();
+        /*draw_mychart_ordersure();*/
         
 
         function draw_mychart_ordersure(){
@@ -359,7 +470,7 @@ $(function(){
         var year = mydate.getFullYear(); 
         var month = mydate.getMonth(); 
         $("#open_trends").html("["+month+"月]");
-        $("#order_sure").html("["+year+"]");
+        $("#order_total").html("["+year+"]");
 
 });
 </script>

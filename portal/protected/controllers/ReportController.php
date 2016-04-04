@@ -362,7 +362,7 @@ class ReportController extends InitController
         $touser="@all";
         $content="中文怎么解决";
         $title="今日经营日报（大郊亭店）";
-        $agentid=9;
+        $agentid=0;
         $url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
@@ -523,14 +523,119 @@ class ReportController extends InitController
         $sales['deal']=number_format(($this->hotel_total_sales(1,$year,$order_status_deal))/10000,1);
         $sales['payment']=number_format(($this->hotel_total_payment(1,$year,$order_status_deal))/10000,1);
 
+        //取当日开单数据
+        $time = time();
+        $date = date("y-m-d",strtotime("-1 day"));
+
+        $criteria = new CDbCriteria; 
+        $criteria->addSearchCondition('update_time', $date);
+        $order1 = Order::model()->findAll($criteria);
+        /*print_r($order1);die;*/
+
+        $yesterday_open_order = count($order1); 
+
+        $order_open = array();
+        foreach ($order1 as $key => $value) {
+            $item = array();
+            $t1 = explode(" ",$value['order_date']);
+            $t2 = explode("-",$t1[0]);
+            $t3 = $t2[1].'/'.$t2[2];
+            $item['date'] = $t3;
+            $item['type'] = '无';
+            if($value['order_type'] == '1'){
+                $item['type'] = '婚礼';
+            }else if($value['order_type'] == '2'){
+                $item['type'] = '会议';
+            }
+
+            $staff = Staff::model()->findByPk($value['adder_id']);
+            $item['name'] = $staff['name'];
+            $order_open[] = $item ;
+        }
+
+        
+
+        //取全部已定订单数据
+        $criteria3 = new CDbCriteria; 
+        $criteria3->addInCondition('order_status', array(2,3));
+        $criteria3->order = 'order_date DESC'; 
+        $order3 = Order::model()->findAll($criteria3);  
+
+
+
+
+        $tuidan = SupplierProduct::model()->findAll(array(
+            'condition' => 'supplier_type_id = :supplier_type_id ',
+            'params' => array(':supplier_type_id'=>16),
+            ));
+        
+        /*$post=Post::model()->find(array(  
+            'select'=>'title',  
+            'condition'=>'postID=:postID',  
+            'params'=>array(':postID'=>10),  
+            ));  */
+        $meeting_num = 0;
+        $wedding_num = 0;
+
+        $tuidan_id = array();
+        foreach ($tuidan as $key => $value) {
+            $tuidan_id[] = $value['id'];
+        };
+
+        $order_all = array();
+        foreach ($order3 as $key => $value) {
+            $item = array();
+            $t1 = explode(" ",$value['order_date']);
+            $t2 = explode("-",$t1[0]);
+            $t3 = $t2[1].'/'.$t2[2];
+            $item['date'] = $t3;
+            $item['type'] = "";
+            if($value['order_type'] == "1"){
+                $item['type'] = '会议';
+            }else if($value['order_type'] == "2"){
+                $item['type'] = '婚礼';
+            };
+
+            $staff = Staff::model()->findByPk($value['planner_id']);
+            $item['planner_name'] = $staff['name'];
+            $staff = Staff::model()->findByPk($value['designer_id']);
+            $item['designer_name'] = $staff['name'];
+            /*print_r($tuidan_id);die;*/
+            $criteria3 = new CDbCriteria; 
+            $criteria3->addCondition('order_id', $value['id']);
+            $criteria3->addInCondition('product_id', $tuidan_id);
+            $order_product = OrderProduct::model()->findAll($criteria3); 
+            /*print_r($order_product);die;*/
+            $SupplierProduct = array();
+            if(!empty($arr)){
+                $SupplierProduct = SupplierProduct::model()->findByPk($order_product['product_id']);
+            }else{
+                $SupplierProduct['name'] = "无";
+            };
+            
+
+            $item['tuidan_name'] = $SupplierProduct['name'];
+
+            $order_all[] = $item;
+            if($value['order_type'] == 1){
+                $meeting_num++;
+            }else if($value['order_type'] == 2){
+                $wedding_num++;
+            };
+        };
+
 
 
 
         //print_r($arr_sum);die;
-        $this->render('dayreport',array(
+        $this->render('dayreporthtml',array(
                 'order_sure' => $data,
                 'sales' => $sales,
-
+                'yesterday_open_order' => $yesterday_open_order,
+                'order_open' => $order_open,
+                'wedding_num' => $wedding_num,
+                'meeting_num' => $meeting_num,
+                'order_all' => $order_all,
             ));
 
         //生成静态页面

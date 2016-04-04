@@ -118,19 +118,19 @@ class PrintController extends InitController
 
     public function actionDesignbill()
     {
-        $Order = Order::model()->findByPk($_GET['order_id']);
+        $Order = Order::model()->findByPk($_POST['order_id']);
         $date = explode(" ",$Order['order_date']);
         $t = new StaffForm();
         $wed = OrderWedding::model()->find(array(
             'condition' => 'order_id=:order_id',
             'params' => array(
-                ':order_id' => $_GET['order_id']
+                ':order_id' => $_POST['order_id']
             )
         ));
 
 
         $order_data = array();
-        $order_data['id']='W'.$_GET['order_id'].'-'.$date[0];
+        $order_data['id']='W'.$_POST['order_id'].'-'.$date[0];
         $order_data['feast_discount']=$Order['feast_discount'];
         $order_data['other_discount']=$Order['other_discount'];
         $order_data['cut_price']=$Order['cut_price'];
@@ -142,7 +142,7 @@ class PrintController extends InitController
 
         //print_r($order_data);die;
 
-        $orderId = $_GET['order_id'];
+        $orderId = $_POST['order_id'];
         $supplier_product_id = array();
         $wed_feast = array();
         $arr_wed_feast = array();
@@ -1753,7 +1753,8 @@ $html .='</body>
 
         //收件人 
         //$sendto = 'trhyyy@hpeprint.com'; 
-        $sendto = 'zhangsiheng0820@126.com'; 
+        $sendto = $_POST['email']; 
+        echo $_POST['email'];
 
         //發件人 
         $replyto = '2837745713@qq.com'; 
@@ -1767,12 +1768,12 @@ $html .='</body>
         //附件類別 
         //$mimetype = "billtable".$_SESSION['userid'].".html";  
         $mimetype = "billtable.html";  
-        //echo "1";
+        echo "1";
 
         $mailfile = new CMailFile($subject,$sendto,$replyto,$message,$filename,$mimetype); 
-        //echo "2";
+        echo "2";
         $mailfile->sendfile(); 
-        //echo "3";
+        echo "3";
     }
 
     public function judge_discount($type_id,$order_id){
@@ -1786,6 +1787,615 @@ $html .='</body>
         }
         return $t;
     }
+
+    public function actionMeetingbill()
+    {
+        $_POST['order_id'] = 11;
+        $_POST['email'] = 'zhangsiheng0820@126.com';
+        $orderId = $_POST['order_id'];
+        $supplier_product_id = array();
+        $wed_feast = array();
+        $arr_wed_feast = array();
+
+        $order_discount = Order::model()->find(array(
+            "condition" => "id = :id",
+            "params" => array(":id" => $orderId),
+        ));
+
+        /*********************************************************************************************************************/
+        /*取餐饮数据*/
+        /*********************************************************************************************************************/
+        $supplier_id_result = Supplier::model()->findAll(array(
+            "condition" => "type_id = :type_id",
+            "params" => array(":type_id" => 2),
+        ));
+        $supplier_id = array();
+        foreach ($supplier_id_result as $value) {
+            $item = $value->id;
+            $supplier_id[] = $item;
+        };
+        /*print_r($supplier_id);*/
+        if(!empty($supplier_id)){
+            $criteria1 = new CDbCriteria; 
+            $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("category=:category");
+            $criteria1->params[':category']=1; 
+            $supplier_product = SupplierProduct::model()->findAll($criteria1);
+            /*print_r($supplier_product);*/
+            foreach ($supplier_product as $value) {
+                $item = $value->id;
+                $supplier_product_id[] = $item;
+            };
+            /*print_r($supplier_product_id);*/
+        }
+        
+        if(!empty($supplier_product_id)){
+            $criteria2 = new CDbCriteria; 
+            $criteria2->addInCondition("product_id",$supplier_product_id);
+            $criteria2->addCondition("order_id=:order_id");
+            $criteria2->params[':order_id']=$orderId; 
+            $supplier_product = OrderProduct::model()->findAll($criteria2);
+            foreach ($supplier_product as $value) {
+                $item = array();
+                $item['id'] = $value->id;
+                $item['product_id'] = $value->product_id;
+                $item['actual_price'] = $value->actual_price;
+                $item['unit'] = $value->unit;
+                $item['actual_unit_cost'] = $value->actual_unit_cost;
+                $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $wed_feast[] = $item;
+            };
+            /*print_r($wed_feast);*/
+        }
+        /*print_r($wed_feast);*/
+        
+        if(!empty($wed_feast)){
+            $criteria3 = new CDbCriteria; 
+            $criteria3->addCondition("id=:id");
+            $criteria3->params[':id']=$wed_feast[0]['product_id']; 
+            $supplier_product2 = SupplierProduct::model()->find($criteria3);
+            /*print_r($supplier_product2);*/
+            $arr_wed_feast = array(
+                'name' => $supplier_product2['name'],
+                'unit_price' => $wed_feast[0]['actual_price'],
+                'unit' => $supplier_product2['unit'],
+                'table_num' => $wed_feast[0]['unit'],
+                'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
+                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100),
+                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100,
+                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100)),
+                /*'remark' => $wed_feast['']*/
+            );
+        }
+        /*print_r($arr_wed_feast);*/
+
+
+        /*********************************************************************************************************************/
+        /*取场地费数据*/
+        /*********************************************************************************************************************/
+        $changdi_fee = array();
+        $arr_changdi_fee = array();
+        $supplier_id_result = Supplier::model()->findAll(array(
+            "condition" => "type_id = :type_id",
+            "params" => array(":type_id" => 19),
+        ));
+        $supplier_id = array();
+        foreach ($supplier_id_result as $value) {
+            $item = $value->id;
+            $supplier_id[] = $item;
+        };
+        /*print_r($supplier_id);*/
+        if(!empty($supplier_id)){
+            $criteria1 = new CDbCriteria; 
+            $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("category=:category");
+            $criteria1->params[':category']=1; 
+            $supplier_product = SupplierProduct::model()->findAll($criteria1);
+            /*print_r($supplier_product);*/
+            foreach ($supplier_product as $value) {
+                $item = $value->id;
+                $supplier_product_id[] = $item;
+            };
+            /*print_r($supplier_product_id);*/
+        }
+        
+        if(!empty($supplier_product_id)){
+            $criteria2 = new CDbCriteria; 
+            $criteria2->addInCondition("product_id",$supplier_product_id);
+            $criteria2->addCondition("order_id=:order_id");
+            $criteria2->params[':order_id']=$orderId; 
+            $supplier_product = OrderProduct::model()->findAll($criteria2);
+            foreach ($supplier_product as $value) {
+                $item = array();
+                $item['id'] = $value->id;
+                $item['product_id'] = $value->product_id;
+                $item['actual_price'] = $value->actual_price;
+                $item['unit'] = $value->unit;
+                $item['actual_unit_cost'] = $value->actual_unit_cost;
+                $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $changdi_fee[] = $item;
+            };
+            /*print_r($changdi_fee);*/
+        }
+        
+        if(!empty($changdi_fee)){
+            $criteria3 = new CDbCriteria; 
+            $criteria3->addCondition("id=:id");
+            $criteria3->params[':id']=$changdi_fee[0]['product_id']; 
+            $supplier_product2 = SupplierProduct::model()->find($criteria3);
+            /*print_r($supplier_product2);*/
+            $arr_changdi_fee = array(
+                'name' => $supplier_product2['name'],
+                'unit_price' => $changdi_fee[0]['actual_price'],
+                'unit' => $supplier_product2['unit'],
+                'amount' => $changdi_fee[0]['unit'],
+                'total_price' => $changdi_fee[0]['actual_price']*$changdi_fee[0]['unit'],
+                'gross_profit' => ($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'],
+                'gross_profit_rate' => (($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'])/($changdi_fee[0]['actual_price']*$changdi_fee[0]['unit']),
+                /*'table_num' => $wed_feast[0]['unit'],
+                'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],*/
+                /*'remark' => $wed_feast['']*/
+            );
+        }
+        /*print_r($arr_changdi_fee);die;*/
+
+
+
+        /*********************************************************************************************************************/
+        /*取灯光数据*/
+        /*********************************************************************************************************************/
+        $supplier_product_id = array();
+        $arr_light = array();
+        $light = array();
+        $arr_light_total = array();
+        $supplier_id_result = Supplier::model()->findAll(array(
+            "condition" => "type_id = :type_id",
+            "params" => array(":type_id" => 8),
+        ));
+        $supplier_id = array();
+        foreach ($supplier_id_result as $value) {
+            $item = $value->id;
+            $supplier_id[] = $item;
+        };
+        /*print_r($supplier_id);*/
+
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("supplier_id",$supplier_id);
+        $criteria1->addCondition("category=:category");
+        $criteria1->params[':category']=1; 
+        $supplier_product = SupplierProduct::model()->findAll($criteria1);
+        /*print_r($supplier_product);*/
+        $supplier_product_id = array();
+        foreach ($supplier_product as $value) {
+            $item = $value->id;
+            $supplier_product_id[] = $item;
+        };
+
+        if(!empty($supplier_product_id)){
+            $criteria2 = new CDbCriteria; 
+            $criteria2->addInCondition("product_id",$supplier_product_id);
+            $criteria2->addCondition("order_id=:order_id");
+            $criteria2->params[':order_id']=$orderId; 
+            $supplier_product = OrderProduct::model()->findAll($criteria2);
+            foreach ($supplier_product as $value) {
+                $item = array();
+                $item['id'] = $value->id;
+                $item['product_id'] = $value->product_id;
+
+                $item['actual_price'] = $value->actual_price;
+                $item['unit'] = $value->unit;
+                $item['actual_unit_cost'] = $value->actual_unit_cost;
+                $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $light[] = $item;
+            };
+        }
+        $arr_light_total['total_price']=0;
+        $arr_light_total['total_cost']=0;
+        if (!empty($light)) {
+            foreach ($light as $key => $value) {
+                $criteria3 = new CDbCriteria; 
+                $criteria3->addCondition("id=:id");
+                $criteria3->params[':id']=$value['product_id']; 
+                $supplier_product2 = SupplierProduct::model()->find($criteria3);
+                $item= array(
+                    'name' => $supplier_product2['name'],
+                    'unit_price' => $value['actual_price'],
+                    'unit' => $supplier_product2['unit'],
+                    'amount' => $value['unit'],
+                );
+                $arr_light[]=$item;
+                $arr_light_total['total_price'] += $value['actual_price']*$value['unit'];;
+                $arr_light_total['total_cost'] +=$value['actual_unit_cost']*$value['unit'];
+            }           
+            $arr_light_total['gross_profit']=$arr_light_total['total_price']-$arr_light_total['total_cost'];
+            if($arr_light_total['total_price'] != 0){
+                $arr_light_total['gross_profit_rate']=$arr_light_total['gross_profit']/$arr_light_total['total_price'];
+            }else{
+                $arr_light_total['gross_profit_rate']=0;
+            };
+            
+        }
+
+        /*print_r($arr_light);die;*/
+
+        
+
+        /*********************************************************************************************************************/
+        /*取视频数据*/
+        /*********************************************************************************************************************/
+        $supplier_product_id = array();
+        $arr_video = array();
+        $video = array();
+        $arr_video_total = array();
+        $supplier_id_result = Supplier::model()->findAll(array(
+            "condition" => "type_id = :type_id",
+            "params" => array(":type_id" => 9),
+        ));
+        $supplier_id = array();
+        foreach ($supplier_id_result as $value) {
+            $item = $value->id;
+            $supplier_id[] = $item;
+        };
+        /*print_r($supplier_id);*/
+
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("supplier_id",$supplier_id);
+        $criteria1->addCondition("category=:category");
+        $criteria1->params[':category']=1; 
+        $supplier_product = SupplierProduct::model()->findAll($criteria1);
+        /*print_r($supplier_product);*/
+        $supplier_product_id = array();
+        foreach ($supplier_product as $value) {
+            $item = $value->id;
+            $supplier_product_id[] = $item;
+        };
+        /*print_r($supplier_product_id);*/
+
+        if(!empty($supplier_product_id)){
+            $criteria2 = new CDbCriteria; 
+            $criteria2->addInCondition("product_id",$supplier_product_id);
+            $criteria2->addCondition("order_id=:order_id");
+            $criteria2->params[':order_id']=$orderId; 
+            $supplier_product = OrderProduct::model()->findAll($criteria2);
+            /*$video = array();*/
+            foreach ($supplier_product as $value) {
+                $item = array();
+                $item['id'] = $value->id;
+                $item['product_id'] = $value->product_id;
+                $item['actual_price'] = $value->actual_price;
+                $item['unit'] = $value->unit;
+                $item['actual_unit_cost'] = $value->actual_unit_cost;
+                $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $video[] = $item;
+            };
+            /*print_r($video);*/
+        }
+        $arr_video_total['total_price']=0;
+        $arr_video_total['total_cost']=0;
+        if (!empty($video)) {
+            foreach ($video as $key => $value) {
+                $criteria3 = new CDbCriteria; 
+                $criteria3->addCondition("id=:id");
+                $criteria3->params[':id']=$value['product_id']; 
+                $supplier_product2 = SupplierProduct::model()->find($criteria3);
+
+                
+                
+                $item= array(
+                    'name' => $supplier_product2['name'],
+                    'unit_price' => $value['actual_price'],
+                    'unit' => $supplier_product2['unit'],
+                    'amount' => $value['unit'],
+                );
+                $arr_video[]=$item;
+                $arr_video_total['total_price'] += $value['actual_price']*$value['unit'];;
+                $arr_video_total['total_cost'] +=$value['actual_unit_cost']*$value['unit'];
+            }           
+            $arr_video_total['gross_profit']=$arr_video_total['total_price'];-$arr_video_total['total_cost'];
+            $arr_video_total['gross_profit_rate']=$arr_video_total['gross_profit']/$arr_video_total['total_price'];
+        }
+
+        /*print_r($arr_video_total);*/
+
+        
+
+        
+
+        /*********************************************************************************************************************/
+        /*取订单日期、统筹师数据*/
+        /*********************************************************************************************************************/
+
+        $criteria3 = new CDbCriteria; 
+        $criteria3->addCondition("order_id=:order_id");
+        $criteria3->params[':order_id']=$orderId; 
+        $order_meeting = OrderMeeting::model()->find($criteria3);
+        /*print_r($order_data);die;*/
+
+        $company_linkman = OrderMeetingCompanyLinkman::model()->findByPk($order_meeting['company_linkman_id']);
+
+
+
+
+
+        /*********************************************************************************************************************/
+        /*计算订单总价*/
+        /*********************************************************************************************************************/
+        $arr_total = array(
+            'total_price' => 0 ,
+            'gross_profit' => 0 ,
+            'gross_profit_rate' => 0 ,
+        );
+        if(!empty($arr_wed_feast)){
+            $arr_total['total_price'] += $arr_wed_feast['total_price'] * $order_discount['feast_discount'] * 0.1;
+            $arr_total['gross_profit'] += $arr_wed_feast['gross_profit'];
+        }
+
+        if(!empty($arr_changdi_fee)){
+            if($this->judge_discount(19,$orderId) == 0){
+                $arr_total['total_price'] += $arr_changdi_fee['total_price'];
+                $arr_total['gross_profit'] += $arr_changdi_fee['gross_profit'];
+            }else{
+                $arr_total['total_price'] += $arr_changdi_fee['total_price'] * $order_discount['other_discount'] * 0.1;
+                $arr_total['gross_profit'] += $arr_changdi_fee['gross_profit'];
+            }
+        }
+
+        if(!empty($arr_video)){
+            if($this->judge_discount(9,$orderId) == 0){
+                $arr_total['total_price'] += $arr_video_total['total_price'];
+                $arr_total['gross_profit'] += $arr_video_total['gross_profit'];
+            }else{
+                $arr_total['total_price'] += $arr_video_total['total_price'] * $order_discount['other_discount'] * 0.1;
+                $arr_total['gross_profit'] += $arr_video_total['gross_profit'];
+            }
+        }
+
+        if(!empty($arr_light)){
+            if($this->judge_discount(8,$orderId) == 0){
+                $arr_total['total_price'] += $arr_light_total['total_price'];
+                $arr_total['gross_profit'] += $arr_light_total['gross_profit'];
+            }else{
+                $arr_total['total_price'] += $arr_light_total['total_price'] * $order_discount['other_discount'] * 0.1;
+                $arr_total['gross_profit'] += $arr_light_total['gross_profit'];
+            }
+        }
+
+        if($order_discount['cut_price'] != 0){
+            $arr_total['total_price'] -= $order_discount['cut_price'];
+        }
+
+        if($arr_total['total_price'] != 0){
+            $arr_total['gross_profit_rate'] = $arr_total['gross_profit']/$arr_total['total_price'];    
+        }
+
+        /*********************************************************************************************************************/
+        /*查询订单信息*/
+        /*********************************************************************************************************************/
+        $order_data = Order::model()->findByPk($orderId);
+        $planner = Staff::model()->findByPk($order_data['planner_id']);
+        /*print_r($order_data);die;*/
+
+        /*========================================================================================================
+        ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊界面渲染＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+        ========================================================================================================*/
+
+
+
+
+$html = '<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>报价单</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<style type="text/css">
+.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ebab3a;border-collapse: collapse;}
+.tftable th {font-size:12px;background-color:#e6983b;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;text-align:left;}
+.tftable tr {background-color:#ffffff;}
+.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;}
+.tftable tr:hover {background-color:#ffff99;}
+</style>
+<style type="text/css">
+.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ebab3a;border-collapse: collapse;}
+.tftable th {font-size:12px;background-color:#e6983b;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;text-align:left;}
+.tftable tr {background-color:#ffffff;}
+.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;}
+.tftable tr:hover {background-color:#ffff99;}
+</style>
+
+<table class="tftable" border="1">
+<tr><th colspan="3">基本信息</th></tr>
+<tr><td width="10%">订单编号</td><td colspan="2" width="90%">'.$order_data["id"].'</td></tr>
+<tr><td width="10%">客户名称</td><td colspan="2" width="50%">'.$order_data['order_name'].'</td></tr>
+<tr><td width="10%">联系人</td><td width="50%">'.$company_linkman['name'].'</td><td width="40%">'.$company_linkman['telephone'].'</td></tr>
+<tr><td width="10%">统筹师</td><td colspan="2" width="90%">'.$planner['name'].'</td></tr>
+<tr><td width="10%">餐饮折扣</td><td colspan="2" width="90%">'.$order_data["feast_discount"].'</td></tr>
+<tr><td width="10%">其他折扣</td><td colspan="2" width="90%">'.$order_data["other_discount"].'</td></tr>
+<tr><td width="10%">抹零</td><td colspan="2" width="90%">'.$order_data["cut_price"].'</td></tr>
+<tr><td width="10%">订单总价</td><td colspan="2" width="90%">'.$arr_total['total_price'].'</td></tr>
+</table>
+
+<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+
+/*<!-- 会议餐 -->*/
+if (!empty($arr_wed_feast)) {
+
+$html .= '<table class="tftable" border="1">
+<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>
+<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">'.$arr_wed_feast['name'].'</td><td width="20%"></td><td width="4%">'.$arr_wed_feast['table_num'].'</td><td width="9%">'.$arr_wed_feast['unit'].'</td><td width="18%">'.$arr_wed_feast['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>
+</table>
+
+<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+
+
+};
+
+/*<!-- 场地费 -->*/
+
+if (!empty($arr_changdi_fee)) {
+$i=1;
+
+$html .='<table class="tftable" border="1">
+<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>';
+            
+
+$html .='<tr><td width="10%" rowspan = "1">场地费</td><td width="4%">'.$i.'</td><td width="12%">'.$arr_changdi_fee['name'].'</td><td width="20%"></td><td width="4%">'.$arr_changdi_fee['amount'].'</td><td width="4%">'.$arr_changdi_fee['unit'].'</td><td width="23%">'.$arr_changdi_fee['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+
+
+$html .='</table>
+
+<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+ 
+    };
+
+/*<!-- 灯光 -->*/
+/*print_r($arr_light);die;*/
+if (!empty($arr_light)) {
+$i=1;
+
+$html .= '<table class="tftable" border="1">
+<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>';
+
+    foreach ($arr_light as $key => $value) {
+
+        if($i==1){
+$html .= '<tr><td width="10%" rowspan = "'.count($arr_light).'">灯光</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+
+        $i++;
+        }else{
+
+$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+        $i++;
+        }
+    };
+$html .= '</table>
+
+<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+};
+
+
+/*<!-- 视频 -->*/
+/*print_r($arr_video);die;*/
+if (!empty($arr_video)) {
+$i=1;
+
+$html .='<table class="tftable" border="1">
+<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>';
+
+        foreach ($arr_video as $key => $value) {
+
+            if($i==1){
+
+$html .='<tr><td width="10%" rowspan = "'.count($arr_video).'">视频</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+        $i++;
+        }else{
+
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+        $i++;
+        }
+    };
+$html .='</table>
+
+<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+
+  
+    };
+
+
+$html .='</body>
+</html>';
+
+/*echo $html;die;*/
+
+        //$fp = fopen("billtable".$_SESSION['userid'].".html","w");
+        $fp = fopen("billtable.html","w");
+        if(!$fp)
+        {
+        echo "System Error";
+        exit();
+        }
+        else {
+        fwrite($fp,$html);
+        fclose($fp);
+        echo "Success";
+        }
+
+
+
+        /*require_once "../library/email.class.php";
+        //******************** 配置信息 ********************************
+        $smtpserver = "smtp.qq.com";//SMTP服务器
+        $smtpserverport =25;//SMTP服务器端口
+        $smtpusermail = "2837745713@qq.com";//SMTP服务器的用户邮箱
+        $smtpemailto = "zhangsiheng0820@126.com";//发送给谁
+        $smtpuser = "2837745713";//SMTP服务器的用户帐号
+        $smtppass = "xsxn1183";//SMTP服务器的用户密码
+        $mailtitle = "报价单";//邮件主题
+        $mailcontent = $html;//邮件内容
+        $mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件
+        //************************ 配置信息 ****************************
+        $smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证.
+        $smtp->debug = true;//是否显示发送的调试信息
+        $state = $smtp->sendmail($smtpemailto, $smtpusermail, $mailtitle, $mailcontent, $mailtype);
+
+        echo   '<head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                <title>报价单</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                <meta name="apple-mobile-web-app-status-bar-style" content="black">
+                <meta name="format-detection" content="telephone=no">
+                <link href="css/base.css" rel="stylesheet" type="text/css"/>
+                <link href="css/style.css" rel="stylesheet" type="text/css"/>
+                </head>
+                <body>';
+
+        echo "<div style='width:300px; margin:36px auto;'>";
+        if($state==""){
+            echo "对不起，邮件发送失败！请检查邮箱填写是否有误。";
+            echo "<a href='index.html'>点此返回</a>";
+            exit();
+        }
+        echo "恭喜！邮件发送成功！！";
+        echo "<a href='index.html'>点此返回</a>";
+        echo "</div></body>";*/
+
+        
+        
+
+        //发送邮件 
+
+        //主題 
+        $subject = "test send email"; 
+
+        //收件人 
+        //$sendto = 'trhyyy@hpeprint.com'; 
+        $sendto = $_POST['email']; 
+        echo $_POST['email'];
+
+        //發件人 
+        $replyto = '2837745713@qq.com'; 
+
+        //內容 
+        $message = ""; 
+
+        //附件 
+        //$filename = "billtable".$_SESSION['userid'].".html"; 
+        $filename = "billtable.html"; 
+        //附件類別 
+        //$mimetype = "billtable".$_SESSION['userid'].".html";  
+        $mimetype = "billtable.html";  
+        echo "1";
+
+        $mailfile = new CMailFile($subject,$sendto,$replyto,$message,$filename,$mimetype); 
+        echo "2";
+        $mailfile->sendfile(); 
+        echo "3";   
+    }    
 
 }
 

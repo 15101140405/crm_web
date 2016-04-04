@@ -13,7 +13,6 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
         <div class="r_btn" data-icon="&#xe767;"></div>
         <h2 class="page_title">收取现金</h2>
     </div>
@@ -49,22 +48,12 @@
 
         //跳转到编辑
         $(".ulist_item").on("click",function(){
-            location.href="<?php echo $this->createUrl("finance/cashier", array("order_id" => $_GET['order_id'],"type"=>'edit'));?>&from=<?php echo $_GET['from']?>&paymentId=" + $(this).attr('payment-id');
+            location.href="<?php echo $this->createUrl("finance/cashier", array("order_id" => $_GET['order_id'],"type"=>'edit'));?>&paymentId=" + $(this).attr('payment-id');
         });
 
         //跳转到新增
         $(".r_btn").on("click",function(){
-            location.href="<?php echo $this->createUrl("finance/cashier", array("order_id" => $_GET['order_id'],"type"=>'new'));?>&from=<?php echo $_GET['from']?>&paymentId=";
-        });
-
-        //返回
-        $(".l_btn").on("click", function () {
-            if("<?php echo $_GET['from']?>" == "design"){
-                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
-            }else if("<?php echo $_GET['from']?>" == "meeting"){
-                location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
-            }
-                
+            location.href="<?php echo $this->createUrl("finance/cashier", array("order_id" => $_GET['order_id'],"type"=>'new'));?>&paymentId=";
         });
     })   
 </script>

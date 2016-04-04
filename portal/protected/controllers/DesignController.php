@@ -61,7 +61,40 @@ class DesignController extends InitController
 
     public function actionBill()
     {
-        $orderId = $_GET['order_id'];
+        /*Yii::app()->session['userid']=100;
+        Yii::app()->session['code']='asjfdlk123';
+        Yii::app()->session['account_id']=1;
+        Yii::app()->session['staff_hotel_id']=1;*/
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            echo '已登陆';
+            $this->Bill($_GET['order_id']);
+        }else{ //未登录
+            echo '未登陆';
+            $code = $_GET['code'];
+            Yii::app()->session['code']=$code;
+            if($code == ''){
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&order_id='.$_GET['order_id'].'&code=';
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                echo "<script>window.location='".$url."';</script>";
+            };
+
+            $t=new WPRequest;
+            $userId = $t->getUserId($code);
+            $adder=array("UserId"=>"222","DeviceId"=>"");
+            $adder=json_decode($userId,true);
+            if(!empty($adder['UserId'])) {
+                Yii::app()->session['userid']=$adder['UserId'];
+                $staff = Staff::model()->findByPk($adder['UserId']);
+                Yii::app()->session['account_id']=$staff['account_id'];
+                Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+                
+                $this->Bill($_GET['order_id']);
+            };
+        };
+    }
+
+    public function Bill($orderId)
+    {
         $supplier_product_id = array();
         $wed_feast = array();
         $arr_wed_feast = array();
@@ -1259,10 +1292,43 @@ class DesignController extends InitController
                                                        )
                                                  );
 
+        $follow = OrderMerchandiser::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        /*print_r($follow);die;*/
+        $in_door = 0;
+        $out_door = 0;
+        foreach ($follow as $key => $value) {
+            if($value['type'] == '0'){$in_door++;}else{$out_door++;};
+        };
 
+        //取回款记录
+        $ordre_payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        foreach ($ordre_payment as $key => $value) {
+            if($value['type'] == 0){
+                $order_data['feast_deposit'] += $value['money'];
+            };
+            if($value['type'] == 1){
+                $order_data['medium_term'] += $value['money'];
+            };
+            if($value['type'] == 2){
+                $order_data['final_payments'] += $value['money'];
+            };
+        }
 
-
-
+        // *********************************************************************************************************************
+        // 查访问者，所在部门
+        // *********************************************************************************************************************
+        $staff_user = Staff::model()->findByPk($_SESSION['userid']);
+        $user_department_list= $staff_user['department_list'];
 
         $this->render("bill",array(
             "arr_wed_feast" => $arr_wed_feast,
@@ -1288,8 +1354,10 @@ class DesignController extends InitController
             "arr_order_data" => $order_data,
             "designer" => $designer['name'],
             "planner" => $planer['name'],
-            "select_reference"  => $select_reference
-            
+            "select_reference"  => $select_reference,
+            'in_door' => $in_door,
+            'out_door' => $out_door,
+            'user_department_list' => $user_department_list
         ));
 
     }

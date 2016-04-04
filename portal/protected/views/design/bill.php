@@ -17,15 +17,55 @@ $arr_locate = array(
     <link href="css/base.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link href="css/staff_management.css" rel="stylesheet" type="text/css"/>
-
+    <link rel="stylesheet" href="css/upscroller.css">
+    <link rel="stylesheet" href="css/my-app.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/public.css">
+    <link rel="stylesheet" href="css/swiper.min.css">
 </head>
 <body>
-<article style='position: relative;bottom: 100px;top: 1px;'>
-    <div class="tool_bar">
-        <h2 class="page_title">报价单</h2>
-
+<article style='position: relative;top: -45px;'>
+    <div class="tool_bar" style="line-height: 3rem;">
+        <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div>
+        <h6  style="text-align: center;font-size: 2rem;"><?php echo $arr_order_data['order_name']; ?></h6>
+        <h6  style="text-align: center;font-size: 1.2rem;">婚礼日期：<?php echo $arr_order_data['order_date']; ?></h6>
     </div>
-    <div class="ulist_module">
+    <ul class="m-index-list" id="page_list" style="margin-bottom: 10px;">
+        <li class="card list_more" category="appear" status="进行中" id='follow'>
+            <h6 class="m-list-tit" style="color:#37CB58;font-size: 1.8rem;text-align: left;margin-left: 10px;">跟进情况 <span style="color:#b6babf;font-size:1rem;"> [<?php echo $designer; ?>]</span></h6>
+            <div class="m-money clear" style="display:inline">
+                <div style="display:inline-block;float:left;margin-left:15%;border-right:1px solid #ebebeb;width:35%">
+                    <p class="m-money-per " >进店面谈</p>
+                    <p class="m-money-num " style="color: #37CB58;font-size: 1.8rem;"><?php echo $in_door;?> <i class="m-money-per "> 次</i></p>
+                </div>
+                <div style="display:inline-block;float:right;margin-right:15%;">
+                    <p class="m-money-per ">跟单</p>
+                    <p class="m-money-num " style="color: #37CB58;font-size: 1.8rem;"><?php echo $out_door;?> <i class="m-money-per "> 次</i></p>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <nav id="action">
+        <ul>
+            <li style="width:50%" id="print">
+                <a href="#">
+                    <div class="cat_icon">
+                        <img src="images/gendan.png"/>
+                    </div>
+                    <p class="cat_name">打印报价单</p>
+                </a>
+            </li>
+            <li style="width:50%" id="checkout">
+                <a href="#">
+                    <div class="cat_icon">
+                        <img src="images/settlement.png"/>
+                    </div>
+                    <p class="cat_name" id="checkout_name">申请结算</p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="ulist_module" style="margin-top:10px;">
         <ul class="ulist">
             <li class="ulist_item list_more" id="detailinfo">
                 <span class="big_font">婚礼信息</span>
@@ -75,28 +115,28 @@ $arr_locate = array(
         </ul>
     </div>
     <!-- 回款信息 -->
-    <!-- <div class="table_module">
+    <div class="table_module">
         <h4 class="module_title list_more" id="payment">回款纪录</h4>
         <table class="mar_b10">
             <tbody>
             <tr>
                 <td>定金</td>
-                <td>&yen;<?php /*echo $arr_order_data['feast_deposit'];*/ ?></td>
+                <td>&yen;<?php echo $arr_order_data['feast_deposit']; ?></td>
                 <td><?php /*echo $arr_order_data['first']['order_date'];*/ ?></td>
             </tr>
             <tr>
                 <td>中期款</td>
-                <td>&yen;<?php /*echo $arr_order_data['medium_term'];*/ ?></td>
-                <td><?php /*echo $arr_order_data['second']['order_date']; */?></td>
+                <td>&yen;<?php echo $arr_order_data['medium_term']; ?></td>
+                <td><?php /*echo $arr_order_data['second']['order_date'];*/ ?></td>
             </tr>
             <tr>
                 <td>尾款</td>
-                <td>&yen;<?php /*echo $arr_order_data['final_payments'];*/ ?></td>
-                <td><?php /*echo $arr_order_data['third']['order_date']; */?></td>
+                <td>&yen;<?php echo $arr_order_data['final_payments']; ?></td>
+                <td><?php /*echo $arr_order_data['third']['order_date'];*/ ?></td>
             </tr>
             </tbody>
         </table>
-    </div> -->
+    </div>
     <!-- 餐饮 -->
 
     <div class="bill_item_module" id="feast">
@@ -132,6 +172,14 @@ $arr_locate = array(
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_wed_feast['gross_profit_rate']*100).'%'; ?></i>
             </div>
     <?php 
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
+            </div>
+    <?php
         }
     ?>
         </div>
@@ -176,6 +224,14 @@ $arr_locate = array(
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_light_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
     <?php 
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
+            </div>
+    <?php
         }
     ?>
         </div>
@@ -217,6 +273,14 @@ $arr_locate = array(
                 <p>小计：&yen;<?php echo $arr_video_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_video_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_video_total['gross_profit_rate']*100).'%'; ?></i>
+            </div>
+    <?php
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
             </div>
     <?php
         }
@@ -432,6 +496,14 @@ $arr_locate = array(
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_graphic_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
     <?php
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
+            </div>
+    <?php
         }
     ?>
         </div>
@@ -474,6 +546,14 @@ $arr_locate = array(
                 <p>小计：&yen;<?php echo $arr_film_total['total_price']; ?></p>
                 <i class="profits">利润：&yen;<?php echo $arr_film_total['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_film_total['gross_profit_rate']*100).'%'; ?></i>
+            </div>
+    <?php
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
             </div>
     <?php
         }
@@ -520,13 +600,23 @@ $arr_locate = array(
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_designer_total['gross_profit_rate']*100).'%'; ?></i>
             </div>
     <?php
+        }else{
+    ?>
+            <div class="subtotal">
+                <p>小计：&yen;0</p>
+                <i class="profits">毛利：&yen;0</i>
+                <i class="profits">毛利率：0%</i>
+            </div>
+    <?php
         }
     ?>
         </div>
     </div>
            
 
-    <?php 
+    
+
+<?php 
         if(!empty($arr_order_total)){
     ?>
             <div class="bottom_fixed_bar">
@@ -537,38 +627,47 @@ $arr_locate = array(
                 </div>
             </div>
     <?php
+        }else{
+    ?>
+            <div class="bottom_fixed_bar">
+                <p class="total_right">总价：<i class="t_green">&yen;0</i></p>
+                <div class="total_left">
+                    <i><p>利润：&yen;0</i>
+                    <i><p>毛利率：&yen;0</i>
+                </div>
+            </div>
+    <?php
         }
     ?>
+    
 </article>
+    <div class="bottom_fixed_bar" id='bottom' style="position: fixed;bottom: 61px;">
+        <div class="r_btn" id="agree">同意</div>
+        <div class="r_btn " id="refuse" style='background-color:#da0f22;'>拒绝</div>
+    </div>
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js" type="text/javascript"></script>
 <script>
     $(function () {
         //返回
         $(".l_btn").on("click", function () {
-            var from = <?php echo '"'.$_GET['from'].'"'; ?>;
             var order_id = <?php echo $_GET['order_id'];?>;
             /*alert(from);*/
-            if( from == 'detail' ){
-                location.href = "<?php echo $this->createUrl("design/detail");?>&order_id=" + order_id;
-            }else if( from == 'index' ){
-                location.href = "<?php echo $this->createUrl("order/index");?>&from=bill&code=<?php if(isset($_SESSION['code'])){echo $_SESSION['code'];};?>&this_order=" + order_id;
-            }
-            
+                location.href = "<?php echo $this->createUrl("design/detail");?>&order_id=" + order_id;            
         });
 
         var order_status = <?php echo $arr_order_data['order_status']?>;
+
+        //打印
+        $("#print").on("click",function(){
+            location.href="<?php echo $this->createUrl("order/orderprint", array("order_id" => $_GET['order_id'],"type" => "design"));?>";
+        });
 
         if(order_status != 5 && order_status != 6){
             //跳推单页面
             $("#channel").on("click", function () {
                 location.href = "<?php echo $this->createUrl("plan/chooseChannel", array("from" => "design", "order_id" => $_GET['order_id']));?>";
             })
-
-            //打印
-            $("#print").on("click",function(){
-                location.href="<?php echo $this->createUrl("print/designbill", array("order_id" => $_GET['order_id']));?>";
-            });
 
             //跳转详细信息
             $("#detailinfo").on("click",function(){
@@ -577,94 +676,146 @@ $arr_locate = array(
 
             //跳折扣页面
             $("#feast_discount").on("click", function () {
-                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "feast"));?>";
+                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from1" => "design","order_id" => $_GET['order_id'],"type" => "feast"));?>";
             });
             $("#other_discount").on("click", function () {
-                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id'],"type" => "wedding_other"));?>";
+                location.href = "<?php echo $this->createUrl("order/chooseDiscount", array("from1" => "design","order_id" => $_GET['order_id'],"type" => "wedding_other"));?>";
             });
 
             //跳免零页面
             $("#changefree").on("click", function () {
-                location.href = "<?php echo $this->createUrl("order/changefree", array("from" => $_GET['from'],"from1" => "design","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("order/changefree", array("from1" => "design","order_id" => $_GET['order_id']));?>";
             });
 
             //跳收款列表
             $("#payment").on("click",function(){
-                location.href="<?php echo $this->createUrl("finance/cashierlist", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>"
+                location.href="<?php echo $this->createUrl("finance/cashierlist", array("from" => "design", "tab" => "","order_id" => $_GET['order_id']));?>"
             })
 
             //跳转产品分类
             $("#feast").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/feast", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/feast", array("from" => "design", "tab" => "","order_id" => $_GET['order_id']));?>";
             });
 
             $("#lighting").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => "lighting","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "design", "tab" => "lighting","order_id" => $_GET['order_id']));?>";
             });
             $("#screen").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "bill", "tab" => 'screen',"order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/lightingScreen", array("from" => "design", "tab" => 'screen',"order_id" => $_GET['order_id']));?>";
             });
 
             $("#service").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/ServicePersonnel", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/ServicePersonnel", array("from" => "design", "tab" => "","order_id" => $_GET['order_id']));?>";
             });
 
             $("#decoration").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "bill", "tab" => "","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/decoration", array("from" => "design", "tab" => "","order_id" => $_GET['order_id']));?>";
             });
 
             $("#graphic").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "graphic","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "design", "tab" => "graphic","order_id" => $_GET['order_id']));?>";
             });
             $("#film").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "bill", "tab" => "film","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/graphicfilm", array("from" => "design", "tab" => "film","order_id" => $_GET['order_id']));?>";
             });
 
             $("#dress").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "dress","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "design", "tab" => "dress","order_id" => $_GET['order_id']));?>";
             });
             $("#appliance").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "bill", "tab" => "appliance","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/dressAppliance", array("from" => "design", "tab" => "appliance","order_id" => $_GET['order_id']));?>";
             });
 
             $("#drinks").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "drinks","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "design", "tab" => "drinks","order_id" => $_GET['order_id']));?>";
             });
             $("#car").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "bill", "tab" => "car","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/drinksCar", array("from" => "design", "tab" => "car","order_id" => $_GET['order_id']));?>";
             });
             
             $("#plan").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "plan","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "design", "tab" => "plan","order_id" => $_GET['order_id']));?>";
             });
 
             $("#other").on("click", function () {
-                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "bill", "tab" => "other","order_id" => $_GET['order_id']));?>";
+                location.href = "<?php echo $this->createUrl("design/planother", array("from" => "design", "tab" => "other","order_id" => $_GET['order_id']));?>";
             });
         }else{
             $(".list_more").removeClass('list_more');
         }
 
+        //跳转到跟单页面
+        $("#follow").on('click',function(){
+            location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&order_id=<?php echo $_GET["order_id"]?>';
+        });
+
+
+
+        //结算
+        var order_status=<?php echo $arr_order_data['order_status'];?>;
+        /*alert(order_status);*/
+        if(order_status == 5){$("#checkout_name").html("结算中")};
+        if(order_status == 6){$("#checkout_name").html("已完成")};
+        $("#checkout").on("click",function(){
+            if(order_status == 4){
+                $.post("<?php echo $this->createUrl('order/checkoutpost');?>",{type:'design',order_id:<?php echo $_GET['order_id']?>},function(){
+                    location.reload();
+                });
+            }else if(order_status == 5){
+                alert("结算中，请耐心等待！");
+            }else if(order_status ==0 || order_status ==1 || order_status ==2 || order_status ==3){
+                alert("订单收取尾款后，才能申请结算！");
+            }
+        });
         
 
-        //判断订单状态，改变审批按钮
-        <?php     //background data
-        $order_state = "examined";?>
-        var order_state = "<?php echo $order_state;?>"    //php取数
-        if (order_state == "non_examine") {
-            $("#examining").addClass("hid");
-            $("#examined").addClass("hid");
-        } else if (order_state == "examining") {
-            $("#non_examine").addClass("hid");
-            $("#examined").addClass("hid");
-        } else if (order_state == "examined") {
-            $("#non_examine").addClass("hid");
-            $("#examining").addClass("hid");
+        //order_status = 5 && 访问者为 财务 时 , 出现：同意／拒绝 按钮
+        var order_status = <?php echo $arr_order_data['order_status'];?>;
+<?php 
+    $newstr = rtrim($user_department_list, "]");
+    $newstr = ltrim($user_department_list, "[");
+    $arr_type = explode(",",$newstr);
+    $t = 0;
+    foreach ($arr_type as $key => $value) {
+        if($value == 5){
+            $t++;
         }
-        ;
+    };
+    if($t == 0){//访问者不在财务部门
+?>
+        $("#bottom").remove();
+<?php
+    }else{//访问者在财务部门
+?>
+
+        if(order_status != 5){$("#bottom").remove();};
+        //点击同意结算
+        $("#agree").on("click",function(){
+            
+            $.post("<?php echo $this->createUrl('order/checkoutagree');?>",{type:'design',order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $arr_order_total['total_price']?>,final_cost:<?php echo $arr_order_total['total_cost']?>,final_profit:<?php echo $arr_order_total['gross_profit']?>,final_profit_rate:<?php echo $arr_order_total['gross_profit_rate']?>,final_payment:<?php echo ($arr_order_data['feast_deposit']+$arr_order_data['medium_term']+$arr_order_data['final_payments']);?>},function(){
+                location.reload();
+            });
+        });
+        //点击拒绝结算
+        $("#refuse").on("click",function(){
+            
+            $.post("<?php echo $this->createUrl('order/checkoutrefuse');?>",{type:'meeting'order_id:<?php echo $_GET['order_id']?>},function(){
+                location.reload();
+            });
+        });
+
+        $("#action").remove();
+        $("#page_list").remove();
+<?php 
+    }
+?>        
+
+        //返回
+        $(".l_btn").on("click", function () {
+            location.href = "<?php echo $this->createUrl("order/my");?>&t=plan&code=";
+        });
 
     });
-
 
 </script>
 </body>

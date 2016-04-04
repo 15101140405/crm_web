@@ -23,7 +23,7 @@
 <body>
 <article id="homepage" >
     <div class="tool_bar fixed">
-        <!-- <div class="l_btn" data-icon="&#xe69c;" id="filter"></div> -->
+        <div class="l_btn" data-icon="&#xe679;"></div>
         <h2 class="page_title" id="pa_title">跟进记录</h2>
         <!--管理层显示该title -->
         <div class="r_btn" data-icon="&#xe767;"></div>
@@ -74,6 +74,16 @@
         }else{
             $(".r_btn").remove();
         }
+
+        //返回
+        $(".l_btn").on("click", function () {
+            if("<?php echo $_GET['from']?>" == "design"){
+                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+            }else if("<?php echo $_GET['from']?>" == "meeting"){
+                location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+            }
+                
+        });
         
     });
 </script>

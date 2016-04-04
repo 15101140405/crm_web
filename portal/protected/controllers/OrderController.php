@@ -357,10 +357,10 @@ class OrderController extends InitController
         Yii::app()->session['account_id']=1;
         Yii::app()->session['staff_hotel_id']=1;*/
 
-        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
             $this->render("selectType");
-        }else{*///未登录
+        }else{//未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -381,7 +381,7 @@ class OrderController extends InitController
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];                
                 $this->render("selectType");
             }
-        /*};*/
+        };
     }
 
     public function actionChoosediscount()
@@ -795,23 +795,43 @@ class OrderController extends InitController
     }
 
     public function actionCheckoutpost(){
+        /*$_POST['order_id'] = 11;
+        $_POST['type'] = "meeting";*/
         Order::model()->updateByPk($_POST['order_id'],array('order_status'=>5));
         $order = Order::model()->findByPk($_POST['order_id']);
-        $StaffDepartment = StaffDepartment::model()->find(array(
-                'condition' => 'account_id = :account_id && name = :name',
+        $order['order_date'] = explode(" ",$order['order_date']);
+        $staff = Staff::model()->findAll(array(
+                'condition' => 'account_id = :account_id ',
                 'params' => array(
-                        ':account_id' => $order['account_id'],
-                        ':name' => '财务'
+                        ':account_id' => $order['account_id']
                     )
-            ));
-        $staff_list = substr($StaffDepartment['staff_list'],0,strlen($StaffDepartment['staff_list'])-1); 
+                ));
+        $touser_list = "";
+        foreach ($staff as $key => $value) {
+            $newstr = rtrim($value['department_list'], "]");
+            $newstr = ltrim($value['department_list'], "[");
+            $arr_type = explode(",",$newstr);
+            foreach ($arr_type as $key1 => $value1) {
+                if($value1 == 5){
+                    $touser_list .= $value['id']."|";
+                }
+            }
+        }
+        $touser_list = substr($touser_list,0,strlen($touser_list)-1); 
+        
         
 
-        $touser= '100';
+        $touser= $touser_list;
+        /*print_r($touser);die;*/
         $content= "中文怎么解决";
-        $title= '"'."结算申请:".$order['order_name'].'|'.'"';
+        $title= '结算申请:'.$order['order_name'].'|'.$order['order_date'][0];
         $agentid=35;
-        $url="http://www.cike360.com/school/crm_web/portal/index.php?r=order/orderinfo&code=&order_id=".$_POST['order_id'];
+        if($_POST['type'] == "meeting"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&code=&order_id=".$_POST['order_id'];    
+        }else if($_POST['type'] == "design"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=design/bill&code=&order_id=".$_POST['order_id'];
+        }
+        
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
         $description="结算申请";
@@ -838,13 +858,13 @@ class OrderController extends InitController
         /*$result2=WPrequest::sendMessage_Mpnews(
                 $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
         // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
-        //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
-        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
+        print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid));
+        //$result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
         //$result=WPRequest::mediaupload($media,$type);
-        echo "result1:";
-        print_r($result1);
-        echo "result2:";
-        print_r($result2);
+        /*echo "result1:";
+        print_r($result1);*/
+        /*echo "result2:";
+        print_r($result2);*/
     }
 
     public function actionCheckoutagree()
@@ -862,10 +882,107 @@ class OrderController extends InitController
         $final->save(); 
 
         Order::model()->updateByPk($_POST['order_id'],array('order_status'=>6));
+
+        $touser_list = $order['planner_id']."|".$order['designer_id'];
+        $touser= $touser_list;
+        /*print_r($touser);die;*/
+        $content= "中文怎么解决";
+        $title= '结算已通过:'.$order['order_name'].'|'.$order['order_date'][0];
+        $agentid=0;
+        if($_POST['type'] == "meeting"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&code=&order_id=".$_POST['order_id'];    
+        }else if($_POST['type'] == "design"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=design/bill&code=&order_id=".$_POST['order_id'];
+        }
+        
+        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+        $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
+        $description="结算申请";
+        $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
+        // $t=new ReportController;
+
+        // $content = $t->actionDayreport();
+        // print_r($content);die;
+        //$content=$html;
+        // $content=ReportController::actionDayreport();
+        $digest="描述";
+        //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
+        // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
+        // $type="image";
+
+        echo "</br>";
+        $author="";
+        $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
+        $show_cover_pic="";
+        $safe="";
+        $toparty="";
+        $totag="";
+        //$result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        /*$result2=WPrequest::sendMessage_Mpnews(
+                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
+        // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid));
+        //$result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
+        //$result=WPRequest::mediaupload($media,$type);
+        /*echo "result1:";
+        print_r($result1);*/
+        /*echo "result2:";
+        print_r($result2);*/
     }
 
     public function actionCheckoutrefuse()
     {
         Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4));
+
+        $touser_list = $order['planner_id']."|".$order['designer_id'];
+        $touser= $touser_list;
+        /*print_r($touser);die;*/
+        $content= "中文怎么解决";
+        $title= '结算被拒绝:'.$order['order_name'].'|'.$order['order_date'][0];
+        $agentid=0;
+        if($_POST['type'] == "meeting"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&code=&order_id=".$_POST['order_id'];    
+        }else if($_POST['type'] == "design"){
+            $url="http://www.cike360.com/school/crm_web/portal/index.php?r=design/bill&code=&order_id=".$_POST['order_id'];
+        }
+        
+        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+        $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
+        $description="结算申请";
+        $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
+        // $t=new ReportController;
+
+        // $content = $t->actionDayreport();
+        // print_r($content);die;
+        //$content=$html;
+        // $content=ReportController::actionDayreport();
+        $digest="描述";
+        //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
+        // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
+        // $type="image";
+
+        echo "</br>";
+        $author="";
+        $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
+        $show_cover_pic="";
+        $safe="";
+        $toparty="";
+        $totag="";
+        //$result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        /*$result2=WPrequest::sendMessage_Mpnews(
+                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
+        // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+        print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid));
+        //$result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
+        //$result=WPRequest::mediaupload($media,$type);
+        /*echo "result1:";
+        print_r($result1);*/
+        /*echo "result2:";
+        print_r($result2);*/
+    }
+
+    public function actionOrderprint()
+    {
+        $this->render('orderprint');
     }
 }

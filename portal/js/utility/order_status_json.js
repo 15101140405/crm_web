@@ -13,6 +13,12 @@ var order_status = [{
 }, {
     content: "已付尾款",
     class_type: "status_darkgray"
+},{
+    content: "结算中",
+    class_type: "status_darkgray"
+},{
+    content: "已完成",
+    class_type: "status_darkgray"
 }];
 
 var order_type_json = [{
