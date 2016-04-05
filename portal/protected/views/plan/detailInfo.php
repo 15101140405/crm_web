@@ -208,22 +208,18 @@
 
 
 
-        //点击修改
-        $("div.r_btn").on("click",function(){
-            $("#bottom").removeClass("hid");
-            $("input").removeAttr("disabled");
-            $("input").addClass("edit_color");
-            $("#edit").remove();
-            $("#save").on("click",function(){
-                var detail_info = get_info();
-                $.post("<?php echo $this->createUrl("plan/updatedetail");?>",detail_info,function(data){
-                 /*if(data.success){
-                 alert("保存成功");*/
-                    location.reload();
-                //}
-                });
-            })
+        //初始化
+        $("#bottom").removeClass("hid");
+        $("input").removeAttr("disabled");
+        $("input").addClass("edit_color");
+        $("#edit").remove();
+        $("#save").on("click",function(){
+            var detail_info = get_info();
+            $.post("<?php echo $this->createUrl('plan/updatedetail');?>",detail_info,function(data){
+                location.href = "<?php echo $this->createUrl("design/bill");?>&from=&order_id=<?php echo $_GET['order_id']?>";
+            });
         })
+        
 
         /*//返回
         var from = $.util.param("from");

@@ -360,7 +360,7 @@
     
                 get_info = {//因为wedding_linkman_info.html页面，无法从后端获取order_id，所以lacalStorage.getItem("order_id")未定义，所以暂时注释掉
                     'account_id' : account_id ,
-                    'order_id' : parseInt(localStorage.getItem("order_id")) ,
+                    'order_id' : <?php echo $_GET['order_id']?> ,
                     'product_id' : parseInt($.util.param("product_id")),        
                     'actual_price' : parseFloat($("#price").val()),
                     'amount' : 1 ,
@@ -383,7 +383,7 @@
             }else if($.util.param("tab") == "feast" ){
                 get_info = {
                     'account_id' : account_id ,
-                    'order_id' : parseInt(localStorage.getItem("order_id")) ,
+                    'order_id' : <?php echo $_GET['order_id']?> ,
                     'product_id' : parseInt($.util.param("product_id")),        
                     'actual_price' : parseInt($("#price").val()),
                     'amount' : $("#amount").val() ,
@@ -400,7 +400,7 @@
             else /*if ($.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "made" || $.util.param("tab") == "screen" || $.util.param("tab") == "graphic" || $.util.param("tab") == "film" || $.util.param("tab") == "dress" || $.util.param("tab") == "appliance" || $.util.param("tab") == "drinks" || $.util.param("tab") == "car")*/ {
                 get_info = {//因为wedding_linkman_info.html页面，无法从后端获取order_id，所以lacalStorage.getItem("order_id")未定义，所以暂时注释掉
                     'account_id' : account_id ,
-                    'order_id' : parseInt(localStorage.getItem("order_id")) ,
+                    'order_id' : <?php echo $_GET['order_id']?> ,
                     'product_id' : parseInt($.util.param("product_id")),         
                     'actual_price' : parseFloat($("#price").val()),
                     'amount' : $("#amount").val(),
@@ -475,11 +475,11 @@
                 }
                 ;
             }*/
-
+            console.log(get_info);
             $.post("<?php echo $this->createUrl('design/updatetp');?>",get_info,function(data){  //bacground data
                 
                     alert("提交成功!");
-                    if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
+                    /*if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
                         location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                     } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
                         location.href = "<?php echo $this->createUrl("design/lightingScreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
@@ -493,7 +493,7 @@
                         location.href = "<?php echo $this->createUrl("design/drinksCar", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                     }else if ($.util.param("tab") == "feast") {
                         location.href = "<?php echo $this->createUrl("design/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                    };
+                    };*/
                 
             });
         });

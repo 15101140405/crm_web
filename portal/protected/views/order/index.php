@@ -77,8 +77,7 @@
   </section>
   <!-- 预定情况 -->
   <div class="day_order_module">
-    <h4 class="module_title">16日预订情况<div class="btn" style="display:inline-block;float:right" id="new">新增订单</div></h4>
-
+    <h4 class="module_title">16日预订情况<div class="btn" style="display:inline-block;float:right;height: 2.5rem;font-size: 1.5rem;line-height: 2.5rem;" id="new">新增订单</div></h4>
     <ul class="order_ulist" id='order'>
     </ul>
   </div>
@@ -249,7 +248,7 @@ $(function() {
   });
 
   //新增订单
-  $("#new").on("click",function(){
+  $(".btn").on("click",function(){
     location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
   })
 
@@ -258,13 +257,16 @@ $(function() {
    * =========================== */
   function show_order(choose_day){
     var _this = choose_day;
-    $('.module_title').html(_this.attr('data-solor')+'日预定情况'+'<div class="btn" style="display:inline-block;float:right" id="new">新增订单</div>');
+    $('.module_title').html(_this.attr('data-solor')+'日预定情况'+'<div class="btn" style="display:inline-block;float:right;height: 2.5rem;font-size: 1.5rem;line-height: 2.5rem;" id="new">新增订单</div>');
     $("#order").find("li").removeClass("hid");
     $("#order").find("li").addClass("hid");
     $("[day='"+_this.attr('data-solor')+"']").removeClass('hid');
     if($('.order_ulist').find('.hid').length == $('.order_ulist').find('li').length){
       $(".no_order").removeClass("hid");
     }
+    $(".btn").on("click",function(){
+      location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
+    })
   }
 
   /* ===========================

@@ -2636,7 +2636,7 @@ class DesignController extends InitController
 
     public function actionDressAppliance()
     {
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductdressAppliance($accountId);
         $supplierProducts1 = $SupplierProductForm->getSupplierProductdressAppliance1($accountId);
@@ -2690,7 +2690,7 @@ class DesignController extends InitController
 
     public function actionDrinksCar()
     {
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductdrinksCar($accountId);
         $supplierProducts1 = $SupplierProductForm->getSupplierProductdrinksCar1($accountId);
@@ -2744,7 +2744,7 @@ class DesignController extends InitController
 
     public function actionLightingScreen()
     {
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductLight($accountId);
         $supplierProducts1 = $SupplierProductForm->getSupplierProductLight1($accountId);
@@ -2802,7 +2802,7 @@ class DesignController extends InitController
 
     public function actionGraphicFilm()
     {
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductgraphicFilm($accountId);
         $supplierProducts1 = $SupplierProductForm->getSupplierProductgraphicFilm1($accountId);
@@ -2928,7 +2928,7 @@ class DesignController extends InitController
         /*取supplier_product*/
         /*********************************************************************************************************************/
 
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
         $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
@@ -3096,18 +3096,18 @@ class DesignController extends InitController
 
     public function actionUpdatetp()
     {
-        $data = array(
-            'account_id' => $_POST['account_id'],
-            'order_id' => $_POST['order_id'],
-            'product_id' => $_POST['product_id'],
-            'actual_price' => $_POST['actual_price'],
-            'unit' => $_POST['amount'],
-            'actual_unit_cost' => $_POST['actual_unit_cost'],
-            'update_time' => $_POST['update_time'],
-            'actual_service_ratio' => $_POST['actual_service_ratio']
-        );
-
-        OrderProduct::model()->updateAll($data,'order_id=:order_id && product_id=:product_id',array('order_id'=>$_POST['order_id'],'product_id'=>$_POST['product_id']));
+        /*$_POST['order_id'] = 68;
+        $_POST['product_id'] = 36;*/
+        
+        $orderproduct = OrderProduct::model()->find(array(
+                'condition' => 'order_id=:order_id && product_id=:product_id',
+                'params' => array(
+                        ':order_id' => $_POST['order_id'],
+                        'product_id' => $_POST['product_id']
+                    )
+            ));
+        /*print_r($orderproduct);die;*/
+        OrderProduct::model()->updateByPk($orderproduct['id'],array('actual_price'=>$_POST['actual_price'],'unit'=>$_POST['amount'],'actual_unit_cost'=>$_POST['actual_unit_cost'],'actual_service_ratio'=>$_POST['actual_service_ratio']));
     }
 
     public function actionSavedec()
@@ -3231,7 +3231,7 @@ class DesignController extends InitController
             'total' => $feast_total,
         );      
         /*print_r($feast_data);die;*/
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $supplierproductForm = new SupplierProductForm();
         $supplierproducts = $supplierproductForm->SupplierProductIndex3($accountId);
         //var_dump($supplierproducts);die;

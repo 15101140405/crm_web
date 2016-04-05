@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>昨日经营日报</title>
+<title>今日经营日报</title>
 <meta name="viewport" content="width=640,user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="css/thorn.css">
@@ -17,7 +17,7 @@
 <div class="mian_hs">
 	<div class="product_date">
     	<div class="title">
-        	<p class="p1"><span>昨日经营日报</span></p>
+        	<p class="p1"><span>今日经营日报（大郊亭店）</span></p>
             <p class="p2">让销售业绩飞起来</p>
             <!-- <div class="ww">
 <pre>
@@ -36,7 +36,7 @@
                         <section class="" style="margin: 0.5em 0px; position: static; box-sizing: border-box;"> 
                             <section class="" style="border-top-width: 2px; border-top-style: solid; border-color: #fa5e00; padding-top: 3px; box-sizing: border-box;"> 
                                 <section class="" style="display: inline-block; vertical-align: top; height: 2em; line-height: 2em; padding: 0px 0.5em; color: rgb(255, 255, 255); box-sizing: border-box; background-color: #fa5e00;"> 
-                                    <section style="box-sizing: border-box;">昨日进店［ <?php echo $yesterday_open_order ?> ］单</section> 
+                                    <section style="box-sizing: border-box;">今日进店［ <?php echo $yesterday_open_order ?> ］单</section> 
                                     <section style="box-sizing: border-box;"><br style="box-sizing: border-box;"  /></section>
                                     <section style="box-sizing: border-box;"><br style="box-sizing: border-box;"  /></section> 
                                 </section>
@@ -49,14 +49,7 @@
         foreach ($order_open as $key => $value) {
     ?>
                     <section class="" style="position: static; box-sizing: border-box;"> 
-                        <section class="" style="display: inline-block; vertical-align: top; width: 20%; box-sizing: border-box;"> 
-                            <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
-                                <section class="" style=" transform: translate3d(10px, 0px, 0px); -webkit-transform: translate3d(10px, 0px, 0px); -moz-transform: translate3d(10px, 0px, 0px); -o-transform: translate3d(10px, 0px, 0px); margin: 12px 0% 0px; position: static; box-sizing: border-box;"> 
-                                    <img style="max-width: 100%; width: 50%; box-sizing: border-box; vertical-align: middle;" class="" src="http://img.xiumi.us/xmi/ua/yTtV/i/7f3379102852667b03d0b4d539e2819e-sz_14151.png@1l_640w.png"  />
-                                </section>
-                            </section>
-                        </section>
-                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">
+                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box; font-size:2rem">
                             <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
                                 <section class="" style="margin: 0px; position: static; box-sizing: border-box;"> 
                                     <section class="" style="display: inline-block; float: left; width: 1em; height: 1em; margin: 1.5em 0px -2em -0.5em; border: 1px solid #fa5e00; border-radius: 100%; box-sizing: border-box; background-color: #fa5e00;"></section> 
@@ -102,7 +95,7 @@
     foreach ($order_all as $key => $value) {
 ?>
         
-                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
+                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;font-size:1.6rem;">
                         <section class="" style="margin: 0px; position: static; box-sizing: border-box;">
                             <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">
                                 <section style="border-right-width: 1px; border-right-style: solid; border-color: #fa5e00; height: 1.2em; box-sizing: border-box;"></section>
@@ -111,7 +104,7 @@
                                     <section class="" style="padding: 0px 20px 10px 0px; box-sizing: border-box;">
                                         <section class="Powered-by-XIUMI V5" style="box-sizing: border-box;">
                                             <section class="" style="position: static; box-sizing: border-box;">
-                                                <section class="" style="text-align: right; font-size: 12px; box-sizing: border-box;">
+                                                <section class="" style="text-align: right; font-size: 12px; box-sizing: border-box; font-size:1.6rem;">
 <?php 
         if($value['type'] == "会议"){
 ?>
@@ -131,7 +124,7 @@
                             </section>
                             <section class="" style="display: inline-block; vertical-align: top; width: 18%; box-sizing: border-box;">
                                 <span style="display: inline-block; margin-top: 1.2em; margin-left: 1em; font-size: 14px; box-sizing: border-box;" class="">
-                                    <section style="box-sizing: border-box;"><?php echo $value["date"]?></section>
+                                    <section style="box-sizing: border-box; font-size:1.6rem;"><?php echo $value["date"]?></section>
                                 </span> 
                             </section>
                         </section>

@@ -228,14 +228,35 @@ class OrderController extends InitController
         Yii::app()->session['staff_hotel_id']=1;*/
         if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
+            $arr_order = array();
+            $staff = Staff::model()->findByPk($_SESSION['userid']);
+            $newstr = rtrim($staff['department_list'], "]");
+            $newstr = ltrim($newstr, "[");
+            $arr_type = explode(",",$newstr);
+            $t = 0;
+            foreach ($arr_type as $key => $value) {
+                if($value == 6){
+                    $t++;
+                }
+            };
+            if($t != 0){//访问者为管理层
+                $criteria = new CDbCriteria; 
+                $criteria->addInCondition('order_status', array(1,2,3,4,5,6)); 
+                $criteria->addCondition("account_id = :account_id");    
+                $criteria->params[':account_id']=$_SESSION['account_id'];
+                $criteria->order = 'order_date DESC' ;
+                $arr_order = Order::model()->findAll($criteria);
+            }else{
+                $arr_order = Order::model()->findAll(array(
+                    "condition" => "adder_id=:adder_id || planner_id=:planner_id",
+                    "params" => array(
+                        ":adder_id" => $_SESSION['userid'],
+                        ":planner_id" => $_SESSION['userid']
+                    ),
+                    'order'=>'order_date  DESC', 
+                ));
+            };
             
-            $arr_order = Order::model()->findAll(array(
-                "condition" => "adder_id=:adder_id || planner_id=:planner_id",
-                "params" => array(
-                    ":adder_id" => $_SESSION['userid'],
-                    ":planner_id" => $_SESSION['userid']
-                )
-            ));
             //print_r($arr_order);die;
             if(!empty($arr_order)){
                 $this->render("my",array(
@@ -265,13 +286,34 @@ class OrderController extends InitController
                 Yii::app()->session['account_id']=$staff['account_id'];
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
                 
-                $arr_order = Order::model()->findAll(array(
-                    "condition" => "adder_id=:adder_id || planner_id=:planner_id",
-                    "params" => array(
-                        ":adder_id" => $_SESSION['userid'],
-                        ":planner_id" => $_SESSION['userid']
-                    )
-                ));
+                $arr_order = array();
+                $staff = Staff::model()->findByPk($_SESSION['userid']);
+                $newstr = rtrim($staff['department_list'], "]");
+                $newstr = ltrim($newstr, "[");
+                $arr_type = explode(",",$newstr);
+                $t = 0;
+                foreach ($arr_type as $key => $value) {
+                    if($value == 6){
+                        $t++;
+                    }
+                };
+                if($t != 0){//访问者为管理层
+                    $criteria = new CDbCriteria; 
+                    $criteria->addInCondition('order_status', array(1,2,3,4,5,6)); 
+                    $criteria->addCondition("account_id = :account_id");    
+                    $criteria->params[':account_id']=$_SESSION['account_id'];
+                    $criteria->order = 'order_date DESC' ;
+                    $arr_order = Order::model()->findAll($criteria);
+                }else{
+                    $arr_order = Order::model()->findAll(array(
+                        "condition" => "adder_id=:adder_id || planner_id=:planner_id",
+                        "params" => array(
+                            ":adder_id" => $_SESSION['userid'],
+                            ":planner_id" => $_SESSION['userid']
+                        ),
+                        'order'=>'order_date DESC', 
+                    ));
+                };
                 /*echo $adder['UserId'];die;*/
                 if(!empty($arr_order)){
                     $this->render("my",array(

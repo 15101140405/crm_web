@@ -50,7 +50,7 @@
             <li style="width:50%" id="checkout">
                 <a href="#">
                     <div class="cat_icon">
-                        <img src="http://www.cike360.com/school/crm_web/image/settlement.png"/>
+                        <img src="images/cehuashi.png"/>
                     </div>
                     <p class="cat_name" id="checkout_name">申请结算</p>
                 </a>

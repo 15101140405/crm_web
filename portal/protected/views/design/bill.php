@@ -58,7 +58,7 @@ $arr_locate = array(
             <li style="width:50%" id="checkout">
                 <a href="#">
                     <div class="cat_icon">
-                        <img src="images/settlement.png"/>
+                        <img src="images/cehuashi.png"/>
                     </div>
                     <p class="cat_name" id="checkout_name">申请结算</p>
                 </a>
@@ -746,7 +746,7 @@ $arr_locate = array(
 
         //跳转到跟单页面
         $("#follow").on('click',function(){
-            location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&order_id=<?php echo $_GET["order_id"]?>';
+            location.href='<?php echo $this->createUrl("order/orderinfofollow");?>&from=design&order_id=<?php echo $_GET["order_id"]?>';
         });
 
 

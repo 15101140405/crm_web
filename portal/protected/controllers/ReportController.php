@@ -117,15 +117,15 @@ class ReportController extends InitController
     public function actionDayreport()
     {
         //取当日开单数据
-        $time = time();
-        $date = date("y-m-d",strtotime("-1 day"));
+        /*$time = time();
+        $date = date("Y-m-d");
 
         $criteria = new CDbCriteria; 
         $criteria->addSearchCondition('update_time', $date);
         $order1 = Order::model()->findAll($criteria);
         /*print_r($order1);die;*/
 
-        $yesterday_open_order = count($order1); 
+        /*$yesterday_open_order = count($order1); 
 
         $order_open = array();
         foreach ($order1 as $key => $value) {
@@ -160,14 +160,14 @@ class ReportController extends InitController
         $tuidan = SupplierProduct::model()->findAll(array(
             'condition' => 'supplier_type_id = :supplier_type_id ',
             'params' => array(':supplier_type_id'=>16),
-            ));
+            ));*/
         
         /*$post=Post::model()->find(array(  
             'select'=>'title',  
             'condition'=>'postID=:postID',  
             'params'=>array(':postID'=>10),  
             ));  */
-        $meeting_num = 0;
+        /*$meeting_num = 0;
         $wedding_num = 0;
 
         $tuidan_id = array();
@@ -194,12 +194,12 @@ class ReportController extends InitController
             $staff = Staff::model()->findByPk($value['designer_id']);
             $item['designer_name'] = $staff['name'];
             /*print_r($tuidan_id);die;*/
-            $criteria3 = new CDbCriteria; 
+            /*$criteria3 = new CDbCriteria; 
             $criteria3->addCondition('order_id', $value['id']);
             $criteria3->addInCondition('product_id', $tuidan_id);
-            $order_product = OrderProduct::model()->findAll($criteria3); 
+            $order_product = OrderProduct::model()->findAll($criteria3);*/ 
             /*print_r($order_product);die;*/
-            $SupplierProduct = array();
+            /*$SupplierProduct = array();
             if(!empty($arr)){
                 $SupplierProduct = SupplierProduct::model()->findByPk($order_product['product_id']);
             }else{
@@ -215,19 +215,19 @@ class ReportController extends InitController
             }else if($value['order_type'] == 2){
                 $wedding_num++;
             };
-        };
+        };*/
         /*print_r($order_all);die;*/
 
         /*print_r($today_order);print_r($meeting_num);print_r($wedding_num);  */
 
 
-        $html = '<div class="rich_media_content " id="js_content">';   
+        /*$html = '<div class="rich_media_content " id="js_content">';   
         $html .='                <section style="box-sizing: border-box; background-color: rgb(255, 255, 255);">'; 
         $html .='                    <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">'; 
         $html .='                        <section class="" style="margin: 0.5em 0px; position: static; box-sizing: border-box;">'; 
         $html .='                            <section class="" style="border-top-width: 2px; border-top-style: solid; border-color: rgb(95, 156, 239); padding-top: 3px; box-sizing: border-box;">'; 
         $html .='                                <section class="" style="display: inline-block; vertical-align: top; height: 2em; line-height: 2em; padding: 0px 0.5em; color: rgb(255, 255, 255); box-sizing: border-box; background-color: rgb(95, 156, 239);">'; 
-        $html .='                                    <section style="box-sizing: border-box;">昨日进店［ '.$yesterday_open_order.' ］单</section>'; 
+        $html .='                                    <section style="box-sizing: border-box;">今日进店［ '.$yesterday_open_order.' ］单</section>'; 
         $html .='                                    <section style="box-sizing: border-box;">'; 
         $html .='                                        <br style="box-sizing: border-box;"  />'; 
         $html .='                                    </section>'; 
@@ -243,7 +243,7 @@ class ReportController extends InitController
 
 
         foreach ($order_open as $key => $value) {
-            $html .= '<section class="" style="position: static; box-sizing: border-box;">'; 
+            $html .= '<section class="" style="position: static; box-sizing: border-box;">'; */
         /*    $html .='                        <section class="" style="display: inline-block; vertical-align: top; width: 20%; box-sizing: border-box;">'; 
             $html .='                            <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">'; 
             $html .='                                <section class="" style=" transform: translate3d(10px, 0px, 0px); -webkit-transform: translate3d(10px, 0px, 0px); -moz-transform: translate3d(10px, 0px, 0px); -o-transform: translate3d(10px, 0px, 0px); margin: 12px 0% 0px; position: static; box-sizing: border-box;">'; 
@@ -251,7 +251,7 @@ class ReportController extends InitController
             $html .='                                </section>'; 
             $html .='                            </section>'; 
             $html .='                        </section>'; */
-            $html .='                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">'; 
+            /*$html .='                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box;">'; 
             $html .='                            <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">'; 
             $html .='                                <section class="" style="margin: 0px; position: static; box-sizing: border-box;">'; 
             $html .='                                    <section class="" style="display: inline-block; float: left; width: 1em; height: 1em; margin: 1.5em 0px -2em -0.5em; border: 1px solid rgb(95, 156, 239); border-radius: 100%; box-sizing: border-box; background-color: rgb(95, 156, 239);">'; 
@@ -327,7 +327,7 @@ class ReportController extends InitController
             $html .='                            </section>'; 
             $html .='                        </section>'; 
             $html .='                    </section>';
-        };
+        };*/
 
         /*$html .= '<section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">'; 
         $html .='                        <section class="" style="text-align: center; margin-top: 10px; margin-bottom: 10px; font-size: 32px; position: static; box-sizing: border-box;">'; 
@@ -525,16 +525,18 @@ class ReportController extends InitController
 
         //取当日开单数据
         $time = time();
-        $date = date("y-m-d",strtotime("-1 day"));
+        $date = date("y-m-d");
 
         $criteria = new CDbCriteria; 
         $criteria->addSearchCondition('update_time', $date);
         $order1 = Order::model()->findAll($criteria);
-        /*print_r($order1);die;*/
+        
 
         $yesterday_open_order = count($order1); 
 
         $order_open = array();
+        /*print_r($order1);die;*/
+
         foreach ($order1 as $key => $value) {
             $item = array();
             $t1 = explode(" ",$value['order_date']);
@@ -542,9 +544,9 @@ class ReportController extends InitController
             $t3 = $t2[1].'/'.$t2[2];
             $item['date'] = $t3;
             $item['type'] = '无';
-            if($value['order_type'] == '1'){
+            if($value['order_type'] == '2'){
                 $item['type'] = '婚礼';
-            }else if($value['order_type'] == '2'){
+            }else if($value['order_type'] == '1'){
                 $item['type'] = '会议';
             }
 
@@ -552,7 +554,7 @@ class ReportController extends InitController
             $item['name'] = $staff['name'];
             $order_open[] = $item ;
         }
-
+        
         
 
         //取全部已定订单数据
@@ -627,7 +629,7 @@ class ReportController extends InitController
 
 
 
-        //print_r($arr_sum);die;
+        /*print_r($order_open);die;*/
         $this->render('dayreporthtml',array(
                 'order_sure' => $data,
                 'sales' => $sales,

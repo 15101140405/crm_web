@@ -113,12 +113,12 @@ function order_stat($arr, $stat)
 function shuchu_html($result,$order_status)
 {
     if($order_status == 0 || $order_status == 1){
-        $html = "<li class=\"ulist_item swipeout\"  order-type=\"" . $result['order_type'] . "\" order-id=\"" . $result['id'] . "\">" . "<div class=\"item-content\">" .
+        $html = "<li class=\"ulist_item swipeout\" order-id=\"" . $result['id'] . "\">" . "<div class=\"item-content\" >" .
         /*"<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>"*/ 
-        "<p  style=\"margin-left: 20px;\" ><input order_status=\"". $result['order_status'] ."\" order-id=\"" . $result['id'] . "\" id=\"switch\" type=\"checkbox\" name=\"check-1\" value=\"4\" class=\"lcs_check\" autocomplete=\"off\" /></p>".
+        "<div  style=\"margin-left: 10px;\" ><input order_status=\"". $result['order_status'] ."\" order-id=\"" . $result['id'] . "\"  type=\"checkbox\" name=\"check-1\" value=\"4\" class=\"lcs_check switch\" autocomplete=\"off\" /></div>".
         /*"<span class=\"order_status " . $result['order_color'] . "\">" . $result['order_stat'] . "</span>" .*/
-        "<div class=\"order_info\">" .
-        "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 0rem;\">" . $result['order_name'] . "</i></p>" .
+        "<div class=\"order_info\" order-id=\"" . $result['id'] . "\" order-type=\"" . $result['order_type'] . "\" status=\"". $result['order_status'] ."\">" .
+        "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 1.2rem;white-space: nowrap;width: 180px;overflow: hidden;\">" . $result['order_name'] . "</i></p>" .
        /* "<p class=\"customer\"><i class=" . $result['order_new'] . ">" . $result['account_id'] . "</i></p>" .*/
         "<p class=\"desc\" style=\"margin-top: 8px;margin-bottom: 0;font-size:1rem;\" >" . $result['order_date'] . "</p>" .
         /*"<p class=\"desc\" style＝'color:#fff; display:none'> ". $result['order_time'] . "</p>" .*/
@@ -129,8 +129,8 @@ function shuchu_html($result,$order_status)
         "<span class=\"order_status \" style=\"margin-top: 15px;margin-bottom: 15;font-size:1.3rem;\" order_status=\"". $result['order_status'] ."\"></span>". 
         /*'<p><input id="switch" type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="off" /></p>'*/
         /*"<span class=\"order_status " . $result['order_color'] . "\">" . $result['order_stat'] . "</span>" .*/
-        "<div class=\"order_info\">" .
-        "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 0rem;\">" . $result['order_name'] . "</i></p>" .
+        "<div class=\"order_info\"  order-id=\"" . $result['id'] . "\" order-type=\"" . $result['order_type'] . "\" status=\"". $result['order_status'] ."\">" .
+        "<p class=\"customer\" style=\"margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 1.2rem;white-space: nowrap;width: 180px;overflow: hidden;\">" . $result['order_name'] . "</i></p>" .
        /* "<p class=\"customer\"><i class=" . $result['order_new'] . ">" . $result['account_id'] . "</i></p>" .*/
         "<p class=\"desc\" style=\"margin-top: 8px;margin-bottom: 0;font-size:1rem;\" >" . $result['order_date'] . "</p>" .
         /*"<p class=\"desc\" style＝'color:#fff; display:none'> ". $result['order_time'] . "</p>" .*/
@@ -345,7 +345,6 @@ small {
             var choice=confirm("您确认要删除吗？订单删除将无法恢复！", function() { }, null);
             if(choice){
                 order_id = $(this).parent().parent().parent().attr('order-id');
-                //alert(order_id);
                 $.post("<?php echo $this->createUrl('order/delorder');?>",{'order_id':order_id},function(retval){
                     if(retval == "success"){
                         alert('删除成功！');
@@ -425,9 +424,9 @@ small {
         if("<?php echo $_GET['t'];?>" == "plan"){
             order_status_xuanran ();
             buttonclick_xuanran();
-            $(".ulist_item").on("click", function () {
+            $(".order_info").on("click", function () {
                     //判断order－type，进入不同页面
-                    var order_status = $(this).find("span").attr("order_status");
+                    var order_status = $(this).attr("status");
                     var order_type = $(this).attr("order-type");
                     var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
@@ -448,9 +447,9 @@ small {
                 order_status_xuanran ();
                 buttonclick_xuanran();
                 /*alert(1);*/
-                $(".ulist_item").on("click", function () {
+                $(".order_info").on("click", function () {
                     //判断order－type，进入不同页面
-                    var order_status = $(this).find("span").attr("order_status");
+                    var order_status = $(this).attr("order_status");
                     var order_type = $(this).attr("order-type");
                     var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
@@ -468,9 +467,9 @@ small {
                 $("[order-type='2']").removeClass("hid");
                 order_status_xuanran ();
                 buttonclick_xuanran();
-                $(".ulist_item").on("click", function () {
+                $(".order_info").on("click", function () {
                     //判断order－type，进入不同页面
-                    var order_status = $(this).find("span").attr("order_status");
+                    var order_status = $(this).attr("status");
                     var order_type = $(this).attr("order-type");
                     var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
@@ -488,9 +487,9 @@ small {
                     $("[order-type='1']").addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("order_status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -508,9 +507,9 @@ small {
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -527,9 +526,9 @@ small {
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -547,9 +546,9 @@ small {
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -567,9 +566,9 @@ small {
                     $("[order-type='2']").find("[order_status='1']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -589,9 +588,9 @@ small {
                 $("[order-type='1']").removeClass("hid");
                 order_status_xuanran ();
                 buttonclick_xuanran();
-                $(".ulist_item").on("click", function () {
+                $(".order_info").on("click", function () {
                     //判断order－type，进入不同页面
-                    var order_status = $(this).find("span").attr("order_status");
+                    var order_status = $(this).attr("status");
                     var order_type = $(this).attr("order-type");
                     var order_id = $(this).attr("order-id");
                     plan_jump (order_type,order_status,order_id);
@@ -609,9 +608,9 @@ small {
                     $("[order-type='2']").addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -628,9 +627,9 @@ small {
                     $("[order-type='1']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -647,9 +646,9 @@ small {
                     $("[order-type='1']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -666,9 +665,9 @@ small {
                     $("[order-type='1']").find("[order_status='1']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
-                        var order_status = $(this).find("span").attr("order_status");
+                        var order_status = $(this).attr("status");
                         var order_type = $(this).attr("order-type");
                         var order_id = $(this).attr("order-id");
                         plan_jump (order_type,order_status,order_id);
@@ -698,7 +697,7 @@ small {
                 $("[order-type='1']").addClass("hid");
                 order_status_xuanran ();
                 buttonclick_xuanran();
-                $(".ulist_item").on("click", function () {
+                $(".order_info").on("click", function () {
                     //判断order－type，进入不同页面
                     var order_id = $(this).attr("order-id");
                     design_jump (order_id);
@@ -716,7 +715,7 @@ small {
                     $("[order-type='1']").addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = $(this).attr("order-id");
                         design_jump (order_id);
@@ -733,7 +732,7 @@ small {
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = $(this).attr("order-id");
                         design_jump (order_id);
@@ -750,7 +749,7 @@ small {
                     $("[order-type='2']").find("[order_status='4']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = $(this).attr("order-id");
                         design_jump (order_id);
@@ -767,7 +766,7 @@ small {
                     $("[order-type='2']").find("[order_status='3']").parent().addClass("hid");
                     order_status_xuanran ();
                     buttonclick_xuanran();
-                    $(".ulist_item").on("click", function () {
+                    $(".order_info").on("click", function () {
                         //判断order－type，进入不同页面
                         var order_id = $(this).attr("order-id");
                         design_jump (order_id);
@@ -783,7 +782,7 @@ small {
         $("[order_status='1']").find(".lcs_checkbox_switch").addClass('lcs_on');*/
 
         function buttonclick_xuanran(){
-            $('#switch').lc_switch();
+            $('.switch').lc_switch();
             // triggered each time a field changes status
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
             var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
@@ -794,7 +793,7 @@ small {
             $('body').delegate('.lcs_check', 'lcs-on', function() {
                 console.log('field is checked');
                 $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:1},function(){
-                    alert("档期已预订");
+                    
                 });
             });
 
@@ -802,7 +801,7 @@ small {
             $('body').delegate('.lcs_check', 'lcs-off', function(){
                 console.log('field is unchecked');
                 $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:0},function(){
-                    alert("预订已取消");
+                    
                 });
             });     
         }
