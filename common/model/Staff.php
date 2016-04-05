@@ -34,7 +34,7 @@ class Staff extends InitActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	/*public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -46,23 +46,23 @@ class Staff extends InitActiveRecord
 			// @todo Please remove those attributes that should not be searched.
 			array('id, account_id, name, gender, avatar, avatar_media_id, job_title, telephone, weixin_id, email, company_id, department_list, hotel_list, extattr, target, update_time', 'safe', 'on'=>'search'),
 		);
-	}
+	}*/
 
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
+	/*public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
 		);
-	}
+	}*/
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	/*public function attributeLabels()
 	{
 		return array(
 			'id' => 'ID',
@@ -82,7 +82,7 @@ class Staff extends InitActiveRecord
 			'target' => 'Target',
 			'update_time' => 'Update Time',
 		);
-	}
+	}*/
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

@@ -471,7 +471,7 @@
         var order_status = <?php echo $arr_order_data['order_status'];?>;
 <?php 
     $newstr = rtrim($user_department_list, "]");
-    $newstr = ltrim($user_department_list, "[");
+    $newstr = ltrim($newstr, "[");
     $arr_type = explode(",",$newstr);
     $t = 0;
     foreach ($arr_type as $key => $value) {

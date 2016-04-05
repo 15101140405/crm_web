@@ -45,44 +45,123 @@ class StaffController extends InitController
 
     public function actionList()
     {
-        $accountId = $this->getAccountId();
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            //echo '已登陆';
+            $this->getlist();
+        }else{ //未登录
+            //echo '未登陆';
+            $code = $_GET['code'];
+            Yii::app()->session['code']=$code;
+            if($code == ''){
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=order/my&t=plan&code=';
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                echo "<script>window.location='".$url."';</script>";
+            };
 
-        $staffForm = new StaffForm();
-        $staffList = $staffForm->getStaffList($accountId);
+            $t=new WPRequest;
+            $userId = $t->getUserId($code);
+            $adder=array("UserId"=>"222","DeviceId"=>"");
+            $adder=json_decode($userId,true);
+            if(!empty($adder['UserId'])) {
+                Yii::app()->session['userid']=$adder['UserId'];
+                $staff = Staff::model()->findByPk($adder['UserId']);
+                Yii::app()->session['account_id']=$staff['account_id'];
+                Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+                $this->getlist();
+            };
+        };
+    }
 
+    public function getlist()
+    {
+        $staff = Staff::model()->findAll(array(
+                'condition' => 'account_id = :account_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id']
+                    )
+            ));
+        /*print_r($staff);die;*/
+        $arr_staff = array();
+        foreach ($staff as $key => $value) {
+            $item = array();
+            $newstr = rtrim($value['department_list'], "]");
+            $newstr = ltrim($newstr, "[");
+            $department_list = explode(",",$newstr);
+
+            $i=0;
+            foreach ($department_list as $key1 => $value1) {
+                if($value1 == 1 || $value1 == 2 || $value1 == 3 || $value1 == 5){
+                    $i++;
+                }
+            }
+            if($i != 0){
+                $item['id']=$value['id'];
+                $item['avatar']=$value['avatar'];
+                $item['name']=$value['name'];
+                $item['department_list']=$department_list;
+                $arr_staff[]=$item;
+            };
+        };
         $this->render("list", array(
-            "staffList" => $staffList,
+            "arr_staff" => $arr_staff,
         ));
     }
 
     public function actionAdd()
     {
-        $model = new Staff();
+        $arr_staff = array(
+                'name' => "",
+                'phone' => "",
+                'department_list' => array(),
+                'hotel_list' =>""
+            );
+
+        if($_GET['type'] == 'edit'){//若为编辑，从数据库取数据
+            $staff = Staff::model()->findByPk($_GET['staff_id']);
+            $arr_staff['id'] = $staff['id'];
+            $arr_staff['name'] = $staff['name'];
+            $arr_staff['phone'] = $staff['telephone'];
+            $newstr = rtrim($staff['department_list'], "]");
+            $newstr = ltrim($newstr, "[");
+            $arr_staff['department_list'] = explode(",",$newstr);
+            $arr_staff['hotel_list'] = $staff['hotel_list'];
+        };
+
+        $arr_hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id = :account_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id']
+                    )
+            ));
+        /*print_r($arr_hotel);die;*/
         $this->render("add", array(
-            "model" => $model,
+            "arr_staff" => $arr_staff,
+            "arr_hotel" => $arr_hotel,
         ));
+        
     }
 
-    public function actionUpdate($id)
+    public function actionInsert()
     {
-        $staff = Staff::model()->findByPk($id);
-
-        $this->render("add", array(
-            "model" => $staff,
-            "action" => "update",
-        ));
+        $admin = new Staff;
+        $admin ->account_id=$_POST['account_id'];
+        $admin ->name=$_POST['name'];
+        $admin ->telephone=$_POST['telephone'];
+        $admin ->department_list=$_POST['department_list'];
+        $admin ->hotel_list=$_POST['hotel_list'];
+        $admin ->save();
     }
 
-    public function actionChooseDept()
+    public function actionUpdate()
     {
-        $accountId = $this->getAccountId();
-
-        $staffForm = new StaffForm();
-        $departments = $staffForm->getDepartments($accountId);
-
-        $this->render("chooseDept", array(
-            "departments" => $departments,
-        ));
+        Staff::model()->updateByPk($_POST['staff_id'],array('name'=>$_POST['name'],'telephone'=>$_POST['telephone'],'department_list'=>$_POST['department_list'],'hotel_list'=>$_POST['hotel_list']));
     }
+
+    public function actionDel()
+    {
+        Staff::model()->deleteByPk($_POST['staff_id']);
+    }
+
+    
 
 }

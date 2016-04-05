@@ -52,28 +52,23 @@
     <div class="contacts_ulist_module">
         <!-- loop -->
         <!-- <h4 class="contacts_index">A</h4> -->
-
-        <?php foreach ($staffList as $staff) { ?>
             <ul class="contacts_ulist">
-                <li class="contacts_item" user-id="<?php echo $staff->id ?>">
+        <?php foreach ($arr_staff as $key => $value) {?>
+                <li class="contacts_item" user-id="<?php echo $value['id'] ?>">
                     <div class="img_bar">
-                        <img src="<?php echo $staff->avatar ?>"/>
+                        <img src="<?php echo $value['avatar'] ?>"/>
                     </div>
-                    <div class="contacts_info">
-                        <div class="supplier_item_left">
-                            <p class="contacts"><?php echo $staff->name ?></p>
-                            <p class="remark"><?php echo $staff->department_list ?></p>
-                        </div>
-
-                        <div class="contacts_info_left">
-                            <a href="<?php echo Yii::app()->createUrl("staff/update", array("id" => $staff->id)) ?>"
-                               class="singup">编 辑</a>
-                        </div>
+                    <div class="supplier_item_left">
+                        <p class="remark"><?php echo $value['name'] ?></p>
+                    </div>
+                    <div class="supplier_item_right">
+                <?php foreach ($value['department_list'] as $key1 => $value1) {?>
+                        <p class="remark t_green" style="display:inline-block" depatment-id="<?php echo $value1 ?>"></p>
+                <?php }?>
                     </div>
                 </li>
-            </ul>
         <?php } ?>
-
+            </ul>
         <!-- loop end -->
     </div>
 </article>
@@ -85,8 +80,19 @@
     $(function () {
         //右上角增加按钮，进入add_usr
         $(".r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("staff/add");?>";
+            location.href = "<?php echo $this->createUrl("staff/add");?>&type=new&staff_id=";
         });
+
+        //点击li,进入编辑页面
+        $(".contacts_item").on("click",function(){
+            location.href = "<?php echo $this->createUrl('staff/add');?>&type=edit&staff_id=" + $(this).attr("user-id");
+        });
+
+        //渲染所属部门
+        $("[depatment-id = '1']").html("统筹师");
+        $("[depatment-id = '2']").html("策划师");
+        $("[depatment-id = '3']").html("店长");
+        $("[depatment-id = '5']").html("财务");
     });
 </script>
 </body>

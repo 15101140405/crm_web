@@ -870,14 +870,15 @@
 }
 
 .supplier_item_left {
-    width: 40%;
+    width: 30%;
     float: left;
+    line-height: 5rem;
 }
 
 .supplier_item_right {
     width: 50%;
     float: right;
-    margin-top: 5px;
+    line-height: 5rem;
 }
 
 .del {
