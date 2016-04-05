@@ -459,12 +459,12 @@ class OrderController extends InitController
     public function actionFindMonthOrder()
     {
         /*die;*/
-        $order_hotel = Order::model()->findAll(array(
-            'condition' => 'staff_hotel_id = :staff_hotel_id',
-            'params' => array(
-                ':staff_hotel_id' => $_POST['account_id']
-            )
-        ));
+        $criteria = new CDbCriteria;        
+        $criteria->addCondition("account_id = :account_id");    
+        $criteria->params[':account_id']=$_POST['account_id'];   
+        $criteria->addInCondition('order_status', array(1,2,3,4,5,6)); 
+        $order_hotel = Order::model()->findAll($criteria);  
+
         $arr_order_all = array();
         foreach ($order_hotel as $key => $value) {
             $item =array();
