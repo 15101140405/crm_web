@@ -76,8 +76,12 @@ $arr_locate = array(
             </li>
             <li class="ulist_item">婚礼日期：<?php echo $arr_order_data['order_date']; ?></li>
             <li class="ulist_item">新人姓名：<?php echo $arr_order_data['order_name']; ?></li>
-            <li class="ulist_item">策 划 师：<?php echo $designer; ?></li>
-            <li class="ulist_item">统 筹 师：<?php echo $planner; ?></li>
+        </ul>
+    </div>
+    <div class="ulist_module" style="margin-top:10px;">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="select_desigener">策 划 师：<?php echo $designer; ?></li>
+            <li class="ulist_item list_more" id="select_planner">统 筹 师：<?php echo $planner; ?></li>
         </ul>
     </div>
     <div class="ulist_module">
@@ -815,6 +819,15 @@ $arr_locate = array(
             location.href = "<?php echo $this->createUrl("order/my");?>&t=plan&code=";
         });
 
+        //选择策划师
+        $("#select_desigener").on("click",function(){
+            location.href = "<?php echo $this->createUrl("order/transition");?>&from=wedding&order_id=<?php echo $_GET['order_id']?>&type=designer";
+        });
+
+        //选择统筹师
+        $("#select_planner").on("click",function(){
+            location.href = "<?php echo $this->createUrl("order/transition");?>&from=wedding&order_id=<?php echo $_GET['order_id']?>&type=planner";
+        });
     });
 
 </script>

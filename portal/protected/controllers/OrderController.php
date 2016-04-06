@@ -1027,4 +1027,30 @@ class OrderController extends InitController
     {
         $this->render('orderprint');
     }
+
+    public function actionOrdertransition()
+    {
+        $user = Staff::model()->findByPk($_SESSION['userid']);
+        $target = Staff::model()->findByPk($_POST['staff_id']);
+        $order = Order::model()->findByPk($_POST['order_id']);
+        $date = explode(" ",$order['order_date']);
+        $content = "";
+        if($_POST['type'] == 'designer'){
+            Order::model()->updateByPk($_POST['order_id'],array('designer_id' => $_POST['staff_id']));
+            $content = "“".$user['name']."”将订单"."[".$date[0]."婚礼]转移给“".$target['name']."”";            
+        }else if($_POST['type'] == 'planner'){
+            Order::model()->updateByPk($_POST['order_id'],array('planner_id' => $_POST['staff_id']));
+            $content = "“".$user['name']."”将订单"."[".$date[0]."会议]转移给“".$target['name']."”";   
+        };
+        $this->sendMessage($content);
+    }
+
+    public function sendMessage($html)
+    {
+        $touser="@all";//你要发的人
+        $toparty="";
+        $content = $html;
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
+        print_r($result);
+    }
 }

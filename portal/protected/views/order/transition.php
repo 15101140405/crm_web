@@ -15,7 +15,7 @@
 <article>
     <div class="tool_bar">
         <div class="l_btn" data-icon="&#xe679;"></div>
-        <h2 class="page_title">转移客户</h2>
+        <h2 class="page_title">转移订单</h2>
     </div>
     <div class="contacts_ulist_module">
         <?php
@@ -43,9 +43,9 @@
             <h4 class="contacts_index">A</h4>
             <ul class="contacts_ulist">
                 <!-- loop -->
-                <li class="contacts_item" plan-id="<?php echo $staff['id']; ?>">
+                <li class="contacts_item" staff-id="<?php echo $staff['id']; ?>">
                     <div class="img_bar">
-                        <img src="images/<?php echo $staff['avatar']; ?>"/>
+                        <img src="images/dudaohui.png"/>
                     </div>
                     <div class="contacts_info">
                         <p class="contacts"><?php echo $staff['name']; ?></p>
@@ -68,22 +68,19 @@
 
         //选择策划师
         $("li.contacts_item").on("click", function () {
-
             //弹窗：确定／取消
             var confirm_name = $(this).find(".contacts").html();
             var r = confirm("确定把订单分配给" + confirm_name + "?") //这里选择有点问题
+            console.log({"order_id":"<?php echo $_GET['order_id']?>" , "staff_id":$(this).attr("staff-id"), "type":"<?php echo $_GET['type']?>"});
             if (r == true) {
-                $.postJASON("<?php echo $this->createUrl("meeting/detail", array());?>",{"order_id":localStorage.getItem("order_id") , "plan_id":$(this).attr("plan-id")},function(retval){
-                    if(retval.success){
-                        location.href = "<?php echo $this->createUrl("order/my", array());?>"
-                    }
-                     else{
-                        alert('分配失败，一秒后再试试！');
-                     return false;
-                     }
-                 })
-            }
-            else {
+                $.post("<?php echo $this->createUrl("order/ordertransition", array());?>",{"order_id":"<?php echo $_GET['order_id']?>" , "staff_id":$(this).attr("staff-id"), "type":"<?php echo $_GET['type']?>"},function(retval){
+                    if("<?php echo $_GET['from']?>" == 'meeting'){
+                        location.href = "<?php echo $this->createUrl("meeting/bill")?>&order_id=<?php echo $_GET['order_id']?>";
+                    }else if("<?php echo $_GET['from']?>" == 'wedding'){
+                        location.href = "<?php echo $this->createUrl("design/bill")?>&order_id=<?php echo $_GET['order_id']?>";
+                    };
+                });
+            }else {
                 return false;
             }
         })

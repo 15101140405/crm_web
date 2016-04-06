@@ -70,7 +70,11 @@
             <li class="ulist_item overflow1">客户名称：<span class="overflow2"><?php echo $arr_order_data['order_name']; ?><span></li>
             <li class="ulist_item">联 系 人：<?php echo $linkman; ?></li>
             <li class="ulist_item">活动日期：<?php echo $arr_order_data['order_date']; ?></li>
-            <li class="ulist_item">统 筹 师：<?php echo $planner; ?></li>
+        </ul>
+    </div>
+    <div class="ulist_module" style="margin-top:10px;">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="select_planner">统 筹 师：<?php echo $planner; ?></li>
         </ul>
     </div>
     <div class="ulist_module">
@@ -178,12 +182,13 @@
     
 
         <!-- 场地费 -->
-    <?php
-        if (!empty($arr_changdi_fee)) {
-    ?>
+    
     <div class="bill_item_module">
         <h4 class="module_title list_more" id="changdifei">场地费</h4>
         <div class="ulist_module">
+<?php
+    if (!empty($arr_changdi_fee)) {
+?>
             <ul class="ulist menu_list">
                 <li class="ulist_item">
                     <div class="dishes">
@@ -490,7 +495,6 @@
         if(order_status != 5){$("#bottom").remove();};
         //点击同意结算
         $("#agree").on("click",function(){
-            
             $.post("<?php echo $this->createUrl('order/checkoutagree');?>",{type:'design',order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $arr_total['total_price']?>,final_cost:<?php echo $arr_total['total_cost']?>,final_profit:<?php echo $arr_total['gross_profit']?>,final_profit_rate:<?php echo $arr_total['gross_profit_rate']?>,final_payment:<?php echo $payment_total;?>},function(){
                 location.reload();
             });
@@ -508,6 +512,10 @@
     }
 ?>
 
+    //选择统筹师
+    $("#select_planner").on("click",function(){
+        location.href = "<?php echo $this->createUrl("order/transition");?>&from=meeting&order_id=<?php echo $_GET['order_id']?>&type=planner";
+    });
     })
 </script>
 </body>
