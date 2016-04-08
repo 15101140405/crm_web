@@ -505,13 +505,10 @@
             $.post("<?php echo $this->createUrl('order/checkoutrefuse');?>",{type:'meeting',order_id:<?php echo $_GET['order_id']?>},function(){
                 location.reload();
             });
-        });
-
-        
+        });        
 <?php 
     }
 ?>
-
     //选择统筹师
     $("#select_planner").on("click",function(){
         location.href = "<?php echo $this->createUrl("order/transition");?>&from=meeting&order_id=<?php echo $_GET['order_id']?>&type=planner";

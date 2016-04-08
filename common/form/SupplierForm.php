@@ -6,16 +6,16 @@
  */
 class SupplierForm extends InitForm
 {
-    public function getSupplierList($accountId)
+    public function getSupplierList($accountId,$supplier_type_id)
     {
         $result = array();
-        $types = $this->getSupplierTypes($accountId);
 
         $suppliers = Supplier::model()->findAll(array(
-            "condition" => "account_id=:account_id",
+            "condition" => "account_id=:account_id && type_id=:type_id",
             "params" => array(
                 ":account_id" => $accountId,
-            ),
+                ":type_id" => $supplier_type_id
+            )
         ));
 
         foreach ($suppliers as $supplier) {
@@ -30,16 +30,8 @@ class SupplierForm extends InitForm
             $item["staff_name"] = $staff->name;
             $item["avatar"] = $staff->avatar;
 
-            // 获取供应商类型数据
-            $type = $types[$supplier->type_id];
-            if (!$type) {
-                continue;
-            }
-            $item["type_name"] = $type->name;
-            if (!$item["avatar"]) {     // 如果员工头像为空, 则用供应商类型默认头像补足
-                $item["avatar"] = $type->avatar;
-            }
-
+            $type = SupplierType::model()->findByPk($supplier_type_id);
+            $item['type_name'] = $type['name'];
             $result[] = $item;
         }
 

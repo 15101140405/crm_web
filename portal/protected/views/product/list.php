@@ -21,26 +21,10 @@
     </div>
     <div class="int_ulist_module">
         <ul class="int_ulist">
-            <?php
-            //background data
-            // $arr = array(
-
-            //     '0' => array('product_id' => '001',
-            //         'name' => '产品名称1'
-            //     ),
-            //     '1' => array('product_id' => '003',
-            //         'name' => '产品名称2'
-            //     )
-            // );
-            foreach ($arr as $value) {
-                foreach ($value as $key1 => $value1) {
-                    $arr_list[$key1] = $value1;
-                }
-                ?>
-                <li class="int_ulist_item list_more" id="supplier_type"
-                    product-id="<?php echo $arr_list['product_id']; ?>">
-                    <span><?php echo $arr_list['name']; ?></span>
-                    <div class="align_r supplier_type"></div>
+            <?php foreach ($supplier_product as $value) { ?>
+                <li class="int_ulist_item list_more" supplier-id="<?php echo $value['supplier_id']?>" product-id="<?php echo $value['id']; ?>">
+                    <span><?php echo $value['product_name']; ?></span>
+                    <div class="align_r supplier_type">[<?php echo $value['supplier_name']?>]</div>
                 </li>
             <?php } ?>
         </ul>
@@ -48,21 +32,20 @@
 </article>
 <script>
     $(function () {
-        //获取supplier_id
-        var supplier_id = escape(unescape($.util.param("supplier_id")));
 
         //右上角增加按钮，进入add_product_detail
         $(".tool_bar .r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("product/add");?>&supplier_id=" + supplier_id ;
+            location.href = "<?php echo $this->createUrl("product/add");?>&supplier_type=<?php echo $_GET['supplier_type']?>&category=<?php echo $_GET['category']?>&supplier_id=&product_id=";
         });
 
         //点击某个供应商，进入add_product_detail进行信息修改
         $(".int_ulist li").on("click", function () {
             var product_id = escape($(this).attr("product-id"));
-            location.href = "<?php echo $this->createUrl("product/add");?>&product_id=" + product_id + "&supplier_id=" + supplier_id;
+            var supplier_id = escape($(this).attr("supplier-id"));
+            location.href = "<?php echo $this->createUrl("product/add");?>&supplier_type=<?php echo $_GET['supplier_type']?>&category=<?php echo $_GET['category']?>&supplier_id=" + supplier_id + "&product_id=" + product_id;
         });
 
-        //点击返回按钮,回到 供应商列表
+        //点击返回按钮,回到 产品库
         $(".l_btn").on("click", function () {
             location.href = "<?php echo $this->createUrl("supplier/list");?>";
         });

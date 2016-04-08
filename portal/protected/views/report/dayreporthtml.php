@@ -49,7 +49,7 @@
         foreach ($order_open as $key => $value) {
     ?>
                     <section class="" style="position: static; box-sizing: border-box;"> 
-                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box; font-size:2rem">
+                        <section class="" style="display: inline-block; vertical-align: top; width: 80%; box-sizing: border-box; font-size:1.8rem">
                             <section class="Powered-by-XIUMI V5" style="position: static; box-sizing: border-box;">
                                 <section class="" style="margin: 0px; position: static; box-sizing: border-box;"> 
                                     <section class="" style="display: inline-block; float: left; width: 1em; height: 1em; margin: 1.5em 0px -2em -0.5em; border: 1px solid #fa5e00; border-radius: 100%; box-sizing: border-box; background-color: #fa5e00;"></section> 

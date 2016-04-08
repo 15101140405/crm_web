@@ -418,7 +418,7 @@ class MeetingController extends InitController
         $criteria1 = new CDbCriteria; 
         $criteria1->addInCondition("supplier_id",$supplier_id);
         $criteria1->addCondition("category=:category");
-        $criteria1->params[':category']=1; 
+        $criteria1->params[':category']=2; 
         $supplier_product = SupplierProduct::model()->findAll($criteria1);
         /*print_r($supplier_product);*/
         $supplier_product_id = array();
@@ -469,7 +469,7 @@ class MeetingController extends InitController
             $arr_light_total['gross_profit_rate']=$arr_light_total['gross_profit']/$arr_light_total['total_price'];
         }
 
-        /*print_r($arr_light_total);die;*/
+        /*print_r($light);die;*/
 
         
 
@@ -493,7 +493,7 @@ class MeetingController extends InitController
         $criteria1 = new CDbCriteria; 
         $criteria1->addInCondition("supplier_id",$supplier_id);
         $criteria1->addCondition("category=:category");
-        $criteria1->params[':category']=1; 
+        $criteria1->params[':category']=2; 
         $supplier_product = SupplierProduct::model()->findAll($criteria1);
         /*print_r($supplier_product);*/
         $supplier_product_id = array();
@@ -941,24 +941,34 @@ class MeetingController extends InitController
             'planner_id'=>$_SESSION['userid'],
         ));
         $order = Order::model()->findByPk($_POST['order_id']);
+        //$order = Order::model()->findByPk($_GET['order_id']);
 
         $staff = Staff::model()->findByPk($_SESSION['userid']);
 
-        $html = '<div class="rich_media_content " id="js_content">    
-                    <p>开单时间：'.$_POST['update_time'].'</p>
-                    <p>订单类型：会议</p>
-                    <p>客户名称：'.$order['order_name'].'</p>
+        /*$html = '<div class="rich_media_content " id="js_content">    
+                    
+                    <p>订单类型：婚礼</p>
+                    <p>新人姓名：'.$order['order_name'].'</p>
                     <p>开始时间：'.$order['order_date'].'</p>
                     <p>结束时间：'.$order['end_time'].'</p>
                     <p>统筹师：'.$staff["name"].'</p>
                     <p><br></p>
-                </div>';
+                </div>';*/
+        /*print_r($order);die;*/
+        $date = explode(" ",$order['order_date']);
+        $html = "";
+        if($order['order_type'] == 2){
+            $html = "新客人进店了"."                 "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+        }else if($order['order_type'] == 1){
+            $html = "新客人进店了"."                 "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+        };
         
+        /*print_r($html);die;*/
         $touser="@all";//你要发的人
         $toparty="";
         $totag="";
         $title="新客人进店了！";//标题
-        $agentid=16;//应用
+        $agentid=0;//应用
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $author="";
         $content_source_url="";
@@ -966,8 +976,11 @@ class MeetingController extends InitController
         $digest="描述";
         $show_cover_pic="";
         $safe="";
-        $result=WPRequest::sendMessage_Mpnews(
-                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
+        echo 1;
+        //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
+        print_r($result);
+        echo 2;
     }
 
     public function actionSavetp()

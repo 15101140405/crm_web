@@ -18,7 +18,7 @@
     </div>
     <nav>
         <ul>
-            <li id='meeting_feast'>
+            <li supplier-type="2" category="1">
                 <a href="#">
                     <div class="cat_icon">
                         <img src="images/gendan.png"/>
@@ -26,7 +26,7 @@
                     <p class="cat_name">会议餐</p>
                 </a>
             </li>
-            <li id="changdifei">
+            <li supplier-type="19" category="1">
                 <a href="#">
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
@@ -34,7 +34,7 @@
                     <p class="cat_name">会议场地费</p>
                 </a>
             </li>
-            <li id="wedding_feast">
+            <li supplier-type="2" category="2">
                 <a href="<?php echo $this->createUrl("design/feast", array());?>&from=detail&tab=">
                     <div class="cat_icon">
                         <img src="images/hunyan.png"/>
@@ -42,60 +42,148 @@
                     <p class="cat_name">婚宴</p>
                 </a>
             </li>
-            <li id='service'>
-                <a href="<?php echo $this->createUrl("design/servicePersonnel", array());?>&from=detail&tab=">
-                    <div class="cat_icon">
-                        <img src="images/cehuashi.png"/>
-                    </div>
-                    <p class="cat_name">服务人员</p>
-                </a>
-            </li>
-            <li di='decoration'>
+            <li supplier-type="20" category="2">
                 <a href="<?php echo $this->createUrl("design/decoration", array());?>&from=detail">
                     <div class="cat_icon">
                         <img src="images/hunyan.png"/>
                     </div>
-                    <p class="cat_name">场地布置</p>
+                    <p class="cat_name">婚礼场布</p>
                 </a>
             </li>
-            <li id="lighting">
-                <a href="<?php echo $this->createUrl("design/lightingScreen", array());?>&from=detail&tab=">
-                    <div class="cat_icon">
-                        <img src="images/taoxi.png"/>
-                    </div>
-                    <p class="cat_name">灯光视频</p>
-                </a>
-            </li>
-            <li id='design'>
-                <a href="<?php echo $this->createUrl("design/graphicFilm", array());?>&from=detail&tab=">
-                    <div class="cat_icon">
-                        <img src="images/queren.png"/>
-                    </div>
-                    <p class="cat_name">设计</p>
-                </a>
-            </li>
-            <li id='dress'>
+            <li supplier-type="3" category="2">
                 <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
-                    <p class="cat_name">婚纱婚品</p>
+                    <p class="cat_name">主持人</p>
                 </a>
             </li>
-            <li id='car'>
+            <li supplier-type="4" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">摄像师</p>
+                </a>
+            </li>
+            <li supplier-type="5" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">摄影师</p>
+                </a>
+            </li>
+            <li supplier-type="6" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">化妆师</p>
+                </a>
+            </li>
+            <li supplier-type="7" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">其他人员</p>
+                </a>
+            </li>
+            <li supplier-type="8" category="2">
+                <a href="<?php echo $this->createUrl("design/lightingScreen", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/taoxi.png"/>
+                    </div>
+                    <p class="cat_name">灯光</p>
+                </a>
+            </li>
+            <li supplier-type="9" category="2">
+                <a href="<?php echo $this->createUrl("design/lightingScreen", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/taoxi.png"/>
+                    </div>
+                    <p class="cat_name">视频</p>
+                </a>
+            </li>
+            <li supplier-type="10" category="2">
+                <a href="<?php echo $this->createUrl("design/graphicFilm", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/queren.png"/>
+                    </div>
+                    <p class="cat_name">平面设计</p>
+                </a>
+            </li>
+            <li supplier-type="11" category="2">
+                <a href="<?php echo $this->createUrl("design/graphicFilm", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/queren.png"/>
+                    </div>
+                    <p class="cat_name">视频设计</p>
+                </a>
+            </li>
+            <li supplier-type="12" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">婚纱礼服</p>
+                </a>
+            </li>
+            <li supplier-type="13" category="2">
+                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dudaohui.png"/>
+                    </div>
+                    <p class="cat_name">婚礼用品</p>
+                </a>
+            </li>
+            <li supplier-type="14" category="2">
                 <a href="<?php echo $this->createUrl("design/drinksCar", array());?>&from=detail&tab=">
                     <div class="cat_icon">
                         <img src="images/dianli.png"/>
                     </div>
-                    <p class="cat_name">酒水车辆</p>
+                    <p class="cat_name">酒水</p>
                 </a>
             </li>
-            <li id='fee'>
+            <li supplier-type="15" category="2">
+                <a href="<?php echo $this->createUrl("design/servicePersonnel", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/dianli.png"/>
+                    </div>
+                    <p class="cat_name">车辆</p>
+                </a>
+            </li>
+            <li supplier-type="18" category="2">
                 <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
                     <div class="cat_icon">
                         <img src="images/cehuashi.png"/>
                     </div>
-                    <p class="cat_name">策划费&杂费</p>
+                    <p class="cat_name">策划费</p>
+                </a>
+            </li>
+            <li supplier-type="21" category="2">
+                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/cehuashi.png"/>
+                    </div>
+                    <p class="cat_name">杂费</p>
+                </a>
+            </li>
+            <li supplier-type="18" category="1">
+                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/cehuashi.png"/>
+                    </div>
+                    <p class="cat_name">会议税费</p>
+                </a>
+            </li>
+            <li supplier-type="18" category="2">
+                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+                    <div class="cat_icon">
+                        <img src="images/cehuashi.png"/>
+                    </div>
+                    <p class="cat_name">婚礼税费</p>
                 </a>
             </li>
         </ul>
@@ -107,20 +195,12 @@
 <script src="js/lc_switch.js" type="text/javascript"></script>
 <script>
     $(function () {
-        var from = "<?php echo $_GET['t']?>";
-        if(from == 'wedding'){
-            $("#meeting_feast").remove();
-            $("#changdifei").remove();
-        }else if(from == 'meeting'){
-            $("#wedding_feast").remove();
-            $("#service").remove();
-            $("#decoration").remove();
-            $("#lighting").remove();
-            $("#design").remove();
-            $("#dress").remove();
-            $("#car").remove();
-            $("#fee").remove();
-        }
+        $("li").on("click",function(){
+            if($(this).attr("supplier-type") != "18"){
+                location.href = "<?php echo $this->createUrl('product/list');?>&supplier_type=" + $(this).attr("supplier-type") + "&category=" + $(this).attr("category");
+            };
+        });
+
     })
 </script>
 </body>

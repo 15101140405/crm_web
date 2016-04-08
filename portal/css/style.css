@@ -800,6 +800,15 @@
     top: 0;
     right: 3rem;
     display: inline-block;
+    margin-right: 15px;
+}
+
+.supplier_type1 {
+    color: green;
+    float: right;
+    display: inline-block;
+    margin-right: 20px;
+    line-height: 5rem;
 }
 
 .camera {

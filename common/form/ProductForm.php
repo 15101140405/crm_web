@@ -75,33 +75,16 @@ class ProductForm extends InitForm
         }
 
     }
-    public function productUpdate($productId,$arr){
-        $productInfo = SupplierProduct::model()->findByPk($productId);
-        // $arr1['name']      = $arr['name'];
-        // // $arr1['telephone'] = $arr['telephone'];
 
-        // $count1 =  SupplierProduct::model()->updateAll('id =:id',array( ":id" => $productId));
-        $arr2['account_id'] = $arr['account_id'];
+    public function productUpdate($productId,$arr){
         $arr2['supplier_id']    = $arr['supplier_id'];
-        // $arr2['type_id']    = $arr['type_id'];
         $arr2['name']    = $arr['name'];
-        // $arr2['category']    = $arr['category'];
         $arr2['unit_price']    = $arr['unit_price'];
         $arr2['unit']    = $arr['unit'];
         $arr2['unit_cost']    = $arr['unit_cost'];
-        $arr2['cost']    = '555';
-        // $arr2['service_charge_ratio']    = $arr['service_charge_ratio'];
-        // $arr2['ref_pic_url']    = $arr['ref_pic_url'];
-        // $arr2['description']    = $arr['description'];
-        $arr2['update_time']= date('Y-m-d');
-        $count2 =  SupplierProduct::model()->updateAll($arr2,'id =:id',array( ":id" => $productId));
-     if($count2>0 ){
-            /*return array('success'=>1);*/
-            return array('success'=>3);
-        }else{
-            return array('success'=>0);
-        }
+        SupplierProduct::model()->updateAll($arr2,'id =:id',array( ":id" => $productId));
     }
+
     public function productDelete($productId,$account_id){
         $count = SupplierProduct::model()->deleteByPk($productId,'account_id=:account_id',array(':account_id'=>$account_id));
         if($count>0){
@@ -110,7 +93,7 @@ class ProductForm extends InitForm
         }else{
             $arr['success']= 0;
             return  $arr;
-        }
+        };
     }
 
 }

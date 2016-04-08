@@ -17,6 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 <article id="homepage">
     <div class="tool_bar fixed">
         <!-- <div class="l_btn" data-icon="&#xe69c;" id="filter"></div> -->
+        <div class="l_btn" id="index" style='width:30%'>档期快查</div>
         <h2 class="page_title" id="pa_title">我的订单</h2>
         <!--管理层显示该title -->
         <?php
@@ -45,6 +46,7 @@ error_reporting(E_ALL & ~E_NOTICE);
         }
         ?>
         <!-- <div class="r_btn" data-icon="&#xe767;"></div> -->
+        <div class="r_btn" data-icon="&#xe767;" style='width: 3.5rem;'></div>
     </div>
     <?php
     if ($user_power > 1) {
@@ -127,18 +129,21 @@ error_reporting(E_ALL & ~E_NOTICE);
 <script>
 
     $(function () {
+        //点击档期快查
+        $(".l_btn").on("click", function () {
+            location.href = "<?php echo $this->createUrl("order/index", array());?>&from=&code=";
+        });
 
+        //点击增加订单
+        $(".r_btn").on("click", function () {
+            location.href = "<?php echo $this->createUrl("order/selecttype");?>&code=";
+        });
         
 
         //点击变换导航选中状态
         $(".tab_btn").on("click", function () {
             $(this).addClass("act");
             $(this).siblings().removeClass("act");
-        });
-
-        //点击增加订单
-        $(".r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/index")?>&from=my&code=";
         });
 
         //判断角色，隐藏或显示选择店面

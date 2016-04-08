@@ -49,10 +49,10 @@ class SupplierController extends InitController
      */
     public function actionList()
     {
-        $accountId = $this->getAccountId();
-
+        $accountId = $_SESSION['account_id'];
+        $supplier_type_id = $_GET['supplier_type'];
         $supplierForm = new SupplierForm();
-        $suppliers = $supplierForm->getSupplierList($accountId);
+        $suppliers = $supplierForm->getSupplierList($accountId,$supplier_type_id);
 
         $this->render("list", array(
             "arr" => $suppliers,
@@ -62,9 +62,17 @@ class SupplierController extends InitController
 
     public function actionAdd()
     {
-        $this->render("add",array(
-
-        ));
+        $staff = array();
+        if($_GET['edit_supplier_id'] == ""){
+            $this->render("add");
+        }else{
+            $supplier = Supplier::model()->findByPk($_GET['edit_supplier_id']);
+            $staff = Staff::model()->findByPk($supplier['staff_id']);
+            $this->render("add",array(
+                    'staff' => $staff
+                ));
+        }
+        
     }
 
     public function actionChooseType()
@@ -77,44 +85,45 @@ class SupplierController extends InitController
             "accountId" => $accountId
         ));
     }
+
+    public function actionInsert(){
+        //新增供应商对应的员工
+        $admin=new Staff;
+        $admin->account_id=$_SESSION['account_id'];
+        $admin->name=$_POST['na'];
+        $admin->telephone=$_POST['phone'];
+        $admin->department_list="[4]";
+        $admin->update_time=$_POST['update_time'];
+        $admin->save();
+        //查找新增的员工ID
+        $staff=Staff::model()->find(array(
+                'condition' => 'name=:name && telephone=:telephone && update_time=:update_time',
+                'params' => array(
+                        ':name' => $_POST['na'],
+                        ':telephone' => $_POST['phone'],
+                        ':update_time' => $_POST['update_time']
+                    )
+            ));
+
+        //新增供应商
+        $admin1=new Supplier;
+        $admin1->account_id=$_SESSION['account_id'];
+        $admin1->type_id=$_POST['type_id'];
+        $admin1->staff_id=$staff['id'];
+        $admin1->update_time=$_POST['update_time'];
+        $admin1->save();
+    }
+
     public function actionEdit()
     {
-        $supplierId = $_GET['supplier_id'];
-        $supplierForm = new SupplierForm();
-        $supplierInfo = $supplierForm->supplierEdit($supplierId) ;
-        echo json_encode($supplierInfo);
+        $supplier = Supplier::model()->findByPk($_POST['supplier_id']);
+        Staff::model()->updateByPk($supplier['staff_id'],array('name'=>$_POST['na'],'telephone'=>$_POST['phone']));
     }
-    public function actionSave(){
-        $supplierId = $_GET['supplier_id'];
-        $supplierForm = new SupplierForm();
-        if(is_numeric($supplierId)){ //编辑
 
-            $post['account_id']     = $this->getAccountId();
-            $post['staff_name']     = $_POST['na'];
-            $post['telephone']      = $_POST['phone'];
-            //$post['contract_url']= $_POST['supplier_contract'];
-            $post['contract_url']= 1;
-            $post['type_id']    =  $_POST['supplier_type_id'];
-            $arr = $supplierForm->supplierUpdate($supplierId,$post);
-            echo  json_encode($arr);
-            //  echo  json_encode($_POST);
-        }else{ //新增
-            $post['account_id'] = $this->getAccountId();
-            $post['staff_name'] = $_POST['na'];
-            $post['telephone']  = $_POST['phone'];
-            $post['type_id'] = $_POST['supplier_type_id'];
-            $arr = $supplierForm->supplierInsert($post);
-            echo  json_encode($arr);
-        }
-    }
-    public function actionDelete()
+    public function actionDel()
     {
-        $supplierId = $_GET['supplier_id'];
-        if (is_numeric($supplierId)) { //删除
-            $supplierForm = new SupplierForm();
-            $post['account_id'] = $this->getAccountId();
-           $result =  $supplierForm->supplierDelete($supplierId,$post['account_id']);
-            echo json_encode($result);
-        }
+        $supplier = Supplier::model()->findByPk($_POST['supplier_id']);
+        Staff::model()->deleteByPk($supplier['staff_id']);
+        Supplier::model()->deleteByPk($_POST['supplier_id']);
     }
 }

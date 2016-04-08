@@ -103,7 +103,7 @@
           var choose_obj = $(".select_ulist .select_selected");
 
           var meeting_info = {
-                account_id : 1,
+                account_id : <?php echo $_SESSION['account_id']?>,
                 order_id : <?php echo $_GET['order_id'];?>,
                 company_id : <?php echo $_GET['company_id'];?>,
                 company_linkman_id : parseInt(choose_obj.attr("data-id")),

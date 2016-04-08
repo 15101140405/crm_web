@@ -24,7 +24,7 @@ class Supplier extends InitActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	/*public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -36,23 +36,23 @@ class Supplier extends InitActiveRecord
 			// @todo Please remove those attributes that should not be searched.
 			array('id, account_id, type_id, staff_id, contract_url, update_time', 'safe', 'on'=>'search'),
 		);
-	}
+	}*/
 
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
+	/*public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
 		);
-	}
+	}*/
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	/*public function attributeLabels()
 	{
 		return array(
 			'id' => 'ID',
@@ -62,7 +62,7 @@ class Supplier extends InitActiveRecord
 			'contract_url' => 'Contract Url',
 			'update_time' => 'Update Time',
 		);
-	}
+	}*/
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

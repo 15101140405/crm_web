@@ -17,7 +17,7 @@
         <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">供应商列表</h2>
 
-        <div class="r_btn" data-icon="&#xe767;"></div>
+        <div class="r_btn" >新增</div>
     </div>
     <!-- 搜索-->
     <!--  <div class="search_module border_b">
@@ -48,50 +48,21 @@
          </div>
      </div> -->
     <!-- 搜索 end -->
-
-    <div class="contacts_ulist_module">
-        <!-- loop -->
-        <?php
-        //background data
-//        $arr = array(
-//
-//            '0' => array('supplier_id' => '001',
-//                'staff_name' => '吴辉',
-//                'name' => '婚礼主持1' //type
-//            ),
-//            '1' => array('supplier_id' => '003',
-//                'staff_name' => '吴辉2',
-//                'name' => '婚礼主持2'
-//            )
-//        );
-        foreach ($arr as $value) {
-            foreach ($value as $key1 => $value1) {
-                $arr_list[$key1] = $value1;
-            }
-            ?>
-            <ul class="contacts_ulist">
-                <!-- loop -->
-                <li class="contacts_item" supplier-id="<?php echo $arr_list['supplier_id']; ?>">
-                    <div class="img_bar">
-                        <img src="<?php echo $arr_list['avatar']; ?>"/>
-                    </div>
-
-                    <div class="contacts_info">
-                        <div class="supplier_item_left">
-                            <p class="contacts"><?php echo $arr_list['staff_name']; ?></p>
-
-                            <p class="remark"><?php echo $arr_list['type_name']; ?></p>
-                        </div>
-                        <div class="supplier_item_right">
-                            <span  href="#" class="edit">编 辑</span>
-                            <span  href="#" class="product">产品列表</span>
-                        </div>
-                    </div>
+    <div class="int_ulist_module">
+        <ul class="int_ulist">
+            <?php foreach ($arr as $value) { ?>
+                <li class="int_ulist_item select_ulist_item1 round_select1 list_more" supplier-id="<?php echo $value['supplier_id']?>">
+                    <div style='float:left;width:15%;z-index:999' class="select_click"></div>
+                    <div style="float:right;width:85%;z-index:999" class="edit_click">
+                        <span><?php echo $value['staff_name']; ?></span>
+                        <div class="align_r supplier_type">[<?php echo $value['type_name']?>]</div>
+                    <div>
                 </li>
-            </ul>
-        <?php } ?>
-
-        <!-- loop end -->
+            <?php } ?>
+        </ul>
+    </div>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="r_btn" id="sure">确定</div>
     </div>
 </article>
 <script src="js/zepto.min.js"></script>
@@ -101,20 +72,26 @@
     $(function () {
         //右上角增加按钮，进入add_usr
         $(".r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("supplier/add");?>";
+            location.href = "<?php echo $this->createUrl("supplier/add");?>&supplier_type=<?php echo $_GET['supplier_type']?>&category=<?php echo $_GET['category']?>&supplier_id=<?php echo $_GET['supplier_id']?>&product_id=<?php echo $_GET['product_id']?>&edit_supplier_id=";
         });
 
         //点击某个供应商，进入add_supplier进行信息修改
-        $(".edit").on("click", function () {
-            var supplier_id = escape($(this).parent().parent().parent().attr("supplier-id"));
-            location.href = "<?php echo $this->createUrl("supplier/add");?>&supplier_id=" + supplier_id;
-        });
-        //点击进入产品列表add_product
-        $(".product").on("click", function () {
-            var supplier_id = escape($(this).parent().parent().parent().attr("supplier-id"));
-            location.href = "<?php echo $this->createUrl("product/list");?>&supplier_id=" + supplier_id;
+        $(".edit_click").on("click", function () {
+            var supplier_id = $(this).parent().attr("supplier-id");
+            location.href = "<?php echo $this->createUrl("supplier/add");?>&supplier_type=<?php echo $_GET['supplier_type']?>&category=<?php echo $_GET['category']?>&supplier_id=<?php echo $_GET['supplier_id']?>&product_id=<?php echo $_GET['product_id']?>&edit_supplier_id="+supplier_id;
         });
 
+        //选择部门
+        $(".select_click").on("click", function () {
+            $("li").removeClass("round_select_selected1");
+            $(this).parent().addClass("round_select_selected1");
+        });
+
+        //确定
+        $("#sure").on("click",function(){
+            supplier_id = $(".round_select_selected1").attr("supplier-id");
+            location.href = "<?php echo $this->createUrl("product/add");?>&supplier_type=<?php echo $_GET['supplier_type']?>&category=<?php echo $_GET['category']?>&supplier_id=" + supplier_id + "&product_id=<?php echo $_GET['product_id']?>";
+        })
     });
 </script>
 </body>

@@ -559,7 +559,7 @@ class ReportController extends InitController
 
         //取全部已定订单数据
         $criteria3 = new CDbCriteria; 
-        $criteria3->addInCondition('order_status', array(2,3));
+        $criteria3->addInCondition('order_status', array(1,2,3));
         $criteria3->order = 'order_date DESC'; 
         $order3 = Order::model()->findAll($criteria3);  
 
