@@ -48,7 +48,7 @@
       </div>
        搜索 end -->
 
-    <a href="<?php echo $this->createUrl("meeting/addLinkman");?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>" class="btn add_customer">+ 新增联系人</a>
+    <a  class="btn add_customer">+ 新增联系人</a>
 
     <div class="select_ulist_module">
         <h4 class="module_title">选择联系人</h4>
@@ -73,6 +73,15 @@
 <script src="js/common.js"></script>
 <script>
     $(function () {
+      //初始渲染
+      if("<?php echo $_GET['linkman_id']?>" != ""){
+        $("[data-id='<?php echo $_GET['linkman_id']?>']").addClass("select_selected");
+      }
+      if("<?php echo $_GET['from']?>" == "detailinfo"){
+        $(".l_btn").remove();
+        $(".r_btn").html("确定");
+        $(".r_btn").attr("data-icon","");
+      };
 
       //客户选择勾选
       $(".select_ulist li").on("click", function () {
@@ -88,43 +97,58 @@
       });
 
       //确定按钮
-      $(".r_btn").on("click", function () {
-          var mydate = new Date();
-          var year = mydate.getFullYear() + "";
-          var month = mydate.getMonth() + 1;
-          var month = month + "";
-          var date = mydate.getDate() + "";
-          var hours = mydate.getHours() + "";
-          var minutes = mydate.getMinutes() + "";
-          var seconds = mydate.getSeconds() + "";
+      if("<?php echo $_GET['from']?>" == "selectcustomer"){
+        $(".r_btn").on("click", function () {
+            var mydate = new Date();
+            var year = mydate.getFullYear() + "";
+            var month = mydate.getMonth() + 1;
+            var month = month + "";
+            var date = mydate.getDate() + "";
+            var hours = mydate.getHours() + "";
+            var minutes = mydate.getMinutes() + "";
+            var seconds = mydate.getSeconds() + "";
 
-          var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
+            var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
 
+            var choose_obj = $(".select_ulist .select_selected");
+
+            var meeting_info = {
+                  account_id : <?php echo $_SESSION['account_id']?>,
+                  order_id : <?php echo $_GET['order_id'];?>,
+                  company_id : <?php echo $_GET['company_id'];?>,
+                  company_linkman_id : parseInt(choose_obj.attr("data-id")),
+                  layout_id : 1,
+                  update_time : time
+                }
+            console.log(meeting_info);
+
+            $.post("<?php echo $this->createUrl('meeting/meetingdetailinsert')?>",meeting_info,function(retval){
+              if($('.select_ulist_item').hasClass("select_selected")){
+                location.href = "<?php echo $this->createUrl("order/my");?>&code=&t=plan&order_id=<?php echo $_GET['order_id']?>";
+              }else{
+                alert("请先选择联系人！");
+              };
+            })
+            // location.href = "<?php echo $this->createUrl("meeting/selectLayout");?>&linkman_id="+linkman_id+"&company_id="+aa;
+        });
+      }else{
+        $(".r_btn").on("click", function () {
           var choose_obj = $(".select_ulist .select_selected");
-
-          var meeting_info = {
-                account_id : <?php echo $_SESSION['account_id']?>,
-                order_id : <?php echo $_GET['order_id'];?>,
-                company_id : <?php echo $_GET['company_id'];?>,
-                company_linkman_id : parseInt(choose_obj.attr("data-id")),
-                layout_id : 1,
-                update_time : time
-              }
-          console.log(meeting_info);
-
-          $.post("<?php echo $this->createUrl('meeting/meetingdetailinsert')?>",meeting_info,function(retval){
+          $.post("<?php echo $this->createUrl('meeting/updatelinkmanid')?>",{order_id:"<?php echo $_GET['order_id']?>",linkman_id:choose_obj.attr("data-id")},function(retval){
             if($('.select_ulist_item').hasClass("select_selected")){
-              location.href = "<?php echo $this->createUrl("order/my");?>&code=&t=plan&order_id=<?php echo $_GET['order_id']?>";
+              location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php echo $_GET['order_id']?>";
             }else{
               alert("请先选择联系人！");
             };
-          })
-          // location.href = "<?php echo $this->createUrl("meeting/selectLayout");?>&linkman_id="+linkman_id+"&company_id="+aa;
-      });
+          });
+            // location.href = "<?php echo $this->createUrl("meeting/selectLayout");?>&linkman_id="+linkman_id+"&company_id="+aa;
+        });
+      }
+        
 
       //新增按钮
-      $(".btn add_customer").on("click", function () {
-          //跳转到新建客户meeting_add_customer
+      $(".btn").on("click", function () {
+          location.href="<?php echo $this->createUrl("meeting/addLinkman");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>"
       });
 
     });

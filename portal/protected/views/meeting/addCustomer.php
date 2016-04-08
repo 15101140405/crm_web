@@ -13,7 +13,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">新建客户</h2>
     </div>
     <div class="int_ulist_module">
@@ -60,7 +60,7 @@
             // }
 
             // localStorage.setItem("new_customer", JSON.stringify(new_customer));
-            location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php if($_GET['company_id'] != ""){ echo $_GET['company_id'] ;}?>";
+            location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php if($_GET['company_id'] != ""){ echo $_GET['company_id'] ;}?>";
             //  }else{
             //    alert('太累了，歇一歇，刷新下试试！');
             //    return false;

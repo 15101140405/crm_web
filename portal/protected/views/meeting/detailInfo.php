@@ -1,13 +1,3 @@
-<?php
-$arr = array(
-    'customer' => $_GET['order_name'],
-    'linkman' => $linkmanname,
-    'tele' => $linkmanphone,
-    'layout' => $layout,
-    'meeting_time' => $time_type
-
-);
-?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -23,39 +13,40 @@ $arr = array(
 <body>
 <article>
     <div class="tool_bar">
-        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
+        <div class="l_btn" data-icon="&#xe679;"></div>
         <h2 class="page_title">详细信息</h2>
     </div>
     <div class="int_ulist_module">
         <h4 class="module_title">客户信息</h4>
         <ul class="int_ulist">
             <li class="int_ulist_item" id="customer">
-                <div class="int_bar list_more"><?php echo $arr['customer']; ?></div>
+                <div class="int_bar list_more"><?php echo $order_name; ?></div>
             </li>
         </ul>
     </div>
     <div class="int_ulist_module">
         <h4 class="module_title">联系人</h4>
         <ul class="int_ulist">
-            <li class="int_ulist_item" id="linkman">
-                <div class="int_bar list_more"><?php echo $arr['linkman']; ?><i
-                        class="t_green"><?php echo $arr['tele']; ?></i></div>
+            <li class="int_ulist_item" company-id="<?php echo $company_id?>" linkman-id="<?php echo $linkman_id?>" id="linkman">
+                <div class="int_bar list_more"><?php echo $linkmanname; ?>
+                    <iclass="t_green"><?php echo $linkmanphone; ?></i>
+                </div>
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module">
+<!--     <div class="int_ulist_module">
         <h4 class="module_title">台型</h4>
         <ul class="int_ulist">
             <li class="int_ulist_item" id="layout">
-                <div class="int_bar list_more"><?php echo $arr['layout']; ?></div>
+                <div class="int_bar list_more"></div>
             </li>
         </ul>
-    </div>
+    </div> -->
     <div class="int_ulist_module">
         <h4 class="module_title">时间</h4>
         <ul class="int_ulist">
             <li class="int_ulist_item" id="meeting_time">
-                <div class="int_bar list_more"><?php echo $arr['meeting_time']; ?></div>
+                <div class="int_bar list_more"><?php echo $time ?></div>
             </li>
         </ul>
     </div>
@@ -65,23 +56,20 @@ $arr = array(
 <script>
     $(function () {
         $("#customer").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/selectCustomerInfo");?>";
-        })
+            location.href = "<?php echo $this->createUrl("meeting/SelectCustomer");?>&from=detailinfo&company_id=&order_id=<?php echo $_GET['order_id']?>";
+        });
 
         $("#linkman").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/selectLinkmanInfo");?>";
-        })
-
-        $("#layout").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/selectLayoutInfo");?>";
-        })
+            location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=detailinfo&linkman_id="+$(this).attr("linkman-id")+"&company_id="+$(this).attr("company-id")+"&order_id=<?php echo $_GET['order_id']?>";
+        });
 
         $("#meeting_time").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/selectTimeInfo");?>";
-        })
+            location.href = "<?php echo $this->createUrl("meeting/selectTime");?>&from=detailinfo&order_id=<?php echo $_GET['order_id']?>";
+        });
+
         $(".l_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/detail");?>";
-        })
+            location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+        });
     })
 </script>
 </body>

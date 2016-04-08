@@ -13,7 +13,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">新增联系人</h2>
     </div>
     <div class="int_ulist_module">
@@ -43,11 +43,6 @@
 
     $(function () {
 
-        //返回按钮
-        $(".l_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>";
-        });
-
         //确定按钮
         $(".r_btn").on("click", function () {
             //获取新增客户列表
@@ -57,7 +52,6 @@
                 alert("请输入正确的手机号！");
                 return false;
             }
-            alert(<?php echo $_GET['order_id']?>);
             //存入数据库且存入本地存储，返回存入客户的ID
             // $.postJSON('#',{linkman_name:$("#linkman_name input").val(), linkman_phone:$("#linkman_phone input").val()},function(retval){
             $.post('<?php echo $this->createUrl('meeting/insertLinkman');?>',{order_id:<?php echo $_GET['order_id']?>, linkman_name:$("#linkman_name input").val(), linkman_phone:$("#linkman_phone input").val(), company_id:"<?php echo $_GET['company_id'];?>"},function(retval){
@@ -72,7 +66,7 @@
             // }
 
             // localStorage.setItem("new_linkman", JSON.stringify(new_linkman));
-                location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>";
+                location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>";
             //  }else{
             //    alert('太累了，歇一歇，刷新下试试！');
             //    return false;

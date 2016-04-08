@@ -99,6 +99,15 @@
 
 <script>
     $(function () {
+        if("<?php echo $_GET['from']?>" == "detailinfo"){
+            $(".l_btn").remove();
+            $(".r_btn").html("确定");
+            $(".r_btn").attr("data-icon","");
+            $("#appDate").val("<?php echo $order_date?>");
+            $("#appTime").val("<?php echo $order_time?>");
+            $("#appTime1").val("<?php echo $end_time?>");
+        };
+
         //选择日期插件
         var currYear = (new Date()).getFullYear();  
         var opt={};
@@ -128,37 +137,54 @@
 
         
         //确定按钮
-        $(".r_btn").on("click", function () {
-            //传给后台参数
-            var mydate = new Date();
-            var year = mydate.getFullYear() + "";
-            var month = mydate.getMonth() + 1;
-            var month = month + "";
-            var date = mydate.getDate() + "";
-            var hours = mydate.getHours() + "";
-            var minutes = mydate.getMinutes() + "";
-            var seconds = mydate.getSeconds() + "";
+        if("<?php echo $_GET['from']?>" == "selecttype"){
+            $(".r_btn").on("click", function () {
+                //传给后台参数
+                var mydate = new Date();
+                var year = mydate.getFullYear() + "";
+                var month = mydate.getMonth() + 1;
+                var month = month + "";
+                var date = mydate.getDate() + "";
+                var hours = mydate.getHours() + "";
+                var minutes = mydate.getMinutes() + "";
+                var seconds = mydate.getSeconds() + "";
 
-            var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
-            var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
-            var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
+                var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
+                var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
+                var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
 
-            var new_order_info = {
-                order_date: order_date,
-                order_type: 1,
-                order_name: '新订单',
-                order_time: 0, 
-                end_time: end_time, 
-                update_time : time,
-            };
-            $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
-                    /*if(retval.success){*/
-                        location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&company_id=&order_id="+retval;
-                    /*}else{*/
-                //  alert("BI偷了个懒！");
-                // }
-                });
-        });
+                var new_order_info = {
+                    order_date: order_date,
+                    order_type: 1,
+                    order_name: '新订单',
+                    order_time: 0, 
+                    end_time: end_time, 
+                    update_time : time,
+                };
+                $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
+                        /*if(retval.success){*/
+                            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&from=selecttime&company_id=&order_id="+retval;
+                        /*}else{*/
+                    //  alert("BI偷了个懒！");
+                    // }
+                    });
+            });
+        }else{
+            $(".r_btn").on("click", function () {
+                data={
+                    order_id : <?php echo $_GET['order_id']?>,
+                    order_date : $("#appDate").val()+" "+$("#appTime").val()+":00",
+                    end_time : $("#appDate").val()+" "+$("#appTime1").val()+":00",
+                };
+                $.post('<?php echo $this->createUrl("meeting/updatetime");?>',data,function(retval){
+                        /*if(retval.success){*/
+                            location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php echo $_GET['order_id']?>";
+                        /*}else{*/
+                    //  alert("BI偷了个懒！");
+                    // }
+                    });
+            });
+        }
 
         //返回按钮
         $(".l_btn").on("click", function () {

@@ -46,14 +46,22 @@ class MeetingController extends InitController
     public function actionSelectCustomer()
     {
         /*$this->render("selectCustomer");*/
-        $accountId = $this->getAccountId();
+        $accountId = $_SESSION['account_id'];
         $order_id = $_GET['order_id'];
         // var_dump($order_id);
         $companyForm = new CompanyForm();
         $companys = $companyForm->getcompanyList($accountId,$order_id);
         // var_dump($companys);
+        $ordermeeting = OrderMeeting::model()->find(array(
+                'condition' => 'order_id=:order_id && account_id=:account_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id'],
+                        ':account_id' => $_SESSION['account_id']
+                    )
+            ));
         $this->render("selectCustomer",array(
-            "arr_old_customer" => $companys,
+                "arr_old_customer" => $companys,
+                "selected_company" => $ordermeeting['company_id']
             ));
     }
     public function actionInsert()
@@ -70,6 +78,7 @@ class MeetingController extends InitController
 
     public function actionSelectCustomerInfo()
     {
+
         $this->render("selectCustomerInfo");
     }
 
@@ -150,7 +159,27 @@ class MeetingController extends InitController
 
     public function actionSelectTime()
     {
-        $this->render("selectTime");
+        if($_GET['from']=='detailinfo'){
+            $order = Order::model()->findByPk($_GET['order_id']);
+            $t = explode(" ",$order['order_date']);
+            $t1 = explode(":",$t[1]);
+            $t2 = $t1[0].":".$t1[1];
+            $t3 = explode(" ",$order['end_time']);
+            $t4 = explode(":",$t3[1]);
+            $t5 = $t4[0].":".$t4[1];
+            $this->render("selectTime",array(
+                    'order_date' => $t[0],
+                    'order_time' => $t2,
+                    'end_time' => $t5,
+                ));    
+        }else{
+            $this->render("selectTime",array(
+                    'order_date' => "",
+                    'order_time' => "",
+                    'end_time' => "",
+                )); 
+        }
+        //$this->render("selectTime");
     }
 
     public function actionSelectTimeInfo()
@@ -175,38 +204,30 @@ class MeetingController extends InitController
     public function actionDetailInfo()
     {
 
-        /*$this->render("detailInfo");*/
-        $orderId = $_GET['order_id'];
         $ordermeetingData = OrderMeeting::model()->find(array(
-            "condition" => "order_id=:id",
-            "params" => array( ":id" => $orderId),
-                                                       )
-                                                 );
+                "condition" => "order_id=:id",
+                "params" => array( ":id" => $_GET['order_id']),
+            ));
 
         
         $linkmanData = OrderMeetingCompanyLinkman::model()->find(array(
-            "condition" => "id=:id",
-            "params" => array( ":id" => $ordermeetingData['company_linkman_id']),
-                                                                      )
-                                                                );
-
-        $layoutData = OrderMeetingLayout::model()->find(array(
-            "condition" => "id=:id",
-            "params" => array( ":id" => $ordermeetingData['layout_id']),
-                                                             )
-                                                       );
+                "condition" => "id=:id",
+                "params" => array( ":id" => $ordermeetingData['company_linkman_id']),
+            ));
         
         $orderDate = Order::model()->find(array(
-            "condition" => "id=:id",
-            "params" => array( ":id" => $orderId),
-       ));
+                "condition" => "id=:id",
+                "params" => array( ":id" => $_GET['order_id']),
+            ));
 
 
         $this->render("detailInfo",array(
-            "linkmanname"   =>  $linkmanData['name'],
-            "linkmanphone"  =>  $linkmanData['telephone'],
-            "layout"        =>  $layoutData['title'],
-            "time"          =>  $orderDate     
+                "order_name"    =>  $orderDate['order_name'],
+                "company_id"    =>  $ordermeetingData['company_id'],
+                "linkman_id"    =>  $ordermeetingData['company_linkman_id'],
+                "linkmanname"   =>  $linkmanData['name'],
+                "linkmanphone"  =>  $linkmanData['telephone'],
+                "time"          =>  $orderDate['order_date']     
             ));
     }
 
@@ -1031,6 +1052,23 @@ class MeetingController extends InitController
     {
         OrderProduct::model()->deleteAll('order_id=:order_id && product_id=:product_id',array('order_id'=>$_POST['order_id'],'product_id'=>$_POST['product_id']));
     } 
+
+    public function actionUpdatecompanyid()
+    {
+        OrderMeeting::model()->updateAll(array('company_id' => $_POST['company_id']),'order_id=:order_id && account_id=:account_id',array(':order_id' => $_POST['order_id'] , ':account_id' => $_SESSION['account_id']));
+        $company = OrderMeetingCompany::model()->findByPk($_POST['company_id']);
+        Order::model()->updateByPk($_POST['order_id'],array('order_name'=>$company['company_name']));
+    }
+
+    public function actionUpdatelinkmanid()
+    {
+        OrderMeeting::model()->updateAll(array('company_linkman_id' => $_POST['linkman_id']),'order_id=:order_id && account_id=:account_id',array(':order_id' => $_POST['order_id'] , ':account_id' => $_SESSION['account_id']));
+    }
+
+    public function actionUpdatetime()
+    {
+        Order::model()->updateByPk($_POST['order_id'],array('order_date' => $_POST['order_date'],'end_time' => $_POST['end_time']));
+    }
 
    // public function action
 

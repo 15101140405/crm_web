@@ -1,10 +1,3 @@
-<?php
-/*$arr = array(//+++++++++++++++++++++++++++所需数据
-    'order_name' => '北京浩瀚一方互联网科技',
-    'order_data' => '2015 12 12',
-);
-*/
-?>
 <!DOCTYPE HTML>
 <html>
 <head>

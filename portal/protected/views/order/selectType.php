@@ -45,7 +45,7 @@
                 location.href = "<?php echo $this->createUrl("plan/create");?>";
             } else {//会议
                 //localStorage.setItem("order_type", "1");
-                location.href = "<?php echo $this->createUrl("meeting/selectTime");?>";
+                location.href = "<?php echo $this->createUrl("meeting/selectTime");?>&from=selecttype&order_id=";
             }
         });
 

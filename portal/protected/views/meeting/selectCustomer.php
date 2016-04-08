@@ -49,7 +49,7 @@
        </div>
        搜索 end -->
 
-    <a href="<?php echo $this->createUrl("meeting/addCustomer"); ?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php if($_GET['company_id'] != ""){ echo $_GET['company_id'] ;}?>" class="btn add_customer">+ 新增客户</a>
+    <div class="btn add_customer">+ 新增客户</div>
 
     <div class="select_ulist_module">
         <h4 class="module_title">选择客户</h4>
@@ -77,43 +77,63 @@
 
     //初始化
     var selected_id = "<?php echo $_GET['company_id']?>";
-    console.log(selected_id);
+    var selected_company = "<?php echo $selected_company?>";
+    $("li").removeClass("select_selected");
+    $("[data-id='"+selected_company+"']").addClass("select_selected");
+    if("<?php echo $_GET['from']?>" == "detailinfo"){
+      $(".l_btn").remove();
+      $(".r_btn").html("确定");
+      $(".r_btn").attr("data-icon","");
+    };
+
+
     if(selected_id != ""){
-      $("[data-id='"+selected_id+"']").addClass("select_selected");
+      /*$("li").removeClass("select_selected");
+      $("[data-id='"+selected_id+"']").addClass("select_selected");*/
     }
-    $('ul').find('li:first').addClass("select_selected");
+    
+    /*$('ul').find('li:first').addClass("select_selected");*/
 
     //客户选择勾选
     $(".select_ulist li").on("click", function () {
-        $(".select_ulist li").removeClass("select_selected");
-        $(this).addClass("select_selected");
-        // $(this).html();
+      $(".select_ulist li").removeClass("select_selected");
+      $(this).addClass("select_selected");
+      // $(this).html();
     });
 
     //返回按钮
     $(".l_btn").on("click", function () {
-        //清空localStorage
-        localStorage.removeItem("choose_customer");
-        location.href = "<?php echo $this->createUrl("order/selectType");?>";
+      //清空localStorage
+      localStorage.removeItem("choose_customer");
+      location.href = "<?php echo $this->createUrl("order/selectType");?>";
     });
 
     //确定按钮
-    $(".r_btn").on("click", function () {
+    
+    if("<?php echo $_GET['from']?>" == "selecttime"){
+      $(".r_btn").on("click", function () {
         var choose_obj = $(".select_ulist .select_selected");
-
-        /*$.post("<?php echo $this->createUrl('meeting/MeetingDetailInsert')?>",meeting_info,function(retval){*/
-          if($('.select_ulist_item').hasClass("select_selected")){
-            location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&order_id=<?php echo $_GET['order_id']?>&company_id="+choose_obj.attr("data-id");
-          }else{
-            alert("请先选择客户！");
-          }
-            
-        /*})*/
-    });
+        if($('.select_ulist_item').hasClass("select_selected")){
+          location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>from=selectcustomer&linkman_id=&order_id=<?php echo $_GET['order_id']?>&company_id="+choose_obj.attr("data-id");
+        }else{
+          alert("请先选择客户！");
+        }
+      });
+    }else if("<?php echo $_GET['from']?>" == "detailinfo"){
+      $(".r_btn").on("click", function () {
+        var choose_obj = $(".select_ulist .select_selected");
+        console.log({order_id:"<?php echo $_GET['order_id']?>",company_id:choose_obj.attr("data-id")});
+        $.post("<?php echo $this->createUrl("meeting/updatecompanyid");?>",{order_id:"<?php echo $_GET['order_id']?>",company_id:choose_obj.attr("data-id")},function(){
+          location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php echo $_GET['order_id']?>";
+        });
+      });
+    }
+      
 
     //新增按钮
-    $(".btn add_customer").on("click", function () {
-        location.href = '<?php echo $this->createUrl("meeting/addCustomer"); ?>&order_id=<?php echo $_GET['order_id']?>&company_id='+choose_obj.attr("data-id");
+    $(".btn").on("click", function () {
+      var choose_obj = $(".select_ulist .select_selected");
+      location.href = '<?php echo $this->createUrl("meeting/addCustomer"); ?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id='+choose_obj.attr("data-id");
     });
 
   });

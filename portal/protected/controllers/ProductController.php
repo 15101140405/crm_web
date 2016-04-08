@@ -1,5 +1,7 @@
 <?php
 
+include_once('../library/WPRequest.php');
+
 class ProductController extends InitController
 {
     /**
@@ -165,7 +167,7 @@ class ProductController extends InitController
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
             if($code == ''){
-                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=order/my&t=plan&code=';
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=product/store&code=';
                 $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
