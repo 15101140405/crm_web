@@ -48,19 +48,6 @@
         //渲染页面
         var html_feast = '';
                 <?php
-                // $arr_feast = array(//background data
-                //     '0' => array(
-                //         'product_id' => '2',
-                //         'name' => '会议餐套餐A',
-                //         'supplier_name' => '小李3'
-                //     ),
-                //     '1' => array(
-                //         'product_id' => '1',
-                //         'name' => '会议餐套餐B',
-                //         'supplier_name' => '小李'
-                //     )
-
-                // );
                 foreach ($arr_feast as $key => $value) {
                 foreach ($value as $key1 => $value1) {
                     $feast[$key1] = $value1;
@@ -106,9 +93,13 @@
         $(".l_btn").on("click", function () {
             location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
         });
+
+        //编辑
         $("#product li.selected").on("click", function () {
             location.href = "<?php echo $this->createUrl("meeting/tpDetail", array());?>&product_id=" + $(this).attr("product-id") + "&type=edit&tab=feast&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
         })
+
+        //新增
         $("#product li.list_more").on("click", function () {
             location.href = "<?php echo $this->createUrl("meeting/tpDetail", array());?>&product_id=" + $(this).attr("product-id") + "&type=new&tab=feast&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
         })

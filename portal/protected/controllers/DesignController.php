@@ -3222,7 +3222,7 @@ class DesignController extends InitController
         $feast_total = 0 ;
         if(!empty($feast_data)){
             foreach ($feast_data as $key => $value) {
-                $feast_total += $value['actual_price']*$value['unit'];
+                $feast_total += $value['actual_price']*$value['unit']*(1+$value['actual_service_ratio']*0.01);
             }
         }
 
