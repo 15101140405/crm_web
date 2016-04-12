@@ -15,7 +15,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">员工列表</h2>
         <div class="r_btn" data-icon="&#xe767;"></div>
     </div>
@@ -80,12 +80,12 @@
     $(function () {
         //右上角增加按钮，进入add_usr
         $(".r_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("staff/add");?>&type=new&staff_id=";
+            location.href = "<?php echo $this->createUrl("staff/add");?>&type=new&staff_id=&account_id=<?php echo $account_id ?>";
         });
 
         //点击li,进入编辑页面
         $(".contacts_item").on("click",function(){
-            location.href = "<?php echo $this->createUrl('staff/add');?>&type=edit&staff_id=" + $(this).attr("user-id");
+            location.href = "<?php echo $this->createUrl('staff/add');?>&account_id=<?php echo $account_id?>&type=edit&staff_id=" + $(this).attr("user-id");
         });
 
         //渲染所属部门

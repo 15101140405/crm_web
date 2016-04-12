@@ -55,7 +55,12 @@ class OrderController extends InitController
         $_SESSION['code']=123123123;
         $_SESSION['account_id']=1;
         $_SESSION['staff_hotel_id']=1;*/
-
+        $company = array();
+        if(isset($_GET['account_id'])){
+            Yii::app()->session['account_id']=$_GET['account_id'];
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);    
+        };
+        
         if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
             if($_GET['from'] == 'bill'){
@@ -88,12 +93,12 @@ class OrderController extends InitController
             Yii::app()->session['code']=$code;
             if($code == ''){
                 $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=order/index&from=&code=';
-                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$company['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
-
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']); 
             $t=new WPRequest;
-            $userId = $t->getUserId($code);
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
             $adder=array("UserId"=>"222","DeviceId"=>"");
             $adder=json_decode($userId,true);
             if(!empty($adder['UserId'])) {
@@ -226,9 +231,16 @@ class OrderController extends InitController
         Yii::app()->session['code']='asjfdlk123';
         Yii::app()->session['account_id']=1;
         Yii::app()->session['staff_hotel_id']=1;*/
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        $company = array();
+        if(isset($_GET['account_id'])){
+            Yii::app()->session['account_id']=$_GET['account_id'];
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);    
+        };
+
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
-            $arr_order = array();
+            /*echo $_SESSION['userid'];die;*/
+            /*$arr_order = array();
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $newstr = rtrim($staff['department_list'], "]");
             $newstr = ltrim($newstr, "[");
@@ -266,18 +278,18 @@ class OrderController extends InitController
             }else{
                 $this->render("my_empty");
             }
-        }else{ //未登录
+        }else{*/ //未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
             if($code == ''){
                 $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=order/my&t=plan&code=';
-                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$company['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
-
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']); 
             $t=new WPRequest;
-            $userId = $t->getUserId($code);
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
             $adder=array("UserId"=>"222","DeviceId"=>"");
             $adder=json_decode($userId,true);
             if(!empty($adder['UserId'])) {
@@ -285,6 +297,7 @@ class OrderController extends InitController
                 $staff = Staff::model()->findByPk($adder['UserId']);
                 Yii::app()->session['account_id']=$staff['account_id'];
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+
                 
                 $arr_order = array();
                 $staff = Staff::model()->findByPk($_SESSION['userid']);
@@ -324,7 +337,7 @@ class OrderController extends InitController
                     $this->render("my_empty");
                 }
             }
-        };
+        /*};*/
     }
 
     public function actionSave()

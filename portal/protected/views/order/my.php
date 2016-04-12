@@ -342,15 +342,14 @@ small {
         //删除订单
         $(".del").on("click",function(){
             $("li").unbind("click");
-            var choice=confirm("您确认要删除吗？订单删除将无法恢复！", function() { }, null);
-            if(choice){
+            if(confirm("您确认要删除吗？订单删除将无法恢复！", function() { }, null)){
                 order_id = $(this).parent().parent().parent().attr('order-id');
                 $.post("<?php echo $this->createUrl('order/delorder');?>",{'order_id':order_id},function(retval){
                     if(retval == "success"){
-                        alert('删除成功！');
-                        location.href = "<?php echo $this->createUrl('order/my');?>&code=&t=plan";//刷新当前页面.    
+                        /*alert('删除成功！');*/
+                        location.href = "<?php echo $this->createUrl('order/my');?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";//刷新当前页面.    
                     }else{
-                        alert('删除失败！');
+                        /*alert('删除失败！');*/
                     }
                     
                 });

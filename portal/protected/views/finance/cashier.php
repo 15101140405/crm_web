@@ -29,8 +29,11 @@
     #time input, select {
         width: 100%;
         padding: 5px;
-        margin: 5px 0;
         border: 1px solid #aaa;
+        height: 48px;
+        font-size: 1.4rem;
+        padding: 12px;
+        background: #eee;
         box-sizing: border-box;
         border-radius: 5px;
         -moz-box-sizing: border-box;
@@ -94,11 +97,12 @@
                 <li class="select_ulist_item round_select" way-value="2">支票</li>
             </ul>
         </div>
-        <div class="demos" id="time">
-            <label for="appDateTime">收款时间</label>
+        <div class="demos" id="time" style="margin-top:15px;margin-bottom:15px">
+            <p for="appDateTime" style="color:#00b90c;font-size:1.4rem;padding-left:12px;background-color:#fff;line-height:48px;">收款时间</p>
             <input value="2015-05-01 15:42:02" class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text">
         </div>
         <div class="text_bar" style="background: #fff;">
+            <p for="appDateTime" style="font-size:1.4rem;background-color:#fff;line-height:48px;">备注</p>
             <textarea maxlength="70" placeholder="请填写记录内容" id="remark"></textarea>
         </div>
     </div>

@@ -816,7 +816,7 @@ $arr_locate = array(
 
         //返回
         $(".l_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/my");?>&t=plan&code=";
+            location.href = "<?php echo $this->createUrl("order/my");?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";
         });
 
         //选择策划师

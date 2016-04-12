@@ -49,7 +49,7 @@
         </ul>
     </div>
     <div class="bottom_fixed_bar">
-    	<a class="r_btn" id="sure">确认收款</a>
+    	<a class="r_btn" id="sure">确定</a>
   	</div>
 </article>
 <script src="js/zepto.min.js"></script>

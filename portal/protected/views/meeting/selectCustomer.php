@@ -114,7 +114,7 @@
       $(".r_btn").on("click", function () {
         var choose_obj = $(".select_ulist .select_selected");
         if($('.select_ulist_item').hasClass("select_selected")){
-          location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>from=selectcustomer&linkman_id=&order_id=<?php echo $_GET['order_id']?>&company_id="+choose_obj.attr("data-id");
+          location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=selectcustomer&linkman_id=&order_id=<?php echo $_GET['order_id']?>&company_id="+choose_obj.attr("data-id");
         }else{
           alert("请先选择客户！");
         }

@@ -15,7 +15,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">新增员工</h2>
     </div>
     <!-- <div class="avatar_upload">
@@ -47,6 +47,12 @@
             <li class="select_ulist_item round_select" department-value="2" id="design">策划师</li>
             <li class="select_ulist_item round_select" department-value="3" id="manager">店长</li>
             <li class="select_ulist_item round_select" department-value="5" id="finance">财务</li>
+        </ul>
+    </div>
+    <div class="select_ulist_module pad_b50">
+        <ul class="select_ulist" id="gender">
+            <li class="select_ulist_item round_select round_select_selected" gender-value="1" id="plan">男</li>
+            <li class="select_ulist_item round_select" gender-value="2" id="design">女</li>
         </ul>
     </div>
     <div class="select_ulist_module pad_b50">
@@ -87,7 +93,7 @@
 
         //点击新增
         $('#insert').on("click",function(){
-            var department_list = "[";
+            var department_list = "";
             
             //构造职位列表
             if($("#plan").hasClass("round_select_selected")){department_list += $("#plan").attr('department-value');department_list += ","};
@@ -96,8 +102,6 @@
             if($("#finance").hasClass("round_select_selected")){department_list += $("#finance").attr('department-value');department_list += ","};
 
             department_list = department_list.substring(0,department_list.length - 1);
-
-            department_list += "]";
 
             if ($("#name").val() == "" || $("#phone").val() == "" || $("#hotel li .round_select_selected").attr("hotel-value") || department_list == "[]") {
                 alert("请补全信息");
@@ -110,15 +114,17 @@
             
 
             data = {
-                account_id : <?php echo $_SESSION['account_id']?>,
+                account_id : <?php echo $_GET['account_id']?>,
                 name : $("#name").val(),
                 telephone : $("#phone").val(),
                 department_list : department_list,
-                hotel_list : $("#hotel li.round_select_selected").attr("hotel-value")
+                hotel_list : $("#hotel li.round_select_selected").attr("hotel-value"),
+                gender : $("#gender li.round_select_selected").attr("gender-value")
             };
             console.log(data);
-            $.post('<?php echo $this->createUrl("staff/insert");?>',data,function(){
-                location.href = "<?php echo $this->createUrl("staff/list");?>";
+            $.post('<?php echo $this->createUrl("staff/insert");?>',data,function(data){
+                alert(data);
+                //location.href = "<?php echo $this->createUrl("staff/list");?>&code=&account_id=<?php echo $_GET['account_id']?>sa";
             })
         });
 
@@ -154,18 +160,18 @@
             };
 
             $.post('<?php echo $this->createUrl("staff/update");?>',data,function(){
-                location.href = "<?php echo $this->createUrl("staff/list");?>";
+                location.href = "<?php echo $this->createUrl("staff/list");?>&code=&account_id=<?php echo $_GET['account_id']?>";
             });
         });
 
-        //编辑
+        //删除
         $('#del').on("click",function(){
             data = {
                 staff_id : "<?php echo $_GET['staff_id'];?>",
             };
 
             $.post('<?php echo $this->createUrl("staff/del");?>',data,function(){
-                location.href = "<?php echo $this->createUrl("staff/list");?>";
+                location.href = "<?php echo $this->createUrl("staff/list");?>&code=&account_id=<?php echo $_GET['account_id']?>";
             });
         });
         

@@ -113,8 +113,8 @@
                 var get_info = getinfo();
                 console.log(get_info);
                 $.post('<?php echo $this->createUrl("plan/weddetailinsert");?>',get_info,function(retval){
-                    //location.href = "<?php echo $this->createUrl("order/my", array());?>&code=&t=plan&from=" + $.util.param("from")+"&order_id=" + $.util.param("order_id");
-                    alert(retval);
+                    location.href = "<?php echo $this->createUrl("order/my", array());?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";
+                    /*alert(retval);*/
                 });
                 
             }

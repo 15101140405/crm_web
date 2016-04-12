@@ -42,12 +42,10 @@ class WPRequest
     }
 
     //微信接口
-    public static $corpid = "wxee0a719fd467c364";
-    public static $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
 
-    public static function getAccessToken()
+    public static function getAccessToken($corpid,$corpsecret)
     {
-        $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" . WPRequest::$corpid . "&corpsecret=" . WPRequest::$corpsecret;
+        $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" . $corpid . "&corpsecret=" . $corpsecret;
         //echo $url;
         $data = self::get($url);
         try {
@@ -56,14 +54,16 @@ class WPRequest
         } catch (Excption $e) {
             return "";
         }
-
     }
 
     /*创建用户*/
     //department 格式 [1] 或 [1,2]
     public static function createUser($userid, $name, $department, $position, $mobile)
     {
-        $access_token = self::getAccessToken();
+        $corpid = "wxee0a719fd467c364";
+        $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $obj = json_encode(array(
             'userid' => $userid,
             'name' => $name,
@@ -84,18 +84,18 @@ class WPRequest
     }
 
     /*获取登陆用户信息*/
-    public static function getUserId($code)
+    public static function getUserId($code,$corpid,$corpsecret)
     {
-        $access_token = self::getAccessToken();
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token='.$access_token.'&code='.$code;
         $userId = self::get($url);
         return $userId;
     }
 
     /*发送消息（通用）*/
-    public static function sendMessage($data)
+    public static function sendMessage($data,$corpid,$corpsecret)
     {
-        $access_token = self::getAccessToken();
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $sendSuccess = false;
         $url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" . $access_token;
         $rtnobj = self::post($url, $data);
@@ -116,7 +116,7 @@ class WPRequest
     /*发送消息（text消息）*/
     //成员ID列表（消息接收者，多个接收者用‘|’分隔，最多支持1000个）。特殊情况：指定为@all，则向关注该企业应用的全部成员发送
     //部门ID列表，多个接收者用‘|’分隔，最多支持100个。当touser为@all时忽略本参数
-    public static function sendMessage_Text($touser, $toparty, $content)
+    public static function sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret)
     {
         $obj = json_encode(array(
             'touser' => $touser,
@@ -126,7 +126,7 @@ class WPRequest
             'agentid' => 0,
             'text' => array('content' => $content)
         ), JSON_UNESCAPED_UNICODE);
-        return self::sendMessage($obj);
+        return self::sendMessage($obj,$corpid,$corpsecret);
     }
 
 
@@ -142,7 +142,7 @@ class WPRequest
     // url         点击后跳转的链接。
     // picurl      图文消息的图片链接，支持JPG、PNG格式，较好的效果为大图640*320，小图80*80。如不填，在客户端不显示图片
     // 此处只能发一条图文消息，若要实现多条，需要修改
-    public static function sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid)
+    public static function sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid,$corpid,$corpsecret)
     {
         $obj = json_encode(array(
 
@@ -160,7 +160,7 @@ class WPRequest
                                        ))
 
                 ), JSON_UNESCAPED_UNICODE);
-        return self::sendMessage($obj);
+        return self::sendMessage($obj,$corpid,$corpsecret);
     }
 
 //     发送消息（mpnews消息）a)发送时直接带上mpnews内容
@@ -179,7 +179,7 @@ class WPRequest
 //     show_cover_pic  否   是否显示封面，1为显示，0为不显示
 //     safe    否   表示是否是保密消息，0表示否，1表示是，默认0
     public static function sendMessage_Mpnews(
-        $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe)
+        $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe,$corpid,$corpsecret)
     {
         $obj = json_encode(array(
             'touser'    => $touser,
@@ -200,7 +200,7 @@ class WPRequest
                                        ))
 
                 ), JSON_UNESCAPED_UNICODE);
-        return self::sendMessage($obj);
+        return self::sendMessage($obj,$corpid,$corpsecret);
     }
 
 
@@ -245,7 +245,10 @@ class WPRequest
        /*上传媒体文件*/
     public static function media($data, $type)
     {
-        $access_token = self::getAccessToken();
+        $corpid = "wxee0a719fd467c364";
+        $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $sendSuccess = false;
         $url = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=". $access_token."&type=".$type;
         $rtnobj = self::post($url, $data);
@@ -271,7 +274,10 @@ class WPRequest
        /*上传永久图文素材*/
     public static function material($data)
     {
-        $access_token = self::getAccessToken();
+        $corpid = "wxee0a719fd467c364";
+        $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $sendSuccess = false;
         $url = "https://qyapi.weixin.qq.com/cgi-bin/material/add_mpnews?access_token=". $access_token;
         $rtnobj = self::post($url, $data);
@@ -322,7 +328,10 @@ class WPRequest
  
     public static function updateMpnews($data)
     {
-        $access_token = self::getAccessToken();
+        $corpid = "wxee0a719fd467c364";
+        $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+
+        $access_token = self::getAccessToken($corpid,$corpsecret);
         $sendSuccess = false;
         $url = "https://qyapi.weixin.qq.com/cgi-bin/material/update_mpnews?access_token=". $access_token;
         $rtnobj = self::post($url, $data);
@@ -366,6 +375,51 @@ class WPRequest
                                    )
                                ), JSON_UNESCAPED_UNICODE);
         return self::updateMpnews($obj);
+    }
+
+    /*创建成员*/
+    public static function create_post($data,$corpid,$corpsecret)
+    {
+        $access_token = self::getAccessToken($corpid,$corpsecret);
+        $sendSuccess = false;
+        $url = "https://qyapi.weixin.qq.com/cgi-bin/user/create?access_token=" . $access_token;
+        $rtnobj = self::post($url, $data);
+        // echo "<br>" . $rtnobj;
+        // echo "<br>"."rtnob:";
+        // print_r($rtnobj);
+        // echo "<br>"."end";
+    try {
+            if (json_decode($rtnobj)->errcode == 0)
+                $sendSuccess = true;
+        } catch (Excption $e) {
+        }
+    return $rtnobj;
+       // return $sendSuccess;
+    }
+
+    /*构造成员信息*/
+    public static function create_user($userid,$name,$department,$position,$mobile,$gender,$email,$weixinid,$corpid,$corpsecret)
+    {
+        $access_token = self::getAccessToken($corpid,$corpsecret);
+        $url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token='.$access_token.'&code='.$code;
+        $userId = self::get($url);
+        return $userId;
+        
+
+        
+        $obj = json_encode(array(
+            "userid" => $userid,
+            "name" => $name,
+            "department" => $department,
+            "position" => $position,
+            "mobile" => $mobile,
+            "gender" => $gender,
+            "email" => $email,
+            "weixinid" => $weixinid,
+            /*"avatar_mediaid": "2-G6nrLmr5EC3MNb_-zL1dDdzkd0p7cNliYu9V5w7o8K0",
+            "extattr": {"attrs":[{"name":"爱好","value":"旅游"},{"name":"卡号","value":"1234567234"}]}*/
+        ), JSON_UNESCAPED_UNICODE);
+        return self::create_post($obj,$corpid,$corpsecret);
     }
 
 }

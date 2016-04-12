@@ -72,7 +72,15 @@ class PlanController extends InitController
 
     public function actionCreate()
     {
-        $this->render("create");
+        $hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id']
+                    )
+            ));
+        $this->render("create",array(
+                'hotel' => $hotel
+            ));
     }
 
     public function actionCustomerName()
@@ -1099,7 +1107,7 @@ class PlanController extends InitController
         $payment->designer_id =0;
         $payment->planner_id =0;
         $payment->adder_id =$_SESSION['userid'];
-        $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
+        $payment->staff_hotel_id =$_POST['hotel_id'];
         $payment->order_name =$_POST['order_name'];
         $payment->order_type =$_POST['order_type'];
         $payment->order_date =$_POST['order_date'];
@@ -1146,6 +1154,7 @@ class PlanController extends InitController
         ));
         $order = Order::model()->findByPk($_POST['order_id']);
         //$order = Order::model()->findByPk($_GET['order_id']);
+        $hotel = StaffHotel::model()->findByPk($order['staff_hotel_id']);
 
         $staff = Staff::model()->findByPk($_SESSION['userid']);
 
@@ -1162,9 +1171,9 @@ class PlanController extends InitController
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
-            $html = "新客人进店了"."                 "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         }else if($order['order_type'] == 1){
-            $html = "新客人进店了"."                 "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         };
         
         /*print_r($html);die;*/
@@ -1180,11 +1189,15 @@ class PlanController extends InitController
         $digest="描述";
         $show_cover_pic="";
         $safe="";
-        echo 1;
+
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
+        echo $corpid;
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         print_r($result);
-        echo 2;
+        echo $corpsecret;
     }
 
     public function actionUpdatedetail()

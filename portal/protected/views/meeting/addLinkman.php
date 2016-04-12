@@ -66,7 +66,7 @@
             // }
 
             // localStorage.setItem("new_linkman", JSON.stringify(new_linkman));
-                location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>";
+                location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>&linkman_id=";
             //  }else{
             //    alert('太累了，歇一歇，刷新下试试！');
             //    return false;

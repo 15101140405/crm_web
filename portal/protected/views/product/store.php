@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li supplier-type="2" category="2">
-                <a href="<?php echo $this->createUrl("design/feast", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/hunyan.png"/>
                     </div>
@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li supplier-type="20" category="2">
-                <a href="<?php echo $this->createUrl("design/decoration", array());?>&from=detail">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/hunyan.png"/>
                     </div>
@@ -51,7 +51,7 @@
                 </a>
             </li>
             <li supplier-type="3" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -59,7 +59,7 @@
                 </a>
             </li>
             <li supplier-type="4" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -67,7 +67,7 @@
                 </a>
             </li>
             <li supplier-type="5" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -75,7 +75,7 @@
                 </a>
             </li>
             <li supplier-type="6" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -83,7 +83,7 @@
                 </a>
             </li>
             <li supplier-type="7" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -91,7 +91,7 @@
                 </a>
             </li>
             <li supplier-type="8" category="2">
-                <a href="<?php echo $this->createUrl("design/lightingScreen", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
                     </div>
@@ -99,7 +99,7 @@
                 </a>
             </li>
             <li supplier-type="9" category="2">
-                <a href="<?php echo $this->createUrl("design/lightingScreen", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
                     </div>
@@ -107,7 +107,7 @@
                 </a>
             </li>
             <li supplier-type="10" category="2">
-                <a href="<?php echo $this->createUrl("design/graphicFilm", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/queren.png"/>
                     </div>
@@ -115,7 +115,7 @@
                 </a>
             </li>
             <li supplier-type="11" category="2">
-                <a href="<?php echo $this->createUrl("design/graphicFilm", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/queren.png"/>
                     </div>
@@ -123,7 +123,7 @@
                 </a>
             </li>
             <li supplier-type="12" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -131,7 +131,7 @@
                 </a>
             </li>
             <li supplier-type="13" category="2">
-                <a href="<?php echo $this->createUrl("design/dressAppliance", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -139,7 +139,7 @@
                 </a>
             </li>
             <li supplier-type="14" category="2">
-                <a href="<?php echo $this->createUrl("design/drinksCar", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dianli.png"/>
                     </div>
@@ -147,15 +147,15 @@
                 </a>
             </li>
             <li supplier-type="15" category="2">
-                <a href="<?php echo $this->createUrl("design/servicePersonnel", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/dianli.png"/>
                     </div>
                     <p class="cat_name">车辆</p>
                 </a>
             </li>
-            <li supplier-type="18" category="2">
-                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+            <li supplier-type="17s" category="2">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/cehuashi.png"/>
                     </div>
@@ -163,15 +163,15 @@
                 </a>
             </li>
             <li supplier-type="21" category="2">
-                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/cehuashi.png"/>
                     </div>
                     <p class="cat_name">杂费</p>
                 </a>
             </li>
-            <li supplier-type="18" category="1">
-                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+            <!-- <li supplier-type="18" category="1">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/cehuashi.png"/>
                     </div>
@@ -179,13 +179,13 @@
                 </a>
             </li>
             <li supplier-type="18" category="2">
-                <a href="<?php echo $this->createUrl("design/planother", array());?>&from=detail&tab=">
+                <a href="#">
                     <div class="cat_icon">
                         <img src="images/cehuashi.png"/>
                     </div>
                     <p class="cat_name">婚礼税费</p>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </nav>
 </article>

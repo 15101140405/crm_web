@@ -68,7 +68,7 @@ class MeetingController extends InitController
     {
         // var_dump($_POST);die;
         $companyForm = new CompanyForm();
-        $post['account_id']  =  $this->getAccountId();
+        $post['account_id']  =  $_SESSION['account_id'];
         $post['company_name']    = $_POST['new_customer'];
         $post['update_time']      = time();
         $arr = $companyForm->companyInsert($post);
@@ -159,6 +159,12 @@ class MeetingController extends InitController
 
     public function actionSelectTime()
     {
+        $hotel = StaffHotel::model()->findAll(array(
+            'condition' => 'account_id=:account_id',
+            'params' => array(
+                    ':account_id' => $_SESSION['account_id']
+                )
+        ));
         if($_GET['from']=='detailinfo'){
             $order = Order::model()->findByPk($_GET['order_id']);
             $t = explode(" ",$order['order_date']);
@@ -171,12 +177,14 @@ class MeetingController extends InitController
                     'order_date' => $t[0],
                     'order_time' => $t2,
                     'end_time' => $t5,
+                    'hotel' => $hotel,
                 ));    
         }else{
             $this->render("selectTime",array(
                     'order_date' => "",
                     'order_time' => "",
                     'end_time' => "",
+                    'hotel' => $hotel,
                 )); 
         }
         //$this->render("selectTime");
@@ -921,7 +929,7 @@ class MeetingController extends InitController
         $payment->designer_id =0;
         $payment->planner_id =0;
         $payment->adder_id =$_SESSION['userid'];
-        $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
+        $payment->staff_hotel_id =$_POST['hotel_id'];
         $payment->order_name =$_POST['order_name'];
         $payment->order_type =$_POST['order_type'];
         $payment->order_date =$_POST['order_date'];
@@ -963,6 +971,7 @@ class MeetingController extends InitController
         ));
         $order = Order::model()->findByPk($_POST['order_id']);
         //$order = Order::model()->findByPk($_GET['order_id']);
+        $hotel = StaffHotel::model()->findByPk($order['staff_hotel_id']);
 
         $staff = Staff::model()->findByPk($_SESSION['userid']);
 
@@ -979,9 +988,9 @@ class MeetingController extends InitController
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
-            $html = "新客人进店了"."                 "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         }else if($order['order_type'] == 1){
-            $html = "新客人进店了"."                 "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         };
         
         /*print_r($html);die;*/
@@ -997,9 +1006,13 @@ class MeetingController extends InitController
         $digest="描述";
         $show_cover_pic="";
         $safe="";
+
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
         echo 1;
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         print_r($result);
         echo 2;
     }

@@ -1,5 +1,7 @@
 <?php
 
+include_once('../library/WPRequest.php');
+
 class StaffController extends InitController
 {
     /**
@@ -45,6 +47,11 @@ class StaffController extends InitController
 
     public function actionList()
     {
+        if(isset($_GET['account_id'])){
+            Yii::app()->session['account_id']=$_GET['account_id']; 
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);     
+        };
+        
         if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
             $this->getlist();
@@ -53,13 +60,14 @@ class StaffController extends InitController
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
             if($code == ''){
-                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=order/my&t=plan&code=';
-                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=staff/list&t=plan&code=&account_id='.$_GET['account_id'];
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$company['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
 
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);
             $t=new WPRequest;
-            $userId = $t->getUserId($code);
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
             $adder=array("UserId"=>"222","DeviceId"=>"");
             $adder=json_decode($userId,true);
             if(!empty($adder['UserId'])) {
@@ -67,6 +75,7 @@ class StaffController extends InitController
                 $staff = Staff::model()->findByPk($adder['UserId']);
                 Yii::app()->session['account_id']=$staff['account_id'];
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+                /*print_r($_SESSION['account_id']);die;*/
                 $this->getlist();
             };
         };
@@ -102,7 +111,9 @@ class StaffController extends InitController
                 $arr_staff[]=$item;
             };
         };
+        /*print_r($_SESSION['account_id']);die;*/
         $this->render("list", array(
+            "account_id" => $_SESSION['account_id'],
             "arr_staff" => $arr_staff,
         ));
     }
@@ -130,7 +141,7 @@ class StaffController extends InitController
         $arr_hotel = StaffHotel::model()->findAll(array(
                 'condition' => 'account_id = :account_id',
                 'params' => array(
-                        ':account_id' => $_SESSION['account_id']
+                        ':account_id' => $_GET['account_id']
                     )
             ));
         /*print_r($arr_hotel);die;*/
@@ -150,6 +161,38 @@ class StaffController extends InitController
         $admin ->department_list=$_POST['department_list'];
         $admin ->hotel_list=$_POST['hotel_list'];
         $admin ->save();
+
+        $staff = Staff::model()->find(array(
+                'condition' => 'name=:name && telephone=:telephone',
+                'params' => array(
+                        ':name' => $_POST['name'],
+                        ':telephone' => $_POST['telephone'],
+                    )
+            ));
+
+        $company = StaffCompany::model()->findByPk($_POST['account_id']);
+        $t=explode(";",$_POST['department_list']);
+        $department = "[";
+        foreach ($t as $key => $value) {
+            $t1 = StaffDepartment::model()->findByPk($value);
+            $department .= $t1['weixin_id'];
+            $department .= ",";
+        }
+        $department = substr($department,0,strlen($department)-1); 
+        $department .= "]";
+
+        $userid = $staff['id'];
+        $name = $_POST['name'];
+        $position ="";
+        $mobile = $_POST['telephone'];
+        $gender = $_POST['gender'];
+        $email ="";
+        $weixinid ="";
+        $corpid = $company['corpid'];
+        $corpsecret = $company['corpsecret'];
+        /*print_r($corpid."&&||&&".$corpsecret);die;*/
+
+        print_r(WPRequest::create_user($userid, $name, $department, $position, $mobile, $gender, $email, $email, $weixinid, $corpid, $corpsecret));
     }
 
     public function actionUpdate()

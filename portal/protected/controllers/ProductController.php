@@ -52,11 +52,12 @@ class ProductController extends InitController
     public function actionList()
     {
         $product = SupplierProduct::model()->findAll(array(
-                'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
+                'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category && standard_type=:standard_type',
                 'params' => array(
                         ':account_id' => $_SESSION['account_id'],
                         ':supplier_type_id' => $_GET['supplier_type'],
-                        ':category' => $_GET['category']
+                        ':category' => $_GET['category'],
+                        ':standard_type' => 0
                     )
             ));
 
@@ -159,6 +160,10 @@ class ProductController extends InitController
 
     public function actionStore()
     {
+        if(isset($_GET['account_id'])){
+            Yii::app()->session['account_id']=$_GET['account_id'];  
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);   
+        };
         if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
             $this->render('store');
@@ -168,12 +173,13 @@ class ProductController extends InitController
             Yii::app()->session['code']=$code;
             if($code == ''){
                 $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=product/store&code=';
-                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$company['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
 
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);
             $t=new WPRequest;
-            $userId = $t->getUserId($code);
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
             $adder=array("UserId"=>"222","DeviceId"=>"");
             $adder=json_decode($userId,true);
             if(!empty($adder['UserId'])) {

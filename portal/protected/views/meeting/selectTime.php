@@ -85,6 +85,13 @@
             <input value="" class="" placeholder="请选择结束时间" readonly="readonly" name="appTime_end" id="appTime1" type="text">
         </div>
     </div>
+    <div class="select_ulist_module" id="hotel">
+            <ul class="select_ulist" id="hotel_ul">
+                <?php foreach ($hotel as $key => $value) { ?>
+                <li class="select_ulist_item round_select" hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></li>
+                <?php }?>
+            </ul>
+    </div>
     <!-- <div class="select_ulist_module">
         <h4 class="module_title">会议时间</h4>
         <ul class="select_ulist">
@@ -160,6 +167,7 @@
                     order_time: 0, 
                     end_time: end_time, 
                     update_time : time,
+                    hotel_id : $(".round_select_selected").attr("hotel-id"),
                 };
                 $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
                         /*if(retval.success){*/
@@ -172,7 +180,7 @@
         }else{
             $(".r_btn").on("click", function () {
                 data={
-                    order_id : <?php echo $_GET['order_id']?>,
+                    order_id : "<?php echo $_GET['order_id']?>",
                     order_date : $("#appDate").val()+" "+$("#appTime").val()+":00",
                     end_time : $("#appDate").val()+" "+$("#appTime1").val()+":00",
                 };
@@ -196,6 +204,14 @@
         $(".select_ulist li").on("click", function () {
             $(".select_ulist li").removeClass("select_selected");
             $(this).addClass("select_selected");
+        });
+
+        //选择门店
+        $("#hotel_ul li").on("click", function () {
+            if(!$(this).hasClass("round_select_selected")){
+                $("#hotel_ul li").removeClass("round_select_selected");
+                $(this).addClass("round_select_selected");
+            }           
         });
 
     })

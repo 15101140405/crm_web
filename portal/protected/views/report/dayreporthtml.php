@@ -17,7 +17,7 @@
 <div class="mian_hs">
 	<div class="product_date">
     	<div class="title">
-        	<p class="p1"><span>今日经营日报（大郊亭店）</span></p>
+        	<p class="p1"><span>今日经营日报（<?php echo $hotel_name?>）</span></p>
             <p class="p2">让销售业绩飞起来</p>
             <!-- <div class="ww">
 <pre>
@@ -249,7 +249,7 @@ $(function(){
             var temp_right_date=new Date();
            
             var temp_stamp =  Date.parse(temp_right_date) / 1000;
-           $.getJSON('<?php echo $this->createUrl("report/info");?>',{hotel_id: 1,chart1_type:'1' ,show_date:temp_stamp,show_day:0
+           $.getJSON('<?php echo $this->createUrl("report/info");?>',{hotel_id: <?php echo $hotel_id?>,chart1_type:'1' ,show_date:temp_stamp,show_day:0
            },function(retval){
            // alert(retval);
                var ret = JSON.stringify(retval);
@@ -461,7 +461,7 @@ $(function(){
         //月份（进店走势）、年份（已签订单）
         var mydate = new Date();
         var year = mydate.getFullYear(); 
-        var month = mydate.getMonth(); 
+        var month = mydate.getMonth()+1; 
         $("#open_trends").html("["+month+"月]");
         $("#order_total").html("["+year+"]");
 

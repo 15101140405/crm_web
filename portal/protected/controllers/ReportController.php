@@ -358,57 +358,73 @@ class ReportController extends InitController
         $html .='                <p><br  /></p>'; 
         $html .='            </div>';*/
 
+        $company = StaffCompany::model()->findAll();
+        /*print_r($company);die;*/
+        foreach ($company as $key => $value) {
+            $hotel = StaffHotel::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            'account_id' => $value['id']
+                        )
+                ));
+            foreach ($hotel as $key1 => $value1) {
+                $touser="@all";
+                $content="中文怎么解决";
+                $title="今日经营日报（".$value1['name'].")";
+                $agentid=0;
+                $url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml&code=&account_id=".$value['id']."&staff_hotel_id=".$value1['id'];
+                $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+                $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
+                $description="经营日报";
+                $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
+                // $t=new ReportController;
 
-        $touser="@all";
-        $content="中文怎么解决";
-        $title="今日经营日报（大郊亭店）";
-        $agentid=0;
-        $url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
-        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
-        $media_id="2n8jAkMtWj42qcBGih5M_hq0teff_17YKATQXYyLlLyAEN6Z_5mOgSyBUcKz7ebu9";
-        $description="这是一个升级后报表";
-        $picur="http://www.cike360.com/school/crm_web/image/thumb.jpg";
-        // $t=new ReportController;
+                // $content = $t->actionDayreport();
+                // print_r($content);die;
+                //$content=$html;
+                // $content=ReportController::actionDayreport();
+                $digest="描述";
+                //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
+                // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
+                // $type="image";
 
-        // $content = $t->actionDayreport();
-        // print_r($content);die;
-        //$content=$html;
-        // $content=ReportController::actionDayreport();
-        $digest="描述";
-        //$media="C:\Users\Light\Desktop\life\65298b36.jpg";
-        // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
-        // $type="image";
-
-        echo "</br>";
-        $author="";
-        $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
-        $show_cover_pic="";
-        $safe="";
-        $toparty="";
-        $totag="";
-        $result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
-        /*$result2=WPrequest::sendMessage_Mpnews(
-                $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
-        // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
-        //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
-        $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid);
-        //$result=WPRequest::mediaupload($media,$type);
-        echo "result1:";
-        print_r($result1);
-        echo "result2:";
-        print_r($result2);
-
+                echo "</br>";
+                $author="";
+                $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
+                $show_cover_pic="";
+                $safe="";
+                $toparty="";
+                $totag="";
+                $result1=WPRequest::updateMpnews_Data($media_id,$title,$thumb_media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+                /*$result2=WPrequest::sendMessage_Mpnews(
+                        $touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);*/
+                // $result=WPRequest::addmpnews( $title,$media_id,$author,$content_source_url,$content,$digest,$show_cover_pic);
+                //print_r(WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur));
+                $result2=WPRequest::sendMessage_News($touser, $toparty, $title, $description, $url, $picur, $agentid,$value['corpid'],$value['corpsecret']);
+                //$result=WPRequest::mediaupload($media,$type);
+                echo "result1:";
+                print_r($result1);
+                echo "result2:";
+                print_r($result2);
+            }
+        }
     }
 
     public function actionDayreporthtml()
     {
+        
+        Yii::app()->session['account_id']=$_GET['account_id'];  
+        Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];  
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);     
+
         //********************************************************************************************
         //取当年已签订单数据
         //********************************************************************************************
         $order_basic = Order::model()->findAll(array(
-                'condition' => 'account_id=:account_id',
+                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
                 'params' => array(
-                        ':account_id' => 1/*$_SESSION['account_id']*/
+                        ':account_id' => $_SESSION['account_id'],
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
                     )
             ));
 
@@ -518,10 +534,12 @@ class ReportController extends InitController
         $order_status_forecast = array(0,1,2,3,4);
         $order_status_deal = array(2,3,4);
         $sales=array();
-        $sales['target']=800;
-        $sales['forecast']=number_format(($this->hotel_total_sales(1,$year,$order_status_forecast))/10000, 1);;
-        $sales['deal']=number_format(($this->hotel_total_sales(1,$year,$order_status_deal))/10000,1);
-        $sales['payment']=number_format(($this->hotel_total_payment(1,$year,$order_status_deal))/10000,1);
+        //取门店信息
+        $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+        $sales['target']=$hotel['target'];
+        $sales['forecast']=number_format(($this->hotel_total_sales($_SESSION['staff_hotel_id'],$year,$order_status_forecast))/10000, 1);;
+        $sales['deal']=number_format(($this->hotel_total_sales($_SESSION['staff_hotel_id'],$year,$order_status_deal))/10000,1);
+        $sales['payment']=number_format(($this->hotel_total_payment($_SESSION['staff_hotel_id'],$year,$order_status_deal))/10000,1);
 
         //取当日开单数据
         $time = time();
@@ -529,7 +547,12 @@ class ReportController extends InitController
 
         $criteria = new CDbCriteria; 
         $criteria->addSearchCondition('update_time', $date);
+        $criteria->addCondition('account_id=:account_id');
+        $criteria->addCondition('staff_hotel_id=:staff_hotel_id');
+        $criteria->params[':account_id']=$_SESSION['account_id'];  
+        $criteria->params[':staff_hotel_id']=$_SESSION['staff_hotel_id'];  
         $order1 = Order::model()->findAll($criteria);
+
         
 
         $yesterday_open_order = count($order1); 
@@ -560,6 +583,10 @@ class ReportController extends InitController
         //取全部已定订单数据
         $criteria3 = new CDbCriteria; 
         $criteria3->addInCondition('order_status', array(1,2,3));
+        $criteria3->addCondition('account_id=:account_id');
+        $criteria3->addCondition('staff_hotel_id=:staff_hotel_id');
+        $criteria3->params[':account_id']=$_SESSION['account_id'];  
+        $criteria3->params[':staff_hotel_id']=$_SESSION['staff_hotel_id'];  
         $criteria3->order = 'order_date DESC'; 
         $order3 = Order::model()->findAll($criteria3);  
 
@@ -626,7 +653,7 @@ class ReportController extends InitController
             };
         };
 
-
+        
 
 
         /*print_r($order_open);die;*/
@@ -638,6 +665,8 @@ class ReportController extends InitController
                 'wedding_num' => $wedding_num,
                 'meeting_num' => $meeting_num,
                 'order_all' => $order_all,
+                'hotel_name' => $hotel['name'],
+                'hotel_id' => $hotel['id']
             ));
 
         //生成静态页面
