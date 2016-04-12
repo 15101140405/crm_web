@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>婚礼－创建婚礼订单</title>
+    <title>创建订单</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -103,14 +103,7 @@
                 <?php }?>
             </ul>
     </div>
-    <!-- <div class="select_ulist_module">
-        <h4 class="module_title">时间</h4>
-        <ul class="select_ulist">
-            <li class="select_ulist_item select select_selected">上午</li>
-            <li class="select_ulist_item select">下午</li>
-            <li class="select_ulist_item select">全天</li>
-        </ul>
-    </div> -->
+    
 </article>
 
 <script src="js/zepto.min.js"></script>

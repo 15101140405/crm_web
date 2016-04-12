@@ -1,34 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "staff".
+ * This is the model class for table "order".
  *
- * The followings are the available columns in table 'staff':
- * @property integer $id
+ * The followings are the available columns in table 'order':
+ * @property string $id
  * @property integer $account_id
- * @property integer $name
- * @property integer $gender
- * @property string $avatar
- * @property string $avatar_media_id
- * @property string $job_title
- * @property string $telephone
- * @property string $weixin_id
- * @property string $email
- * @property integer $company_id
- * @property string $department_list
- * @property string $hotel_list
- * @property string $extattr
- * @property string $target
+ * @property integer $planner_id
+ * @property integer $staff_hotel_id
+ * @property string $order_name
+ * @property string $order_type
+ * @property string $order_date
+ * @property string $order_time
+ * @property integer $order_status
  * @property string $update_time
  */
-class Staff extends InitActiveRecord
+class ServicePerson extends InitActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'staff';
+		return 'service_person';
 	}
 
 	/**
@@ -39,12 +33,13 @@ class Staff extends InitActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('account_id, name, gender, avatar, avatar_media_id, job_title, telephone, weixin_id, email, company_id, department_list, hotel_list, extattr, target, update_time', 'required'),
-			array('account_id, name, gender, company_id', 'numerical', 'integerOnly'=>true),
-			array('avatar, avatar_media_id, job_title, telephone, weixin_id, email, department_list, hotel_list, extattr, target', 'length', 'max'=>256),
+			array('account_id, planner_id, staff_hotel_id, order_name, order_type, order_date, order_time, order_status, update_time', 'required'),
+			array('account_id, planner_id, staff_hotel_id, order_status', 'numerical', 'integerOnly'=>true),
+			array('order_name', 'length', 'max'=>256),
+			array('order_type, order_time', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, account_id, name, gender, avatar, avatar_media_id, job_title, telephone, weixin_id, email, company_id, department_list, hotel_list, extattr, target, update_time', 'safe', 'on'=>'search'),
+			array('id, account_id, planner_id, designer_id, staff_hotel_id, order_name, order_type, order_date, order_time, order_status, update_time, feast_deposit, medium_term, final_payments', 'safe', 'on'=>'search'),
 		);
 	}*/
 
@@ -67,20 +62,17 @@ class Staff extends InitActiveRecord
 		return array(
 			'id' => 'ID',
 			'account_id' => 'Account',
-			'name' => 'Name',
-			'gender' => 'Gender',
-			'avatar' => 'Avatar',
-			'avatar_media_id' => 'Avatar Media',
-			'job_title' => 'Job Title',
-			'telephone' => 'Telephone',
-			'weixin_id' => 'Weixin',
-			'email' => 'Email',
-			'company_id' => 'Company',
-			'department_list' => 'Department List',
-			'hotel_list' => 'Hotel List',
-			'extattr' => 'Extattr',
-			'target' => 'Target',
+			'planner_id' => 'Planner',
+			'staff_hotel_id' => 'Staff Hotel',
+			'order_name' => 'Order Name',
+			'order_type' => 'Order Type',
+			'order_date' => 'Order Date',
+			'order_time' => 'Order Time',
+			'order_status' => 'Order Status',
 			'update_time' => 'Update Time',
+			'feast_deposit' => 'Deposit',
+			'medium_term' => 'Medium',
+			'final_payments' => 'Final',
 		);
 	}*/
 
@@ -102,23 +94,17 @@ class Staff extends InitActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('account_id',$this->account_id);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('team_id',$this->team_id);
 		$criteria->compare('name',$this->name);
-		$criteria->compare('gender',$this->gender);
+		$criteria->compare('gender',$this->gender,true);
 		$criteria->compare('avatar',$this->avatar,true);
-		$criteria->compare('avatar_media_id',$this->avatar_media_id,true);
-		$criteria->compare('job_title',$this->job_title,true);
-		$criteria->compare('telephone',$this->telephone,true);
+		$criteria->compare('telephone',$this->telephone);
 		$criteria->compare('weixin_id',$this->weixin_id,true);
 		$criteria->compare('email',$this->email,true);
-		$criteria->compare('company_id',$this->company_id);
-		$criteria->compare('department_list',$this->department_list,true);
-		$criteria->compare('hotel_list',$this->hotel_list,true);
-		$criteria->compare('extattr',$this->extattr,true);
-		$criteria->compare('target',$this->target,true);
 		$criteria->compare('update_time',$this->update_time,true);
-		$criteria->compare('password',$this->password,true);
+		$criteria->compare('staff_id',$this->staff_id,true);
+		$criteria->compare('service_type',$this->service_type,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -129,7 +115,7 @@ class Staff extends InitActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Staff the static model class
+	 * @return Order the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

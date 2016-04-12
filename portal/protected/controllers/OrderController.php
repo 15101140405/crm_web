@@ -237,10 +237,10 @@ class OrderController extends InitController
             $company = StaffCompany::model()->findByPk($_SESSION['account_id']);    
         };
 
-        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
             //echo '已登陆';
             /*echo $_SESSION['userid'];die;*/
-            /*$arr_order = array();
+            $arr_order = array();
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $newstr = rtrim($staff['department_list'], "]");
             $newstr = ltrim($newstr, "[");
@@ -278,7 +278,7 @@ class OrderController extends InitController
             }else{
                 $this->render("my_empty");
             }
-        }else{*/ //未登录
+        }else{ //未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -337,7 +337,7 @@ class OrderController extends InitController
                     $this->render("my_empty");
                 }
             }
-        /*};*/
+        };
     }
 
     public function actionSave()
