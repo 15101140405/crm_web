@@ -67,7 +67,7 @@ small {
         <!-- <div class="l_btn" data-icon="&#xe69c;" id="filter"></div> -->
         <div class="l_btn" id="index" style='width:30%'>档期快查</div>
         <h2 class="page_title" id="pa_title">我的订单</h2>
-    <div class="r_btn" data-icon="&#xe767;" style='width: 3.5rem;'></div>
+    <div class="r_btn" data-icon="&#xe767;" style='width: 4.5rem;'></div>
     </div>
     <div class="ulist_module list-block" style='position: relative;top: 0px;'>
         <ul class="ulist order_list">
@@ -75,7 +75,7 @@ small {
                 <li class="ulist_item swipeout" order-id="<?php echo $value['id']?>" service-type="<?php echo $value['service_type']?>">
                     <div class="item-content">
                         <span class="order_status  status_green" style="margin-top: 15px;margin-bottom: 15;font-size:1.3rem;" order-status="<?php echo $value['order_status']?>">
-                            已付尾款
+                            未执行
                         </span>
                         <div class="order_info" order-id="<?php echo $value['id']?>" service-type="<?php echo $value['service_type']?>" order-status="<?php echo $value['order_status']?>">
                             <p class="customer" style="margin-top:20px;margin-bottom:10px;font-size: 1.3rem;line-height: 1.2rem;white-space: nowrap;width: 180px;overflow: hidden;">
@@ -85,7 +85,7 @@ small {
                                 <?php echo $value['order_date']?>
                             </p>
                         </div>
-                        <div class="swipeout-actions-right">
+                        <div class="swipeout-actions-right" id="del">
                             <a class="swipeout-delete del">删除订单</a>
                         </div>
                     </div>
@@ -106,8 +106,29 @@ small {
 <script type="text/javascript" src="js/my-app.js"></script>
 <script>
 $(function () {
+    //新增
+    $(".r_btn").on("click",function(){
+        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=new&service_order_id=";
+    });
 
-    
+    //编辑
+    $("li").on("click",function(){
+        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=edit&service_order_id="+ $(this).attr("order-id");
+    });
+
+    //删除
+    $(".del").on("click",function(){
+        $("li").unbind("click");
+        $.post("<?php echo $this->createUrl("service/del_order");?>",{service_order_id:$(this).parent().parent().parent().attr("order-id")},function(){
+            location.reload(); 
+        });
+    });
+
+    //档期快查
+    $("#index").on("click",function(){
+        location.href = "<?php echo $this->createUrl("service/index");?>&code=&service_team_id=<?php echo $_GET['service_team_id']?>";
+    });
+
 })
 
 </script>

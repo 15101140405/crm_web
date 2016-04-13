@@ -10,45 +10,12 @@
 <link href="css/base.css" rel="stylesheet" type="text/css" />
 <link href="css/calendar.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
-
 </head>
 <body>
   <div class="header">
     <!-- 当从my_order进去才显示返回按钮 -->
     <!-- <div class="l_btn" data-icon="&#xe679;"></div>  -->
-    <h2 class="page_title">
-    <?php 
-        $user_type = "策划"; //用户类型+++++++++++++++++++++++++++所需数据
-      if($user_type == "前台" ){ //当用户类型为“前台”时
-          $arr_hotel = array(//+++++++++++++++++++++++++++所需数据
-                        'hotel_name'   => '大郊亭店',
-                        'staff_hotel_id'=> '1'
-                      );
-          echo '<select disabled="disabled">'.
-               "<option hotel_id='".$arr_hotel['staff_hotel_id']."'>".$arr_hotel['hotel_name']."</option>".
-               '</select>';
-      }else if($user_type=="策划" || $user_type=="收银"){//用户类型为“策划”／“收银”时
-         $arr_hotel = array(//+++++++++++++++++++++++++++所需数据
-                     '0' => array(
-                                'hotel_name'   => '大郊亭店',
-                                'staff_hotel_id'=> '1'
-                            ),
-                     '1' => array(
-                                'hotel_name'   => '航天桥店',
-                                'staff_hotel_id'=> '2'
-                            )
-                     );
-        echo  '<select>';
-        foreach ($arr_hotel as $key => $value) {
-              foreach ($value as $key1 => $value1) {
-                      $arr1[$key1] = $value1;
-              }
-              echo "<option hotel_id='".$arr1['staff_hotel_id']."'>".$arr1['hotel_name']."</option>";
-        }
-        echo '</select>';
-      }
-  ?> 
-    </h2>
+    <h2 class="page_title">我的档期</h2>
 
     <!-- 当从my_order进入，则显示下一步按钮 -->
     <!-- <div class="r_btn" data-icon="&#xe767;"></div> -->
@@ -101,22 +68,18 @@ $(function() {
     currYear: first_show_year,
     currMonth: first_show_month,
     afterDrawCld: function(year, month){
-      var account_id=<?php echo $_SESSION['account_id']?>;
-      var staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>;
-      console.log(account_id+"|"+staff_hotel_id);
                
       var info ={
         'year': year ,
         'month' : month+1 ,
-        'account_id' :  account_id,
-        'staff_hotel_id' : staff_hotel_id
-      }
+        'service_person_id' : <?php echo $service_person_id?>,
+      };
       console.log(info);
 
       /*＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝*/
       //日历部分，增／减月份，渲染
       /*＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝*/
-      $.post('<?php echo $this->createUrl("order/getindexdata");?>',info,function(data){
+      $.post('<?php echo $this->createUrl("service/indexdata");?>',info,function(data){
         var order = data.split("|") 
 
         console.log(order);
@@ -125,6 +88,7 @@ $(function() {
           'half_data' : order[1],//有订单（不是新订单）
           'maybe_data' : order[2]//有新订单
         };
+        
 
         var data = arr_order["data"]; //模拟的返回值 string
         var order_date = data.split(',')
@@ -159,10 +123,11 @@ $(function() {
       /*＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝*/
       $.ajax({ 
         type: "POST", 
-        url: "<?php echo $this->createUrl("order/findmonthorder");?>", 
+        url: "<?php echo $this->createUrl("service/findmonthorder");?>", 
         data: info,
         contentType: "application/x-www-form-urlencoded; charset=utf-8", 
         success:function(retval){
+          /*alert(retval);*/
           console.log(retval);
           var temp = eval(retval);
           var order = new Array();
@@ -173,11 +138,11 @@ $(function() {
 
           $('.order_ulist').html('');
             for(var i=0; i<order.length; i++){
-              var html = '<li order-id="'+order[i].order_id+'" type="'+order[i].order_type+'" status="'+order[i].order_status+'" day="'+order[i].order_day+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
+              var html = '<li order-id="'+order[i].service_order_id+'" type="'+order[i].service_type+'" status="'+order[i].order_status+'" day="'+order[i].order_data+'"><span class="order_categroy" >'+/*order_type_json[order[i].order_type-1].type_content*/+'</span>';
               /*html += '<div class="order_desc"><p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span>';*/
               html += '<div class="order_desc"><p style="display:table;" >';
               html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> <i> ['+order[i].planner_name+']</i></p></div>';
-              html += '<span class="index_order_status '+order_status[order[i].order_status].class_type+'">'+order_status[order[i].order_status].content+'</span></li>';
+              html += '<span class="index_order_status '+/*order_status[order[i].order_status].class_type*/+'">'+/*order_status[order[i].order_status].content*/+'</span></li>';
               $('.order_ulist').append(html);
             }
             var html = '<li class="no_order"><div class="order_null">今日无订单</div></li>';
@@ -249,7 +214,7 @@ $(function() {
 
   //新增订单
   $(".btn").on("click",function(){
-    location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
+    location.href = "<?php echo $this->createUrl("service/create_order");?>&type=new&service_order_id=";
   })
 
   /* ===========================
@@ -265,7 +230,7 @@ $(function() {
       $(".no_order").removeClass("hid");
     }
     $(".btn").on("click",function(){
-      location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
+      location.href = "<?php echo $this->createUrl("service/create_order");?>&type=new&service_order_id=";
     })
   }
 

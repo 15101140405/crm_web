@@ -107,6 +107,8 @@ class ServiceOrder extends InitActiveRecord
 		$criteria->compare('order_status',$this->order_status,true);
 		$criteria->compare('order_place',$this->order_place,true);
 		$criteria->compare('order_company',$this->order_company,true);
+		$criteria->compare('remarks',$this->remarks,true);
+		$criteria->compare('price',$this->price,true);
 		
 
 		return new CActiveDataProvider($this, array(

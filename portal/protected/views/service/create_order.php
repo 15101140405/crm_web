@@ -60,26 +60,38 @@
             padding: 15px;
             background: #fff;
         }
+        .ulist input{
+            height: 3.5rem;
+            width: 200px;
+            line-height: 3.5rem;
+            float: right;
+            margin-top: 12px;
+        }
+        .ulist li{
+            height: 5.5rem;
+            line-height: 5.5rem;
+        }
+        .select_ulist input{
+            height: 3.5rem;
+            width: 200px;
+            line-height: 3.5rem;
+            float: right;
+            margin-top: 12px;
+        }
+        .select_ulist li{
+            height: 5.5rem;
+            line-height: 5.5rem;
+        }
     </style>
 </head>
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn hid" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn hid" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">创建婚礼订单</h2>
-        <div class="r_btn">确定</div>
+        <!-- <div class="r_btn">确定</div> -->
     </div>
-    <!-- <div class="int_ulist_module">
-        <ul class="int_ulist">
-            <li class="int_ulist_item">
-                <span class="label">预计桌数</span>
-                <div class="int_bar mar_r10">
-                    <input class="align_r" id="expect_table" type="text" placeholder="预计桌数"/>
-                </div>
-                <span class="float_r t_green">桌</span>
-            </li>
-        </ul>
-    </div> -->
+
     <div class="content">
         <div class="demos">
             <label for="appDate">日期</label>
@@ -90,20 +102,67 @@
             <label for="appTime">开始时间</label>
             <input value="" class="" placeholder="请选择开始时间" readonly="readonly" name="appTime_start" id="appTime" type="text">
         </div>
-
-        <div class="demos">
-            <label for="appTime">结束时间</label>
-            <input value="" class="" placeholder="请选择结束时间" readonly="readonly" name="appTime_end" id="appTime1" type="text">
-        </div>
     </div>
-    <div class="select_ulist_module" id="hotel">
-            <ul class="select_ulist" id="hotel_ul">
-                <?php foreach ($hotel as $key => $value) { ?>
-                <li class="select_ulist_item round_select" hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></li>
-                <?php }?>
-            </ul>
+    <div class="ulist_module pad_b40" style="margin-top:20px;">
+        <ul class="ulist">
+            <li class="ulist_item " id="detailinfo">
+                <span class="big_font">基本信息</span>
+            </li>
+            <li class="ulist_item flex">
+                客户姓名
+                <div class="flex1">
+                    <input class="align_r t_green" type="text" id="order_name" placeholder="例如：陈磊&王晓媛"/>
+                </div>
+            </li>
+            <li class="ulist_item flex">
+                地点
+                <div class="flex1">
+                    <input class="align_r t_green" type="text" id="place" placeholder="请输入地点"/>
+                </div>
+            </li>
+            <li class="ulist_item flex">
+                联系人
+                <div class="flex1">
+                    <input class="align_r t_green" type="text" id="linkman" placeholder="例如：乔项"/>
+                </div>
+            </li>
+            <li class="ulist_item flex">
+                联系人电话
+                <div class="flex1">
+                    <input class="align_r t_green" type="text" id="linkman_phone" placeholder="请输入联系人电话"/>
+                </div>
+            </li>
+        </ul>
     </div>
     
+    <div class="select_ulist_module">
+        <ul class="select_ulist" id="price_ul">
+            <li class="ulist_item " id="detailinfo">
+                <span class="big_font">报价</span>
+            </li>
+            <li class="ulist_item flex">
+                报价
+                <div class="flex1">
+                    <input class="align_r t_green" type="text" id="price" />
+                </div>
+            </li>     
+        </ul>
+    </div>
+
+    <div class="ulist_module pad_b50">
+        <ul class="ulist " >
+            <li class="ulist_item">备注</li>
+            <li class="remark">
+                <div class="text_bar">
+                    <textarea maxlength="70" placeholder="请输入备注" id="remark"></textarea>
+                </div>
+            </li> 
+        </ul>
+    </div>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="r_btn" id="insert">创建订单</div>
+        <div class="r_btn" id="update">确定</div>
+    </div>
 </article>
 
 <script src="js/zepto.min.js"></script>
@@ -136,22 +195,51 @@
         $("#appTime1").mobiscroll(optTime).time(optTime);
 
 
-
-        
-
         var order_date = localStorage.getItem("new_order_day");//获得所选择的时间
         $('.module_title').html('时间［'+order_date+']');
 
-        //返回按钮
-        $(".l_btn").on("click", function () {
-            localStorage.removeClass("order_type");
-            location.href = "<?php echo $this->createUrl("order/selectType");?>";
-        });
-        //确定按钮
-        $(".r_btn").on("click", function () {
+        //页面初始化
+        if("<?php echo $_GET['service_order_id']?>" != ""){
+            var order_date = "<?php echo $order['order_date']?>";
+            var t1 = order_date.split(' ');
+            $("#appDate").val(t1[0]);
+            $("#appTime").val(t1[1]);
+            $("#order_name").val("<?php echo $order['order_name']?>");
+            $("#place").val("<?php echo $order['order_place']?>");
+            $("#linkman").val("<?php echo $order['linkman_name']?>");
+            $("#linkman_phone").val("<?php echo $order['linkman_phone']?>");
+            $("#price").val("<?php echo $order['price']?>");
+            $("#remark").val("<?php echo $order['remarks']?>");
+            $("#insert").remove();
+            $(".page_title").html("订单编辑");
+        }else{
+            $("#update").remove();
+        }
 
-            //console.log($(".select_ulist .select_selected").index());
-            //将此婚礼信息提交给后台
+        //新增
+        $("#insert").on("click", function () {
+            
+            new_order_info = get_info();
+
+            $.post('<?php echo $this->createUrl("service/insert_order");?>',new_order_info,function(retval){
+                location.href = "<?php echo $this->createUrl("service/my");?>";
+            });
+            
+        })
+
+        //编辑
+        $("#update").on("click", function () {
+            
+            new_order_info = get_info();
+            alert(new_order_info.service_order_id);
+            $.post('<?php echo $this->createUrl("service/update_order");?>',new_order_info,function(retval){
+                location.href = "<?php echo $this->createUrl("service/my");?>";
+            });
+            
+        })
+
+        function get_info()
+        {
             var mydate = new Date();
             var year = mydate.getFullYear() + "";
             var month = mydate.getMonth() + 1;
@@ -163,37 +251,20 @@
 
             var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
             var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
-            var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
 
             var new_order_info = {
+                service_order_id: "<?php echo $_GET['service_order_id']?>",
                 order_date: order_date,
-                order_type: 2,
-                order_name: '新订单',
-                order_time: 0, 
-                end_time: end_time, 
+                order_name: $("#order_name").val(),
+                place: $("#place").val(),
+                linkman: $("#linkman").val(),
+                linkman_phone: $("#linkman_phone").val(),
+                price: $("#price").val(),
                 update_time : time,
-                hotel_id : $(".round_select_selected").attr("hotel-id"),
+                remarks: $("#remark").val(),
             };
-            
-
-            $.post('<?php echo $this->createUrl("plan/wedinsert");?>',new_order_info,function(retval){
-                /*if(retval.success){*/
-                location.href = "<?php echo $this->createUrl("plan/customername");?>&order_id="+retval;
-                /*}else{*/
-            //  alert("BI偷了个懒！");
-            // }
-            });
-            
-        })
-
-
-        //选择门店
-        $("#hotel_ul li").on("click", function () {
-            if(!$(this).hasClass("round_select_selected")){
-                $("#hotel_ul li").removeClass("round_select_selected");
-                $(this).addClass("round_select_selected");
-            }           
-        });
+            return new_order_info;
+        }
 
     })
 </script>
