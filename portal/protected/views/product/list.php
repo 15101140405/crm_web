@@ -11,11 +11,12 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <script src="js/zepto.min.js"></script>
     <script src="js/common.js"></script>
+    <link rel="stylesheet" href="css/weui.css"/>
 </head>
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">产品列表</h2>
         <div class="r_btn" data-icon="&#xe767;"></div>
     </div>
@@ -29,6 +30,7 @@
             <?php } ?>
         </ul>
     </div>
+    <a href="<?php echo $this->createUrl("service/teamlist");?>&service_type=<?php echo $_GET['supplier_type']?>" class="weui_btn weui_btn_primary">更多团队</a>
 </article>
 <script>
     $(function () {

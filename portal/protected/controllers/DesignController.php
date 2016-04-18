@@ -757,7 +757,7 @@ class DesignController extends InitController
             'gross_profit' => 0 ,
             'gross_profit_rate' => 0 ,
         );
-
+        /*print_r($arr_photo_total);die;*/
         if(!empty($arr_host_total)){
             $arr_service_total['total_price'] += $arr_host_total['total_price'];
             $arr_service_total['total_cost'] += $arr_host_total['total_cost'];
@@ -2922,6 +2922,48 @@ class DesignController extends InitController
         ));
     }
 
+    public function actionHostDetail()
+    {
+        $supplier_product = SupplierProduct::model()->findAll(array(
+            "condition" => "supplier_id = :supplier_id && account_id = :account_id",
+            "params" => array(":supplier_id" => $_GET['supplier_id'],':account_id' => $_SESSION['account_id']),
+        ));
+        $supplier = Supplier::model()->findByPk($_GET['supplier_id']);
+        $service_person = ServicePerson::model()->find(array(
+                'condition' => 'staff_id = :staff_id',
+                'params' => array(
+                        ':staff_id' => $supplier['staff_id'],
+                    )
+            ));
+        $orderproduct = array();
+        if($_GET['type'] == "edit"){
+            $supplierproduct = SupplierProduct::model()->findAll(array(
+                    'condition' => 'supplier_id = :supplier_id',
+                    'params' => array(
+                            ':supplier_id' => $_GET['supplier_id']
+                        )
+                ));
+            $product_id = array();
+            foreach ($supplierproduct as $key => $value) {
+                $product_id[] = $value['id']; 
+            };
+
+            $criteria = new CDbCriteria; 
+            $criteria->addInCondition('product_id', $product_id);
+            $criteria->addCondition("order_id = :order_id");    
+            $criteria->params[':order_id']=$_GET['order_id'];  
+            $orderproduct = OrderProduct::model()->find($criteria); 
+
+        };
+        /*print_r($supplier_product);die;*/
+        /*print_r($supplier);die;*/
+        $this->render('hostDetail',array(
+                'supplier_product' => $supplier_product,
+                'order_product' => $orderproduct,
+                'service_person' => $service_person,
+            ));
+    }
+
     public function actionServicePersonnel()
     {
         /*********************************************************************************************************************/
@@ -2931,6 +2973,7 @@ class DesignController extends InitController
         $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
         $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
+        /*print_r($supplierProducts);die;*/
         $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
         $supplierProducts2 = $SupplierProductForm->getSupplierProductList2($accountId);
         $supplierProducts3 = $SupplierProductForm->getSupplierProductList3($accountId);
@@ -2942,6 +2985,12 @@ class DesignController extends InitController
         /*********************************************************************************************************************/
 
         $host_data = $this -> actionGetOrderProduct(3);
+        $host_id = array();
+        foreach ($host_data as $key => $value) {
+            $item = SupplierProduct::model()->findByPk($value['product_id']);
+            $host_id[] = $item['supplier_id'];
+        };
+        
         $host_total = 0 ;
         if(!empty($host_data)){
             foreach ($host_data as $key => $value) {
@@ -3023,7 +3072,7 @@ class DesignController extends InitController
                 'arr_category_camera' => $supplierProducts2,
                 'arr_category_makeup' => $supplierProducts3,
                 'arr_category_other' => $supplierProducts4,
-                'host_data' => $host_data,
+                'host_id' => $host_id,
                 'video_data' => $video_data,
                 'camera_data' => $camera_data,
                 'makeup_data' => $makeup_data,
@@ -3094,6 +3143,59 @@ class DesignController extends InitController
         $orderproduct->save();
     }
 
+    public function actionSavehost()
+    {
+        /*if($_POST['product_id'] == 0){
+            $supplier = Supplier::model()->findByPk($_POST['supplier_id']);
+            $supplierproduct= new SupplierProduct;  
+            $supplierproduct->account_id = $_POST['account_id'];
+            $supplierproduct->supplier_id = $_POST['supplier_id'];
+            $supplierproduct->supplier_type_id = $supplier['type_id'];
+            $supplierproduct->standard_type = 0;
+            $supplierproduct->name = "婚礼主持";
+            $supplierproduct->category = 2;
+            $supplierproduct->unit_price = $_POST['actual_price'];
+            $supplierproduct->unit_cost = $_POST['actual_unit_cost'];
+            $supplierproduct->unit = "元／场";
+            $supplierproduct->update_time = $_POST['update_time'];
+            $supplierproduct->service_charge_ratio = 0;
+
+            $supplierproduct->save();
+
+            $supplierproduct = SupplierProduct::model()->find(array(
+                    'condition' => 'account_id=:account_id && supplier_id=:supplier_id && update_time=:update_time',
+                    'params' => array(
+                            ':account_id' => $_POST['account_id'],
+                            ':supplier_id' => $_POST['supplier_id'],
+                            ':update_time' => $_POST['update_time'],
+                        )
+                ));
+
+            $orderproduct= new OrderProduct;  
+            $orderproduct->account_id = $_POST['account_id'];
+            $orderproduct->order_id = $_POST['order_id'];
+            $orderproduct->product_id = $supplierproduct['id'];
+            $orderproduct->actual_price = $supplierproduct['unit_price'];
+            $orderproduct->unit = $supplierproduct['unit'];
+            $orderproduct->actual_unit_cost = $supplierproduct['unit_cost'];
+            $orderproduct->update_time = $_POST['update_time'];
+            $orderproduct->actual_service_ratio = $supplierproduct['service_charge_ratio'];
+
+            $orderproduct->save();
+        }else{*/
+            $orderproduct= new OrderProduct;  
+            $orderproduct->account_id = $_POST['account_id'];
+            $orderproduct->order_id = $_POST['order_id'];
+            $orderproduct->product_id = $_POST['product_id'];
+            $orderproduct->actual_price = $_POST['actual_price'];
+            $orderproduct->unit = "元／场";
+            $orderproduct->actual_unit_cost = $_POST['actual_unit_cost'];
+            $orderproduct->update_time = $_POST['update_time'];
+
+            $orderproduct->save();
+        /*}*/
+    }
+
     public function actionUpdatetp()
     {
         /*$_POST['order_id'] = 68;
@@ -3108,6 +3210,14 @@ class DesignController extends InitController
             ));
         /*print_r($orderproduct);die;*/
         OrderProduct::model()->updateByPk($orderproduct['id'],array('actual_price'=>$_POST['actual_price'],'unit'=>$_POST['amount'],'actual_unit_cost'=>$_POST['actual_unit_cost'],'actual_service_ratio'=>$_POST['actual_service_ratio']));
+    }
+
+    public function actionUpdatehost()
+    {
+        /*$_POST['order_id'] = 68;
+        $_POST['product_id'] = 36;*/
+        
+        OrderProduct::model()->updateByPk($_POST['order_product_id'],array('product_id'=>$_POST['product_id'],'actual_price'=>$_POST['actual_price'],'actual_unit_cost'=>$_POST['actual_unit_cost']));
     }
 
     public function actionSavedec()
@@ -3203,6 +3313,11 @@ class DesignController extends InitController
     public function actionDeltp()
     {
         OrderProduct::model()->deleteAll('order_id=:order_id && product_id=:product_id',array('order_id'=>$_POST['order_id'],'product_id'=>$_POST['product_id']));
+    }    
+
+    public function actionDelhost()
+    {
+        OrderProduct::model()->deleteByPk($_POST['order_product_id']);
     }    
 
     public function actionChooseChannel()

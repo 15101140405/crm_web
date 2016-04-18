@@ -260,10 +260,11 @@ class OrderController extends InitController
                 $arr_order = Order::model()->findAll($criteria);
             }else{
                 $arr_order = Order::model()->findAll(array(
-                    "condition" => "adder_id=:adder_id || planner_id=:planner_id",
+                    "condition" => "adder_id=:adder_id || planner_id=:planner_id && account_id = :account_id",
                     "params" => array(
                         ":adder_id" => $_SESSION['userid'],
-                        ":planner_id" => $_SESSION['userid']
+                        ":planner_id" => $_SESSION['userid'],
+                        ":account_id" => $_SESSION['account_id'],
                     ),
                     'order'=>'order_date  DESC', 
                 ));
@@ -319,10 +320,11 @@ class OrderController extends InitController
                     $arr_order = Order::model()->findAll($criteria);
                 }else{
                     $arr_order = Order::model()->findAll(array(
-                        "condition" => "adder_id=:adder_id || planner_id=:planner_id",
+                        "condition" => "adder_id=:adder_id || planner_id=:planner_id && account_id = :account_id",
                         "params" => array(
                             ":adder_id" => $_SESSION['userid'],
-                            ":planner_id" => $_SESSION['userid']
+                            ":planner_id" => $_SESSION['userid'],
+                            ":account_id" => $_SESSION['account_id'],
                         ),
                         'order'=>'order_date DESC', 
                     ));

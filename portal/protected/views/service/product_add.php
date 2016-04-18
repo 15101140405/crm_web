@@ -105,7 +105,8 @@
             console.log(p_info);
             //提交用户信息 
 
-            $.post('<?php echo $this->createUrl("service/update_product");?>',p_info,function(){
+            $.post('<?php echo $this->createUrl("service/update_product");?>',p_info,function(retval){
+                /*alert(retval);*/
                 location.href = "<?php echo $this->createUrl('service/product');?>";
             });
         });
@@ -113,7 +114,8 @@
         //删除
         $("#del").on("click", function () {
             //background data
-            $.post('<?php echo $this->createUrl('service/del_product');?>',{product_id:'<?php echo $product['id']?>'},function(){
+            $.post('<?php echo $this->createUrl('service/del_product');?>',{product_id:'<?php echo $product['id']?>'},function(retval){
+                /*alert(retval);*/
                 location.href = "<?php echo $this->createUrl('service/product');?>";
             });
         }); 

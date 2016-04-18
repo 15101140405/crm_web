@@ -108,12 +108,12 @@ small {
 $(function () {
     //新增
     $(".r_btn").on("click",function(){
-        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=new&service_order_id=";
+        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=new&service_order_id=&service_team_id=<?php echo $_SESSION['service_team_id']?>";
     });
 
     //编辑
     $("li").on("click",function(){
-        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=edit&service_order_id="+ $(this).attr("order-id");
+        location.href = "<?php echo $this->createUrl("service/create_order");?>&type=edit&service_team_id=<?php echo $_SESSION['service_team_id']?>&service_order_id="+ $(this).attr("order-id");
     });
 
     //删除
@@ -126,7 +126,7 @@ $(function () {
 
     //档期快查
     $("#index").on("click",function(){
-        location.href = "<?php echo $this->createUrl("service/index");?>&code=&service_team_id=<?php echo $_GET['service_team_id']?>";
+        location.href = "<?php echo $this->createUrl("service/index");?>&code=&service_team_id=<?php echo $_SESSION['service_team_id']?>&from=&supplier_product_id=";
     });
 
 })

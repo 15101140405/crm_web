@@ -150,13 +150,32 @@ class SupplierProductForm extends InitForm
  
     public function getSupplierProductList($accountId)
     {
-        $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+        $supplier = Supplier::model()->findAll(array(
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 3,
+                    ":account_id" => $accountId,
                 ),
             ));
-           $supplier_id = array();
+        $result = array();
+        foreach ($supplier as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $service_person = ServicePerson::model()->find(array(
+                    'condition' => 'staff_id = :staff_id',
+                    'params' => array(
+                            ':staff_id' => $value['staff_id']
+                        )
+                ));
+            $item['name'] = $service_person['name'];
+            $service_team = ServiceTeam::model()->findByPk($service_person['team_id']);
+            $item['team_name'] = $service_team['name'];
+            $result[] = $item;
+        }
+        return $result;
+            
+
+           /*$supplier_id = array();
             foreach($Supplier as $value){
                 $item = $value->id;
                 $supplier_id[] = $item;
@@ -192,15 +211,16 @@ class SupplierProductForm extends InitForm
             $result[$key]['supplier_name'] = $staff['name'];
             }
            
-            return $result;
+            return $result;*/
     }
 
     public function getSupplierProductList1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 4,
+                    ":account_id" => $accountId,
                 ),
             ));
            $supplier_id = array();
@@ -213,6 +233,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -248,9 +270,10 @@ class SupplierProductForm extends InitForm
     public function getSupplierProductList2($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 5,
+                    ":account_id" => $accountId
                 ),
             ));
             $supplier_id = array();
@@ -263,6 +286,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -298,9 +323,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductList3($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 6,
+                    ":account_id" => $accountId
                 ),
             ));
             $supplier_id = array();
@@ -313,6 +339,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -350,9 +378,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductList4($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 7,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -365,6 +394,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -402,9 +433,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLightM($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 8,
+                    ":account_id" => $accountId
                 ),
             ));
             // $SupplierProduct = SupplierProduct::model()->findAll(array(
@@ -425,6 +457,8 @@ class SupplierProductForm extends InitForm
             $criteria1 = new CDbCriteria; 
             $criteria1->addCondition("category=1");
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -462,9 +496,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLightM1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 9,
+                    ":account_id" => $accountId
                 ),
             ));
 
@@ -486,6 +521,8 @@ class SupplierProductForm extends InitForm
             $criteria1 = new CDbCriteria; 
             $criteria1->addCondition("category=1");
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -522,9 +559,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLight($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 8,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -538,6 +576,8 @@ class SupplierProductForm extends InitForm
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
             $criteria1->addCondition("category=2");
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -577,9 +617,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLight1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 9,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -592,6 +633,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -629,9 +672,10 @@ class SupplierProductForm extends InitForm
          public function getSupplierProductgraphicFilm($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 10,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -644,6 +688,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -681,9 +727,10 @@ class SupplierProductForm extends InitForm
           public function getSupplierProductgraphicFilm1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 11,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -696,6 +743,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -735,9 +784,10 @@ class SupplierProductForm extends InitForm
           public function getSupplierProductdressAppliance($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 12,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -750,6 +800,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -790,9 +842,10 @@ class SupplierProductForm extends InitForm
           public function getSupplierProductdressAppliance1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 13,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -805,6 +858,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -843,9 +898,10 @@ class SupplierProductForm extends InitForm
           public function getSupplierProductdrinksCar($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id account_id = :account_id",
                 "params" => array(
                     ":type_id" => 14,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -858,6 +914,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -896,9 +954,10 @@ class SupplierProductForm extends InitForm
           public function getSupplierProductdrinksCar1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 15,
+                    ":account_id" => $accountId
                 ),
             ));
            $supplier_id = array();
@@ -911,6 +970,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);
@@ -946,9 +1007,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductplanother($designer_id)
         {
             $Supplier = Supplier::model()->find(array(
-                "condition" => "staff_id=:staff_id",
+                "condition" => "staff_id=:staff_id && account_id = :account_id",
                 "params" => array(
                     ":staff_id" => $designer_id,
+                    ":account_id" => $account_id,
                 ),
             ));
      
@@ -956,6 +1018,8 @@ class SupplierProductForm extends InitForm
             // var_dump($staff_id);die;
             $criteria1 = new CDbCriteria; 
             $criteria1->addCondition("supplier_id",$Supplier['id']);
+            $criteria1->addCondition("account_id = :account_id");    
+            $criteria1->params[':account_id']=$accountId;  
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             $result = array();
             // var_dump($SupplierProducts);

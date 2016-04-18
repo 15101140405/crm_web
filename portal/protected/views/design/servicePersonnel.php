@@ -9,6 +9,7 @@
     <meta name="format-detection" content="telephone=no">
     <link href="css/base.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="css/weui.css"/>
 </head>
 <body>
 <article>
@@ -89,6 +90,7 @@
                 </div>
             </li> -->
         </ul>
+        <div id="more" class="weui_btn weui_btn_primary">查看更多……</div>
     </div>
 </article>
 <script src="js/zepto.min.js"></script>
@@ -117,6 +119,21 @@
             location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
         });
 
+        //更多团队
+        $("#more").on("click",function(){
+            if($(".act").attr("type-id") == "host"){
+                location.href = "<?php echo $this->createUrl("service/teamlist");?>&service_type=3";
+            }else if($(".act").attr("type-id") == "video"){
+                location.href = "<?php echo $this->createUrl("service/teamlist");?>&service_type=4";
+            }else if($(".act").attr("type-id") == "camera"){
+                location.href = "<?php echo $this->createUrl("service/teamlist");?>&service_type=5";
+            }else if($(".act").attr("type-id") == "makeup"){
+                location.href = "<?php echo $this->createUrl("service/teamlist");?>&service_type=6";
+            }else if($(".act").attr("type-id") == "other"){
+                location.href = "<?php echo $this->createUrl("service/teamlist");?>&service_type=7";
+            }
+        })
+
         //渲染对应内容
         function showdata(data) {
             var type_id = data;
@@ -124,31 +141,12 @@
                 case "host":
                     $(".charge_list").empty(); //清空订单列表
                 <?php
-                /*$arr_category_host = array(//background data
-                    '0' => array(
-                        'product_id' => '2',
-                        'name' => '吴辉',
-                        'unit' => '元/场'
-
-                    ),
-                    '1' => array(
-                        'product_id' => '1',
-                        'name' => '小柯',
-                        'unit' => '元/场'
-
-                    )
-
-                );*/
-                foreach ($arr_category_host as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $arr_host[$key1] = $value1;
-                }
-                ?>
+                foreach ($arr_category_host as $key => $value) {?>
                     var html_host
-                    html_host = '<li class="ulist_item list_more " host-id="<?php  echo $arr_host['product_id'];?>">';//id由php从后端取数，格式为host＋序号；
+                    html_host = '<li class="ulist_item list_more " host-id="<?php  echo $value['id'];?>">';//id由php从后端取数，格式为host＋序号；
                     html_host += '<div class="item">';
-                    html_host += '<p class="name"><?php  echo $arr_host['name'];?></p>';
-                    html_host += '</div>';
+                    html_host += '<p class="name"><?php  echo $value['name'];?></p>';
+                    html_host += '</div><i class="name"><?php echo $value['team_name'];?></i>';
                     html_host += '<div>';
                     html_host += '</li>';
 
@@ -158,15 +156,10 @@
                     //先判断是否已经选择主持人
 
                 <?php
-                foreach ($host_data as $key => $value) {
-                    $data=$value['product_id'];
+                foreach ($host_id as $key => $value) {
                 ?>
-                    var host_id = "<?php echo $data; ?>";   //php从后端取得“已经选择的主持人，的id”，此处暂时做个示例
-                    if (host_id != "") {
-                        $("[host-id='" + host_id + "']").removeClass("list_more");
-                        $("[host-id='" + host_id + "']").addClass("selected");
-
-                    };
+                    $("[host-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[host-id='<?php echo $value?>']").addClass("selected");
                 <?php 
                 }
                 ?>
@@ -174,11 +167,11 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("host-id") + "&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
-                    })
+                        location.href = "<?php echo $this->createUrl("design/hostDetail", array());?>&supplier_id=" + $(this).attr("host-id") + "&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                    });
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("host-id") + "&type=new&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
-                    })
+                        location.href = "<?php echo $this->createUrl("design/hostDetail", array());?>&supplier_id=" + $(this).attr("host-id") + "&type=new&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                    });
                     break;
 
                 case "video":

@@ -60,6 +60,12 @@ $(function() {
 
   comePage();
 
+  //页面初始化
+  if("<?php echo $_GET['from']?>" == "design" || "<?php echo $_GET['from']?>" == "team_list"){
+    $(".day_order_module").remove();
+    $(".page_title").html("<?php echo $name?>的档期");
+  };
+
   //日历初始化
   $("#calendar").almanac({
     /**
@@ -138,7 +144,8 @@ $(function() {
 
           $('.order_ulist').html('');
             for(var i=0; i<order.length; i++){
-              var html = '<li order-id="'+order[i].service_order_id+'" type="'+order[i].service_type+'" status="'+order[i].order_status+'" day="'+order[i].order_data+'"><span class="order_categroy" >'+/*order_type_json[order[i].order_type-1].type_content*/+'</span>';
+              /*by gy:meiyou ordertype */
+              var html = '<li order-id="'+order[i].service_order_id+'" type="'+order[i].service_type+'" status="'+order[i].order_status+'" day="'+order[i].order_data+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
               /*html += '<div class="order_desc"><p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span>';*/
               html += '<div class="order_desc"><p style="display:table;" >';
               html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> <i> ['+order[i].planner_name+']</i></p></div>';

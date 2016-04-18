@@ -73,7 +73,7 @@ function getUrlFileSize($url){
         return "";
     }
 }
-public $url ="http://xxxx.com/";
+public $url ="http://file.cike360.com";
     public function actionList()
     {
         $staff_id = $_GET['token'];

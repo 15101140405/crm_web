@@ -242,65 +242,289 @@ class ServiceController extends InitController
 
     public function actionIndex()
     {
-        $service_team = array();
-        if(isset($_GET['service_team_id'])){
-            Yii::app()->session['service_team_id']=$_GET['service_team_id'];  
-            $service_team = ServiceTeam::model()->findByPk($_GET['service_team_id']);  
-        };
-        /*Yii::app()->session['userid']=1;
-        Yii::app()->session['code']=1;
-        Yii::app()->session['service_person_id']=1;*/
-
-
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['service_team_id']) && isset($_SESSION['service_person_id'])){//已登陆
-            //echo '已登陆';
-            $y = date("Y");
-            $m = date("m");
-            $d = date("d");
-            $this->render("index",array(
-                'service_person_id' => $_SESSION['service_person_id'],
-                'first_show_year' => $y,
-                'first_show_month' => $m,
-                'first_show_day' => $d,
-            ));
-
-        }else{//未登录
-            //echo '未登陆';
-            $code = $_GET['code'];
-            Yii::app()->session['code']=$code;
-            if($code == ''){
-                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=service/index&from=&code=';
-                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$service_team['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
-                echo "<script>window.location='".$url."';</script>";
+        if($_GET['from'] != 'design' && $_GET['from'] != 'team_list'){
+            $service_team = array();
+            if(isset($_GET['service_team_id'])){
+                Yii::app()->session['service_team_id']=$_GET['service_team_id'];  
+                $service_team = ServiceTeam::model()->findByPk($_GET['service_team_id']);  
             };
-            $service_team = ServiceTeam::model()->findByPk($_SESSION['service_team_id']); 
-            $t=new WPRequest;
-            $userId = $t->getUserId($code,$service_team['corpid'],$service_team['corpsecret']);
-            $adder=array("UserId"=>"222","DeviceId"=>"");
-            $adder=json_decode($userId,true);
-            if(!empty($adder['UserId'])) {
-                Yii::app()->session['userid']=$adder['UserId'];
-                /*echo $adder['UserId'];*/
-                $service_person = ServicePerson::model()->find(array(
-                        'condition' => 'staff_id=:staff_id',
-                        'params' => array(
-                                ':staff_id' => $_SESSION['userid']
-                            )
-                    ));
-                Yii::app()->session['service_person_id']=$service_person['id'];
-                Yii::app()->session['service_type']=$service_person['service_type'];
-                
+            /*Yii::app()->session['userid']=1;
+            Yii::app()->session['code']=1;
+            Yii::app()->session['service_person_id']=1;*/
+
+
+            if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['service_team_id']) && isset($_SESSION['service_person_id'])){//已登陆
+                //echo '已登陆';
                 $y = date("Y");
                 $m = date("m");
                 $d = date("d");
                 $this->render("index",array(
                     'service_person_id' => $_SESSION['service_person_id'],
+                    'name' => "",
                     'first_show_year' => $y,
                     'first_show_month' => $m,
                     'first_show_day' => $d,
                 ));
-            }
+
+            }else{//未登录
+                //echo '未登陆';
+                $code = $_GET['code'];
+                Yii::app()->session['code']=$code;
+                if($code == ''){
+                    $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=service/index&from=&code=';
+                    $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$service_team['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                    echo "<script>window.location='".$url."';</script>";
+                };
+                $service_team = ServiceTeam::model()->findByPk($_SESSION['service_team_id']); 
+                $t=new WPRequest;
+                $userId = $t->getUserId($code,$service_team['corpid'],$service_team['corpsecret']);
+                $adder=array("UserId"=>"222","DeviceId"=>"");
+                $adder=json_decode($userId,true);
+                if(!empty($adder['UserId'])) {
+                    Yii::app()->session['userid']=$adder['UserId'];
+                    /*echo $adder['UserId'];*/
+                    $service_person = ServicePerson::model()->find(array(
+                            'condition' => 'staff_id=:staff_id',
+                            'params' => array(
+                                    ':staff_id' => $_SESSION['userid']
+                                )
+                        ));
+                    Yii::app()->session['service_person_id']=$service_person['id'];
+                    Yii::app()->session['service_type']=$service_person['service_type'];
+                    
+                    $y = date("Y");
+                    $m = date("m");
+                    $d = date("d");
+                    $this->render("index",array(
+                        'service_person_id' => $_SESSION['service_person_id'],
+                        'name' => "",
+                        'first_show_year' => $y,
+                        'first_show_month' => $m,
+                        'first_show_day' => $d,
+                    ));
+                }
+            };
+        }else if($_GET['from'] == 'design'){
+            //echo "非登录";
+            $supplier_product = SupplierProduct::model()->findByPk($_GET['supplier_product_id']);
+            $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+            $staff = Staff::model()->findByPk($supplier['id']);
+            $service_person = ServicePerson::model()->find(array(
+                    'condition' => 'staff_id = :staff_id',
+                    'params' => array(
+                            ':staff_id' => $staff['id'], 
+                        )
+                ));
+            /*print_r($staff);die;*/
+            $y = date("Y");
+            $m = date("m");
+            $d = date("d");
+            $this->render("index",array(
+                'service_person_id' => $service_person['id'],
+                'name' => $service_person['name'],
+                'first_show_year' => $y,
+                'first_show_month' => $m,
+                'first_show_day' => $d,
+            ));
+        }else if($_GET['from'] == 'team_list'){
+            //echo "非登录";
+
+            $service_person = ServicePerson::model()->findByPk($_GET['service_person_id']);
+            /*print_r($staff);die;*/
+            $y = date("Y");
+            $m = date("m");
+            $d = date("d");
+            $this->render("index",array(
+                'service_person_id' => $service_person['id'],
+                'name' => $service_person['name'],
+                'first_show_year' => $y,
+                'first_show_month' => $m,
+                'first_show_day' => $d,
+            ));
+        }
+            
+    }
+
+    public function actionTeamList()
+    {
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            $this->getTeamList($_GET['service_type']);
+        }else{
+            $company = array();
+            if(isset($_GET['account_id'])){
+                Yii::app()->session['account_id']=$_GET['account_id'];
+                $company = StaffCompany::model()->findByPk($_SESSION['account_id']);    
+            };
+            $code = $_GET['code'];
+            Yii::app()->session['code']=$code;
+            if($code == ''){
+                $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=service/teamlist&t=plan&code=';
+                $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$company['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                echo "<script>window.location='".$url."';</script>";
+            };
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']); 
+            $t=new WPRequest;
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
+            $adder=array("UserId"=>"222","DeviceId"=>"");
+            $adder=json_decode($userId,true);
+            if(!empty($adder['UserId'])) {
+                Yii::app()->session['userid']=$adder['UserId'];
+                $staff = Staff::model()->findByPk($adder['UserId']);
+                Yii::app()->session['account_id']=$staff['account_id'];
+                Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
+
+                $this->getTeamList($_GET['service_type']);
+            };
         };
+    }
+
+    public function getTeamList($service_type)
+    {
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);
+
+        $service_person = ServicePerson::model()->findAll(array(
+                'condition' => 'service_type = :service_type',
+                'params' => array(
+                        ':service_type' => $service_type,
+                    )
+            ));
+        //不重复的输出所有包含以上service_type的团队id，构造team_list
+        if(!empty($service_person)){
+            $team_list=array();
+            $i=0;
+            $team_list[0]=$service_person[0]['team_id'];
+            foreach ($service_person as $key => $value) {
+                $j=0;
+                foreach ($team_list as $key1 => $value1) {
+                    if($value1 == $value['team_id']){$j++;};
+                };
+                if($j == 0){
+                    $team_list[++$i] = $value['team_id'];
+                }
+            };
+            //在team_list里删除当前公司的first_service_team
+            foreach ($team_list as $key => $value) {
+                if($value == $company['first_service_team']){
+                    array_splice($team_list, $key, 1);
+                };
+            };
+            //根据first_service_team，查找优先的服务人员团队
+            $first_team_data=array();
+            $service_person1 = ServicePerson::model()->findAll(array(
+                    'condition' => 'team_id = :team_id',
+                    'params' => array(
+                            ':team_id' => $company['first_service_team'],
+                        )
+                ));
+            $service_person_data = array();
+            foreach ($service_person1 as $key1 => $value1) {
+                $item['name'] = $value1['name'];
+                $item['id'] = $value1['id'];
+                $t = ServiceProduct::model()->findAll(array(
+                        'condition' => 'service_person_id = :service_person_id',
+                        'params' => array(
+                                ':service_person_id' => $value1['id'],
+                            ),
+                        'order' => 'price'
+                    ));
+                $item['price'] = $t[0]['price'];
+                $service_person_data[] = $item;
+            };
+            $first_team_data['team_member'] = $service_person_data;
+            $service_team = ServiceTeam::model()->findByPk($company['first_service_team']);
+            $first_team_data['team_name'] = $service_team['name'];
+
+            //根据team_list查找每一个团队的成员信息，并构造数组
+            /*print_r($team_list);die;*/
+            $team_data=array();
+            if(!empty($team_list)){
+                foreach ($team_list as $key => $value) {
+                    $item = array();
+                    $service_person2 = ServicePerson::model()->findAll(array(
+                            'condition' => 'team_id = :team_id',
+                            'params' => array(
+                                    ':team_id' => $value,
+                                )
+                        ));
+                    $service_person_data = array();
+                    foreach ($service_person2 as $key1 => $value1) {
+                        $item = array();
+                        $item['name'] = $value1['name'];
+                        $item['id'] = $value1['id'];
+                        $t = ServiceProduct::model()->findAll(array(
+                                'condition' => 'service_person_id = :service_person_id',
+                                'params' => array(
+                                        ':service_person_id' => $value1['id'],
+                                    ),
+                                'order' => 'price'
+                            ));
+                        if(!empty($t)){
+                            $item['price'] = $t[0]['price'];    
+                        }else{
+                            $item['price'] = 0;
+                        };
+                        $service_person_data[] = $item;
+                    }
+                    $item['team_member'] = $service_person_data;
+                    $service_team = ServiceTeam::model()->findByPk($value);
+                    $item['team_name'] = $service_team['name'];
+                    $team_data[] = $item;
+                };
+            };   
+
+            //查询当前公司的常用主持人
+            $supplier = Supplier::model()->findAll(array(
+                    'condition' => 'type_id = :type_id',
+                    'params' => array(
+                            ':type_id' => $service_type,
+                        ),
+                ));
+            $service_person_id = array();
+            foreach ($supplier as $key => $value) {
+                $service_person = ServicePerson::model()->find(array(
+                        'condition' => 'staff_id = :staff_id',
+                        'params' => array(
+                                ':staff_id' => $value['staff_id'],
+                            ),
+                    ));
+                $service_person_id[] = $service_person['id'];
+            }
+            $this->render('team_list',array(
+                    'team_data' => $team_data,
+                    'first_team_data' => $first_team_data,
+                    'service_person_id' => $service_person_id,
+                    'type' => 'has',
+                ));
+        }else{
+            $team_data = array(
+                    'team_name' => "",
+                    'team_member' => array(
+                            0 => array(
+                                    'name' => "",
+                                    'id' => "",
+                                    'price' => "",
+                                )
+                        )
+                );
+            $first_team_data = array(
+                    'team_name' => "",
+                    'team_member' => array(
+                            0 => array(
+                                    'name' => "",
+                                    'id' => "",
+                                    'price' => "",
+                                )
+                        )
+                );
+            $service_person_id = array();
+            $this->render('team_list',array(
+                    'team_data' => $team_data,
+                    'first_team_data' => $first_team_data,
+                    'service_person_id' => $service_person_id,
+                    'type' => 'none',
+                ));
+        }
+        
     }
 
     public function actionIndexData()
@@ -466,15 +690,88 @@ class ServiceController extends InitController
         $admin->update_time=$_POST['update_time'];
         $admin->description=$_POST['description'];
         $admin->save();
+
+        $service_person = ServicePerson::model()->findByPk($_SESSION['service_person_id']);
+        $supplier = Supplier::model()->findAll(array(
+                'condition' => 'staff_id = :staff_id',
+                'params' => array(
+                        ':staff_id' => $service_person['staff_id'],
+                    )
+            ));
+
+        foreach ($supplier as $key => $value) {
+            $admin=new SupplierProduct;
+            $admin->account_id=$value['account_id'];
+            $admin->supplier_id=$value['id'];
+            $admin->supplier_type_id=$value['type_id'];
+            $admin->standard_type=0;
+            $admin->name=$_POST['na'];
+            $admin->category=2;
+            $admin->unit_price=$_POST['price']*2;
+            $admin->unit=$_POST['unit'];
+            $admin->unit_cost=$_POST['price'];
+            $admin->update_time=$_POST['update_time'];
+            $admin->description=$_POST['description'];
+            $admin->save();   
+        };    
     }
 
     public function actionUpdate_product()
     {
         ServiceProduct::model()->updateByPk($_POST['product_id'],array('product_name'=>$_POST['na'],'price'=>$_POST['price'],'unit'=>$_POST['unit']));
+        $service_product = ServiceProduct::model()->findByPk($_POST['product_id']);
+        $service_person = ServicePerson::model()->findByPk($service_product['service_person_id']);
+        $supplier = Supplier::model()->findAll(array(
+                'condition' => 'staff_id = :staff_id',
+                'params' => array(
+                        ':staff_id' => $service_person['staff_id'],
+                    )
+            ));
+        
+        $supplier_id = array();
+        foreach ($supplier as $key => $value) {
+            $supplier_id[] = $value['id'];
+        };
+
+        $criteria = new CDbCriteria;  
+        $criteria->addInCondition('supplier_id', $supplier_id);
+        $criteria->addCondition("update_time = :update_time");    
+        $criteria->params[':update_time']=$service_product['update_time'];
+        $supplier_product = SupplierProduct::model()->findAll($criteria);   
+
+        foreach ($supplier_product as $key => $value) {
+             SupplierProduct::model()->updateByPk($value['id'],array('name'=>$_POST['na'],'unit_price'=>$_POST['price']*2,'unit_cost'=>$_POST['price'],'unit'=>$_POST['unit']));
+        };
     }
 
     public function actionDel_product()
     {
+        
+
+        $service_product = ServiceProduct::model()->findByPk($_POST['product_id']);
+        $service_person = ServicePerson::model()->findByPk($service_product['service_person_id']);
+        $supplier = Supplier::model()->findAll(array(
+                'condition' => 'staff_id = :staff_id',
+                'params' => array(
+                        ':staff_id' => $service_person['staff_id'],
+                    )
+            ));
+        
+        $supplier_id = array();
+        foreach ($supplier as $key => $value) {
+            $supplier_id[] = $value['id'];
+        };
+
+        $criteria = new CDbCriteria;  
+        $criteria->addInCondition('supplier_id', $supplier_id);
+        $criteria->addCondition("update_time = :update_time");    
+        $criteria->params[':update_time']=$service_product['update_time'];
+        $supplier_product = SupplierProduct::model()->findAll($criteria); 
+
+        foreach ($supplier_product as $key => $value) {
+             SupplierProduct::model()->deleteByPk($value['id']);
+        };
+        /*print_r($supplier_product);*/
         ServiceProduct::model()->deleteByPk($_POST['product_id']);
     }
 
@@ -506,5 +803,76 @@ class ServiceController extends InitController
     public function actionDel_order()
     {
         ServiceOrder::model()->deleteByPk($_POST['service_order_id']);
+    }
+
+    public function actionInsertSupplier()
+    {   
+        /*$_POST['service_person_id'] = 2;
+        $_POST['account_id'] = 1;*/
+        $service_person = ServicePerson::model()->findByPk($_POST['service_person_id']);
+
+        $admin=new Supplier;
+        $admin->account_id=$_POST['account_id'];
+        $admin->staff_id=$service_person['staff_id'];
+        $admin->type_id=$service_person['service_type'];
+        $admin->save();
+
+        $service_product = ServiceProduct::model()->findAll(array(
+                'condition' => 'service_person_id = :service_person_id',
+                'params' => array(
+                        ':service_person_id' => $_POST['service_person_id'],
+                    )
+            ));
+        /*print_r($service_product);die;*/
+        $supplier = Supplier::model()->find(array(
+                'condition' => 'account_id = :account_id && staff_id = :staff_id ',
+                'params' => array(
+                        ':account_id' => $_POST['account_id'],
+                        ':staff_id' => $service_person['staff_id'],
+                    )
+            ));
+        foreach ($service_product as $key => $value) {
+            $admin1=new SupplierProduct;
+            $admin1->account_id=$_POST['account_id'];
+            $admin1->supplier_id=$supplier['id'];
+            $admin1->supplier_type_id=$service_person['service_type'];
+            $admin1->standard_type=0;
+            $admin1->name=$value['product_name'];
+            $admin1->category=2;
+            $admin1->unit_price=$value['price']*2;
+            $admin1->unit_cost=$value['price'];
+            $admin1->unit=$value['unit'];
+            $admin1->description=$value['description'];
+            $admin1->save();
+        }
+            
+    }
+
+    public function actionDelSupplier()
+    {
+        $service_person = ServicePerson::model()->findByPk($_POST['service_person_id']);
+
+        $supplier = Supplier::model()->find(array(
+                'condition' => 'account_id = :account_id && staff_id = :staff_id ',
+                'params' => array(
+                        ':account_id' => $_POST['account_id'],
+                        ':staff_id' => $service_person['staff_id'],
+                    )
+            ));
+
+
+        $condition = 'account_id = :account_id && staff_id = :staff_id';
+        $params = array(
+                ':account_id' => $_POST['account_id'],
+                ':staff_id' => $service_person['staff_id'],
+            );
+        Supplier::model()->deleteAll($condition,$params);
+
+        $condition = 'account_id = :account_id && supplier_id = :supplier_id';
+        $params = array(
+                ':account_id' => $_POST['account_id'],
+                ':supplier_id' => $supplier['id'],
+            );
+        SupplierProduct::model()->deleteAll($condition,$params);
     }
 }

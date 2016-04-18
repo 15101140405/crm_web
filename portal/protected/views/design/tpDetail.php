@@ -2,11 +2,6 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-    <!-- 所有的子项目报价单订单填写都是此模板 -->
-
-    <!-- 成本项增加也是此模板 -->
-
     <title>订单填写</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -88,7 +83,15 @@
         ?>
         </ul>
     </div>
-
+    <div class="ulist_module" id="schedule">
+        <ul class="ulist charge_list" >
+            <li class="ulist_item list_more">
+                <div class="item">
+                    <p class="name">查看档期</p>
+                </div>
+            </li>
+        </ul>
+    </div>
     <!-- <div class="ulist_module pad_b40 hid" id="supplier">
         <div class="module_title" id="title">选择供应商</div>
         <ul class="select_ulist">
@@ -141,7 +144,7 @@
     $(function () {
 
         //获取用户信息
-        var account_id = 1;
+        var account_id = <?php echo $_SESSION['account_id']?>;
 
         //页面初始化
         if ($.util.param("type") == "edit") {
@@ -155,10 +158,17 @@
         if ($.util.param("tab") == "host") {
             $("#number").remove();
             $(".total").remove();
+        }else{
+            $("#schedule").remove();
         };
         if($.util.param("tab") != "feast"){
             $("#fuwufei").remove();
-        }
+        };
+
+        //查看档期
+        $("#schedule").on("click",function(){
+            location.href="<?php echo $this->createUrl("service/index");?>&code=&service_team_id=&from=design&supplier_product_id=<?php echo $_GET['product_id']?>";
+        });
 
         //选择供应商
         if ($.util.param("tab") == "other") {
@@ -191,8 +201,8 @@
                 location.href = "<?php echo $this->createUrl("design/drinksCar", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=" + localStorage.getItem('order_id');
             }
             ;
-
         });
+
 
         //新增按钮
         $("#insert").on("click", function () {
@@ -479,7 +489,7 @@
             $.post("<?php echo $this->createUrl('design/updatetp');?>",get_info,function(data){  //bacground data
                 
                     alert("提交成功!");
-                    /*if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
+                    if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
                         location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                     } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
                         location.href = "<?php echo $this->createUrl("design/lightingScreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
@@ -493,7 +503,7 @@
                         location.href = "<?php echo $this->createUrl("design/drinksCar", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                     }else if ($.util.param("tab") == "feast") {
                         location.href = "<?php echo $this->createUrl("design/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                    };*/
+                    };
                 
             });
         });
