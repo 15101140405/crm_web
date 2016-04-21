@@ -11,33 +11,17 @@
 
 <body>
     <ul class="set_list">
+<?php foreach ($product_data as $key => $value) { ?>
         <li class="set_item" product-id="0">
             <a>
-                <img src="images/weeding_sets_img.jpg" alt="">
+                <img src="<?php echo $value['img_url']?>" alt="">
                 <div class="info flexbox v_center">
-                    <p class="flex1">凤凰花开</p>
-                    <p class="price"><strong>3288</strong>元</p>
+                    <p class="flex1"><?php echo $value['name']?></p>
+                    <p class="price"><strong><?php echo $value['price']?></strong><?php echo $value['unit']?></p>
                 </div>
             </a>
         </li>
-        <li class="set_item" product-id="0">
-            <a >
-                <img src="images/weeding_sets_img.jpg" alt="">
-                <div class="info flexbox v_center">
-                    <p class="flex1">七彩流云</p>
-                    <p class="price"><strong>5888</strong>元</p>
-                </div>
-            </a>
-        </li>
-        <li class="set_item" product-id="0">
-            <a >
-                <img src="images/weeding_sets_img.jpg" alt="">
-                <div class="info flexbox v_center">
-                    <p class="flex1">紫禁之巅</p>
-                    <p class="price"><strong>8888</strong>元</p>
-                </div>
-            </a>
-        </li>
+<?php }?>
     </ul>
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js"></script>

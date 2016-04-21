@@ -195,7 +195,35 @@ class ProductController extends InitController
 
     public function actionSet_list()
     {
-        $this->render('set_list');
+        $supplier_product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id = :account_id && supplier_type = :supplier_type && category = :category',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':supplier_type' => 2,
+                        ':category' => 2
+                    )
+            ));
+
+        $product_data = array();
+
+        foreach ($supplier_product as $key => $value) {
+            $item = array();
+            $criteria = new CDbCriteria; 
+            $criteria->addCondition("img_type = :img_type && supplier_product_id = :supplier_product_id");    
+            $criteria->params[':img_type']=1; 
+            $criteria->params[':supplier_product_id']=$value['id'];  
+            $ProductImg = ProductImg::model()->findAll($criteria);
+            $item['name'] = $value['name'];
+            $item['price'] = $value['unit_price'];
+            $item['img_url'] = $ProductImg['img_url'];
+            $item['unit'] = $value['unit'];
+            $product_data[] = $item; 
+        };
+
+        $this->render('set_list',array(
+            "product_data" => $product_data,
+        ));
+
     }
 
     public function actionSet_detail()
