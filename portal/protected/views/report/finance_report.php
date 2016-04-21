@@ -33,7 +33,7 @@
         </ul>
     </nav>
     <section class="finance_container">
-        <h2 class="title">大郊亭国际商务酒店</h2>
+        <h2 class="title"><?php echo $sales['hotel_name']?></h2>
         <div id="progress" class="progress">
             <div class="pro_info">
                 <p class="money"><strong><?php echo $sales['deal']?></strong>万元</p>
@@ -89,17 +89,19 @@ $(function () {
 
     //导航
     $("#product_store").on("click",function(){
-        location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=1";
+        location.href = "<?php echo $this->createUrl('product/store');?>&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
     });
     $("#index").on("click",function(){
-        location.href = "<?php echo $this->createUrl('order/index');?>&from=&code=&account_id=1";
+        location.href = "<?php echo $this->createUrl('order/index');?>&from=";
     });
     $("#order").on("click",function(){
-        location.href = "<?php echo $this->createUrl('order/order');?>&account_id=1";
+        location.href = "<?php echo $this->createUrl('order/order');?>";
     });
     $("#finance_report").on("click",function(){
-        location.href = "<?php echo $this->createUrl('report/financereport');?>&account_id=1&staff_hotel_id=1";
+        
+        location.href = "<?php echo $this->createUrl('report/financereport');?>";
     });
+
 })
 </script>
 </body>

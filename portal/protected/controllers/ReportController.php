@@ -1795,11 +1795,7 @@ class ReportController extends InitController
     }
 
     public function actionFinancereport()
-    {
-        Yii::app()->session['account_id']=$_GET['account_id'];  
-        Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];  
-        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);     
-
+    {    
         //********************************************************************************************
         //取当年累计销售额、销售目标
         //********************************************************************************************
@@ -1810,6 +1806,7 @@ class ReportController extends InitController
         //取门店信息
         $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
         $sales['target']=$hotel['target'];
+        $sales['hotel_name']=$hotel['name'];
         $sales['deal']=number_format(($this->hotel_total_sales($_SESSION['staff_hotel_id'],$year,$order_status_deal))/10000,1);
 
 

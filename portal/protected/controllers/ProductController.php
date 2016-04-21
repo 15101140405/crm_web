@@ -160,16 +160,16 @@ class ProductController extends InitController
 
     public function actionStore()
     {
-        if(isset($_GET['account_id'])){
+        /*if(isset($_GET['account_id'])){
             Yii::app()->session['account_id']=$_GET['account_id'];  
             $company = StaffCompany::model()->findByPk($_SESSION['account_id']);   
-        };
+        };*/
         /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
             /*$this->render('store');
         }else{*/ //未登录
             //echo '未登陆';
-            $code = $_GET['code'];
+            /*$code = $_GET['code'];
             Yii::app()->session['code']=$code;
             if($code == ''){
                 $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=product/store&code=';
@@ -189,8 +189,25 @@ class ProductController extends InitController
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
                 
                 $this->render('store');
-            }
+            }*/
         /*};*/
+        Yii::app()->session['account_id']=$_GET['account_id'];
+        Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
+        if(isset($_SESSION['userid'])){
+            $this->render('store');
+        }else{
+            $this->render('login');
+        }
+    }
+
+    public function actionSetuserid()
+    {
+        Yii::app()->session['userid']=$_POST['userid'];
+        if($_SESSION['userid']){
+            echo 'success';
+        }else{
+            echo 'failed';
+        }
     }
 
     public function actionSet_list()
