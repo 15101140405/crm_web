@@ -48,6 +48,12 @@
                     <input class="align_r t_green" type="text" value="<?php echo $orderproduct['actual_service_ratio']; ?>" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
                 </div>
             </li>
+            <li class="ulist_item">备注</li> 
+            <li class="remark">
+                <div class="text_bar">
+                    <textarea maxlength="70"  id="remark"><?php  echo $orderproduct['remark'];?></textarea>
+                </div>
+            </li>
         <?php
             }else {
         ?>
@@ -76,6 +82,12 @@
                 服务费
                 <div class="flex1">
                     <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
+                </div>
+            </li>
+            <li class="ulist_item">备注</li> 
+            <li class="remark">
+                <div class="text_bar">
+                    <textarea maxlength="70" placeholder="" id="remark"></textarea>
                 </div>
             </li>
         <?php
@@ -226,7 +238,8 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'remark' : $("#remark").val()
                 };
                 console.log(get_info);
 
@@ -249,7 +262,8 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val()),
+                    'remark' : $("#remark").val()
                 };
                 console.log(get_info);
             }
@@ -266,7 +280,8 @@
                     'unit' :" <?php echo $productData['unit'] ?>",
                     'actual_unit_cost' :  $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'remark' : $("#remark").val()
                 };
 
                 //填写内容判断
@@ -377,7 +392,8 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'remark' : $("#remark").val()
                 };
                 console.log(get_info);
 
@@ -400,7 +416,8 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val()),
+                    'remark' : $("#remark").val()
                 };
                 console.log(get_info);
             }
@@ -417,7 +434,8 @@
                     'unit' :" <?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'remark' : $("#remark").val()
                 };
 
                 //填写内容判断

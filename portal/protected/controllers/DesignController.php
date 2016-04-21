@@ -2914,7 +2914,7 @@ class DesignController extends InitController
             "params" => array(":order_id" => $_GET['order_id'],':product_id' => $_GET['product_id']),
         ));
 
-        /*print_r($productData);die;*/
+        // print_r($orderproduct);die;
 
         $this->render("tpDetail",array(
             'productData' => $productData ,
@@ -3117,28 +3117,30 @@ class DesignController extends InitController
     }
     public function actionSavetp()
     {
-        $data = array(
-            'account_id' => $_POST['account_id'],
-            'order_id' => $_POST['order_id'],
-            'product_id' => $_POST['product_id'],
-            'actual_price' => $_POST['actual_price'],
-            'unit' => $_POST['amount'],
-            'actual_unit_cost' => $_POST['actual_unit_cost'],
-            'update_time' => $_POST['update_time'],
-            'actual_service_ratio' => $_POST['actual_service_ratio']
-        );
+        // $data = array(
+        //     'account_id'            => $_POST['account_id'],
+        //     'order_id'              => $_POST['order_id'],
+        //     'product_id'            => $_POST['product_id'],
+        //     'actual_price'          => $_POST['actual_price'],
+        //     'unit'                  => $_POST['amount'],
+        //     'actual_unit_cost'      => $_POST['actual_unit_cost'],
+        //     'update_time'           => $_POST['update_time'],
+        //     'actual_service_ratio'  => $_POST['actual_service_ratio'],
+        //     'remark'                => $_POST['remark']
+        // );
 
 
         $orderproduct= new OrderProduct;  
         /*print_r($data);die;*/
-        $orderproduct->account_id = $data['account_id'];
-        $orderproduct->order_id = $data['order_id'];
-        $orderproduct->product_id = $data['product_id'];
-        $orderproduct->actual_price = $data['actual_price'];
-        $orderproduct->unit = $data['unit'];
-        $orderproduct->actual_unit_cost = $data['actual_unit_cost'];
-        $orderproduct->update_time = $data['update_time'];
-        $orderproduct->actual_service_ratio = $data['actual_service_ratio'];
+        $orderproduct->account_id = $_POST['account_id'];
+        $orderproduct->order_id = $_POST['order_id'];
+        $orderproduct->product_id = $_POST['product_id'];
+        $orderproduct->actual_price = $_POST['actual_price'];
+        $orderproduct->unit = $_POST['amount'];
+        $orderproduct->actual_unit_cost = $_POST['actual_unit_cost'];
+        $orderproduct->update_time = $_POST['update_time'];
+        $orderproduct->actual_service_ratio = $_POST['actual_service_ratio'];
+        $orderproduct->remark = $_POST['remark'];
 
         $orderproduct->save();
     }
@@ -3209,7 +3211,13 @@ class DesignController extends InitController
                     )
             ));
         /*print_r($orderproduct);die;*/
-        OrderProduct::model()->updateByPk($orderproduct['id'],array('actual_price'=>$_POST['actual_price'],'unit'=>$_POST['amount'],'actual_unit_cost'=>$_POST['actual_unit_cost'],'actual_service_ratio'=>$_POST['actual_service_ratio']));
+        OrderProduct::model()->updateByPk(
+            $orderproduct['id'],array(
+                'actual_price'          => $_POST['actual_price'],
+                'unit'                  => $_POST['amount'],
+                'actual_unit_cost'      => $_POST['actual_unit_cost'],
+                'actual_service_ratio'  => $_POST['actual_service_ratio'],
+                'remark'                => $_POST['remark'] ));
     }
 
     public function actionUpdatehost()
