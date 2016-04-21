@@ -28,7 +28,7 @@ class Order extends InitActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	/*public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -41,23 +41,23 @@ class Order extends InitActiveRecord
 			// @todo Please remove those attributes that should not be searched.
 			array('id, account_id, planner_id, designer_id, staff_hotel_id, order_name, order_type, order_date, order_time, order_status, update_time, feast_deposit, medium_term, final_payments', 'safe', 'on'=>'search'),
 		);
-	}
+	}*/
 
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
+	/*public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
 		);
-	}
+	}*/
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	/*public function attributeLabels()
 	{
 		return array(
 			'id' => 'ID',
@@ -74,7 +74,7 @@ class Order extends InitActiveRecord
 			'medium_term' => 'Medium',
 			'final_payments' => 'Final',
 		);
-	}
+	}*/
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

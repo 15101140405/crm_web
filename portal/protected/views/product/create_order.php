@@ -96,6 +96,12 @@
                     <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  /*echo $productData['service_charge_ratio'];*/?>" id="fee"/>
                 </div>
             </li>
+            <li class="ulist_item">备注</li> 
+            <li class="remark">
+                <div class="text_bar">
+                    <textarea maxlength="70" placeholder="" id="remark"></textarea>
+                </div>
+            </li>
         </ul>
     </div>
     <div class="int_ulist_module">
@@ -191,28 +197,47 @@
         $("#appTime").mobiscroll(optTime).time(optTime);
         $("#appTime1").mobiscroll(optTime).time(optTime);
 
-        var mydate = new Date();
-        var year = mydate.getFullYear() + "";
-        var month = mydate.getMonth() + 1;
-        var month = month + "";
-        var date = mydate.getDate() + "";
-        var hours = mydate.getHours() + "";
-        var minutes = mydate.getMinutes() + "";
-        var seconds = mydate.getSeconds() + "";
+        
 
-        var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
-        var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
-        var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
+        $("#insert").on("click",function(){
+            var mydate = new Date();
+            var year = mydate.getFullYear() + "";
+            var month = mydate.getMonth() + 1;
+            var month = month + "";
+            var date = mydate.getDate() + "";
+            var hours = mydate.getHours() + "";
+            var minutes = mydate.getMinutes() + "";
+            var seconds = mydate.getSeconds() + "";
 
-        var new_order_info = {
-            order_date: order_date,
-            order_type: 1,
-            order_name: '新订单',
-            order_time: 0, 
-            end_time: end_time, 
-            update_time : time,
-            hotel_id : $(".round_select_selected").attr("hotel-id"),
-        };
+            var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
+            var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
+            var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
+
+            var new_order_info = {
+                order_date: order_date,
+                end_time: end_time, 
+                update_time : time,
+                price : $("#price").val(),
+                amount : $("#amount").val(),
+                cost : $("#cost").val(),
+                service_charge_ratio : $("#fuwufei_input").val(),
+                groom_name: $("#groom_name").val(),
+                groom_phone: $("#groom_phone").val(),
+                groom_wechat: $("#groom_wechat").val(),
+                groom_qq: $("#groom_qq").val(),
+                bride_name: $("#bride_name").val(),
+                bride_phone: $("#bride_phone").val(),
+                bride_wechat: $("#bride_wechat").val(),
+                bride_qq: $("#bride_qq").val(),
+                product_id : "<?php echo $_GET['product_id'];?>",
+                remark : $("#remark").val()
+            };
+            console.log(new_order_info);
+            $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
+                console.log(retval);
+                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=" + retval + "&from=my_order";
+            });
+        });
     
     })
 </script>

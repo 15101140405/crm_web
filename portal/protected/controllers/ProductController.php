@@ -286,4 +286,103 @@ class ProductController extends InitController
                 'order_data' => $order_data
             ));
     }
+
+    public function actionCreateorder()
+    {
+        $this->render('create_order');
+    }
+
+    public function actionNeworder()
+    {
+        //存order表
+        $payment= new Order;  
+
+        $payment->account_id =$_SESSION['account_id'];
+        $payment->designer_id =0;
+        $payment->planner_id =$_SESSION['userid'];
+        $payment->adder_id =$_SESSION['userid'];
+        $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
+        $payment->order_name =$_POST['groom_name'];
+        $payment->order_type =2;
+        $payment->order_date =$_POST['order_date'];
+        $payment->end_time =$_POST['end_time'];
+        $payment->order_status =1;
+        $payment->update_time =$_POST['update_time'];
+        $payment->save();
+
+        $order = Order::model()->find(array(
+            'condition' => 'planner_id=:planner_id && update_time=:update_time',
+            'params' => array(
+                ':planner_id' =>$_SESSION['userid'],
+                ':update_time' =>$_POST['update_time'],
+            )
+        ));
+
+        //存order_wedding表
+        $payment= new OrderWedding;  
+
+        $payment->account_id =$_SESSION['account_id'];
+        $payment->order_id =$order['id'];
+        $payment->update_time =$_POST['update_time'];
+        $payment->groom_name =$_POST['groom_name'];
+        $payment->groom_phone =$_POST['groom_phone'];
+        $payment->groom_wechat =$_POST['groom_wechat'];
+        $payment->groom_qq =$_POST['groom_qq'];
+        $payment->bride_name =$_POST['bride_name'];
+        $payment->bride_phone =$_POST['bride_phone'];
+        $payment->bride_wechat =$_POST['bride_wechat'];
+        $payment->bride_qq =$_POST['bride_qq'];
+
+        $payment->save();
+
+
+        $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+
+        $staff = Staff::model()->findByPk($_SESSION['userid']);
+
+        $date = explode(" ",$order['order_date']);
+        $html = "";
+        if($order['order_type'] == 2){
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+        }else if($order['order_type'] == 1){
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+        };
+        
+
+        $touser="100";//你要发的人
+        $toparty="";
+        $totag="";
+        $title="新客人进店了！";//标题
+        $agentid=0;//应用
+        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+        $author="";
+        $content_source_url="";
+        $content = $html;
+        $digest="描述";
+        $show_cover_pic="";
+        $safe="";
+
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
+        //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        //print_r($result);
+
+        $orderproduct= new OrderProduct;  
+        /*print_r($data);die;*/
+        $orderproduct->account_id = $_SESSION['account_id'];
+        $orderproduct->order_id = $order['id'];
+        $orderproduct->product_id = $_POST['product_id'];
+        $orderproduct->actual_price = $_POST['price'];
+        $orderproduct->unit = $_POST['amount'];
+        $orderproduct->actual_unit_cost = $_POST['cost'];
+        $orderproduct->update_time = $_POST['update_time'];
+        $orderproduct->actual_service_ratio = $_POST['service_charge_ratio'];
+        $orderproduct->remark = $_POST['remark'];
+
+        $orderproduct->save();
+
+        echo $order['id'];
+    }
 }
