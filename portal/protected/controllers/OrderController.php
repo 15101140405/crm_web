@@ -556,8 +556,9 @@ class OrderController extends InitController
     {
         /*die;*/
         $criteria = new CDbCriteria;        
-        $criteria->addCondition("account_id = :account_id");    
-        $criteria->params[':account_id']=$_POST['account_id'];   
+        $criteria->addCondition("account_id = :account_id && staff_hotel_id = :staff_hotel_id");    
+        $criteria->params[':account_id']=$_POST['account_id']; 
+        $criteria->params[':staff_hotel_id']=$_POST['staff_hotel_id'];   
         $criteria->addInCondition('order_status', array(1,2,3,4,5,6)); 
         $order_hotel = Order::model()->findAll($criteria);  
 

@@ -12,7 +12,7 @@
 <body>
     <ul class="set_list">
         <li class="set_item" product-id="0">
-            <a >
+            <a>
                 <img src="images/weeding_sets_img.jpg" alt="">
                 <div class="info flexbox v_center">
                     <p class="flex1">凤凰花开</p>
