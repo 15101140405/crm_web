@@ -30,7 +30,7 @@
             <?php } ?>
         </ul>
     </div>
-    <a href="<?php echo $this->createUrl("service/teamlist");?>&service_type=<?php echo $_GET['supplier_type']?>" class="weui_btn weui_btn_primary">更多团队</a>
+    <!-- <a href="<?php echo $this->createUrl("service/teamlist");?>&service_type=<?php echo $_GET['supplier_type']?>" class="weui_btn weui_btn_primary">更多团队</a> -->
 </article>
 <script>
     $(function () {

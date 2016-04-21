@@ -1,0 +1,83 @@
+/*weeding_set css*/
+
+.set_list {
+    padding-bottom:6rem;
+}
+
+.set_list .set_item {
+    margin-bottom: 1rem;
+}
+
+.set_list .set_item .info {
+    padding: 1.5rem;
+    background: #fff;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.set_list .set_item .info p:first-child {
+    margin-right: 1.5rem;
+    border-right: 2px solid #e6e6e6;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
+}
+
+.set_list .set_item .info .price {
+    color: #ff6633;
+    font-size: 1.2rem;
+}
+
+.set_list .set_item .info .price strong {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.set_title {
+    height: 4.4rem;
+    padding: 0 1rem;
+    font-size: 1.5rem;
+    background: #f8f8f8;
+    line-height: 4.4rem;
+}
+
+.fixed_bot_btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid #e6e6e6;
+    padding: 1rem;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.fixed_bot_btn button {
+    width: 10rem;
+    height: 4.5rem;
+    font-size: 1.5rem;
+    background: #ff6633;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.fixed_content {
+    overflow: hidden;
+    font-size: 1.2rem;
+}
+
+.fixed_content .now_price {
+    float: left;
+    color: #ff6633;
+    margin-right: .5rem;
+}
+
+.fixed_content .now_price strong {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.fixed_content .original_price {
+    float: left;
+    color: #999;
+    margin-top: 1.5rem;
+}

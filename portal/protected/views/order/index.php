@@ -10,15 +10,42 @@
 <link href="css/base.css" rel="stylesheet" type="text/css" />
 <link href="css/calendar.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/base1.css">
+<link rel="stylesheet" type="text/css" href="css/zepto.aslider.css">
+<link rel="stylesheet" type="text/css" href="css/mobiscroll.css">
+<link rel="stylesheet" type="text/css" href="css/mobiscroll_002.css">
+<link rel="stylesheet" type="text/css" href="css/mobiscroll_003.css">
+<link rel="stylesheet" type="text/css" href="css/order.css">
 
 </head>
 <body>
+  <nav class="fixed_nav" id="main_nav">
+        <ul>
+            <li id="product_store">
+                <span></span>
+                <p class="cat_name">产品库</p>
+            </li>
+            <li id="index" class="active">
+                <span></span>
+                <p class="cat_name">档期</p>
+            </li>
+            <li id="order">
+                <span></span>
+                <p class="cat_name">订单</p>
+            </li>
+            <li id="finance_report">
+                <span></span>
+                <p class="cat_name">财报</p>
+            </li>
+        </ul>
+    </nav>
+
   <div class="header">
     <!-- 当从my_order进去才显示返回按钮 -->
     <!-- <div class="l_btn" data-icon="&#xe679;"></div>  -->
-    <h2 class="page_title">
+    <h2 class="page_title"><?php echo $hotel_name?>
     <?php 
-        $user_type = "策划"; //用户类型+++++++++++++++++++++++++++所需数据
+        /*$user_type = "策划"; //用户类型+++++++++++++++++++++++++++所需数据
       if($user_type == "前台" ){ //当用户类型为“前台”时
           $arr_hotel = array(//+++++++++++++++++++++++++++所需数据
                         'hotel_name'   => '大郊亭店',
@@ -46,7 +73,7 @@
               echo "<option hotel_id='".$arr1['staff_hotel_id']."'>".$arr1['hotel_name']."</option>";
         }
         echo '</select>';
-      }
+      }*/
   ?> 
     </h2>
 
@@ -76,22 +103,23 @@
     </div>
   </section>
   <!-- 预定情况 -->
-  <div class="day_order_module">
+  <div class="day_order_module" style='margin-bottom:80px;'>
     <h4 class="module_title">16日预订情况<div class="btn" style="display:inline-block;float:right;height: 2.5rem;font-size: 1.5rem;line-height: 2.5rem;" id="new">新增订单</div></h4>
-    <ul class="order_ulist" id='order'>
+    <ul class="order_ulist" id='this_order'>
     </ul>
   </div>
-
+<!-- <script src="js/jquery.js"></script> -->
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.calendar.js"></script>
+
 <script src="js/common.js"></script>
+<script type="text/javascript" src='js/nav.js'></script>
 <script>
 $(function() {
   var first_show_year = <?php echo $first_show_year ;?>;
   var first_show_month = <?php echo $first_show_month ;?> -1;
   var first_show_day = <?php echo $first_show_day ;?>;
 
-  comePage();
 
   //日历初始化
   $("#calendar").almanac({
@@ -174,12 +202,12 @@ $(function() {
           $('.order_ulist').html('');
             for(var i=0; i<order.length; i++){
               var html = '<li order-id="'+order[i].order_id+'" type="'+order[i].order_type+'" status="'+order[i].order_status+'" day="'+order[i].order_day+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
-              /*html += '<div class="order_desc"><p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span>';*/
-              html += '<div class="order_desc"><p style="display:table;" >';
-              html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> <i> ['+order[i].planner_name+']</i></p></div>';
-              html += '<span class="index_order_status '+order_status[order[i].order_status].class_type+'">'+order_status[order[i].order_status].content+'</span></li>';
+              html += '<div class="order_desc">';
+              html += '<div class="order_desc" style="padding:0;"><p style="display:table;" >';
+              html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> </p></div>';
+              html += '<p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span></p><span class="index_order_status '+order_status[order[i].order_status].class_type+'">'+order_status[order[i].order_status].content+'</span></li>';
               $('.order_ulist').append(html);
-            }
+            };
             var html = '<li class="no_order"><div class="order_null">今日无订单</div></li>';
             $('.order_ulist').append(html); 
           //点击订单，跳转订单详情页
@@ -213,6 +241,8 @@ $(function() {
             $('li[data-solor="'+first_show_day+'"]').addClass('choose_day');
           }
           show_order($('.choose_day'));
+          $("#this_order").find("li").removeClass("hid");
+          $(".no_order").remove();
 
 
         }
@@ -225,10 +255,12 @@ $(function() {
      */
     clickDay: function(elem){
       var _this = $(elem);
-
+      /*alert(1);*/
       if(_this.hasClass('unover')){
+        /*alert(1);*/
         return;
       }else{
+        /*alert(2);*/
         //增加焦点状态
         $('.dates').find('li').removeClass('choose_day');
         _this.addClass('choose_day');
@@ -252,15 +284,16 @@ $(function() {
     location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
   })
 
+
   /* ===========================
    * 显示选择日期的订单情况
    * =========================== */
   function show_order(choose_day){
     var _this = choose_day;
     $('.module_title').html(_this.attr('data-solor')+'日预定情况'+'<div class="btn" style="display:inline-block;float:right;height: 2.5rem;font-size: 1.5rem;line-height: 2.5rem;" id="new">新增订单</div>');
-    $("#order").find("li").removeClass("hid");
-    $("#order").find("li").addClass("hid");
-    $("[day='"+_this.attr('data-solor')+"']").removeClass('hid');
+    $("#this_order").find("li").removeClass("hid");
+    $("#this_order").find("li").addClass("hid");
+    $("[day='"+_this.attr('data-solor')+"']").removeClass("hid");
     if($('.order_ulist').find('.hid').length == $('.order_ulist').find('li').length){
       $(".no_order").removeClass("hid");
     }
@@ -269,38 +302,21 @@ $(function() {
     })
   }
 
-  /* ===========================
-   * 判断进入页面：my_order进入，则最上方按钮有变化
-   * =========================== */
-  function comePage(){
-    if(unescape($.util.param("from"))=="my_order"){//如果从my_order进入
-       var l_btn = '<div class="l_btn" data-icon="&#xe679;"></div>';   
-       $('.header .l_btn').remove();
-       $('.header').prsepend(l_btn);
 
-      var r_btn = '<div class="r_btn" data-icon="&#xe767;"></div>';   
-      $('.header .r_btn').remove();
-      $('.header').append(r_btn);
-      //$('.header .r_btn').attr("data-icon","&#xe767;");
-      
-      $('.l_btn').on("click",function(){
-        location.href = "my_order.html";
-      });
 
-      $(".r_btn").on("click",function(){
-        rbtnClick();
-      });    
-    }
-  }
-    /* ===========================
-   * 右上角图标点击，＋或者>
-   * =========================== */
-  function rbtnClick(){
-    var _this = $(".choose_day");
-    var order_date = _this.attr('data-year')+'-'+_this.attr('data-month')+'-'+_this.attr('data-solor');
-    localStorage.setItem("new_order_day", order_date);//将焦点日期存入本地存储
-    location.href = '<?php echo $this->createUrl("order/selecttype", array());?>';    
-   }  
+  //导航
+  $("#product_store").on("click",function(){
+      location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=1";
+  });
+  $("#index").on("click",function(){
+      location.href = "<?php echo $this->createUrl('order/index');?>&from=&code=&account_id=1";
+  });
+  $("#order").on("click",function(){
+      location.href = "<?php echo $this->createUrl('order/order');?>&account_id=1";
+  });
+  $("#finance_report").on("click",function(){
+      location.href = "<?php echo $this->createUrl('report/financereport');?>&account_id=1&staff_hotel_id=1";
+  });
 
 });
 </script>

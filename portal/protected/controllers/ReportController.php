@@ -368,7 +368,7 @@ class ReportController extends InitController
                         )
                 ));
             foreach ($hotel as $key1 => $value1) {
-                $touser="@all";
+                $touser="100|101";
                 $content="中文怎么解决";
                 $title="今日经营日报（".$value1['name'].")";
                 $agentid=0;
@@ -420,109 +420,7 @@ class ReportController extends InitController
         //********************************************************************************************
         //取当年已签订单数据
         //********************************************************************************************
-        $order_basic = Order::model()->findAll(array(
-                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
-                'params' => array(
-                        ':account_id' => $_SESSION['account_id'],
-                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
-                    )
-            ));
-
-
-        $year = date("Y");
-        /*print_r($year);die;*/
-        $order_month = array();
-        foreach ($order_basic as $key => $value) {
-            $t1 = explode(" ", $value['order_date']);
-            $t2 = explode("-", $t1[0]);
-            if( $t2[0] == $year && $value['order_status'] != 0 && $value['order_status'] != 1 ){
-                $item = array();
-                $item['month']=$t2[1];
-                $item['type']=$value['order_type'];
-                $order_month[] = $item;    
-            };
-        }
-        /*print_r($order_month);die;*/
-        $data=array(
-                'wedding' => array(0,0,0,0,0,0,0,0,0,0,0,0),
-                'meeting' => array(0,0,0,0,0,0,0,0,0,0,0,0)
-            );
-        
-        foreach ($order_month as $key => $value) {
-            if($value['month'] == '01'){
-                if($value['type'] == "2"){
-                    $data['wedding'][0] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][0] += 1;
-                };
-            }else if($value['month'] == '02'){
-                if($value['type'] == "2"){
-                    $data['wedding'][1] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][1] += 1;
-                };
-            }else if($value['month'] == '03'){
-                if($value['type'] == "2"){
-                    $data['wedding'][2] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][2] += 1;
-                };
-            }else if($value['month'] == '04'){
-                if($value['type'] == "2"){
-                    $data['wedding'][3] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][3] += 1;
-                };
-            }else if($value['month'] == '05'){
-                if($value['type'] == "2"){
-                    $data['wedding'][4] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][4] += 1;
-                };
-            }else if($value['month'] == '06'){
-                if($value['type'] == "2"){
-                    $data['wedding'][5] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][5] += 1;
-                };
-            }else if($value['month'] == '07'){
-                if($value['type'] == "2"){
-                    $data['wedding'][6] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][6] += 1;
-                };
-            }else if($value['month'] == '08'){
-                if($value['type'] == "2"){
-                    $data['wedding'][7] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][7] += 1;
-                };
-            }else if($value['month'] == '09'){
-                if($value['type'] == "2"){
-                    $data['wedding'][8] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][8] += 1;
-                };
-            }else if($value['month'] == '10'){
-                if($value['type'] == "2"){
-                    $data['wedding'][9] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][9] += 1;
-                };
-            }else if($value['month'] == '11'){
-                if($value['type'] == "2"){
-                    $data['wedding'][10] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][10] += 1;
-                };
-            }else if($value['month'] == '12'){
-                if($value['type'] == "2"){
-                    $data['wedding'][11] += 1;
-                }else if($value['type'] == "1"){
-                    $data['meeting'][11] += 1;
-                };
-            };     
-        }
+        $data = $this->order_num();
 
         /*print_r($data);die;*/
 
@@ -531,8 +429,8 @@ class ReportController extends InitController
         //取销售额
         //********************************************************************************************
         $year = date("Y");
-        $order_status_forecast = array(0,1,2,3,4);
-        $order_status_deal = array(2,3,4);
+        $order_status_forecast = array(0,1,2,3,4,5,6);
+        $order_status_deal = array(2,3,4,5,6);
         $sales=array();
         //取门店信息
         $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
@@ -584,6 +482,7 @@ class ReportController extends InitController
         $criteria3 = new CDbCriteria; 
         $criteria3->addInCondition('order_status', array(1,2,3));
         $criteria3->addCondition('account_id=:account_id');
+        $criteria3->addCondition('staff_hotel_id=:staff_hotel_id');
         $criteria3->addCondition('staff_hotel_id=:staff_hotel_id');
         $criteria3->params[':account_id']=$_SESSION['account_id'];  
         $criteria3->params[':staff_hotel_id']=$_SESSION['staff_hotel_id'];  
@@ -1893,6 +1792,199 @@ class ReportController extends InitController
         };               
 
         return $hotel_total_payment;
+    }
+
+    public function actionFinancereport()
+    {
+        Yii::app()->session['account_id']=$_GET['account_id'];  
+        Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];  
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);     
+
+        //********************************************************************************************
+        //取当年累计销售额、销售目标
+        //********************************************************************************************
+        $year = date("Y");
+        $order_status_deal = array(2,3,4,5,6);
+        $sales=array();
+
+        //取门店信息
+        $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+        $sales['target']=$hotel['target'];
+        $sales['deal']=number_format(($this->hotel_total_sales($_SESSION['staff_hotel_id'],$year,$order_status_deal))/10000,1);
+
+
+        //********************************************************************************************
+        //取当年已结算毛利
+        //********************************************************************************************
+        $final_profit = $this->hotel_final_profit();
+
+        //********************************************************************************************
+        //取当年已签婚礼、会议数
+        //********************************************************************************************
+        $data = $this->order_num_total();
+
+
+
+        $this->render("finance_report",array(
+                'sales' => $sales,
+                'final_profit' => $final_profit,
+                'data' => $data,
+            ));
+    }
+
+    public function hotel_final_profit()
+    {
+        $order_basic = Order::model()->findAll(array(
+                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
+                    )
+            ));
+        $order_id =array();
+        foreach ($order_basic as $key => $value) {
+            $order_id[] = $value['id'];
+        };
+        $criteria= new CDbCriteria; 
+        $criteria->addInCondition("order_id",$order_id);
+        $order_final = OrderFinal::model()->findAll($criteria);
+        $final_profit = 0;
+        foreach ($order_final as $key => $value) {
+            $final_profit += $value['final_profit'];
+        }
+
+        return sprintf("%.1f", $final_profit/10000);
+    }
+
+    public function order_num_total(){
+        $order_basic = Order::model()->findAll(array(
+                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
+                    )
+            ));
+        $data = array('meeting' =>0,'wedding' =>0);
+        $year = date("Y");
+        foreach ($order_basic as $key => $value) {
+            $t1 = explode(" ", $value['order_date']);
+            $t2 = explode("-", $t1[0]);
+            if( $t2[0] == $year && $value['order_status'] != 0  && $value['order_type'] == 1 ){
+                $data['meeting']++; 
+            }else if($t2[0] == $year && $value['order_status'] != 0  && $value['order_type'] == 2){
+                $data['wedding']++; 
+            }
+        }
+        return $data;
+    }
+
+    public function order_num()
+    {
+        $order_basic = Order::model()->findAll(array(
+                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
+                    )
+            ));
+
+
+        $year = date("Y");
+        /*print_r($year);die;*/
+        $order_month = array();
+        foreach ($order_basic as $key => $value) {
+            $t1 = explode(" ", $value['order_date']);
+            $t2 = explode("-", $t1[0]);
+            if( $t2[0] == $year && $value['order_status'] != 0 && $value['order_status'] != 1 ){
+                $item = array();
+                $item['month']=$t2[1];
+                $item['type']=$value['order_type'];
+                $order_month[] = $item;    
+            };
+        }
+        /*print_r($order_month);die;*/
+        $data=array(
+                'wedding' => array(0,0,0,0,0,0,0,0,0,0,0,0),
+                'meeting' => array(0,0,0,0,0,0,0,0,0,0,0,0)
+            );
+        
+        foreach ($order_month as $key => $value) {
+            if($value['month'] == '01'){
+                if($value['type'] == "2"){
+                    $data['wedding'][0] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][0] += 1;
+                };
+            }else if($value['month'] == '02'){
+                if($value['type'] == "2"){
+                    $data['wedding'][1] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][1] += 1;
+                };
+            }else if($value['month'] == '03'){
+                if($value['type'] == "2"){
+                    $data['wedding'][2] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][2] += 1;
+                };
+            }else if($value['month'] == '04'){
+                if($value['type'] == "2"){
+                    $data['wedding'][3] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][3] += 1;
+                };
+            }else if($value['month'] == '05'){
+                if($value['type'] == "2"){
+                    $data['wedding'][4] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][4] += 1;
+                };
+            }else if($value['month'] == '06'){
+                if($value['type'] == "2"){
+                    $data['wedding'][5] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][5] += 1;
+                };
+            }else if($value['month'] == '07'){
+                if($value['type'] == "2"){
+                    $data['wedding'][6] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][6] += 1;
+                };
+            }else if($value['month'] == '08'){
+                if($value['type'] == "2"){
+                    $data['wedding'][7] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][7] += 1;
+                };
+            }else if($value['month'] == '09'){
+                if($value['type'] == "2"){
+                    $data['wedding'][8] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][8] += 1;
+                };
+            }else if($value['month'] == '10'){
+                if($value['type'] == "2"){
+                    $data['wedding'][9] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][9] += 1;
+                };
+            }else if($value['month'] == '11'){
+                if($value['type'] == "2"){
+                    $data['wedding'][10] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][10] += 1;
+                };
+            }else if($value['month'] == '12'){
+                if($value['type'] == "2"){
+                    $data['wedding'][11] += 1;
+                }else if($value['type'] == "1"){
+                    $data['meeting'][11] += 1;
+                };
+            };     
+        }
+
+        return $data;
     }
 
 }  

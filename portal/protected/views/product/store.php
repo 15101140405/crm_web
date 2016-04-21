@@ -10,14 +10,43 @@
     <link href="css/base.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="css/lc_switch.css">
+    <link rel="stylesheet" type="text/css" href="css/order.css">
 </head>
 <body>
 <article>
-    <div class="tool_bar">
+    <!-- <div class="tool_bar">
         <h2 class="page_title">产品库</h2>
-    </div>
-    <nav>
+    </div> -->
+    <nav class="fixed_nav" id="main_nav">
         <ul>
+            <li id="product_store" class="active">
+                <span></span>
+                <p class="cat_name">产品库</p>
+            </li>
+            <li id="index">
+                <span></span>
+                <p class="cat_name">档期</p>
+            </li>
+            <li id="order">
+                <span></span>
+                <p class="cat_name">订单</p>
+            </li>
+            <li id="finance_report">
+                <span></span>
+                <p class="cat_name">财报</p>
+            </li>
+        </ul>
+    </nav>
+    <nav style='margin-bottom:80px;'>
+        <ul id="product">
+            <li supplier-type="2" category="2">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&category=2">
+                    <div class="cat_icon">
+                        <img src="images/hunyan.png"/>
+                    </div>
+                    <p class="cat_name">婚宴</p>
+                </a>
+            </li>
             <li supplier-type="2" category="1">
                 <a href="#">
                     <div class="cat_icon">
@@ -31,15 +60,7 @@
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
                     </div>
-                    <p class="cat_name">会议场地费</p>
-                </a>
-            </li>
-            <li supplier-type="2" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/hunyan.png"/>
-                    </div>
-                    <p class="cat_name">婚宴</p>
+                    <p class="cat_name">场地套餐</p>
                 </a>
             </li>
             <li supplier-type="20" category="2">
@@ -51,7 +72,7 @@
                 </a>
             </li>
             <li supplier-type="3" category="2">
-                <a href="#">
+                <a href="<?php echo $this->createUrl("service/teamlist");?>&service_type=3">
                     <div class="cat_icon">
                         <img src="images/dudaohui.png"/>
                     </div>
@@ -193,14 +214,28 @@
 <script src="js/common.js"></script>
 <script src="js/jquery.js"></script>
 <script src="js/lc_switch.js" type="text/javascript"></script>
+<script type="text/javascript" src='js/nav.js'></script>
 <script>
     $(function () {
-        $("li").on("click",function(){
+        $("#product li").on("click",function(){
             if($(this).attr("supplier-type") != "18"){
                 location.href = "<?php echo $this->createUrl('product/list');?>&supplier_type=" + $(this).attr("supplier-type") + "&category=" + $(this).attr("category");
             };
         });
 
+        //导航
+        $("#product_store").on("click",function(){
+            location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=1";
+        });
+        $("#index").on("click",function(){
+            location.href = "<?php echo $this->createUrl('order/index');?>&from=&code=&account_id=1";
+        });
+        $("#order").on("click",function(){
+            location.href = "<?php echo $this->createUrl('order/order');?>&account_id=1";
+        });
+        $("#finance_report").on("click",function(){
+            location.href = "<?php echo $this->createUrl('report/financereport');?>&account_id=1&staff_hotel_id=1";
+        });
     })
 </script>
 </body>

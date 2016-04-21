@@ -5,7 +5,7 @@
 
   <meta charset="UTF-8">
 
-  <title>CSS3垂直手风琴折叠菜单 - jQuery插件库 www.jq22.com</title>
+  <title>全部团队</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Iconos -->
@@ -186,7 +186,7 @@ h1 a {
 						</div>
 					</div>
 					<div style="display:inline-block;color:#fff"><?php echo $value1['name']?>    <span class="t_green" style="font-size:10px;display:inline-block;margin-left:20px;">[<?php echo $value1['price']?>元]起</span></div>
-					<a href="<?php echo $this->createUrl("service/index");?>&code=&service_team_id=&from=team_list&service_person_id=<?php echo $value1['id']?>" style="display:inline-block;float:right">查看档期</a>
+					<a href="<?php echo $this->createUrl("service/personnel_host");?>&code=&service_team_id=&from=team_list&service_person_id=<?php echo $value1['id']?>" style="display:inline-block;float:right">查看档期</a>
 				</li>
 	<?php }?>
 			</ul>
@@ -196,6 +196,9 @@ h1 a {
 <?php }else{?>
 	<h1>很抱歉，没有更多服务团队了</h1>
 <?php }?>
+	<div class="fixed_bar" style='background: #2d2c41;'>
+	    <a class="btn">我的－常用主持人</a>
+	</div>
 <script type="text/javascript">
 
 $(document).ready(function(e) {
@@ -229,6 +232,23 @@ $(document).ready(function(e) {
         $("[service-person-id='<?php echo $value?>']").next().removeClass('lcs_off');
         $("[service-person-id='<?php echo $value?>']").next().addClass('lcs_on');
     <?php }?>
+    <?php if($_GET['service_type'] == 4){?>
+    	$(".btn").html("我的－常用摄像师");
+    <?php }?>
+    <?php if($_GET['service_type'] == 5){?>
+    	$(".btn").html("我的－常用摄影师");
+    <?php }?>
+    <?php if($_GET['service_type'] == 6){?>
+    	$(".btn").html("我的－常用化妆师");
+    <?php }?>
+    <?php if($_GET['service_type'] == 7){?>
+    	$(".btn").html("我的－常用其他人员");
+    <?php }?>
+
+    //我的常用
+     $(".btn").on("click",function(){
+     	location.href = "<?php echo $this->createUrl('product/list');?>&supplier_type=<?php echo $_GET['service_type']?>&category=2";
+     });
 })
 </script> 
 </body>

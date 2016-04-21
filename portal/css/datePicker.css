@@ -1,0 +1,14 @@
+.calender{margin:0 auto;padding: 0 1rem}
+.calendertb{width:100%;}
+.calendertb td{position: relative; width:35px;height:35px;vertical-align:middle;text-align:center;font-size:14px;cursor:pointer}
+.calendertb th{width:35px;height:30px;color:#666;vertical-align:middle;text-align:center;cursor:pointer}
+.calendertb .weekend{
+    color: #c70000;
+}
+.tdtoday{width:35px;height:35px;vertical-align:middle;text-align:center;color: #c70000; font-weight:bold;font-size:14px;cursor:pointer}
+.getyear{width:100%;height:35px;text-align:center;line-height:35px}
+.preMonth{margin-right:18px;color:#c70000;font-size:14px;cursor:pointer}
+.nextMonth{margin-left:18px;color:#c70000;font-size:14px;cursor:pointer}
+.datePicker{width:100%;height:34px;line-height:34px;cursor:pointer}
+.order{position: absolute;bottom:-0.6rem;right:1rem;width:2.3rem;height: 1.6rem; background: url('../images/ico_order.png') no-repeat;
+    background-size:2.3rem 1.6rem;}

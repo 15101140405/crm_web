@@ -18,6 +18,14 @@
     font-size: 1.5rem;
 }
 
+.calendar_title_red {
+    padding: 0 4.5rem;
+    background: #F2262D;
+    text-align: center;
+    line-height: 3.5rem;
+    font-size: 1.5rem;
+}
+
 .prev,
 .next {
     position: absolute;
@@ -40,6 +48,14 @@
 
 .week {
     background: #00b90c;
+    line-height: 3rem;
+    font-size: 1.2rem;
+    color: #fff;
+    overflow: hidden;
+}
+
+.week_red {
+    background: #F2262D;
     line-height: 3rem;
     font-size: 1.2rem;
     color: #fff;
@@ -145,6 +161,10 @@
 
 .maybe_order .date_item {
     background: #00b90c;
+    color: #fff;
+}
+.maybe_order .date_item_red {
+    background: #F2262D;
     color: #fff;
 }
 

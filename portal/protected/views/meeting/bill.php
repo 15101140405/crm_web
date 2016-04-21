@@ -21,6 +21,7 @@
         <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div>
         <h6  style="text-align: center;font-size: 2rem;"><?php echo $arr_order_data['order_name']; ?></h6>
         <h6  style="text-align: center;font-size: 1.2rem;">活动日期：<?php echo $arr_order_data['order_date']; ?></h6>
+        <div class="r_btn"  style="font-size: 1.5rem;width: 3rem;">删除订单</div>
     </div>
     <ul class="m-index-list" id="page_list" style="margin-bottom: 10px;">
         <li class="card list_more2" category="appear" status="进行中" id='follow'>
@@ -364,7 +365,7 @@
         //返回
         console.log($('.card'));
         $(".l_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("order/my");?>&t=plan&code=";
+            location.href = "<?php echo $this->createUrl("order/order");?>&t=plan&code=";
         });
 
         //打印
@@ -513,6 +514,13 @@
     $("#select_planner").on("click",function(){
         location.href = "<?php echo $this->createUrl("order/transition");?>&from=meeting&order_id=<?php echo $_GET['order_id']?>&type=planner";
     });
+
+        //删除
+        $(".r_btn").on("click",function(){
+            $.post("<?php echo $this->createUrl('order/delorder');?>",{'order_id':<?php echo $_GET['order_id']?>},function(retval){
+                location.href = "<?php echo $this->createUrl('order/order');?>"; 
+            });
+        });
     })
 </script>
 </body>

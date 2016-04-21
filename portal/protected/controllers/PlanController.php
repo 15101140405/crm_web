@@ -1105,7 +1105,7 @@ class PlanController extends InitController
 
         $payment->account_id =$_SESSION['account_id'];
         $payment->designer_id =0;
-        $payment->planner_id =0;
+        $payment->planner_id =$_SESSION['userid'];
         $payment->adder_id =$_SESSION['userid'];
         $payment->staff_hotel_id =$_POST['hotel_id'];
         $payment->order_name =$_POST['order_name'];
@@ -1113,7 +1113,7 @@ class PlanController extends InitController
         $payment->order_date =$_POST['order_date'];
         $payment->order_time =$_POST['order_time'];
         $payment->end_time =$_POST['end_time'];
-        $payment->order_status =0;
+        $payment->order_status =1;
         $payment->update_time =$_POST['update_time'];
         $payment->save();
 
@@ -1171,9 +1171,9 @@ class PlanController extends InitController
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         }else if($order['order_type'] == 1){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."             "."客人姓名：".$order['order_name']."             "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
         };
         
         /*print_r($html);die;*/

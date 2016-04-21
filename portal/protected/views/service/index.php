@@ -7,9 +7,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="format-detection" content="telephone=no">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/base.css" rel="stylesheet" type="text/css" />
 <link href="css/calendar.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="css/datePicker.css">
 </head>
 <body>
   <div class="header">
@@ -52,6 +56,10 @@
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.calendar.js"></script>
 <script src="js/common.js"></script>
+<script type="text/javascript" src="js/zepto.swipe.js"></script>
+<script type="text/javascript" src="js/zepto.lazyload.js"></script>
+<script type="text/javascript" src="js/zepto.video.js"></script>
+<script type="text/javascript" src="js/zepto.datePicker.js"></script>
 <script>
 $(function() {
   var first_show_year = <?php echo $first_show_year ;?>;
@@ -145,7 +153,7 @@ $(function() {
           $('.order_ulist').html('');
             for(var i=0; i<order.length; i++){
               /*by gy:meiyou ordertype */
-              var html = '<li order-id="'+order[i].service_order_id+'" type="'+order[i].service_type+'" status="'+order[i].order_status+'" day="'+order[i].order_data+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
+              //var html = '<li order-id="'+order[i].service_order_id+'" type="'+order[i].service_type+'" status="'+order[i].order_status+'" day="'+order[i].order_data+'"><span class="order_categroy" >'+order_type_json[order[i].order_type-1].type_content+'</span>';
               /*html += '<div class="order_desc"><p style="display:table;" ><span class="order_planer" style="display:table-cell;">'+order[i].planner_name+'</span>';*/
               html += '<div class="order_desc"><p style="display:table;" >';
               html += '<span class="consumer" style="display:table-cell;">'+order[i].order_name+'</span> <i> ['+order[i].planner_name+']</i></p></div>';
@@ -273,6 +281,15 @@ $(function() {
     localStorage.setItem("new_order_day", order_date);//将焦点日期存入本地存储
     location.href = '<?php echo $this->createUrl("order/selecttype", array());?>';    
    }  
+   /* ===========================
+   * 视频
+   * =========================== */
+   $('.banner').swipeSlide({
+                visibleSlides: 1,
+                autoPlay: true
+            });
+            $('video').videoPlay();
+            $(".data_intbar").datePicker();
 
 });
 </script>

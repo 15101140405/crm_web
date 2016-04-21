@@ -248,10 +248,10 @@ class ServiceController extends InitController
                 Yii::app()->session['service_team_id']=$_GET['service_team_id'];  
                 $service_team = ServiceTeam::model()->findByPk($_GET['service_team_id']);  
             };
-            /*Yii::app()->session['userid']=1;
+            Yii::app()->session['userid']=1;
             Yii::app()->session['code']=1;
-            Yii::app()->session['service_person_id']=1;*/
-
+            Yii::app()->session['service_person_id']=1;
+            Yii::app()->session['service_team_id']=1;
 
             if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['service_team_id']) && isset($_SESSION['service_person_id'])){//已登陆
                 //echo '已登陆';
@@ -341,8 +341,111 @@ class ServiceController extends InitController
                 'first_show_month' => $m,
                 'first_show_day' => $d,
             ));
-        }
-            
+        }       
+    }
+
+    public function actionPersonnel_host()
+    {
+        if($_GET['from'] != 'design' && $_GET['from'] != 'team_list'){
+            $service_team = array();
+            if(isset($_GET['service_team_id'])){
+                Yii::app()->session['service_team_id']=$_GET['service_team_id'];  
+                $service_team = ServiceTeam::model()->findByPk($_GET['service_team_id']);  
+            };
+            Yii::app()->session['userid']=1;
+            Yii::app()->session['code']=1;
+            Yii::app()->session['service_person_id']=1;
+            Yii::app()->session['service_team_id']=1;
+
+            if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['service_team_id']) && isset($_SESSION['service_person_id'])){//已登陆
+                //echo '已登陆';
+                $y = date("Y");
+                $m = date("m");
+                $d = date("d");
+                $this->render("personnel_host",array(
+                    'service_person_id' => $_SESSION['service_person_id'],
+                    'name' => "",
+                    'first_show_year' => $y,
+                    'first_show_month' => $m,
+                    'first_show_day' => $d,
+                ));
+
+            }else{//未登录
+                //echo '未登陆';
+                $code = $_GET['code'];
+                Yii::app()->session['code']=$code;
+                if($code == ''){
+                    $url1 = 'http://www.cike360.com/school/crm_web/portal/index.php?r=service/index&from=&code=';
+                    $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$service_team['corpid']."&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
+                    echo "<script>window.location='".$url."';</script>";
+                };
+                $service_team = ServiceTeam::model()->findByPk($_SESSION['service_team_id']); 
+                $t=new WPRequest;
+                $userId = $t->getUserId($code,$service_team['corpid'],$service_team['corpsecret']);
+                $adder=array("UserId"=>"222","DeviceId"=>"");
+                $adder=json_decode($userId,true);
+                if(!empty($adder['UserId'])) {
+                    Yii::app()->session['userid']=$adder['UserId'];
+                    /*echo $adder['UserId'];*/
+                    $service_person = ServicePerson::model()->find(array(
+                            'condition' => 'staff_id=:staff_id',
+                            'params' => array(
+                                    ':staff_id' => $_SESSION['userid']
+                                )
+                        ));
+                    Yii::app()->session['service_person_id']=$service_person['id'];
+                    Yii::app()->session['service_type']=$service_person['service_type'];
+                    
+                    $y = date("Y");
+                    $m = date("m");
+                    $d = date("d");
+                    $this->render("personnel_host",array(
+                        'service_person_id' => $_SESSION['service_person_id'],
+                        'name' => "",
+                        'first_show_year' => $y,
+                        'first_show_month' => $m,
+                        'first_show_day' => $d,
+                    ));
+                }
+            };
+        }else if($_GET['from'] == 'design'){
+            //echo "非登录";
+            $supplier_product = SupplierProduct::model()->findByPk($_GET['supplier_product_id']);
+            $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+            $staff = Staff::model()->findByPk($supplier['id']);
+            $service_person = ServicePerson::model()->find(array(
+                    'condition' => 'staff_id = :staff_id',
+                    'params' => array(
+                            ':staff_id' => $staff['id'], 
+                        )
+                ));
+            /*print_r($staff);die;*/
+            $y = date("Y");
+            $m = date("m");
+            $d = date("d");
+            $this->render("personnel_host",array(
+                'service_person_id' => $service_person['id'],
+                'name' => $service_person['name'],
+                'first_show_year' => $y,
+                'first_show_month' => $m,
+                'first_show_day' => $d,
+            ));
+        }else if($_GET['from'] == 'team_list'){
+            //echo "非登录";
+
+            $service_person = ServicePerson::model()->findByPk($_GET['service_person_id']);
+            /*print_r($staff);die;*/
+            $y = date("Y");
+            $m = date("m");
+            $d = date("d");
+            $this->render("personnel_host",array(
+                'service_person_id' => $service_person['id'],
+                'name' => $service_person['name'],
+                'first_show_year' => $y,
+                'first_show_month' => $m,
+                'first_show_day' => $d,
+            ));
+        }  
     }
 
     public function actionTeamList()

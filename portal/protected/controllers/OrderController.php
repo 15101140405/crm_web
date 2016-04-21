@@ -45,6 +45,40 @@ class OrderController extends InitController
         );
     }
 
+    public function actionOrder()
+    {
+        /*Yii::app()->session['userid']=100;*/
+        $order = Order::model()->findAll(array(
+                'condition' => 'planner_id = :planner_id || designer_id = :designer_id',
+                'params' => array(
+                        ':planner_id' => $_SESSION['userid'],
+                        ':designer_id' => $_SESSION['userid']
+                    ),
+                'order' => 'update_time DESC'
+            ));
+        /*print_r($order);die;*/
+        $order_data = array();
+        foreach ($order as $key => $value) {
+            if($value['account_id'] == $_SESSION['account_id']){
+                $item = array();
+                $item['order_name'] = $value['order_name'];
+                $item['order_type'] = $value['order_type'];
+                $item['id'] = $value['id'];
+                $t = explode(" ",$value['order_date']);
+                $item['order_date'] = $t[0];
+                $item['order_status'] = $value['order_status'];
+                $staff = Staff::model()->findByPk($value['planner_id']);
+                $item['planner_name'] = $staff['name'];
+                $order_data[] = $item;
+            };
+        };
+
+        $this->render("order",array(
+                'order_data' => $order_data
+            ));
+    }
+
+
     public function actionIndex()
     {
         /*Yii::app()->session['userid']=100;
@@ -55,14 +89,15 @@ class OrderController extends InitController
         $_SESSION['code']=123123123;
         $_SESSION['account_id']=1;
         $_SESSION['staff_hotel_id']=1;*/
-        $company = array();
+        /*$company = array();
         if(isset($_GET['account_id'])){
             Yii::app()->session['account_id']=$_GET['account_id'];
             $company = StaffCompany::model()->findByPk($_SESSION['account_id']);    
         };
         
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
+            $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
             if($_GET['from'] == 'bill'){
                 $order = Order::model()->findByPk($_GET['this_order']);
                 
@@ -74,6 +109,7 @@ class OrderController extends InitController
                     'first_show_year' => $t2[0],
                     'first_show_month' => $t2[1],
                     'first_show_day' => $t2[2],
+                    'hotel_name' => $hotel['name'],
                 ));
             }else if($_GET['from'] == ''){
                 $y = date("Y");
@@ -85,9 +121,10 @@ class OrderController extends InitController
                     'first_show_year' => $y,
                     'first_show_month' => $m,
                     'first_show_day' => $d,
+                    'hotel_name' => $hotel['name'],
                 ));
             }
-        }else{//未登录
+        /*}else{//未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -110,14 +147,16 @@ class OrderController extends InitController
                 $y = date("Y");
                 $m = date("m");
                 $d = date("d");
+                $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
                 $this->render("index",array(
                     'userId' => $adder['UserId'],
                     'first_show_year' => $y,
                     'first_show_month' => $m,
                     'first_show_day' => $d,
+                    'hotel_name' => $hotel['name'],
                 ));
             }
-        };
+        };*/
     }
 
     public function actionGetIndexData()
@@ -426,9 +465,9 @@ class OrderController extends InitController
                 $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee0a719fd467c364&redirect_uri=".urlencode($url1)."&response_type=code&scope=snsapi_base&state=abc#wechat_redirect&from=&this_order=";
                 echo "<script>window.location='".$url."';</script>";
             };
-
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);
             $t=new WPRequest;
-            $userId = $t->getUserId($code);
+            $userId = $t->getUserId($code,$company['corpid'],$company['corpsecret']);
             $adder=array("UserId"=>"222","DeviceId"=>"");
             $adder=json_decode($userId,true);
             if(!empty($adder['UserId'])) {
@@ -1068,4 +1107,5 @@ class OrderController extends InitController
         $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
         print_r($result);
     }
+
 }

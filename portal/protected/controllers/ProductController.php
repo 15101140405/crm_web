@@ -164,10 +164,10 @@ class ProductController extends InitController
             Yii::app()->session['account_id']=$_GET['account_id'];  
             $company = StaffCompany::model()->findByPk($_SESSION['account_id']);   
         };
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
-            $this->render('store');
-        }else{ //未登录
+            /*$this->render('store');
+        }else{*/ //未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -190,7 +190,49 @@ class ProductController extends InitController
                 
                 $this->render('store');
             }
-        };
+        /*};*/
     }
 
+    public function actionSet_list()
+    {
+        $this->render('set_list');
+    }
+
+    public function actionSet_detail()
+    {
+        $this->render('set_detail');
+    }
+
+    public function actionSelectorder()
+    {
+        /*Yii::app()->session['userid']=100;*/
+        $order = Order::model()->findAll(array(
+                'condition' => 'planner_id = :planner_id || designer_id = :designer_id',
+                'params' => array(
+                        ':planner_id' => $_SESSION['userid'],
+                        ':designer_id' => $_SESSION['userid'],
+                    ),
+                'order' => 'order_date DESC'
+            ));
+        /*print_r($order);die;*/
+        $order_data = array();
+        foreach ($order as $key => $value) {
+            $item = array();
+            if($_GET['category'] == $value['order_type']){
+                $item['order_name'] = $value['order_name'];
+                $item['order_type'] = $value['order_type'];
+                $item['id'] = $value['id'];
+                $t = explode(" ",$value['order_date']);
+                $item['order_date'] = $t[0];
+                $item['order_status'] = $value['order_status'];
+                $staff = Staff::model()->findByPk($value['planner_id']);
+                $item['planner_name'] = $staff['name'];
+                $order_data[] = $item;
+            };
+        };
+
+        $this->render("select_order",array(
+                'order_data' => $order_data
+            ));
+    }
 }

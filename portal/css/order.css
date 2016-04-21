@@ -1,0 +1,416 @@
+/*order css*/
+
+.flexcenter {
+    display: box;
+    display: -webkit-box;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    box-align: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+
+.flexcenter_v {
+    display: box;
+    display: -webkit-box;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    box-align: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+}
+
+.fixed_nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99999;
+}
+
+.fixed_nav ul {
+    width: 100%;
+    height: 7.2rem;
+    overflow: hidden;
+}
+
+.fixed_nav ul li {
+    float: left;
+    width: 25%;
+    height: 100%;
+    text-align: center;
+    background: #1a1826;
+    color: #565563;
+}
+
+.fixed_nav ul li span {
+    display: inline-block;
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-top: 1.5rem;
+}
+
+.fixed_nav ul li:nth-child(1) span {
+    background: url('../images/nav02.png') no-repeat;
+    background-size:2.2rem auto;
+}
+
+.fixed_nav ul li:nth-child(2) span {
+    background: url('../images/nav03.png') no-repeat;
+    background-size:2.2rem auto;
+}
+
+.fixed_nav ul li:nth-child(3) span {
+    background: url('../images/nav04.png') no-repeat;
+    background-size:2.2rem auto;
+}
+
+.fixed_nav ul li:nth-child(4) span {
+    background: url('../images/nav01.png') no-repeat;
+    background-size:2.2rem auto;
+}
+
+.fixed_nav ul li.active {
+    background: #0e0e1a;
+    color: #fff;
+}
+
+.fixed_nav ul li.active span {
+    background-position: 0 -2.25rem;
+}
+
+.filter_area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+}
+
+.filter_area .filter_exit {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    height: 5rem;
+    line-height: 5rem;
+    background: #fff;
+    border: 1px solid #d2d2d2;
+    border-top: 3px solid #29b15d;
+    box-sizing: border-box;
+}
+
+.filter_area .filter_exit .all {
+    padding-left: 1.5rem;
+    color: #707070;
+}
+
+.filter_area .filter_exit .all img {
+    display: inline-block;
+    width: 1.4rem;
+    margin-left: .5rem;
+}
+
+.filter_area .filter_exit .all img.up {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    /* IE 9 */
+    -moz-transform: rotate(180deg);
+    /* Firefox */
+    -webkit-transform: rotate(180deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(180deg);
+}
+
+.filter_area .filter_exit .time {
+    width: 4.7rem;
+    border-left: 1px solid #d2d2d2;
+}
+
+.filter_area .filter_exit .time img {
+    display: inline-block;
+    width: 2rem;
+}
+
+.filter_class {
+    position: absolute;
+    top: 5rem;
+    z-index: 2;
+    width: 100%;
+    display: none;
+    border-bottom: 3px solid #29b15d;
+    background: #fff;
+}
+.filter_area .mask{
+    display: none;
+    position: fixed;
+    top:0;
+    left: 0;
+    z-index: 1;
+    background: rgba(0,0,0,.5);
+    width: 100%;
+    height: 100%;
+}
+.filter_area .mask.show{
+    display: block;
+}
+.filter_class.show {
+    display: block;
+}
+
+.filter_class li {
+    display: box;
+    display: -webkit-box;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    box-align: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    height: 4.6rem;
+    line-height: 4.6rem;
+    border-bottom: 1px solid #d2d2d2;
+    margin-left: 1rem;
+}
+
+.filter_class li:first-child {
+    background: #f2f2f2;
+    color: #808080;
+    padding-left: 1rem;
+    margin-left: 0;
+}
+
+.filter_class li:last-child {
+    border: none;
+}
+
+.radio {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid #89909b;
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+    margin-right: 1.5rem;
+}
+
+.radio.checked {
+    background: #29b15d;
+    border: none;
+}
+
+.time_filter_aslider .wrapper {
+    width: 85%;
+}
+
+.time_filter_aslider h2 {
+    height: 4.6rem;
+    padding-left: 1.5rem;
+    border-bottom: 1px solid #d2d2d2;
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 4.6rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.time_list li {
+    height: 4.6rem;
+    border-bottom: 1px solid #d2d2d2;
+    color: #666;
+    padding: 1.5rem;
+    line-height: 4.6rem;
+}
+
+.time_list li.in {
+    background: #3b5a7b;
+    color: #fff;
+    border-bottom: 1px solid #385674;
+}
+
+.time_list li.in span {
+    margin-right: 1rem;
+}
+
+.time_list li.in input {
+    background: none;
+    color: #fff;
+}
+
+.time_filter_aslider button {
+    float: right;
+    background: #009e0f;
+    width: 11rem;
+    height: 4.4rem;
+    line-height: 4.4rem;
+    color: #fff;
+    margin: 2rem 1.5rem 0 0;
+    font-size: 1.4rem;
+    border-radius: 3px;
+}
+.order_list{
+    padding: 1rem;
+    /*margin-top: 4.6rem;*/
+    margin-bottom: 70px;
+}
+.order_list li{
+    background: #fff;
+    border:1px solid #d2d2d2;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+.order_list li h3{
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+.order_list li .info .tag{
+    height: 2.4rem;
+    line-height: 2.4rem;
+    padding:0 1rem;
+    color: #fff;
+    border-radius: 1.2rem;
+}
+.order_list li .info .tag.blue{
+    background: #6abdfc;
+}
+.order_list li .info .tag.green{
+    background: #8bd32d;
+}
+.order_list li .info .tag.yellow{
+    background: #d7a429;
+}
+.order_list li .info .tag.gray{
+    background: #b6babf;
+}
+.order_list li .info .con{
+    border-left: 1px solid #d2d2d2;
+    padding-left: .5rem;
+    color: #999;
+}
+.order_list li .info .con p:first-child{
+    box-align: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-bottom: .5rem;
+}
+.order_list li .info .con p img{
+    display: inline-block;
+    width: 1.4rem;
+    margin-right: .3rem;
+}
+.order_list li .info .con p:last-child{
+    color: #666;
+}
+.add_btn{
+    position: fixed;
+    bottom:8rem;
+    right: 1.5rem;
+    width:4rem;
+    height: 4rem;
+    background: url('../images/add.png') no-repeat;
+    background-size: 100% auto;
+}
+/*财务css*/
+.finance_container{
+    width: 100%;
+    padding-bottom:7.2rem;
+    background:#1a1826 url('../images/finance_bg.jpg') no-repeat;
+    background-size:100% 100%;
+}
+.finance_container .title{
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    padding-top: 3.5rem;
+}
+.progress{
+    position: relative;
+    width: 265px;
+    margin: auto auto;
+}
+.progress .pro_info{
+    position: absolute;
+    top:75px;
+    left:55px;
+    color: #66d4e5;
+    font-size:15px;
+    text-align: center;
+}
+.progress .pro_info p:first-child{
+    font-size:24px;
+    margin-bottom: 20px;
+}
+.progress .pro_info p:first-child strong{
+    font-size:38px;
+    font-weight: bold;
+}
+.progress .pro_info p:last-child{
+    color: #666;
+}
+.progress .pro_info p:last-child span{
+    color: #aa522e
+}
+
+.progress .pro_bot{
+    position: absolute;
+    bottom:30px;
+    right:65px;
+    color: #808d9d;
+    font-size:20px;
+}
+.progress .min{
+    position: absolute;
+    bottom:20px;
+    left:30px;
+    color: #808d9d;
+    font-size:20px;
+}
+.progress .max{
+    position: absolute;
+    bottom:20px;
+    right:0;
+    color: #808d9d;
+    font-size:20px;
+}
+.financ_order{
+    color: #808d9d;
+    font-size: 1.4rem;
+    border-top: 1px solid rgba(39,32,40,.8);
+    padding-top: 1rem;
+}
+.financ_order>div {
+    display: box;
+    display: -webkit-box;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    box-align: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+}
+.financ_order>div:first-child{
+    border-right:1px solid rgba(39,32,40,.8);
+}
+.financ_order>div .order_item{
+    margin-bottom:2rem;
+}
+.financ_order>div .order_item strong{
+    font-weight: bold;
+    color: #b8bbc0;
+}
