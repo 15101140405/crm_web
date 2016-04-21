@@ -453,10 +453,10 @@ class OrderController extends InitController
         Yii::app()->session['account_id']=1;
         Yii::app()->session['staff_hotel_id']=1;*/
 
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
             $this->render("selectType");
-        }else{//未登录
+        /*}else{//未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -477,7 +477,7 @@ class OrderController extends InitController
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];                
                 $this->render("selectType");
             }
-        };
+        };*/
     }
 
     public function actionChoosediscount()
@@ -710,7 +710,7 @@ class OrderController extends InitController
         Yii::app()->session['code']='asjfdlk123';
         Yii::app()->session['account_id']=1;
         Yii::app()->session['staff_hotel_id']=1;*/
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
             $order = Order::model()->findByPk($_GET['order_id']);
             $staff = Staff::model()->findByPk($order['designer_id']);
@@ -759,7 +759,7 @@ class OrderController extends InitController
                     'total_payment' => $total_payment,
                     'payment_rate' => $payment_rate,
                 ));
-        }else{ //未登录
+        /*}else{ //未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -783,9 +783,9 @@ class OrderController extends InitController
                 $staff = Staff::model()->findByPk($order['designer_id']);
                 $staff_user = Staff::model()->findByPk($_SESSION['userid']);
                 $t = new OrderProductForm();
-                $order_total = $t -> total_price($_GET['order_id']);
+                $order_total = $t -> total_price($_GET['order_id']);*/
                 /*print_r($order_total);die;*/
-                $order_data = array();
+                /*$order_data = array();
                 $order_data['order_name'] = $order['order_name'];
                 $order_data['order_date'] = $order['order_date'];
                 $order_data['order_status'] = $order['order_status'];
@@ -796,13 +796,13 @@ class OrderController extends InitController
                         'params' => array(
                                 ':order_id' => $_GET['order_id']
                             )
-                    ));
+                    ));*/
                 /*print_r($follow);die;*/
-                $in_door = 0;
+                /*$in_door = 0;
                 $out_door = 0;
                 foreach ($follow as $key => $value) {
                     if($value['type'] == '0'){$in_door++;}else{$out_door++;};
-                }
+                }*/
                 /*$payment = OrderPayment::model()->findAll(array(
                         'condition' => 'order_id=:order_id',
                         'params' => array(
@@ -815,16 +815,16 @@ class OrderController extends InitController
                 };
                 $payment_rate = $total_payment/$order_total['total_price'];*/
 
-                $this->render('order_info',array(
+                /*$this->render('order_info',array(
                         'order_data' => $order_data,
                         'order_total' => $order_total,
                         'in_door' => $in_door,
-                        'out_door' => $out_door,
+                        'out_door' => $out_door,*/
                         /*'total_payment' => $total_payment,
                         'payment_rate' => $payment_rate,*/
-                    ));
+                    /*));
             }
-        };
+        };*/
         
     }
 

@@ -238,7 +238,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>",
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);
@@ -280,7 +280,7 @@
                     'unit' :" <?php echo $productData['unit'] ?>",
                     'actual_unit_cost' :  $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>",
                     'remark' : $("#remark").val()
                 };
 
@@ -392,7 +392,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>",
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);
@@ -434,7 +434,7 @@
                     'unit' :" <?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>,
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>",
                     'remark' : $("#remark").val()
                 };
 
@@ -548,7 +548,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>"
                 };
                 console.log(get_info);
 
@@ -588,7 +588,7 @@
                     'unit' :" <?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : parseFloat(<?php echo $productData['unit_cost'] ?>) ,
                     'update_time' : update_time,
-                    'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+                    'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>"
                 };
 
                 //填写内容判断
