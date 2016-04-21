@@ -450,9 +450,9 @@ class ServiceController extends InitController
 
     public function actionTeamList()
     {
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             $this->getTeamList($_GET['service_type']);
-        }else{
+        /*}else{
             $company = array();
             if(isset($_GET['account_id'])){
                 Yii::app()->session['account_id']=$_GET['account_id'];
@@ -478,7 +478,7 @@ class ServiceController extends InitController
 
                 $this->getTeamList($_GET['service_type']);
             };
-        };
+        };*/
     }
 
     public function getTeamList($service_type)

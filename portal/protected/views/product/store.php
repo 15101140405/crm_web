@@ -48,7 +48,7 @@
                 </a>
             </li>
             <li supplier-type="2" category="1">
-                <a href="#">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&category=2">
                     <div class="cat_icon">
                         <img src="images/gendan.png"/>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
                     </div>
-                    <p class="cat_name">场地套餐</p>
+                    <p class="cat_name">婚礼套系</p>
                 </a>
             </li>
             <li supplier-type="20" category="2">

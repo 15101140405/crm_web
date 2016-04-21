@@ -47,15 +47,15 @@ class StaffController extends InitController
 
     public function actionList()
     {
-        if(isset($_GET['account_id'])){
+        /*if(isset($_GET['account_id'])){
             Yii::app()->session['account_id']=$_GET['account_id']; 
             $company = StaffCompany::model()->findByPk($_SESSION['account_id']);     
         };
         
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
             $this->getlist();
-        }else{ //未登录
+        /*}else{ //未登录
             //echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -75,9 +75,9 @@ class StaffController extends InitController
                 $staff = Staff::model()->findByPk($adder['UserId']);
                 Yii::app()->session['account_id']=$staff['account_id'];
                 Yii::app()->session['staff_hotel_id']=$staff['hotel_list'];
-                /*print_r($_SESSION['account_id']);die;*/
-                $this->getlist();
-            };
+          */      /*print_r($_SESSION['account_id']);die;*/
+                /*$this->getlist();
+            };*/
         };
     }
 

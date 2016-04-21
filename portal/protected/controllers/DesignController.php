@@ -65,10 +65,10 @@ class DesignController extends InitController
         Yii::app()->session['code']='asjfdlk123';
         Yii::app()->session['account_id']=1;
         Yii::app()->session['staff_hotel_id']=1;*/
-        if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
-            echo '已登陆';
+        /*if(isset($_SESSION['userid']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){//已登陆
+            echo '已登陆';*/
             $this->Bill($_GET['order_id']);
-        }else{ //未登录
+        /*}else{ //未登录
             echo '未登陆';
             $code = $_GET['code'];
             Yii::app()->session['code']=$code;
@@ -90,7 +90,7 @@ class DesignController extends InitController
                 
                 $this->Bill($_GET['order_id']);
             };
-        };
+        };*/
     }
 
     public function Bill($orderId)

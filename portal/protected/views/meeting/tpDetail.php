@@ -204,7 +204,7 @@ $(function(){
             'unit' :" <?php echo $productData['unit'] ?>",
             'actual_unit_cost' : $("#cost").val(),
             'update_time' : update_time,
-            'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+            'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>"
         };
         /*console.log(get_info);*/
         $.post("<?php echo $this->createUrl('meeting/updatetp');?>",get_info,function(data){  //bacground data    
@@ -239,7 +239,7 @@ $(function(){
             'unit' :" <?php echo $productData['unit'] ?>",
             'actual_unit_cost' : $("#cost").val(),
             'update_time' : update_time,
-            'actual_service_ratio' : <?php echo $productData['service_charge_ratio']?>
+            'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>"
         };
 
         $.post("<?php echo $this->createUrl('meeting/deltp');?>",get_info,function(data){

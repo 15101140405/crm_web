@@ -119,7 +119,7 @@ $(function  () {
 
     //新增订单
     $(".add_btn").on("click",function(){
-        location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
+        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&code=";
     })
 })
 </script>
