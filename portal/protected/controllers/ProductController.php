@@ -213,10 +213,10 @@ class ProductController extends InitController
     public function actionSet_list()
     {
         $supplier_product = SupplierProduct::model()->findAll(array(
-                'condition' => 'account_id = :account_id && supplier_type = :supplier_type && category = :category',
+                'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
                 'params' => array(
                         ':account_id' => $_SESSION['account_id'],
-                        ':supplier_type' => 2,
+                        ':supplier_type_id' => 2,
                         ':category' => 2
                     )
             ));
@@ -229,10 +229,15 @@ class ProductController extends InitController
             $criteria->addCondition("img_type = :img_type && supplier_product_id = :supplier_product_id");    
             $criteria->params[':img_type']=1; 
             $criteria->params[':supplier_product_id']=$value['id'];  
-            $ProductImg = ProductImg::model()->findAll($criteria);
+            $ProductImg = ProductImg::model()->find($criteria);
             $item['name'] = $value['name'];
             $item['price'] = $value['unit_price'];
-            $item['img_url'] = $ProductImg['img_url'];
+            // print_r($ProductImg);die;
+            if (!empty($ProductImg)) {
+                $item['img_url'] = $ProductImg['img_url'];
+            } else {
+                $item['img_url'] = "../../crm_product_img/d32.jpg";
+            }
             $item['unit'] = $value['unit'];
             $product_data[] = $item; 
         };
