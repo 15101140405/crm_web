@@ -12,7 +12,7 @@
 <body>
     <ul class="set_list">
 <?php foreach ($product_data as $key => $value) { ?>
-        <li class="set_item" product-id="0">
+        <li class="set_item" product-id="<?php echo $value['id']?>">
             <a>
                 <img src="<?php echo $value['img_url']?>" alt="">
                 <div class="info flexbox v_center">

@@ -239,6 +239,7 @@ class ProductController extends InitController
                 $item['img_url'] = "../../crm_product_img/d32.jpg";
             }
             $item['unit'] = $value['unit'];
+            $item['id'] = $value['id'];
             $product_data[] = $item; 
         };
 
