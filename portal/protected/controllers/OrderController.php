@@ -59,7 +59,7 @@ class OrderController extends InitController
         /*print_r($order);die;*/
         $order_data = array();
         foreach ($order as $key => $value) {
-            if($value['account_id'] == $_SESSION['account_id']){
+            if($value['account_id'] == $_SESSION['account_id'] && $value['staff_hotel_id'] == $_SESSION['staff_hotel_id']){
                 $item = array();
                 $item['order_name'] = $value['order_name'];
                 $item['order_type'] = $value['order_type'];

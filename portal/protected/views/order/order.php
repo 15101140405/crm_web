@@ -145,16 +145,17 @@ $(function  () {
 
     //导航
     $("#product_store").on("click",function(){
-        location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=1";
+        location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
     });
     $("#index").on("click",function(){
-        location.href = "<?php echo $this->createUrl('order/index');?>&from=&code=&account_id=1";
+        location.href = "<?php echo $this->createUrl('order/index');?>&from=";
     });
     $("#order").on("click",function(){
-        location.href = "<?php echo $this->createUrl('order/order');?>&account_id=1";
+        location.href = "<?php echo $this->createUrl('order/order');?>";
     });
     $("#finance_report").on("click",function(){
-        location.href = "<?php echo $this->createUrl('report/financereport');?>&account_id=1&staff_hotel_id=1";
+        
+        location.href = "<?php echo $this->createUrl('report/financereport');?>";
     });
 
     //滑动删除
