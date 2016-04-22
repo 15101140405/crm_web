@@ -216,8 +216,8 @@ class ProductController extends InitController
                 'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
                 'params' => array(
                         ':account_id' => $_SESSION['account_id'],
-                        ':supplier_type_id' => 2,
-                        ':category' => 2
+                        ':supplier_type_id' => $_GET['supplier_type_id'],
+                        ':category' => $_GET['category']
                     )
             ));
 
