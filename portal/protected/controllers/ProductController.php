@@ -251,7 +251,27 @@ class ProductController extends InitController
 
     public function actionSet_detail()
     {
-        $this->render('set_detail');
+        $id=$_GET['product_id'];
+        $supplier_product = SupplierProduct::model()->find(array(
+                'condition' => 'id = :id',
+                'params' => array(
+                        ':id' => $id
+                    )
+            ));
+
+        $img = ProductImg::model()->findAll(array(
+                'condition' => 'supplier_product_id = :id && img_type = :img_type',
+                'params' => array(
+                        ':id' => $id,
+                        ':img_type' => 2
+                    )
+            ));
+
+
+        $this->render('set_detail',array(
+            "supplier_product"  => $supplier_product,
+            "img"               => $img
+        ));
     }
 
     public function actionSelectorder()
