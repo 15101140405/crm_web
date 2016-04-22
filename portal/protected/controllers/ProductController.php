@@ -349,7 +349,7 @@ class ProductController extends InitController
         };
         
 
-        $touser="100";//你要发的人
+        $touser="@all";//你要发的人
         $toparty="";
         $totag="";
         $title="新客人进店了！";//标题

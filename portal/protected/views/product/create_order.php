@@ -235,7 +235,7 @@
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
                 console.log(retval);
-                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=" + retval + "&from=my_order";
+                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });
     

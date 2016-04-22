@@ -40,7 +40,7 @@
     <nav style='margin-bottom:80px;'>
         <ul id="product">
             <li supplier-type="2" category="2">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&category=2">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2">
                     <div class="cat_icon">
                         <img src="images/hunyan.png"/>
                     </div>
@@ -48,19 +48,27 @@
                 </a>
             </li>
             <li supplier-type="2" category="1">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&category=2">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1">
                     <div class="cat_icon">
                         <img src="images/gendan.png"/>
                     </div>
                     <p class="cat_name">会议餐</p>
                 </a>
             </li>
-            <li supplier-type="19" category="1">
-                <a href="#">
+            <li supplier-type="22" category="2">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=2">
                     <div class="cat_icon">
                         <img src="images/taoxi.png"/>
                     </div>
                     <p class="cat_name">婚礼套系</p>
+                </a>
+            </li>
+            <li supplier-type="22" category="1">
+                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=1">
+                    <div class="cat_icon">
+                        <img src="images/taoxi.png"/>
+                    </div>
+                    <p class="cat_name">会议套系</p>
                 </a>
             </li>
             <li supplier-type="20" category="2">

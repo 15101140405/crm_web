@@ -111,9 +111,9 @@ $(function  () {
         order_type = $(this).attr("order-type");
         order_id = $(this).attr("order-id");
         if(order_type == 2){
-            location.href = "<?php echo $this->createUrl("design/tpDetail");?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
+            location.href = "<?php echo $this->createUrl("design/tpDetail");?>&tab=&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
         }else if(order_type == 1){
-            location.href = "<?php echo $this->createUrl("meeting/tpDetail");?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
+            location.href = "<?php echo $this->createUrl("meeting/tpDetail");?>&tab=&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
         };
     })
 

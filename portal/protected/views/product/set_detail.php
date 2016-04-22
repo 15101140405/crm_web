@@ -5,9 +5,9 @@
     <title>产品介绍</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/base1.css">
     <link rel="stylesheet" type="text/css" href="css/weeding_set.css">
-    <link rel="stylesheet" href="css/islider.css" />
+    <!-- <link rel="stylesheet" href="css/islider.css" /> -->
     <script src="js/islider.js"></script>
     <script src="js/plugins/islider_desktop.js"></script>
 </head>
