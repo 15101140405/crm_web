@@ -28,7 +28,7 @@
 <script>
     $(function () {
         $("li").on("click",function(){
-            location.href = "<?php echo $this->createUrl('product/set_detail');?>&product_id="+ $(this).attr("product-id") +"&category=<?php echo $_GET['category']?>";
+            location.href = "<?php echo $this->createUrl('product/set_detail');?>&product_id="+ $(this).attr("product-id") +"&category=<?php echo $_GET['category']?>&from=<?php echo $_GET['from']?>";
         });
     })
 </script>

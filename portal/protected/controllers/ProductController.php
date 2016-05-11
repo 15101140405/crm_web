@@ -414,23 +414,48 @@ class ProductController extends InitController
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        //$result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
 
-        $orderproduct= new OrderProduct;  
-        /*print_r($data);die;*/
-        $orderproduct->account_id = $_SESSION['account_id'];
-        $orderproduct->order_id = $order['id'];
-        $orderproduct->product_id = $_POST['product_id'];
-        $orderproduct->actual_price = $_POST['price'];
-        $orderproduct->unit = $_POST['amount'];
-        $orderproduct->actual_unit_cost = $_POST['cost'];
-        $orderproduct->update_time = $_POST['update_time'];
-        $orderproduct->actual_service_ratio = $_POST['service_charge_ratio'];
-        $orderproduct->remark = $_POST['remark'];
+        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+        $t1 = explode("/",$wedding_set['product_list']);
+        $t2 = explode(",", $t1[0]);
+        foreach ($t2 as $key => $value) {
+            $product = explode("|", $value);
+            $admin=new OrderProduct;         
+            $admin->account_id=$_SESSION['account_id']; 
+            $admin->order_id=$order['id'];
+            $admin->product_id=$product[0]; 
+            $admin->actual_price=$product[1]; 
+            $admin->unit=$product[2]; 
+            $admin->actual_unit_cost=$product[3]; 
+            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->save();
+        }
 
-        $orderproduct->save();
+        Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
 
         echo $order['id'];
+    }
+
+    public function actionInsert_order_set()
+    {
+        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+        $t1 = explode("/",$wedding_set['product_list']);
+        $t2 = explode(",", $t1[0]);
+        foreach ($t2 as $key => $value) {
+            $product = explode("|", $value);
+            $admin=new OrderProduct;         
+            $admin->account_id=$_SESSION['account_id']; 
+            $admin->order_id=$_POST['order_id'];
+            $admin->product_id=$product[0]; 
+            $admin->actual_price=$product[1]; 
+            $admin->unit=$product[2]; 
+            $admin->actual_unit_cost=$product[3]; 
+            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->save();
+        }
+
+        Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
     }
 }

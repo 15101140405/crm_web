@@ -67,13 +67,13 @@
             <input value="" class="" placeholder="请选择结束时间" readonly="readonly" name="appTime_end" id="appTime1" type="text">
         </div>
     </div>
-    <div class="ulist_module pad_b40" style="margin-top:10px;">
+    <div class="ulist_module pad_b40" style="margin-top:10px;" id="price">
         <ul class="ulist">
             <li class="ulist_item flex">
                 价格
                 <div class="flex1">
                     <input class="align_r t_green" type="text" id="price" value=""
-                           placeholder="标准价格：<?php /*echo $productData['unit_price'];*/ ?>"/>
+                           placeholder="请输入价格"/>
                 </div>
                 <i class="mar_l10 t_green"></i>
             </li>
@@ -104,7 +104,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module">
+    <div class="int_ulist_module" style="margin-top: 10px;">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">新郎姓名</span>
@@ -197,23 +197,39 @@
         $("#appTime").mobiscroll(optTime).time(optTime);
         $("#appTime1").mobiscroll(optTime).time(optTime);
 
-        
+        var new_order_info = {};
 
-        $("#insert").on("click",function(){
-            var mydate = new Date();
-            var year = mydate.getFullYear() + "";
-            var month = mydate.getMonth() + 1;
-            var month = month + "";
-            var date = mydate.getDate() + "";
-            var hours = mydate.getHours() + "";
-            var minutes = mydate.getMinutes() + "";
-            var seconds = mydate.getSeconds() + "";
+        var mydate = new Date();
+        var year = mydate.getFullYear() + "";
+        var month = mydate.getMonth() + 1;
+        var month = month + "";
+        var date = mydate.getDate() + "";
+        var hours = mydate.getHours() + "";
+        var minutes = mydate.getMinutes() + "";
+        var seconds = mydate.getSeconds() + "";
 
-            var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
-            var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
-            var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
+        var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
+        var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
+        var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
 
-            var new_order_info = {
+        if("<?php echo $_GET['from']?>" == "wedding_set" || "<?php echo $_GET['from']?>" == "meeting_set"){
+            $("#price").remove();
+            new_order_info = {
+                order_date: order_date,
+                end_time: end_time, 
+                update_time : time,
+                groom_name: $("#groom_name").val(),
+                groom_phone: $("#groom_phone").val(),
+                groom_wechat: $("#groom_wechat").val(),
+                groom_qq: $("#groom_qq").val(),
+                bride_name: $("#bride_name").val(),
+                bride_phone: $("#bride_phone").val(),
+                bride_wechat: $("#bride_wechat").val(),
+                bride_qq: $("#bride_qq").val(),
+                product_id : "<?php echo $_GET['product_id'];?>",
+            };
+        }else{
+            new_order_info = {
                 order_date: order_date,
                 end_time: end_time, 
                 update_time : time,
@@ -232,10 +248,15 @@
                 product_id : "<?php echo $_GET['product_id'];?>",
                 remark : $("#remark").val()
             };
+        }
+
+        
+
+        $("#insert").on("click",function(){
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
                 console.log(retval);
-                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+                //location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });
     

@@ -43,7 +43,7 @@
             </div>
             <ul class="module_con store_set_list flexbox">
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2&from=wedding_feast">
                         <img class="icon" src="images/set01.png" alt="">
                         <div class="info flex1">
                             <p>婚宴</p>
@@ -52,7 +52,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1&from=meeting_feast">
                         <img class="icon" src="images/set02.png" alt="">
                         <div class="info flex1">
                             <p>会议餐</p>
@@ -61,7 +61,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=2">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=2&from=wedding_set">
                         <img class="icon" src="images/set03.png" alt="">
                         <div class="info flex1">
                             <p>婚礼套系</p>
@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=1">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=1&from=meeting_set">
                         <img class="icon" src="images/set04.png" alt="">
                         <div class="info flex1">
                             <p>会议套系</p>
