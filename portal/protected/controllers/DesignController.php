@@ -2864,10 +2864,13 @@ class DesignController extends InitController
 
     public function actionPlanother()
     {
+        $accountId = $_SESSION['account_id'];
 
         $SupplierProduct = SupplierProduct::model()->findAll(array(
-            "condition" => "supplier_type_id=:supplier_type_id ",
-            "params" => array( ":supplier_type_id" => 17 ),
+            "condition" => "supplier_type_id=:supplier_type_id && account_id=:account_id",
+            "params" => array( 
+                ":supplier_type_id" => 17,
+                ":account_id"       => $accountId),
         ));
 
         $arr_category_planother = array();
