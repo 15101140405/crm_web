@@ -108,19 +108,20 @@ $(function  () {
 
     // li点击跳转
     $(".order_list li").on("click",function(){
-        order_type = $(this).attr("order-type");
-        order_id = $(this).attr("order-id");
-        if(order_type == 2){
-            location.href = "<?php echo $this->createUrl("design/tpDetail");?>&tab=&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
-        }else if(order_type == 1){
-            location.href = "<?php echo $this->createUrl("meeting/tpDetail");?>&tab=&product_id=<?php echo $_GET['product_id']?>&type=new&tab=&from=&order_id=" + order_id;
+        data = {
+            'set_id' : '<?php echo $_GET['product_id']?>',
+            'order_id' : $(this).attr("order-id"),
+            'order_type' : $(this).attr("order-type"),
         };
-    })
+        $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
+            //location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+        });
+    });
 
     //新增订单
     $(".add_btn").on("click",function(){
-        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>";
-    })
+        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
+    });
 })
 </script>
 </body>
