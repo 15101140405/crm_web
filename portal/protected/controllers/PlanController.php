@@ -1239,7 +1239,7 @@ class PlanController extends InitController
         $admin->save();
 
         $staff = Staff::model()->find(array(
-                'condition' => 'account_id = :account_id && name = :name && phone = :phone',
+                'condition' => 'account_id = :account_id && name = :name && telephone = :phone',
                 'params' => array(
                         ':account_id' => $_SESSION['account_id'],
                         ':name' => $_POST['name'],
