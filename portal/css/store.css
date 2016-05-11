@@ -1,0 +1,100 @@
+/*store css*/
+
+.store_container {
+    padding: 1rem 0 8rem;
+    width: 100%;
+    background: url('../images/store_bg.jpg') no-repeat;
+    background-size: 100% 100%;
+}
+
+.store_module {
+    margin: 0 1rem;
+}
+
+.store_module .h2_box {
+    margin-bottom: .5rem;
+}
+
+.store_module .h2_box span {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    height: 2px;
+    border-bottom: 1px solid #d2d2d2;
+}
+
+.store_module h2 {
+    min-width: 4rem;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 0 1rem;
+    color: #666;
+}
+
+.store_set_list,
+.store_man_list {
+    -webkit-box-lines: multiple;
+    -moz-box-lines: multiple;
+    -ms-box-lines: multiple;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.store_set_list li {
+    float: left;
+    width: 48.5%;
+    background: #fff;
+    border-radius: 5px;
+    padding: .8rem;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+    margin-bottom: .8rem;
+}
+
+.store_set_list li a,
+.diy_list li a {
+    color: #999;
+}
+
+.store_set_list li:nth-child(odd),
+.store_man_list li:nth-child(odd) {
+    margin-right: 1.5%;
+}
+
+.store_set_list li:nth-child(even),
+.store_man_list li:nth-child(even) {
+    margin-left: 1.5%;
+}
+
+.store_set_list li img,
+.diy_list img {
+    width: 4rem;
+    height: 4rem;
+    margin-right: .5rem;
+}
+
+.store_set_list li a .info p:first-child,
+.diy_list li a .info p:first-child {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: .3rem;
+}
+
+.store_man_list li {
+    float: left;
+    width: 48%;
+    border-radius: 5px;
+    margin-bottom: .8rem;
+    overflow: hidden;
+}
+
+.diy_list li {
+    background: #fff;
+    border-radius: 5px;
+    padding: .8rem;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+    margin-bottom: .5rem;
+}
