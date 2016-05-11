@@ -360,7 +360,7 @@ class ProductController extends InitController
         $payment= new Order;  
 
         $payment->account_id =$_SESSION['account_id'];
-        $payment->designer_id =0;
+        $payment->designer_id =$_SESSION['userid'];
         $payment->planner_id =$_SESSION['userid'];
         $payment->adder_id =$_SESSION['userid'];
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
@@ -428,7 +428,7 @@ class ProductController extends InitController
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        //$result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
 
         $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);

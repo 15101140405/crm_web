@@ -199,64 +199,64 @@
 
         var new_order_info = {};
 
-        var mydate = new Date();
-        var year = mydate.getFullYear() + "";
-        var month = mydate.getMonth() + 1;
-        var month = month + "";
-        var date = mydate.getDate() + "";
-        var hours = mydate.getHours() + "";
-        var minutes = mydate.getMinutes() + "";
-        var seconds = mydate.getSeconds() + "";
-
-        var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
-        var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
-        var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
-
         if("<?php echo $_GET['from']?>" == "wedding_set" || "<?php echo $_GET['from']?>" == "meeting_set"){
             $("#price").remove();
-            new_order_info = {
-                order_date: order_date,
-                end_time: end_time, 
-                update_time : time,
-                groom_name: $("#groom_name").val(),
-                groom_phone: $("#groom_phone").val(),
-                groom_wechat: $("#groom_wechat").val(),
-                groom_qq: $("#groom_qq").val(),
-                bride_name: $("#bride_name").val(),
-                bride_phone: $("#bride_phone").val(),
-                bride_wechat: $("#bride_wechat").val(),
-                bride_qq: $("#bride_qq").val(),
-                product_id : "<?php echo $_GET['product_id'];?>",
-            };
-        }else{
-            new_order_info = {
-                order_date: order_date,
-                end_time: end_time, 
-                update_time : time,
-                price : $("#price").val(),
-                amount : $("#amount").val(),
-                cost : $("#cost").val(),
-                service_charge_ratio : $("#fuwufei_input").val(),
-                groom_name: $("#groom_name").val(),
-                groom_phone: $("#groom_phone").val(),
-                groom_wechat: $("#groom_wechat").val(),
-                groom_qq: $("#groom_qq").val(),
-                bride_name: $("#bride_name").val(),
-                bride_phone: $("#bride_phone").val(),
-                bride_wechat: $("#bride_wechat").val(),
-                bride_qq: $("#bride_qq").val(),
-                product_id : "<?php echo $_GET['product_id'];?>",
-                remark : $("#remark").val()
-            };
-        }
-
-        
+        };
 
         $("#insert").on("click",function(){
+            var mydate = new Date();
+            var year = mydate.getFullYear() + "";
+            var month = mydate.getMonth() + 1;
+            var month = month + "";
+            var date = mydate.getDate() + "";
+            var hours = mydate.getHours() + "";
+            var minutes = mydate.getMinutes() + "";
+            var seconds = mydate.getSeconds() + "";
+
+            var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
+            var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
+            var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
+            if("<?php echo $_GET['from']?>" == "wedding_set" || "<?php echo $_GET['from']?>" == "meeting_set"){
+                $("#price").remove();
+                new_order_info = {
+                    order_date: order_date,
+                    end_time: end_time, 
+                    update_time : time,
+                    groom_name: $("#groom_name").val(),
+                    groom_phone: $("#groom_phone").val(),
+                    groom_wechat: $("#groom_wechat").val(),
+                    groom_qq: $("#groom_qq").val(),
+                    bride_name: $("#bride_name").val(),
+                    bride_phone: $("#bride_phone").val(),
+                    bride_wechat: $("#bride_wechat").val(),
+                    bride_qq: $("#bride_qq").val(),
+                    set_id : "<?php echo $_GET['product_id'];?>",
+                };
+            }else{
+                new_order_info = {
+                    order_date: order_date,
+                    end_time: end_time, 
+                    update_time : time,
+                    price : $("#price").val(),
+                    amount : $("#amount").val(),
+                    cost : $("#cost").val(),
+                    service_charge_ratio : $("#fuwufei_input").val(),
+                    groom_name: $("#groom_name").val(),
+                    groom_phone: $("#groom_phone").val(),
+                    groom_wechat: $("#groom_wechat").val(),
+                    groom_qq: $("#groom_qq").val(),
+                    bride_name: $("#bride_name").val(),
+                    bride_phone: $("#bride_phone").val(),
+                    bride_wechat: $("#bride_wechat").val(),
+                    bride_qq: $("#bride_qq").val(),
+                    product_id : "<?php echo $_GET['product_id'];?>",
+                    remark : $("#remark").val()
+                };
+            }
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
-                console.log(retval);
-                //location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+                //console.log(retval);
+                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });
     
