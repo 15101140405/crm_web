@@ -1,57 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/crm_web.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="2016.5.11">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/FinanceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/FinanceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/MeetingController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/MeetingController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/OrderController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/OrderController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/OrderFinal.php" afterPath="$PROJECT_DIR$/common/model/OrderFinal.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/OrderProduct.php" afterPath="$PROJECT_DIR$/common/model/OrderProduct.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/PlanController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/PlanController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ResourceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ResourceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/form/SupplierProductForm.php" afterPath="$PROJECT_DIR$/common/form/SupplierProductForm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/base1.css" afterPath="$PROJECT_DIR$/portal/css/base1.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/bill.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/bill.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/bill.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/bill.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/calendar.css" afterPath="$PROJECT_DIR$/portal/css/calendar.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/finance/cashier.php" afterPath="$PROJECT_DIR$/portal/protected/views/finance/cashier.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/plan/chooseChannel.php" afterPath="$PROJECT_DIR$/portal/protected/views/plan/chooseChannel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/service/create_order.php" afterPath="$PROJECT_DIR$/portal/protected/views/service/create_order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/plan/customerName.php" afterPath="$PROJECT_DIR$/portal/protected/views/plan/customerName.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/decoration.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/decoration.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/decorationDetail.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/decorationDetail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/plan/detailInfo.php" afterPath="$PROJECT_DIR$/portal/protected/views/plan/detailInfo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/report/finance_report.php" afterPath="$PROJECT_DIR$/portal/protected/views/report/finance_report.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/index.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/plan/linkmanInfo.php" afterPath="$PROJECT_DIR$/portal/protected/views/plan/linkmanInfo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/login.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/mobiscroll_002.css" afterPath="$PROJECT_DIR$/portal/css/mobiscroll_002.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/mobiscroll_003.css" afterPath="$PROJECT_DIR$/portal/css/mobiscroll_003.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/order.css" afterPath="$PROJECT_DIR$/portal/css/order.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/js/order.js" afterPath="$PROJECT_DIR$/portal/js/order.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/order.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/order_info_follow.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/order_info_follow.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/order_info_follow_detail.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/order_info_follow_detail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" afterPath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/servicePersonnel.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/servicePersonnel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/store.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/store.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/style.css" afterPath="$PROJECT_DIR$/portal/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/tpDetail.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/tpDetail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/tpDetail.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/tpDetail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/zepto.aslider.css" afterPath="$PROJECT_DIR$/portal/css/zepto.aslider.css" />
     </list>
     <ignored path="crm_web.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -135,6 +90,28 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+  </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -143,12 +120,20 @@
       <option name="number" value="Default" />
       <updated>1458729967205</updated>
     </task>
+    <task id="LOCAL-00001" summary="2016.5.11">
+      <created>1462931521677</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1462931521677</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="0" />
     <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -171,6 +156,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2016.5.11" />
+    <option name="LAST_COMMIT_MESSAGE" value="2016.5.11" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
