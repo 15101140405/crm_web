@@ -239,19 +239,33 @@ class ProductController extends InitController
 
     public function actionSet_list()
     {
-        $supplier_product = SupplierProduct::model()->findAll(array(
-                'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
-                'params' => array(
-                        ':account_id' => $_SESSION['account_id'],
-                        ':supplier_type_id' => $_GET['supplier_type_id'],
-                        ':category' => $_GET['category']
-                    ),
-                'order' => 'unit_price'
-            ));
+        if ($_GET['from'] == "set") {
+
+            $list = Wedding_set::model()->findAll(array(
+                    'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category',
+                    'params' => array(
+                            ':account_id' => $_SESSION['staff_hotel_id'],
+                            ':category' => $_GET['category']
+                        ),
+                    'order' => 'unit_price'
+                ));
+
+        } else {
+        
+            $list = SupplierProduct::model()->findAll(array(
+                    'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
+                    'params' => array(
+                            ':account_id' => $_SESSION['account_id'],
+                            ':supplier_type_id' => $_GET['supplier_type_id'],
+                            ':category' => $_GET['category']
+                        ),
+                    'order' => 'unit_price'
+                ));
+        }
 
         $product_data = array();
 
-        foreach ($supplier_product as $key => $value) {
+        foreach ($list as $key => $value) {
             $item = array();
             $criteria = new CDbCriteria; 
             $criteria->addCondition("img_type = :img_type && supplier_product_id = :supplier_product_id");    
