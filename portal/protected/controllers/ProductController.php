@@ -193,17 +193,44 @@ class ProductController extends InitController
         /*};*/
         Yii::app()->session['account_id']=$_GET['account_id'];
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
-        if(isset($_SESSION['userid'])){
-            $this->render('store');
+        
+        if(isset($_COOKIE['userid'])){
+            Yii::app()->session['userid']=$_COOKIE['userid'];
+            $staff = Staff::model()->findByPk($_SESSION['userid']);
+            $str =  rtrim($staff['department_list'], "]"); 
+            $str =  ltrim($str, "[");
+            $t = explode(",", $str);
+            $user_type = 0; // 0-普通员工（能看订单、个人业绩）   1-管理层（能看订单统计、财务报告）
+            foreach ($t as $key => $value){
+                if($value == "6"){
+                    $user_type++;
+                };
+            };
+            $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+
+            $this->render('store',array(
+                    'hotel_name' => $hotel['name'],
+                    'user_type' => $user_type
+                ));
         }else{
             $this->render('login');
-        }
+        };
     }
 
     public function actionSetuserid()
     {
-        Yii::app()->session['userid']=$_POST['userid'];
-        if($_SESSION['userid']){
+        $staff = Staff::model()->find(array(
+                'condition' => 'telephone=:telephone',
+                'params' => array(
+                        'telephone' => $_POST['phone']
+                    )
+            ));
+
+        $cookie = new CHttpCookie('userid',$staff['id']);
+        $cookie->expire = time()+60*60*24*30*12*100;  //有限期100年
+        Yii::app()->request->cookies['userid']=$cookie;
+
+        if(isset($_COOKIE['userid'])){
             echo 'success';
         }else{
             echo 'failed';
@@ -218,7 +245,8 @@ class ProductController extends InitController
                         ':account_id' => $_SESSION['account_id'],
                         ':supplier_type_id' => $_GET['supplier_type_id'],
                         ':category' => $_GET['category']
-                    )
+                    ),
+                'order' => 'unit_price'
             ));
 
         $product_data = array();

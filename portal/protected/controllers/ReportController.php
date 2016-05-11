@@ -61,6 +61,128 @@ class ReportController extends InitController
 
     }
 
+    public function actionHotel_finance_report()
+    {
+        $order = Order::model()->findAll(array(
+                'condition' => 'staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id']
+                    )
+            ));
+        $year = date('Y',time());
+        $month_order = array('0','0','0','0','0','0','0','0','0','0','0','0');
+        $hotel_data = array(
+                'total_sales' => 0,
+                'final_profit' => 0,
+                'operating_costs' =>0,
+                'total_wed' =>0,
+                'total_meeting' =>0,
+            );
+        foreach ($order as $key => $value) {
+            $str = explode(' ', $value['order_date']);
+            $t1 = explode('-', $str[0]);
+            if($year == $t1[0]){
+                $t = 0;
+                if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4 || $value['order_status'] == 5 || $value['order_status'] == 6){
+                    $feast = $this->order_feast_total_price($value['id']);
+                    $other = $this->order_other_total_price($value['id']);
+                    $hotel_data['total_sales'] += ($feast['total_price'] + $other['total_price']);
+                    $t = ($feast['total_price'] + $other['total_price']);
+                    if($value['order_type']==2){
+                        $hotel_data['total_wed']++;
+                    }else{
+                        $hotel_data['total_meeting']++;
+                    };
+                };
+
+                if($value['order_status'] == 6){
+                    $hotel_data['final_profit'] += $this->order_final_profit($value['id']);
+                };
+                if($t1[1] == "01"){
+                    $month_order[0] += (int)$t;
+                };
+                if($t1[1] == "02"){
+                    $month_order[1] += (int)$t;
+                };
+                if($t1[1] == "03"){
+                    $month_order[2] += (int)$t;
+                };
+                if($t1[1] == "04"){
+                    $month_order[3] += (int)$t;
+                };
+                if($t1[1] == "05"){
+                    $month_order[4] += (int)$t;
+                };
+                if($t1[1] == "06"){
+                    $month_order[5] += (int)$t;
+                };
+                if($t1[1] == "07"){
+                    $month_order[6] += (int)$t;
+                };
+                if($t1[1] == "08"){
+                    $month_order[7] += (int)$t;
+                };
+                if($t1[1] == "09"){
+                    $month_order[8] += (int)$t;
+                };
+                if($t1[1] == "10"){
+                    $month_order[9] += (int)$t;
+                };
+                if($t1[1] == "11"){
+                    $month_order[10] += (int)$t;
+                };
+                if($t1[1] == "12"){
+                    $month_order[11] += (int)$t;
+                };
+            };
+        };
+        /*print_r($month_order);die;*/
+        $this->render('hotel_finance_report',array(
+                'hotel_data' => $hotel_data,
+                'month_order' => $month_order
+            ));
+    }
+
+    public function actionFinancereport()
+    {    
+        /*Yii::app()->session['account_id']=1;
+        Yii::app()->session['staff_hotel_id']=1;
+        Yii::app()->session['userid']=100;*/
+        //********************************************************************************************
+        //取当年累计销售额、销售目标
+        //********************************************************************************************
+        $year = date("Y");
+        $order_status_deal = array(2,3,4,5,6);
+        $sales=array();
+
+        //取门店信息
+        $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+
+
+        //********************************************************************************************
+        //累计销售额、累计提成
+        //********************************************************************************************
+        $staff_total = $this->staff_total($_SESSION['userid'],$year,$order_status_deal);
+
+        //********************************************************************************************
+        //已结算提成
+        //********************************************************************************************
+        $final_profit = $this->hotel_final_profit();
+
+        //********************************************************************************************
+        //取当年已签婚礼、会议数
+        //********************************************************************************************
+        $data = $this->staff_num_total($_SESSION['userid']);
+
+        /*print_r($staff_total);die;*/
+
+        $this->render("finance_report",array(
+                'hotel_name' => $hotel['name'],
+                'staff_total' => $staff_total,
+                'data' => $data,
+            ));
+    }
+
     public function actionInfo()//开单信息
     {
         //print_r($_GET);
@@ -100,6 +222,145 @@ class ReportController extends InitController
         $arr_sum['success'] = 1;
         echo json_encode($arr_sum);
 
+    }
+
+    public function actionOrder_report()
+    {
+        $staff = Staff::model()->findByPk($_SESSION['userid']);
+        $str =  rtrim($staff['department_list'], "]"); 
+        $str =  ltrim($str, "[");
+        $t = explode(",", $str);
+        $user_type = 0; // 0-普通员工（能看订单、个人业绩）   1-管理层（能看订单统计、财务报告）   2-财务（结算）
+        foreach ($t as $key => $value){
+            if($value == "5"){
+                $user_type += 2;
+            };
+        };
+        $order = Order::model()->findAll(array(
+                'condition' => 'staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':staff_hotel_id' => $_SESSION['staff_hotel_id']
+                    ),
+                'order' => 'order_date'
+            ));
+        $today = date('Y-m-d',time());
+        /*print_r($today);die;*/
+        $year = date('Y',time());
+        $order_data = array();
+        /*print_r($year);die;*/
+        $order_num = array(
+                'order_open' => 0,
+                'wed_finish' => 0,
+                'wed_doing' => 0,
+                'wed_clear' => 0,
+                'meeting_finish' => 0,
+                'meeting_doing' => 0,
+                'meeting_clear' => 0,
+            );
+        foreach ($order as $key => $value) {
+            $t = explode(" ",$value['update_time']);
+
+            $t1 = explode(" ",$value['order_date']);
+            $t2 = explode("-",$t1[0]);
+            /*print_r($t1[0]);die;*/
+            $planner = Staff::model()->findByPk($value['planner_id']);
+            $designer = Staff::model()->findByPk($value['designer_id']);
+
+
+            $item = array();// 开单统计
+            if($t2[0] == $year){
+                if($t[0] == $today){ 
+                    $order_num['order_open']++;
+                    $item['type']=1;
+                    $item['order_date'] = $t1[0];
+                    if($value['order_type']==1){$item['order_type']="会议";}else{$item['order_type']="婚礼";};
+                    $item['planner_name'] = $planner['name'];
+                    $item['designer_name'] = $designer['name'];
+                    $item['order_id'] = $value['id'];
+                    $item['order_type'] = $value['order_type'];
+                };
+            };
+
+            $item1 = array(); //订单统计
+            $item2 = array(); //结算申请
+            if($t2[0] == $year){
+                if($value['order_type']==1){
+                    if($value['order_status'] == 5 || $value['order_status'] == 6){ //已完成会议
+                        $order_num['meeting_finish']++;
+                        $item1['type']=4;
+                        $item1['order_date'] = $t1[0];
+                        $item1['order_type']="会议";
+                        $item1['planner_name'] = $planner['name'];
+                        $item1['designer_name'] = $designer['name'];
+                        $item1['order_id'] = $value['id'];
+                        $item1['order_type'] = $value['order_type'];
+                    };
+                    if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4){ //待执行会议
+                        $order_num['meeting_doing']++;
+                        $item1['type']=5;
+                        $item1['order_date'] = $t1[0];
+                        $item1['order_type']="会议";
+                        $item1['planner_name'] = $planner['name'];
+                        $item1['designer_name'] = $designer['name'];
+                        $item1['order_id'] = $value['id'];
+                        $item1['order_type'] = $value['order_type'];
+                    }
+
+                    if($value['order_status'] == 5){ //结算中
+                        $order_num['meeting_clear']++;
+                        $item2['type']=7;
+                        $item2['order_date'] = $t1[0];
+                        $item2['order_type']="会议";
+                        $item2['planner_name'] = $planner['name'];
+                        $item2['designer_name'] = $designer['name'];
+                        $item2['order_id'] = $value['id'];
+                        $item2['order_type'] = $value['order_type'];
+                    };
+                }else{
+                    if($value['order_status'] == 5 || $value['order_status'] == 6){ //已完成婚礼
+                        $order_num['wed_finish']++;
+                        $item1['type']=2;
+                        $item1['order_date'] = $t1[0];
+                        $item1['order_type']="婚礼";
+                        $item1['planner_name'] = $planner['name'];
+                        $item1['designer_name'] = $designer['name'];
+                        $item1['order_id'] = $value['id'];
+                        $item1['order_type'] = $value['order_type'];
+                    };
+                    
+                    if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4){ //待执行婚礼
+                        $order_num['wed_doing']++;
+                        $item1['type']=3;
+                        $item1['order_date'] = $t1[0];
+                        $item1['order_type']="婚礼";
+                        $item1['planner_name'] = $planner['name'];
+                        $item1['designer_name'] = $designer['name'];
+                        $item1['order_id'] = $value['id'];
+                        $item1['order_type'] = $value['order_type'];
+                    };
+
+                    if($value['order_status'] == 5){ //结算中
+                        $order_num['wed_clear']++;
+                        $item2['type']=6;
+                        $item2['order_date'] = $t1[0];
+                        $item2['order_type']="婚礼";
+                        $item2['planner_name'] = $planner['name'];
+                        $item2['designer_name'] = $designer['name'];
+                        $item2['order_id'] = $value['id'];
+                        $item2['order_type'] = $value['order_type'];
+                    };
+                };
+            };
+            if(!empty($item)){$order_data['open'][] = $item;};
+            if(!empty($item1)){$order_data['order'][] = $item1;};            
+            if(!empty($item2)){$order_data['clear'][] = $item2;}; 
+        };
+        /*print_r($order_data);die;*/
+        $this->render("order_report",array(
+                'order_data' => $order_data,
+                'order_num' => $order_num,
+                'user_type' => $user_type
+            ));
     }
 
     public function actionIndividual_performance_targets()
@@ -581,7 +842,6 @@ class ReportController extends InitController
 
     public function hotel_total_sales($hotel_id,$year,$order_status)
     {
-        
         $criteria1 = new CDbCriteria; 
         $criteria1->addInCondition("order_status",$order_status);
         $criteria1->addCondition("staff_hotel_id=:staff_hotel_id");
@@ -608,12 +868,220 @@ class ReportController extends InitController
         return $hotel_total_sales;
     }
 
-    public function order_wedding_total_price($order_id)
+    
+
+    public function judge_discount($type_id,$order_id){
+        $order = Order::model()->findByPk($order_id); 
+        $discount_range = explode(",",$order['discount_range']);
+        $t=0;
+        foreach ($discount_range as $key => $value) {
+            if($value == $type_id){
+                $t=1;
+            }
+        }
+        return $t;
+    }
+
+    public function hotel_total_payment($hotel_id,$year,$order_status)
+    {
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("order_status",$order_status);
+        $criteria1->addCondition("staff_hotel_id=:staff_hotel_id");
+        $criteria1->params[':staff_hotel_id']=$hotel_id; 
+        $order = Order::model()->findAll($criteria1);
+        $order_id = array();
+        
+        foreach ($order as $key => $value) {
+            $t1 = explode(' ',$value['order_date']);
+            $t2 = explode('-',$t1[0]);
+            /*print_r($value['id'].$year."|".$t2[0]."</br>");*/
+            if($year == $t2[0]){
+                $order_id[$key] = (int)$value['id'];
+            };
+        }
+
+        $criteria2 = new CDbCriteria; 
+        $criteria2->addInCondition("order_id",$order_id);
+        $payment = OrderPayment::model()->findAll($criteria2);
+        $hotel_total_payment = 0;
+
+        foreach ($payment as $key => $value) {
+            $hotel_total_payment += $value['money'];
+        };               
+
+        return $hotel_total_payment;
+    }
+
+
+    public function staff_total($staff_id,$year,$order_status)
+    {
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("order_status",$order_status);
+        $criteria1->addCondition("planner_id=:planner_id");
+        $criteria1->params[':planner_id']=$staff_id; 
+        $order1 = Order::model()->findAll($criteria1);
+        $order_plan_id = array();
+        
+        foreach ($order1 as $key => $value) {
+            $t1 = explode(' ',$value['order_date']);
+            $t2 = explode('-',$t1[0]);
+            /*print_r($value['id'].$year."|".$t2[0]."</br>");*/
+            if($year == $t2[0]){
+                $item = array();
+                $item['id'] = (int)$value['id'];
+                $item['month'] = $t2[1];
+                $order_plan_id[] = $item;
+                /*$order_plan_id[] = (int)$value['id'];*/
+            };
+        }
+        /*var_dump($order_id);die;*/
+        /*return $order_plan_id;*/
+
+
+        $plan_total_sales = 0;
+        $staff_total['final_commission'] = 0;
+        $staff_total['month_order'] = array('0','0','0','0','0','0','0','0','0','0','0','0');
+        /*return $order_plan_id;*/
+        foreach ($order_plan_id as $key => $value) {
+            $t = $this->order_feast_total_price($value['id']);
+            $plan_total_sales += $t['total_price'];
+
+            if($value['month'] == "01"){
+                $staff_total['month_order'][0] += (int)$t['total_price'];
+            };
+            if($value['month'] == "02"){
+                $staff_total['month_order'][1] += (int)$t['total_price'];
+            };
+            if($value['month'] == "03"){
+                $staff_total['month_order'][2] += (int)$t['total_price'];
+            };
+            if($value['month'] == "04"){
+                $staff_total['month_order'][3] += (int)$t['total_price'];
+            };
+            if($value['month'] == "05"){
+                $staff_total['month_order'][4] += (int)$t['total_price'];
+            };
+            if($value['month'] == "06"){
+                $staff_total['month_order'][5] += (int)$t['total_price'];
+            };
+            if($value['month'] == "07"){
+                $staff_total['month_order'][6] += (int)$t['total_price'];
+            };
+            if($value['month'] == "08"){
+                $staff_total['month_order'][7] += (int)$t['total_price'];
+            };
+            if($value['month'] == "09"){
+                $staff_total['month_order'][8] += (int)$t['total_price'];
+            };
+            if($value['month'] == "10"){
+                $staff_total['month_order'][9] += (int)$t['total_price'];
+            };
+            if($value['month'] == "11"){
+                $staff_total['month_order'][10] += (int)$t['total_price'];
+            };
+            if($value['month'] == "12"){
+                $staff_total['month_order'][11] += (int)$t['total_price'];
+            };
+            /*return $value;*/
+            $order_final = OrderFinal::model()->find(array(
+                    'condition' => 'order_id=:order_id',
+                    'params' => array(
+                            ':order_id' => $value['id']
+                        )
+                ));
+            $staff_total['final_commission'] += $order_final['feast_profit']*0.01;
+            /*$staff_total['final_commission'] += $order_final['other_profit']*0.1;*/
+            /*print_r($t);die;*/
+        };
+        /*return $plan_total_sales;*/
+        $criteria2 = new CDbCriteria; 
+        $criteria2->addInCondition("order_status",$order_status);
+        $criteria2->addCondition("designer_id=:designer_id");
+        $criteria2->params[':designer_id']=$staff_id; 
+        $order2 = Order::model()->findAll($criteria2);
+        $order_design_id = array();
+        
+        foreach ($order2 as $key => $value) {
+            $t1 = explode(' ',$value['order_date']);
+            $t2 = explode('-',$t1[0]);
+            /*print_r($value['id'].$year."|".$t2[0]."</br>");*/
+            if($year == $t2[0]){
+                $item = array();
+                $item['id'] = (int)$value['id'];
+                $item['month'] = $t2[1];
+                $order_design_id[] = $item;
+            };
+        }
+        /*var_dump($order_id);die;*/
+        $design_total_sales = 0;
+        $design_total_gross_profit = 0;
+        /*print_r($order_design_id);die;*/
+        foreach ($order_design_id as $key => $value) {
+            $t = $this->order_other_total_price($value['id']);
+            /*print_r($t);die;*/
+            $design_total_sales += $t['total_price'];
+
+            if($value['month'] == "01"){
+                $staff_total['month_order'][0] += (int)$t['total_price'];
+            };
+            if($value['month'] == "02"){
+                $staff_total['month_order'][1] += (int)$t['total_price'];
+            };
+            if($value['month'] == "03"){
+                $staff_total['month_order'][2] += (int)$t['total_price'];
+            };
+            if($value['month'] == "04"){
+                $staff_total['month_order'][3] += (int)$t['total_price'];
+            };
+            if($value['month'] == "05"){
+                $staff_total['month_order'][4] += (int)$t['total_price'];
+            };
+            if($value['month'] == "06"){
+                $staff_total['month_order'][5] += (int)$t['total_price'];
+            };
+            if($value['month'] == "07"){
+                $staff_total['month_order'][6] += (int)$t['total_price'];
+            };
+            if($value['month'] == "08"){
+                $staff_total['month_order'][7] += (int)$t['total_price'];
+            };
+            if($value['month'] == "09"){
+                $staff_total['month_order'][8] += (int)$t['total_price'];
+            };
+            if($value['month'] == "10"){
+                $staff_total['month_order'][9] += (int)$t['total_price'];
+            };
+            if($value['month'] == "11"){
+                $staff_total['month_order'][10] += (int)$t['total_price'];
+            };
+            if($value['month'] == "12"){
+                $staff_total['month_order'][11] += (int)$t['total_price'];
+            };
+            $design_total_gross_profit += $t['gross_profit'];
+            $order_final = OrderFinal::model()->find(array(
+                    'condition' => 'order_id=:order_id',
+                    'params' => array(
+                            ':order_id' => $value['id']
+                        )
+                ));
+            /*return $staff_total['final_commission'];die;*/
+            /*$staff_total['final_commission'] += $order_final['feast_profit']*0.01;*/
+            /*return $order_final['feast_profit'];die;*/
+            $staff_total['final_commission'] += $order_final['other_profit']*0.1;
+            /*print_r($t);die;*/
+        };
+
+        $staff_total['sales'] = $plan_total_sales + $design_total_sales;
+        /*$staff_total['commission'] = $plan_total_sales*0.01 + $design_total_gross_profit*0.1;*/
+        /*print_r($staff_total);die;*/
+        /*return $design_total_sales;die;*/
+        return $staff_total;
+    }
+
+    public function order_other_total_price($order_id)
     {
         $orderId = $order_id;
         $supplier_product_id = array();
-        $wed_feast = array();
-        $arr_wed_feast = array();
 
         $order_discount = Order::model()->find(array(
             "condition" => "id = :id",
@@ -622,31 +1090,36 @@ class ReportController extends InitController
 
         /*print_r($order_discount['other_discount']);die;
 */
+
         /*********************************************************************************************************************/
-        /*取餐饮数据*/
+        /*取场地费数据*/
         /*********************************************************************************************************************/
+        $changdi_fee = array();
+        $arr_changdi_fee = array();
         $supplier_id_result = Supplier::model()->findAll(array(
             "condition" => "type_id = :type_id",
-            "params" => array(":type_id" => 2),
+            "params" => array(":type_id" => 19),
         ));
+        /*print_r($supplier_id_result);die;*/
         $supplier_id = array();
         foreach ($supplier_id_result as $value) {
             $item = $value->id;
             $supplier_id[] = $item;
         };
-        /*print_r($supplier_id);*/
+        /*print_r($supplier_id);die;*/
+        $supplier_product_id = array();
         if(!empty($supplier_id)){
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
             $criteria1->addCondition("category=:category");
-            $criteria1->params[':category']=2; 
+            $criteria1->params[':category']=1; 
             $supplier_product = SupplierProduct::model()->findAll($criteria1);
             /*print_r($supplier_product);*/
             foreach ($supplier_product as $value) {
                 $item = $value->id;
                 $supplier_product_id[] = $item;
             };
-            /*print_r($supplier_product_id);*/
+            /*print_r($supplier_product_id);die;*/
         }
         
         if(!empty($supplier_product_id)){
@@ -663,32 +1136,33 @@ class ReportController extends InitController
                 $item['unit'] = $value->unit;
                 $item['actual_unit_cost'] = $value->actual_unit_cost;
                 $item['actual_service_ratio'] = $value->actual_service_ratio;
-                $wed_feast[] = $item;
+                $changdi_fee[] = $item;
             };
-            /*print_r($wed_feast);*/
+            /*print_r($changdi_fee);die;*/
         }
-        /*print_r($wed_feast);*/
         
-        if(!empty($wed_feast)){
+        if(!empty($changdi_fee)){
             $criteria3 = new CDbCriteria; 
             $criteria3->addCondition("id=:id");
-            $criteria3->params[':id']=$wed_feast[0]['product_id']; 
+            $criteria3->params[':id']=$changdi_fee[0]['product_id']; 
             $supplier_product2 = SupplierProduct::model()->find($criteria3);
             /*print_r($supplier_product2);*/
-            $arr_wed_feast = array(
+            $arr_changdi_fee = array(
                 'name' => $supplier_product2['name'],
-                'unit_price' => $wed_feast[0]['actual_price'],
+                'unit_price' => $changdi_fee[0]['actual_price'],
                 'unit' => $supplier_product2['unit'],
-                'table_num' => $wed_feast[0]['unit'],
-                'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
-                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']),
-                'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
-                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'],
-                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'])/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])),
+                'amount' => $changdi_fee[0]['unit'],
+                'total_price' => $changdi_fee[0]['actual_price']*$changdi_fee[0]['unit'],
+                'total_cost' => $changdi_fee[0]['actual_unit_cost']*$changdi_fee[0]['unit'],
+                'gross_profit' => ($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'],
+                'gross_profit_rate' => (($changdi_fee[0]['actual_price']-$changdi_fee[0]['actual_unit_cost'])*$changdi_fee[0]['unit'])/($changdi_fee[0]['actual_price']*$changdi_fee[0]['unit']),
+                /*'table_num' => $wed_feast[0]['unit'],
+                'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],*/
                 /*'remark' => $wed_feast['']*/
             );
         }
-        /*print_r($arr_wed_feast);*/
+        /*return $arr_changdi_fee;*/
+        /*print_r($arr_changdi_fee);die;*/
 
         /*********************************************************************************************************************/
         /*取灯光数据*/
@@ -1663,11 +2137,6 @@ class ReportController extends InitController
 
         /*print_r($order_discount);die;*/
 
-        if(!empty($arr_wed_feast)){
-            $arr_order_total['total_price'] += $arr_wed_feast['total_price'] * $order_discount['feast_discount'] * 0.1;
-            $arr_order_total['total_cost'] += $arr_wed_feast['total_cost'];
-        }
-
         if(!empty($arr_video)){
             if($this->judge_discount(9,$orderId) == 0){
                 $arr_order_total['total_price'] += $arr_video_total['total_price'];
@@ -1735,6 +2204,15 @@ class ReportController extends InitController
                 $arr_order_total['total_cost'] += $arr_designer_total['total_cost'];
             }
         }
+        if(!empty($arr_changdi_fee)){
+            if($this->judge_discount(19,$orderId) == 0){
+                $arr_order_total['total_price'] += $arr_changdi_fee['total_price'];
+                $arr_order_total['total_cost'] += $arr_changdi_fee['total_cost'];
+            }else{
+                $arr_order_total['total_price'] += $arr_changdi_fee['total_price'] * $order_discount['other_discount'] * 0.1;
+                $arr_order_total['total_cost'] += $arr_changdi_fee['total_cost'];
+            }
+        }
 
         if($order_discount['cut_price'] != 0){
             $arr_order_total['total_price'] -= $order_discount['cut_price'];
@@ -1752,81 +2230,113 @@ class ReportController extends InitController
         return $arr_order_total;
     }
 
-    public function judge_discount($type_id,$order_id){
-        $order = Order::model()->findByPk($order_id); 
-        $discount_range = explode(",",$order['discount_range']);
-        $t=0;
-        foreach ($discount_range as $key => $value) {
-            if($value == $type_id){
-                $t=1;
-            }
-        }
-        return $t;
-    }
-
-    public function hotel_total_payment($hotel_id,$year,$order_status)
+    public function order_feast_total_price($order_id)
     {
-        $criteria1 = new CDbCriteria; 
-        $criteria1->addInCondition("order_status",$order_status);
-        $criteria1->addCondition("staff_hotel_id=:staff_hotel_id");
-        $criteria1->params[':staff_hotel_id']=$hotel_id; 
-        $order = Order::model()->findAll($criteria1);
-        $order_id = array();
-        
-        foreach ($order as $key => $value) {
-            $t1 = explode(' ',$value['order_date']);
-            $t2 = explode('-',$t1[0]);
-            /*print_r($value['id'].$year."|".$t2[0]."</br>");*/
-            if($year == $t2[0]){
-                $order_id[$key] = (int)$value['id'];
+        $orderId = $order_id;
+        $supplier_product_id = array();
+        $wed_feast = array();
+        $arr_wed_feast = array();
+
+        $order_discount = Order::model()->find(array(
+            "condition" => "id = :id",
+            "params" => array(":id" => $orderId),
+        ));
+
+        /*print_r($order_discount['other_discount']);die;
+*/
+        /*********************************************************************************************************************/
+        /*取餐饮数据*/
+        /*********************************************************************************************************************/
+        $supplier_id_result = Supplier::model()->findAll(array(
+            "condition" => "type_id = :type_id",
+            "params" => array(":type_id" => 2),
+        ));
+        $supplier_id = array();
+        foreach ($supplier_id_result as $value) {
+            $item = $value->id;
+            $supplier_id[] = $item;
+        };
+        /*print_r($supplier_id);*/
+        if(!empty($supplier_id)){
+            $criteria1 = new CDbCriteria; 
+            $criteria1->addInCondition("supplier_id",$supplier_id);
+            $supplier_product = SupplierProduct::model()->findAll($criteria1);
+            /*print_r($supplier_product);*/
+            foreach ($supplier_product as $value) {
+                $item = $value->id;
+                $supplier_product_id[] = $item;
             };
-        }
+            /*print_r($supplier_product_id);*/
+        };
+        
+        if(!empty($supplier_product_id)){
+            $criteria2 = new CDbCriteria; 
+            $criteria2->addInCondition("product_id",$supplier_product_id);
+            $criteria2->addCondition("order_id=:order_id");
+            $criteria2->params[':order_id']=$orderId; 
+            $supplier_product = OrderProduct::model()->findAll($criteria2);
+            foreach ($supplier_product as $value) {
+                $item = array();
+                $item['id'] = $value->id;
+                $item['product_id'] = $value->product_id;
+                $item['actual_price'] = $value->actual_price;
+                $item['unit'] = $value->unit;
+                $item['actual_unit_cost'] = $value->actual_unit_cost;
+                $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $wed_feast[] = $item;
+            };
+            /*print_r($wed_feast);*/
+        };
+        /*print_r($wed_feast);*/
+        
+        if(!empty($wed_feast)){
+            $criteria3 = new CDbCriteria; 
+            $criteria3->addCondition("id=:id");
+            $criteria3->params[':id']=$wed_feast[0]['product_id']; 
+            $supplier_product2 = SupplierProduct::model()->find($criteria3);
+            /*print_r($supplier_product2);*/
+            $arr_wed_feast = array(
+                'name' => $supplier_product2['name'],
+                'unit_price' => $wed_feast[0]['actual_price'],
+                'unit' => $supplier_product2['unit'],
+                'table_num' => $wed_feast[0]['unit'],
+                'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
+                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])*$order_discount['feast_discount']*0.1,
+                'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
+                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'],
+                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'])/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])),
+                /*'remark' => $wed_feast['']*/
+            );
+        }else{
+            $arr_wed_feast = array(
+                'name' => "",
+                'unit_price' => "",
+                'unit' => "",
+                'table_num' => "",
+                'service_charge_ratio' => "",
+                'total_price' => "",
+                'total_cost' => "",
+                'gross_profit' => "",
+                'gross_profit_rate' => ""
+            );
+        };
 
-        $criteria2 = new CDbCriteria; 
-        $criteria2->addInCondition("order_id",$order_id);
-        $payment = OrderPayment::model()->findAll($criteria2);
-        $hotel_total_payment = 0;
-
-        foreach ($payment as $key => $value) {
-            $hotel_total_payment += $value['money'];
-        };               
-
-        return $hotel_total_payment;
+        return $arr_wed_feast;
     }
 
-    public function actionFinancereport()
-    {    
-        //********************************************************************************************
-        //取当年累计销售额、销售目标
-        //********************************************************************************************
-        $year = date("Y");
-        $order_status_deal = array(2,3,4,5,6);
-        $sales=array();
-
-        //取门店信息
-        $hotel=StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
-        $sales['target']=$hotel['target'];
-        $sales['hotel_name']=$hotel['name'];
-        $sales['deal']=number_format(($this->hotel_total_sales($_SESSION['staff_hotel_id'],$year,$order_status_deal))/10000,1);
-
-
-        //********************************************************************************************
-        //取当年已结算毛利
-        //********************************************************************************************
-        $final_profit = $this->hotel_final_profit();
-
-        //********************************************************************************************
-        //取当年已签婚礼、会议数
-        //********************************************************************************************
-        $data = $this->order_num_total();
-
-
-
-        $this->render("finance_report",array(
-                'sales' => $sales,
-                'final_profit' => $final_profit,
-                'data' => $data,
+    public function order_final_profit($order_id)
+    {
+        $order = OrderFinal::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $order_id
+                    )
             ));
+        $order_final_profit = 0;
+        foreach ($order as $key => $value) {
+            $order_final_profit += $value['final_profit'];
+        };
+        return $order_final_profit;
     }
 
     public function hotel_final_profit()
@@ -1853,12 +2363,11 @@ class ReportController extends InitController
         return sprintf("%.1f", $final_profit/10000);
     }
 
-    public function order_num_total(){
+    public function staff_num_total($staff_id){
         $order_basic = Order::model()->findAll(array(
-                'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
+                'condition' => 'account_id=:account_id',
                 'params' => array(
                         ':account_id' => $_SESSION['account_id'],
-                        ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
                     )
             ));
         $data = array('meeting' =>0,'wedding' =>0);
@@ -1866,12 +2375,16 @@ class ReportController extends InitController
         foreach ($order_basic as $key => $value) {
             $t1 = explode(" ", $value['order_date']);
             $t2 = explode("-", $t1[0]);
-            if( $t2[0] == $year && $value['order_status'] != 0  && $value['order_type'] == 1 ){
-                $data['meeting']++; 
-            }else if($t2[0] == $year && $value['order_status'] != 0  && $value['order_type'] == 2){
-                $data['wedding']++; 
-            }
-        }
+            if( $t2[0] == $year && $value['order_status'] != 0 && $value['order_type'] == 1 ){
+                if($value['planner_id']==$staff_id || $value['designer_id']==$staff_id){
+                    $data['meeting']++;
+                };
+            }else if($t2[0] == $year && $value['order_status'] != 0 && $value['order_type'] == 2){
+                if($value['planner_id']==$staff_id || $value['designer_id']==$staff_id){
+                    $data['wedding']++; 
+                };
+            };
+        };
         return $data;
     }
 

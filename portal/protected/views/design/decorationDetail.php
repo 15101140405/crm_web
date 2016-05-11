@@ -200,7 +200,7 @@
             }
             console.log(get_info);
             //填写内容判断
-            if (get_info.actual_price == "" || get_info.amount == "" || get_info.unti == "" || get_info.name == "" || get_info.actual_unit_cost == "" || get_info.remark == "") {
+            if (get_info.actual_price == "" || get_info.amount == "" || get_info.unti == "" || get_info.name == "" ) {
                 alert("请补全信息");
                 return false;
             }

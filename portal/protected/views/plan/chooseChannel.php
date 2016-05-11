@@ -15,6 +15,7 @@
     <div class="tool_bar">
         <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">选择推单</h2>
+        <div class="r_btn" id='insert'>新增</div>
     </div>
     <div class="select_ulist_module pad_b50">
         <ul class="select_ulist">
@@ -113,16 +114,19 @@
                     ret();         
                 })
             }          
-        })
-                             
+        });
 
+        //点击新增
+        $("#insert").on("click",function(){
+            location.href = "<?php echo $this->createUrl("plan/channel_insert")?>&order_id=<?php echo $_GET['order_id']?>"; 
+        });
     
         //点击返回
         $(".l_btn").on("click", function () {
             // location.href = "javascript:history.go(-1);location.reload()";
             ret();
         });
-        })
+    })
     
 </script>
 

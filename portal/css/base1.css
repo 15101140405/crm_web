@@ -247,6 +247,7 @@ select:-webkit-autofill{-webkit-box-shadow: 0 0 0 1000px #FFFFFF inset;}
     -webkit-justify-content: center;
 }
 .flexbox.v_center:not(.vertical) {
+	height: 6rem;
     display: -webkit-box;
     display: box;
     display: -webkit-flex;
@@ -617,5 +618,8 @@ select:-webkit-autofill{-webkit-box-shadow: 0 0 0 1000px #FFFFFF inset;}
 }
 .grid2>* {
     width: 50%;
+}
+.hid{
+	display: none;
 }
 /*end*/

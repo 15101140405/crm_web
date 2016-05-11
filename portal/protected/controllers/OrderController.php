@@ -73,8 +73,11 @@ class OrderController extends InitController
             };
         };
 
+        $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
+
         $this->render("order",array(
-                'order_data' => $order_data
+                'order_data' => $order_data,
+                'hotel_name' => $hotel['name']
             ));
     }
 
@@ -97,6 +100,14 @@ class OrderController extends InitController
         
         if(isset($_SESSION['userid']) && isset($_SESSION['code']) && isset($_SESSION['account_id']) && isset($_SESSION['staff_hotel_id'])){*///已登陆
             //echo '已登陆';
+            $staff = Staff::model()->findByPk($_SESSION['userid']);
+            $str =  rtrim($staff['department_list'], "]"); 
+            $str =  ltrim($str, "[");
+            $t = explode(",", $str);
+            $user_type = 0; // 0-普通员工（能看订单、个人业绩）   1-管理层（能看订单统计、财务报告）
+            foreach ($t as $key => $value) {
+                if($value == 6){$user_type++;};
+            };
             $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
             if($_GET['from'] == 'bill'){
                 $order = Order::model()->findByPk($_GET['this_order']);
@@ -110,6 +121,7 @@ class OrderController extends InitController
                     'first_show_month' => $t2[1],
                     'first_show_day' => $t2[2],
                     'hotel_name' => $hotel['name'],
+                    'user_type' => $user_type
                 ));
             }else if($_GET['from'] == ''){
                 $y = date("Y");
@@ -122,6 +134,7 @@ class OrderController extends InitController
                     'first_show_month' => $m,
                     'first_show_day' => $d,
                     'hotel_name' => $hotel['name'],
+                    'user_type' => $user_type
                 ));
             }
         /*}else{//未登录
@@ -919,10 +932,10 @@ class OrderController extends InitController
         
 
         $touser= $touser_list;
-        /*print_r($touser);die;*/
+        print_r($touser);die;
         $content= "中文怎么解决";
         $title= '结算申请:'.$order['order_name'].'|'.$order['order_date'][0];
-        $agentid=35;
+        $agentid=0;
         if($_POST['type'] == "meeting"){
             $url="http://www.cike360.com/school/crm_web/portal/index.php?r=meeting/bill&code=&order_id=".$_POST['order_id'];    
         }else if($_POST['type'] == "design"){
@@ -976,13 +989,15 @@ class OrderController extends InitController
         $final->final_cost = $_POST['final_cost'];
         $final->final_profit = $_POST['final_profit'];
         $final->final_profit_rate = $_POST['final_profit_rate'];
+        $final->feast_profit = $_POST['feast_profit'];
+        $final->other_profit = $_POST['other_profit'];
         $final->save(); 
 
         Order::model()->updateByPk($_POST['order_id'],array('order_status'=>6));
 
         $touser_list = $order['planner_id']."|".$order['designer_id'];
         $touser= $touser_list;
-        /*print_r($touser);die;*/
+        print_r($touser);die;
         $content= "中文怎么解决";
         $title= '结算已通过:'.$order['order_name'].'|'.$order['order_date'][0];
         $agentid=0;
@@ -1007,7 +1022,6 @@ class OrderController extends InitController
         // $media="@/var/www/html/school/crm_web/image/thumb.jpg";
         // $type="image";
 
-        echo "</br>";
         $author="";
         $content_source_url="http://www.cike360.com/school/crm_web/portal/index.php?r=report/dayreporthtml";
         $show_cover_pic="";
@@ -1030,10 +1044,11 @@ class OrderController extends InitController
     public function actionCheckoutrefuse()
     {
         Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4));
+        $order = Order::model()->findByPk($_POST['order_id']);
 
         $touser_list = $order['planner_id']."|".$order['designer_id'];
         $touser= $touser_list;
-        /*print_r($touser);die;*/
+        print_r($touser);die;
         $content= "中文怎么解决";
         $title= '结算被拒绝:'.$order['order_name'].'|'.$order['order_date'][0];
         $agentid=0;

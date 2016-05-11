@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>CRM</title>
+<title>个人主页</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -15,6 +15,7 @@
 <link href="css/base2.css" rel="stylesheet" type="text/css" />
 <link href="css/calendar.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/styles.css" type="text/css">
 </head>
 <body>
   <!-- <div class="header"> -->
@@ -28,9 +29,9 @@
   <!-- </div> -->
   <section class="base_info">
         <div class="profile_bar">
-            <img src="images/lazy_profile.png" data-lazyload="images/profile.png" />
+            <img src="images/lazy_profile.png" data-lazyload="<?php echo $service_person['avatar']?>" />
         </div>
-        <p class="name">呆萌</p>
+        <p class="name"><?php echo $service_person['name']?></p>
         <!-- <p class="desc"><span>专业<i>5.0</i></span><span>态度<i>5.0</i></span><span>守时<i>5.0</i></span> -->
         </p>
         <div class="icon">
@@ -42,12 +43,13 @@
         </div>
         <!-- <a class="big_btn">喜欢TA,赞一下（50）</a> -->
     </section>
+
     <section class="video">
         <h4 class="title">看看TA的样片</h4>
         <!-- loop -->
         <div class="video_bar">
-            <video poster="images/poster.png" id="test">
-                <source src="media/test.mp4" type="video/mp4">
+            <video poster="<?php echo $service_person['poster']?>" id="test">
+                <source src="<?php echo $service_person['sample_video']?>" type="video/mp4">
             </video>
         </div>
         <!-- loop end -->
@@ -82,7 +84,7 @@
   </div>
 
   <div class="fixed_bar">
-    <a class="r_btn">立即预订</a>
+    <a class="r_btn" id="sure">立即预订</a>
     <p class="price">主持价格 &yen;5000</p>
   </div>
 
@@ -95,20 +97,23 @@
 <script type="text/javascript" src="js/zepto.datePicker.js"></script>
 <script>
 $(function() {
+
   var first_show_year = <?php echo $first_show_year ;?>;
   var first_show_month = <?php echo $first_show_month ;?> -1;
   var first_show_day = <?php echo $first_show_day ;?>;
 
-  comePage();
-
 
   $(".day_order_module").remove();
 
+  $("#sure").on("click",function(){
+      location.href = "<?php echo $this->createUrl('service/service_product_list');?>&tab=&staff_id=<?php echo $service_person['staff_id']?>&order_id=";
+  });
+
   //页面初始化
-  if("<?php echo $_GET['from']?>" == "design" || "<?php echo $_GET['from']?>" == "team_list"){
+  /*if("<?php echo $_GET['from']?>" == "design" || "<?php echo $_GET['from']?>" == "team_list"){
     $(".day_order_module").remove();
-    $(".page_title").html("<?php echo $name?>的档期");
-  };
+    $(".page_title").html("<?php echo $service_person['name']?>的档期");
+  };*/
 
   //日历初始化
   $("#calendar").almanac({
@@ -122,7 +127,7 @@ $(function() {
       var info ={
         'year': year ,
         'month' : month+1 ,
-        'service_person_id' : <?php echo $service_person_id?>,
+        'service_person_id' : <?php echo $service_person['id']?>,
       };
       console.log(info);
 
@@ -258,10 +263,6 @@ $(function() {
 
   });
 
-  //右上角加号按钮，增加订单
-  $(".r_btn").on("click",function(){
-    rbtnClick();
-  });
 
   //新增订单
   $(".btn").on("click",function(){
@@ -285,29 +286,6 @@ $(function() {
     })
   }
 
-  /* ===========================
-   * 判断进入页面：my_order进入，则最上方按钮有变化
-   * =========================== */
-  function comePage(){
-    if(unescape($.util.param("from"))=="my_order"){//如果从my_order进入
-       var l_btn = '<div class="l_btn" data-icon="&#xe679;"></div>';   
-       $('.header .l_btn').remove();
-       $('.header').prsepend(l_btn);
-
-      var r_btn = '<div class="r_btn" data-icon="&#xe767;"></div>';   
-      $('.header .r_btn').remove();
-      $('.header').append(r_btn);
-      //$('.header .r_btn').attr("data-icon","&#xe767;");
-      
-      $('.l_btn').on("click",function(){
-        location.href = "my_order.html";
-      });
-
-      $(".r_btn").on("click",function(){
-        rbtnClick();
-      });    
-    }
-  }
     /* ===========================
    * 右上角图标点击，＋或者>
    * =========================== */

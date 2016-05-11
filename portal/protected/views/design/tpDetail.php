@@ -45,7 +45,7 @@
             <li class="ulist_item flex" id='fuwufei'>
                 服务费
                 <div class="flex1">
-                    <input class="align_r t_green" type="text" value="<?php echo $orderproduct['actual_service_ratio']; ?>" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
+                    <input class="align_r t_green" id="fuwufei_input" type="text" value="<?php echo $orderproduct['actual_service_ratio']; ?>" placeholder="<?php  echo $productData['service_charge_ratio'];?>"/>
                 </div>
             </li>
             <li class="ulist_item">备注</li> 
@@ -81,7 +81,7 @@
             <li class="ulist_item flex" id='fuwufei'>
                 服务费
                 <div class="flex1">
-                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
+                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  echo $productData['service_charge_ratio'];?>" />
                 </div>
             </li>
             <li class="ulist_item">备注</li> 
@@ -156,8 +156,9 @@
     $(function () {
 
         //获取用户信息
-        var account_id = <?php echo $_SESSION['account_id']?>;
-
+        //var account_id = <?php /*echo $_SESSION['account_id']*/?>;
+        var staff_hotel_id = 1;
+        var account_id = 1;
         //页面初始化
         if ($.util.param("type") == "edit") {
             $("#insert").remove();
@@ -222,7 +223,9 @@
             //主持
             var myDate = new Date();
 
-            var update_time = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + " " + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
+            var month = myDate.getMonth() + 1 ;
+
+            var update_time = myDate.getFullYear() + "-" + month + "-" + myDate.getDate() + " " + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
             
 
             if ($.util.param("tab") == "host" ) {
@@ -262,7 +265,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val()),
+                    'actual_service_ratio' : $("#fuwufei_input").val()*0.01,
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);
@@ -367,8 +370,8 @@
                 }else if ($.util.param("tab") == "feast") {
                     location.href = "<?php echo $this->createUrl("design/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                 }else{
-                    location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
-                }
+                    location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id="+ account_id +"&staff_hotel_id=" + staff_hotel_id;
+                };
             });
         });
 
@@ -418,7 +421,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val()),
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())*0.01,
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);
@@ -573,7 +576,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : parseFloat(<?php echo $productData['unit_cost'] ?>) ,
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())*0.01
                 };
                 console.log(get_info);
             }

@@ -177,7 +177,9 @@ class PlanController extends InitController
             'girl_tele'     => $orderweddingData['bride_phone'],
             'girl_wxid'     => $orderweddingData['bride_wechat'], //微信号
             'girl_qq'       => $orderweddingData['bride_qq'],
-            );
+            'link_name'     => $orderweddingData['contact_name'],
+            'link_phone'    => $orderweddingData['contact_phone'],
+        );
 
         $this->render("detailInfo",array(
             "arr"   =>   $detailInfoData,
@@ -1015,8 +1017,8 @@ class PlanController extends InitController
         $supplier_type_id = 16 ;//supplier_type_id为16的即“推单渠道”
 
         $list = SupplierProduct::model()->findAll(array(
-            "condition" => "supplier_type_id=:id",
-            "params"    => array( ":id" => $supplier_type_id), 
+            "condition" => "supplier_type_id=:id && account_id=:account_id",
+            "params"    => array( ":id" => $supplier_type_id , ":account_id" => $_SESSION['account_id']), 
                                                        )
                                                  );
         $product_id = array();
@@ -1200,6 +1202,10 @@ class PlanController extends InitController
         echo $corpsecret;
     }
 
+    public function actionLinkmaninsert(){
+        OrderWedding::model()->updateAll(array('contact_name'=>$_POST['link_name'],'contact_phone'=>$_POST['link_phone']),'order_id=:order_id',array(':order_id'=>$_POST['order_id'])); 
+    }
+
     public function actionUpdatedetail()
     {
         OrderWedding::model()->updateAll(array(
@@ -1209,7 +1215,9 @@ class PlanController extends InitController
             'groom_qq'=>$_POST['groom_qq'],
             'bride_phone'=>$_POST['bride_phone'],
             'bride_wechat'=>$_POST['bride_wechat'],
-            'bride_qq'=>$_POST['bride_qq']),'order_id=:order_id',array(':order_id'=>$_POST['order_id'])); 
+            'bride_qq'=>$_POST['bride_qq'],
+            'contact_name'=>$_POST['link_name'],
+            'contact_phone'=>$_POST['link_phone']),'order_id=:order_id',array(':order_id'=>$_POST['order_id'])); 
 
         Order::model()->updateByPk($_POST['order_id'],array(
                 'order_date'=>$_POST['order_date'],
@@ -1217,5 +1225,51 @@ class PlanController extends InitController
             ));
     }
 
+    public function actionChannel_insert()
+    {
+        $this->render('channel_insert');
+    }
 
+    public function actionChannelinsert()
+    {
+        $admin=new Staff;         
+        $admin->account_id=$_SESSION['account_id']; 
+        $admin->name=$_POST['name']; 
+        $admin->telephone=$_POST['phone']; 
+        $admin->save();
+
+        $staff = Staff::model()->find(array(
+                'condition' => 'account_id = :account_id && name = :name && phone = :phone',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':name' => $_POST['name'],
+                        ':phone' => $_POST['phone'],
+                    )
+            ));
+        
+        $admin=new Supplier;         
+        $admin->account_id=$_SESSION['account_id']; 
+        $admin->type_id=16; 
+        $admin->staff_id=$staff['id']; 
+        $admin->save();
+
+        $supplier = Supplier::model()->find(array(
+                'condition' => 'account_id = :account_id && type_id = :type_id && staff_id = :staff_id',
+                'params' => array(
+                        ':account_id' => $_SESSION['account_id'],
+                        ':type_id' => 16,
+                        ':staff_id' => $staff['id'],
+                    )
+            ));
+
+        $admin=new SupplierProduct;         
+        $admin->account_id=$_SESSION['account_id']; 
+        $admin->supplier_id=$supplier['id']; 
+        $admin->supplier_type_id=16; 
+        $admin->standard_type=0; 
+        $admin->name=$_POST['name']; 
+        $admin->category=2; 
+        $admin->save();
+
+    }
 }

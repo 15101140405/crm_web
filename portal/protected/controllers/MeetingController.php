@@ -363,12 +363,14 @@ class MeetingController extends InitController
             "condition" => "type_id = :type_id",
             "params" => array(":type_id" => 19),
         ));
+        /*print_r($supplier_id_result);die;*/
         $supplier_id = array();
         foreach ($supplier_id_result as $value) {
             $item = $value->id;
             $supplier_id[] = $item;
         };
-        /*print_r($supplier_id);*/
+        /*print_r($supplier_id);die;*/
+        $supplier_product_id = array();
         if(!empty($supplier_id)){
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
@@ -380,7 +382,7 @@ class MeetingController extends InitController
                 $item = $value->id;
                 $supplier_product_id[] = $item;
             };
-            /*print_r($supplier_product_id);*/
+            /*print_r($supplier_product_id);die;*/
         }
         
         if(!empty($supplier_product_id)){
@@ -399,7 +401,7 @@ class MeetingController extends InitController
                 $item['actual_service_ratio'] = $value->actual_service_ratio;
                 $changdi_fee[] = $item;
             };
-            /*print_r($changdi_fee);*/
+            /*print_r($changdi_fee);die;*/
         }
         
         if(!empty($changdi_fee)){
@@ -727,6 +729,35 @@ class MeetingController extends InitController
         // *********************************************************************************************************************
         $staff_user = Staff::model()->findByPk($_SESSION['userid']);
         $user_department_list= $staff_user['department_list'];
+
+
+
+
+        //取回款记录
+        $payment_data = array(
+                'feast_deposit' => 0,
+                'medium_term' => 0,
+                'final_payments' => 0
+            );
+        $order_payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    )
+            ));
+        /*print_r($order_payment);die;*/
+        foreach ($order_payment as $key => $value) {
+            if($value['type'] == 0){
+                $payment_data['feast_deposit'] += $value['money'];
+            };
+            if($value['type'] == 1){
+                $payment_data['medium_term'] += $value['money'];
+            };
+            if($value['type'] == 2){
+                $payment_data['final_payments'] += $value['money'];
+            };
+        }
+
         
         /*********************************************************************************************************************/
         /*向 VIEW 传数据*/
@@ -746,7 +777,8 @@ class MeetingController extends InitController
             "planner"           => $planner['name'],
             'in_door' => $in_door,
             'out_door' => $out_door,
-            'user_department_list' => $user_department_list
+            'user_department_list' => $user_department_list,
+            'payment_data' => $payment_data
         ));
     }
 
@@ -926,7 +958,7 @@ class MeetingController extends InitController
         $payment= new Order;  
 
         $payment->account_id =$_SESSION['account_id'];
-        $payment->designer_id =0;
+        $payment->designer_id =$_SESSION['userid'];
         $payment->planner_id =$_SESSION['userid'];
         $payment->adder_id =$_SESSION['userid'];
         $payment->staff_hotel_id =$_POST['hotel_id'];

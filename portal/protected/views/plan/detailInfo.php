@@ -156,23 +156,23 @@
         </ul>
     </div>
     <!-- @$ 增加联系人信息，到此div结束-->
-    <!-- <div class="int_ulist_module">
+    <div class="int_ulist_module" style="margin-bottom: 70px;">
         <h4 class="module_title">联系人信息</h4>
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">联系人姓名</span>
                 <div class="int_bar">
-                    <input class="align_r" type="text" id="bride_name" disabled="disabled" value="<?php echo $arr['girl_name'];?>" placeholder="<?php echo $arr['girl_name'];?>"/>
+                    <input class="align_r" type="text" id="link_name" disabled="disabled" value="<?php echo $arr['link_name'];?>" placeholder="<?php echo $arr['girl_name'];?>"/>
                 </div>
             </li>
             <li class="int_ulist_item">
                 <span class="label">手机号</span>
                 <div class="int_bar">
-                    <input class="align_r" type="text" id="bride_phone" disabled="disabled" value="<?php echo $arr['girl_tele'];?>" placeholder="<?php echo $arr['girl_tele'];?>"/>
+                    <input class="align_r" type="text" id="link_phone" disabled="disabled" value="<?php echo $arr['link_phone'];?>" placeholder="<?php echo $arr['girl_tele'];?>"/>
                 </div>
             </li>
         </ul>
-    </div> -->
+    </div>
     <div class="bottom_fixed_bar hid" id='bottom'>
         <div id='save' class="r_btn" id="insert">提交订单</div>
     </div>
@@ -248,8 +248,10 @@
                 bride_name : $("#bride_name").val(),
                 bride_phone : $("#bride_phone").val(),
                 bride_wechat : $("#bride_wechat").val(),
-                bride_qq : $("#bride_qq").val()
-            }
+                bride_qq : $("#bride_qq").val(),
+                link_name : $("#link_name").val(),
+                link_phone : $("#link_phone").val(),
+            };
             return detail_info;
         }
 

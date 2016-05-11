@@ -70,7 +70,7 @@
             <li class="ulist_item flex" id='fuwufei'>
                 服务费
                 <div class="flex1">
-                    <input class="align_r t_green" type="text" value="<?php echo $orderproduct['actual_service_ratio']; ?>" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
+                    <input class="align_r t_green" id="fuwufei_input" type="text" value="<?php echo $orderproduct['actual_service_ratio']; ?>" placeholder="<?php  echo $productData['service_charge_ratio'];?>"/>
                 </div>
             </li>
         <?php
@@ -100,7 +100,7 @@
             <li class="ulist_item flex" id='fuwufei'>
                 服务费
                 <div class="flex1">
-                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  echo $productData['service_charge_ratio'];?>" id="fee"/>
+                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  echo $productData['service_charge_ratio'];?>"/>
                 </div>
             </li>
         <?php
@@ -182,6 +182,8 @@ $(function(){
                 location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
             }else if($.util.param("tab") == "screen"){
                 location.href = "<?php echo $this->createUrl("meeting/lightingscreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+            }else{
+                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             }
             
         });
@@ -204,7 +206,7 @@ $(function(){
             'unit' :" <?php echo $productData['unit'] ?>",
             'actual_unit_cost' : $("#cost").val(),
             'update_time' : update_time,
-            'actual_service_ratio' : "<?php echo $productData['service_charge_ratio']?>"
+            'actual_service_ratio' : $("#fuwufei_input").val()
         };
         /*console.log(get_info);*/
         $.post("<?php echo $this->createUrl('meeting/updatetp');?>",get_info,function(data){  //bacground data    

@@ -21,7 +21,7 @@
         <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div>
         <h6  style="text-align: center;font-size: 2rem;"><?php echo $arr_order_data['order_name']; ?></h6>
         <h6  style="text-align: center;font-size: 1.2rem;">活动日期：<?php echo $arr_order_data['order_date']; ?></h6>
-        <div class="r_btn"  style="font-size: 1.5rem;width: 3rem;">删除订单</div>
+        <div class="r_btn"  style="font-size: 1.5rem;width: 3rem;" id="del">删除订单</div>
     </div>
     <ul class="m-index-list" id="page_list" style="margin-bottom: 10px;">
         <li class="card list_more2" category="appear" status="进行中" id='follow'>
@@ -118,17 +118,17 @@
             <tbody>
             <tr>
                 <td>定金</td>
-                <td>&yen;<?php echo $arr_order_data['feast_deposit']; ?></td>
+                <td>&yen;<?php echo $payment_data['feast_deposit']; ?></td>
                 <!-- <td><?php /*echo *//*$return_bill['first']['order_date'];*/ ?></td> -->
             </tr>
             <tr>
                 <td>中期款</td>
-                <td>&yen;<?php echo $arr_order_data['medium_term']; ?></td>
+                <td>&yen;<?php echo $payment_data['medium_term']; ?></td>
                 <!-- <td><?php /*echo *//*$return_bill['second']['order_date'];*/ ?></td> -->
             </tr>
             <tr>
                 <td>尾款</td>
-                <td>&yen;<?php echo $arr_order_data['final_payments']; ?></td>
+                <td>&yen;<?php echo $payment_data['final_payments']; ?></td>
                 <!-- <td><?php /*echo*/ /*$return_bill['third']['order_date'];*/ ?></td> -->
             </tr>
             </tbody>
@@ -464,7 +464,8 @@
         $("#checkout").on("click",function(){
             if(order_status == 4){
                 $.post("<?php echo $this->createUrl('order/checkoutpost');?>",{type:'meeting',order_id:<?php echo $_GET['order_id']?>},function(){
-                    location.reload();
+                    alert("申请已发送！");
+                    location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>&from=";
                 });
             }else if(order_status == 5){
                 alert("结算中，请耐心等待！");
@@ -496,15 +497,52 @@
         if(order_status != 5){$("#bottom").remove();};
         //点击同意结算
         $("#agree").on("click",function(){
-            $.post("<?php echo $this->createUrl('order/checkoutagree');?>",{type:'design',order_id:<?php echo $_GET['order_id']?>,final_price:<?php echo $arr_total['total_price']?>,final_cost:<?php echo $arr_total['total_cost']?>,final_profit:<?php echo $arr_total['gross_profit']?>,final_profit_rate:<?php echo $arr_total['gross_profit_rate']?>,final_payment:<?php echo $payment_total;?>},function(){
-                location.reload();
+        <?php if(!empty($arr_wed_feast)){?>
+            var data = {
+                type:'design',
+                order_id:<?php echo $_GET['order_id']?>,
+                final_price:<?php echo $arr_total['total_price']?>,
+                final_cost:<?php echo $arr_total['total_cost']?>,
+                final_profit:<?php echo $arr_total['gross_profit']?>,
+                final_profit_rate:<?php echo $arr_total['gross_profit_rate']?>,
+                final_payment:<?php echo ($payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments']);?>,
+                feast_profit:<?php echo $arr_wed_feast['gross_profit']; ?>,
+                other_profit:<?php echo sprintf("%.2f", $arr_total['gross_profit']-$arr_wed_feast['gross_profit']);?>
+            }
+    <?php }else{?>
+            var data = {
+                type:'design',
+                order_id:<?php echo $_GET['order_id']?>,
+                final_price:<?php echo $arr_total['total_price']?>,
+                final_cost:<?php echo $arr_total['total_cost']?>,
+                final_profit:<?php echo $arr_total['gross_profit']?>,
+                final_profit_rate:<?php echo $arr_total['gross_profit_rate']?>,
+                final_payment:<?php echo ($payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments']);?>,
+                feast_profit:0,
+                other_profit:<?php echo $arr_total['gross_profit']?>
+            }
+    <?php }?>
+
+        /*{
+            type:'design',
+            order_id:<?php echo $_GET['order_id']?>,
+            final_price:<?php echo $arr_total['total_price']?>,
+            final_cost:<?php echo $arr_total['total_cost']?>,
+            final_profit:<?php echo $arr_total['gross_profit']?>,
+            final_profit_rate:<?php echo $arr_total['gross_profit_rate']?>,
+            final_payment:<?php echo $payment_total;?>
+        }*/
+            $.post("<?php echo $this->createUrl('order/checkoutagree');?>",data,function(){
+                alert("结算完成！");
+                location.href = "<?php echo $this->createUrl("report/order_report");?>";
             });
         });
         //点击拒绝结算
         $("#refuse").on("click",function(){
             
             $.post("<?php echo $this->createUrl('order/checkoutrefuse');?>",{type:'meeting',order_id:<?php echo $_GET['order_id']?>},function(){
-                location.reload();
+                alert('已拒绝结算！')
+                location.href = "<?php echo $this->createUrl("report/order_report");?>";
             });
         });        
 <?php 
@@ -516,7 +554,7 @@
     });
 
         //删除
-        $(".r_btn").on("click",function(){
+        $("#del").on("click",function(){
             $.post("<?php echo $this->createUrl('order/delorder');?>",{'order_id':<?php echo $_GET['order_id']?>},function(retval){
                 location.href = "<?php echo $this->createUrl('order/order');?>"; 
             });

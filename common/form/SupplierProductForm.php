@@ -79,11 +79,13 @@ class SupplierProductForm extends InitForm
 
     public function SupplierProductIndex3($accountId){
         $SupplierProduct = SupplierProduct::model()->findAll(array(
-                "condition" => "supplier_type_id=:supplier_type_id && category=:category",
+                "condition" => "supplier_type_id=:supplier_type_id && category=:category && account_id=:account_id",
                 "params" => array(
                     ":supplier_type_id" => 2,
                     ":category" => 2,
+                    ":account_id" => $_SESSION['account_id']
                 ),
+                "order" => "unit_price"
             ));
  
         $result = array();
@@ -151,7 +153,7 @@ class SupplierProductForm extends InitForm
     public function getSupplierProductList($accountId)
     {
         $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id && account_id = :account_id",
+                "condition" => "type_id=:type_id ",
                 "params" => array(
                     ":type_id" => 3,
                     ":account_id" => $accountId,
@@ -160,7 +162,7 @@ class SupplierProductForm extends InitForm
         $result = array();
         foreach ($supplier as $key => $value) {
             $item = array();
-            $item['id'] = $value['id'];
+            $item['staff_id'] = $value['staff_id'];
             $service_person = ServicePerson::model()->find(array(
                     'condition' => 'staff_id = :staff_id',
                     'params' => array(
@@ -216,7 +218,31 @@ class SupplierProductForm extends InitForm
 
     public function getSupplierProductList1($accountId)
         {
-            $Supplier = Supplier::model()->findAll(array(
+            $supplier = Supplier::model()->findAll(array(
+                "condition" => "type_id=:type_id ",
+                "params" => array(
+                    ":type_id" => 4,
+                    ":account_id" => $accountId,
+                ),
+            ));
+            $result = array();
+            foreach ($supplier as $key => $value) {
+                $item = array();
+                $item['staff_id'] = $value['staff_id'];
+                $service_person = ServicePerson::model()->find(array(
+                        'condition' => 'staff_id = :staff_id',
+                        'params' => array(
+                                ':staff_id' => $value['staff_id']
+                            )
+                    ));
+                $item['name'] = $service_person['name'];
+                $service_team = ServiceTeam::model()->findByPk($service_person['team_id']);
+                $item['team_name'] = $service_team['name'];
+                $result[] = $item;
+            }
+            return $result;
+
+            /*$Supplier = Supplier::model()->findAll(array(
                 "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 4,
@@ -264,12 +290,36 @@ class SupplierProductForm extends InitForm
             $result[$key]['supplier_name'] = $staff['name'];
             }
            
-            return $result;
+            return $result;*/
         }
 
     public function getSupplierProductList2($accountId)
         {
-            $Supplier = Supplier::model()->findAll(array(
+            $supplier = Supplier::model()->findAll(array(
+                "condition" => "type_id=:type_id ",
+                "params" => array(
+                    ":type_id" => 5,
+                    ":account_id" => $accountId,
+                ),
+            ));
+            $result = array();
+            foreach ($supplier as $key => $value) {
+                $item = array();
+                $item['staff_id'] = $value['staff_id'];
+                $service_person = ServicePerson::model()->find(array(
+                        'condition' => 'staff_id = :staff_id',
+                        'params' => array(
+                                ':staff_id' => $value['staff_id']
+                            )
+                    ));
+                $item['name'] = $service_person['name'];
+                $service_team = ServiceTeam::model()->findByPk($service_person['team_id']);
+                $item['team_name'] = $service_team['name'];
+                $result[] = $item;
+            }
+            return $result;
+
+            /*$Supplier = Supplier::model()->findAll(array(
                 "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 5,
@@ -317,12 +367,36 @@ class SupplierProductForm extends InitForm
             $result[$key]['supplier_name'] = $staff['name'];
             }
            
-            return $result;
+            return $result;*/
         }
         // =======化妆=====
         public function getSupplierProductList3($accountId)
         {
-            $Supplier = Supplier::model()->findAll(array(
+            $supplier = Supplier::model()->findAll(array(
+                "condition" => "type_id=:type_id",
+                "params" => array(
+                    ":type_id" => 6,
+                    ":account_id" => $accountId,
+                ),
+            ));
+            $result = array();
+            foreach ($supplier as $key => $value) {
+                $item = array();
+                $item['staff_id'] = $value['staff_id'];
+                $service_person = ServicePerson::model()->find(array(
+                        'condition' => 'staff_id = :staff_id',
+                        'params' => array(
+                                ':staff_id' => $value['staff_id']
+                            )
+                    ));
+                $item['name'] = $service_person['name'];
+                $service_team = ServiceTeam::model()->findByPk($service_person['team_id']);
+                $item['team_name'] = $service_team['name'];
+                $result[] = $item;
+            }
+            return $result;
+
+            /*$Supplier = Supplier::model()->findAll(array(
                 "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 6,
@@ -370,14 +444,38 @@ class SupplierProductForm extends InitForm
             $result[$key]['supplier_name'] = $staff['name'];
             }
            
-            return $result;
+            return $result;*/
         }
 
 
         // =========其他=========
         public function getSupplierProductList4($accountId)
         {
-            $Supplier = Supplier::model()->findAll(array(
+            $supplier = Supplier::model()->findAll(array(
+                "condition" => "type_id=:type_id",
+                "params" => array(
+                    ":type_id" => 7,
+                    ":account_id" => $accountId,
+                ),
+            ));
+            $result = array();
+            foreach ($supplier as $key => $value) {
+                $item = array();
+                $item['staff_id'] = $value['staff_id'];
+                $service_person = ServicePerson::model()->find(array(
+                        'condition' => 'staff_id = :staff_id',
+                        'params' => array(
+                                ':staff_id' => $value['staff_id']
+                            )
+                    ));
+                $item['name'] = $service_person['name'];
+                $service_team = ServiceTeam::model()->findByPk($service_person['team_id']);
+                $item['team_name'] = $service_team['name'];
+                $result[] = $item;
+            }
+            return $result;
+
+            /*$Supplier = Supplier::model()->findAll(array(
                 "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 7,
@@ -425,7 +523,7 @@ class SupplierProductForm extends InitForm
             $result[$key]['supplier_name'] = $staff['name'];
             }
            
-            return $result;
+            return $result;*/
         }
 
 

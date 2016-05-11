@@ -66,10 +66,10 @@
 
         if(order_status != 5 && order_status != 6){
             $('.r_btn').on('click',function(){
-                location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=new&order_id=<?php echo $_GET["order_id"]?>&followId=';
+                location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=new&order_id=<?php echo $_GET["order_id"]?>&followId=&from=<?php echo $_GET['from']?>';
             });
             $('li').on('click',function(){
-                location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=edit&order_id=<?php echo $_GET["order_id"]?>&followId=' + $(this).attr('followId');
+                location.href='<?php echo $this->createUrl("order/orderinfofollowdetail");?>&type=edit&order_id=<?php echo $_GET["order_id"]?>&from=<?php echo $_GET['from']?>&followId=' + $(this).attr('followId');
             });
         }else{
             $(".r_btn").remove();

@@ -78,9 +78,9 @@
                 }
                 ?>
                 <li class="ulist_item pad_tb10 flex" poduct-id="<?php echo $product['product_id']; ?>">
-                    <div class="flex1">
+                    <!-- <div class="flex1">
                         <img src="images/<?php echo $product['img']; ?>"/>
-                    </div>
+                    </div> -->
                     <div class="flex1">
                         <span class="flex1" style="white-space:nowrap;overflow:hidden;display:block;"><?php echo $product['name']; ?></span>
                         <span class="flex1">&yen;<?php echo $product['unit_price']; ?></span>

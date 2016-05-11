@@ -103,6 +103,8 @@ class OrderFinal extends InitActiveRecord
 		$criteria->compare('final_cost',$this->final_cost,true);
 		$criteria->compare('final_profit',$this->final_profit,true);
 		$criteria->compare('final_profit_rate',$this->final_profit_rate);
+		$criteria->compare('feast_profit',$this->feast_profit);
+		$criteria->compare('other_profit',$this->other_profit);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

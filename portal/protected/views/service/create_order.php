@@ -222,7 +222,7 @@
             new_order_info = get_info();
 
             $.post('<?php echo $this->createUrl("service/insert_order");?>',new_order_info,function(retval){
-                location.href = "<?php echo $this->createUrl("service/my");?>";
+                location.href = "<?php echo $this->createUrl("service/my");?>&code=&service_team_id=<?php echo $_SESSION['service_team_id']?>";
             });
             
         })
@@ -233,7 +233,7 @@
             new_order_info = get_info();
             alert(new_order_info.service_order_id);
             $.post('<?php echo $this->createUrl("service/update_order");?>',new_order_info,function(retval){
-                location.href = "<?php echo $this->createUrl("service/my");?>";
+                location.href = "<?php echo $this->createUrl("service/my");?>&code=&service_team_id=<?php echo $_SESSION['service_team_id']?>";
             });
             
         })

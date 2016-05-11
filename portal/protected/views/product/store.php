@@ -1,22 +1,17 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>产品库</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
-    <link href="css/base.css" rel="stylesheet" type="text/css"/>
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="css/lc_switch.css">
+    <title><?php echo $hotel_name?></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/base1.css">
     <link rel="stylesheet" type="text/css" href="css/order.css">
+    <link rel="stylesheet" type="text/css" href="css/store.css">
 </head>
+
 <body>
-<article>
-    <!-- <div class="tool_bar">
-        <h2 class="page_title">产品库</h2>
-    </div> -->
+    <!--导航-->
     <nav class="fixed_nav" id="main_nav">
         <ul>
             <li id="product_store" class="active">
@@ -33,203 +28,112 @@
             </li>
             <li id="finance_report">
                 <span></span>
-                <p class="cat_name">财报</p>
+                <p class="cat_name">我的业绩</p>
             </li>
         </ul>
     </nav>
-    <nav style='margin-bottom:80px;'>
-        <ul id="product">
-            <li supplier-type="2" category="2">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2">
-                    <div class="cat_icon">
-                        <img src="images/hunyan.png"/>
-                    </div>
-                    <p class="cat_name">婚宴</p>
-                </a>
-            </li>
-            <li supplier-type="2" category="1">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1">
-                    <div class="cat_icon">
-                        <img src="images/gendan.png"/>
-                    </div>
-                    <p class="cat_name">会议餐</p>
-                </a>
-            </li>
-            <li supplier-type="22" category="2">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=2">
-                    <div class="cat_icon">
-                        <img src="images/taoxi.png"/>
-                    </div>
-                    <p class="cat_name">婚礼套系</p>
-                </a>
-            </li>
-            <li supplier-type="22" category="1">
-                <a href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=1">
-                    <div class="cat_icon">
-                        <img src="images/taoxi.png"/>
-                    </div>
-                    <p class="cat_name">会议套系</p>
-                </a>
-            </li>
-            <li supplier-type="20" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/hunyan.png"/>
-                    </div>
-                    <p class="cat_name">婚礼场布</p>
-                </a>
-            </li>
-            <li supplier-type="3" category="2">
-                <a href="<?php echo $this->createUrl("service/teamlist");?>&service_type=3">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">主持人</p>
-                </a>
-            </li>
-            <li supplier-type="4" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">摄像师</p>
-                </a>
-            </li>
-            <li supplier-type="5" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">摄影师</p>
-                </a>
-            </li>
-            <li supplier-type="6" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">化妆师</p>
-                </a>
-            </li>
-            <li supplier-type="7" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">其他人员</p>
-                </a>
-            </li>
-            <li supplier-type="8" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/taoxi.png"/>
-                    </div>
-                    <p class="cat_name">灯光</p>
-                </a>
-            </li>
-            <li supplier-type="9" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/taoxi.png"/>
-                    </div>
-                    <p class="cat_name">视频</p>
-                </a>
-            </li>
-            <li supplier-type="10" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/queren.png"/>
-                    </div>
-                    <p class="cat_name">平面设计</p>
-                </a>
-            </li>
-            <li supplier-type="11" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/queren.png"/>
-                    </div>
-                    <p class="cat_name">视频设计</p>
-                </a>
-            </li>
-            <li supplier-type="12" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">婚纱礼服</p>
-                </a>
-            </li>
-            <li supplier-type="13" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dudaohui.png"/>
-                    </div>
-                    <p class="cat_name">婚礼用品</p>
-                </a>
-            </li>
-            <li supplier-type="14" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dianli.png"/>
-                    </div>
-                    <p class="cat_name">酒水</p>
-                </a>
-            </li>
-            <li supplier-type="15" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/dianli.png"/>
-                    </div>
-                    <p class="cat_name">车辆</p>
-                </a>
-            </li>
-            <li supplier-type="17s" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/cehuashi.png"/>
-                    </div>
-                    <p class="cat_name">策划费</p>
-                </a>
-            </li>
-            <li supplier-type="21" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/cehuashi.png"/>
-                    </div>
-                    <p class="cat_name">杂费</p>
-                </a>
-            </li>
-            <!-- <li supplier-type="18" category="1">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/cehuashi.png"/>
-                    </div>
-                    <p class="cat_name">会议税费</p>
-                </a>
-            </li>
-            <li supplier-type="18" category="2">
-                <a href="#">
-                    <div class="cat_icon">
-                        <img src="images/cehuashi.png"/>
-                    </div>
-                    <p class="cat_name">婚礼税费</p>
-                </a>
-            </li> -->
-        </ul>
-    </nav>
-</article>
-<script src="js/zepto.min.js"></script>
-<script src="js/common.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/lc_switch.js" type="text/javascript"></script>
-<script type="text/javascript" src='js/nav.js'></script>
+
+    <article class="store_container">
+        <!--套系-->
+        <section class="store_module">
+            <div class="flexbox v_center h2_box" style="height:2rem;">
+                <span></span>
+                <h2>套系</h2>
+                <span></span>
+            </div>
+            <ul class="module_con store_set_list flexbox">
+                <li>
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2">
+                        <img class="icon" src="images/set01.png" alt="">
+                        <div class="info flex1">
+                            <p>婚宴</p>
+                            <p>20元起</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1">
+                        <img class="icon" src="images/set02.png" alt="">
+                        <div class="info flex1">
+                            <p>会议餐</p>
+                            <p>20元起</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=2">
+                        <img class="icon" src="images/set03.png" alt="">
+                        <div class="info flex1">
+                            <p>婚礼套系</p>
+                            <p>20元起</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=22&category=1">
+                        <img class="icon" src="images/set04.png" alt="">
+                        <div class="info flex1">
+                            <p>会议套系</p>
+                            <p>20元起</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <!--服务人员-->
+        <section class="store_module">
+            <div class="flexbox v_center h2_box"  style="height:2rem;">
+                <span></span>
+                <h2>服务人员</h2>
+                <span></span>
+            </div>
+            <ul class="module_con store_man_list flexbox">
+                <li>
+                    <a href="<?php echo $this->createUrl('service/list');?>&type_id=3&category=2"><img src="images/man02.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->createUrl('service/list');?>&type_id=5&category=2"><img src="images/man01.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->createUrl('service/list');?>&type_id=4&category=2"><img src="images/man03.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->createUrl('service/list');?>&type_id=6&category=2"><img src="images/man04.png" alt="">
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <!--婚礼定制-->
+        <section class="store_module">
+            <div class="flexbox v_center h2_box"  style="height:2rem;">
+                <span></span>
+                <h2>婚礼定制</h2>
+                <span></span>
+            </div>
+            <ul class="module_con diy_list">
+                <li>
+                    <a class="flexbox v_center" style="height:4rem;" href="javascript:;">
+                        <img src="images/set05.png" alt="">
+                        <div class="info flex1">
+                            <p>婚礼定制</p>
+                            <p>婚礼定制婚礼定制婚礼定制</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </article>
+
+    <script type="text/javascript" src='js/zepto.min.js'></script>
+    <script src="js/common.js"></script>
+    <script type="text/javascript" src='js/nav.js'></script>
+
 <script>
     $(function () {
-        $("#product li").on("click",function(){
-            if($(this).attr("supplier-type") != "18"){
-                location.href = "<?php echo $this->createUrl('product/list');?>&supplier_type=" + $(this).attr("supplier-type") + "&category=" + $(this).attr("category");
-            };
-        });
 
         //导航
         $("#product_store").on("click",function(){
@@ -241,12 +145,27 @@
         $("#order").on("click",function(){
             location.href = "<?php echo $this->createUrl('order/order');?>";
         });
-        $("#finance_report").on("click",function(){
-            
+        $("#finance_report").on("click",function(){            
             location.href = "<?php echo $this->createUrl('report/financereport');?>";
         });
+
+
+        if("<?php echo $user_type ?>" == "1"){
+            var html ='<li id="order_count"><span></span><p class="cat_name">订单统计</p></li><li id="hotel_finance_report"><span></span><p class="cat_name">本店财报</p></li>';
+            $("#order").remove();
+            $("#finance_report").remove();
+            $("#index").after(html);
+            $("#order_count").on("click",function(){
+                location.href = "<?php echo $this->createUrl('report/order_report');?>";
+            });
+            $("#hotel_finance_report").on("click",function(){
+                location.href = "<?php echo $this->createUrl('report/hotel_finance_report');?>";
+            });
+        };
+        
 
     })
 </script>
 </body>
+
 </html>

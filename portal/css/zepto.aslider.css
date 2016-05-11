@@ -31,6 +31,7 @@
 .aslider .scroll {
     overflow: hidden;
     height: 100%;
+    margin-bottom: 80px;
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
     -ms-box-flex: 1;

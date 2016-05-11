@@ -1246,7 +1246,7 @@ class DesignController extends InitController
         $criteria3->addCondition("id=:id");
         $criteria3->params[':id']=$orderId; 
         $order_data = Order::model()->find($criteria3);
-        /*print_r($order_data);*/
+        /*print_r($order_data);die;*/
 
         //查找策划师姓名
         $criteria3 = new CDbCriteria; 
@@ -1306,30 +1306,38 @@ class DesignController extends InitController
         };
 
         //取回款记录
-        $ordre_payment = OrderPayment::model()->findAll(array(
+        $payment_data = array(
+                'feast_deposit' => 0,
+                'medium_term' => 0,
+                'final_payments' => 0
+            );
+        $order_payment = OrderPayment::model()->findAll(array(
                 'condition' => 'order_id=:order_id',
                 'params' => array(
                         ':order_id' => $_GET['order_id']
                     )
             ));
-        foreach ($ordre_payment as $key => $value) {
+        /*print_r($order_payment);die;*/
+        foreach ($order_payment as $key => $value) {
             if($value['type'] == 0){
-                $order_data['feast_deposit'] += $value['money'];
+                $payment_data['feast_deposit'] += $value['money'];
             };
             if($value['type'] == 1){
-                $order_data['medium_term'] += $value['money'];
+                $payment_data['medium_term'] += $value['money'];
             };
             if($value['type'] == 2){
-                $order_data['final_payments'] += $value['money'];
+                $payment_data['final_payments'] += $value['money'];
             };
         }
+
+
 
         // *********************************************************************************************************************
         // 查访问者，所在部门
         // *********************************************************************************************************************
         $staff_user = Staff::model()->findByPk($_SESSION['userid']);
         $user_department_list= $staff_user['department_list'];
-
+        /*print_r($in_door);die;*/
         $this->render("bill",array(
             "arr_wed_feast" => $arr_wed_feast,
             "arr_video" => $arr_video,
@@ -1357,7 +1365,8 @@ class DesignController extends InitController
             "select_reference"  => $select_reference,
             'in_door' => $in_door,
             'out_door' => $out_door,
-            'user_department_list' => $user_department_list
+            'user_department_list' => $user_department_list,
+            'payment_data' => $payment_data
         ));
 
     }
@@ -2986,15 +2995,18 @@ class DesignController extends InitController
 
         $host_data = $this -> actionGetOrderProduct(3);
         $host_id = array();
-        foreach ($host_data as $key => $value) {
+        /*foreach ($host_data as $key => $value) {
             $item = SupplierProduct::model()->findByPk($value['product_id']);
             $host_id[] = $item['supplier_id'];
-        };
-        
+        };*/
+        $host_selected_staff_id = array();
         $host_total = 0 ;
         if(!empty($host_data)){
             foreach ($host_data as $key => $value) {
                 $host_total += $value['actual_price']*$value['unit'];
+                $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
+                $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+                $host_selected_staff_id[] = $supplier['staff_id'];
             }
         }
 
@@ -3004,9 +3016,13 @@ class DesignController extends InitController
 
         $video_data = $this -> actionGetOrderProduct(4);
         $video_total = 0 ;
+        $video_selected_staff_id = array();
         if(!empty($video_data)){
             foreach ($video_data as $key => $value) {
                 $video_total += $value['actual_price']*$value['unit'];
+                $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
+                $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+                $video_selected_staff_id[] = $supplier['staff_id'];
             }
         }
 
@@ -3016,9 +3032,13 @@ class DesignController extends InitController
 
         $camera_data = $this -> actionGetOrderProduct(5);
         $camera_total = 0 ;
+        $camera_selected_staff_id = array();
         if(!empty($camera_data)){
             foreach ($camera_data as $key => $value) {
                 $camera_total += $value['actual_price']*$value['unit'];
+                $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
+                $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+                $camera_selected_staff_id[] = $supplier['staff_id'];
             }
         }
 
@@ -3028,9 +3048,13 @@ class DesignController extends InitController
 
         $makeup_data = $this -> actionGetOrderProduct(6);
         $makeup_total = 0 ;
+        $makeup_selected_staff_id = array();
         if(!empty($makeup_data)){
             foreach ($makeup_data as $key => $value) {
                 $makeup_total += $value['actual_price']*$value['unit'];
+                $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
+                $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+                $makeup_selected_staff_id[] = $supplier['staff_id'];
             }
         }
 
@@ -3040,9 +3064,13 @@ class DesignController extends InitController
 
         $other_data = $this -> actionGetOrderProduct(7);
         $other_total = 0 ;
+        $other_selected_staff_id = array();
         if(!empty($other_data)){
             foreach ($other_data as $key => $value) {
                 $other_total += $value['actual_price']*$value['unit'];
+                $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
+                $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
+                $other_selected_staff_id[] = $supplier['staff_id'];
             }
         }
         
@@ -3078,7 +3106,11 @@ class DesignController extends InitController
                 'makeup_data' => $makeup_data,
                 'other_data' => $other_data,
                 'serve_bill' => $serve_bill,
-                
+                'other_selected_staff_id' =>$other_selected_staff_id,
+                'makeup_selected_staff_id' => $makeup_selected_staff_id,
+                'camera_selected_staff_id' => $camera_selected_staff_id,
+                'video_selected_staff_id' => $video_selected_staff_id,
+                'host_selected_staff_id' => $host_selected_staff_id,
             ));
     }
 
@@ -3086,8 +3118,9 @@ class DesignController extends InitController
     {
         $OrderHost = SupplierProduct::model()->findAll(array(
             "select" => "id",
-            "condition" => "supplier_type_id=:supplier_type_id && category=:category",
-            "params" => array( ":supplier_type_id" => $supplier_type_id , ":category" => 2 ),
+            "condition" => "supplier_type_id=:supplier_type_id && category=:category && account_id=:account_id",
+            "params" => array( ":supplier_type_id" => $supplier_type_id , ":category" => 2 , ":account_id" => $_SESSION['account_id']),
+            "order" => "unit_price"
 
         ));
 
@@ -3143,6 +3176,7 @@ class DesignController extends InitController
         $orderproduct->remark = $_POST['remark'];
 
         $orderproduct->save();
+
     }
 
     public function actionSavehost()

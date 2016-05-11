@@ -90,7 +90,7 @@
                 </div>
             </li> -->
         </ul>
-        <div id="more" class="weui_btn weui_btn_primary">查看更多……</div>
+       <!--  <div id="more" class="weui_btn weui_btn_primary">查看更多……</div> -->
     </div>
 </article>
 <script src="js/zepto.min.js"></script>
@@ -143,7 +143,7 @@
                 <?php
                 foreach ($arr_category_host as $key => $value) {?>
                     var html_host
-                    html_host = '<li class="ulist_item list_more " host-id="<?php  echo $value['id'];?>">';//id由php从后端取数，格式为host＋序号；
+                    html_host = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';//id由php从后端取数，格式为host＋序号；
                     html_host += '<div class="item">';
                     html_host += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_host += '</div><i class="name"><?php echo $value['team_name'];?></i>';
@@ -156,10 +156,10 @@
                     //先判断是否已经选择主持人
 
                 <?php
-                foreach ($host_id as $key => $value) {
+                foreach ($host_selected_staff_id as $key => $value) {
                 ?>
-                    $("[host-id='<?php echo $value?>']").removeClass("list_more");
-                    $("[host-id='<?php echo $value?>']").addClass("selected");
+                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[staff-id='<?php echo $value?>']").addClass("selected");
                 <?php 
                 }
                 ?>
@@ -167,11 +167,11 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/hostDetail", array());?>&supplier_id=" + $(this).attr("host-id") + "&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
-                    });
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                    })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/hostDetail", array());?>&supplier_id=" + $(this).attr("host-id") + "&type=new&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
-                    });
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                    })
                     break;
 
                 case "video":
@@ -191,39 +191,32 @@
 
                 );*/
                 foreach ($arr_category_video as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $arr_video[$key1] = $value1;
-                }
                 ?>
                     var html_video;
-                    html_video = '<li class="ulist_item list_more " video-id="<?php  echo $arr_video['product_id'];?>">';
+                    html_video = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
                     html_video += '<div class="item ">';
-                    html_video += '<p class="name"><?php  echo $arr_video['name'];?></p>';
-                    html_video += '</div><i class="name"><?php  echo $arr_video['supplier_name'];?></i>';//!$  此处加入了供应商姓名
+                    html_video += '<p class="name"><?php  echo $value['name'];?></p>';
+                    html_video += '</div><i class="name"><?php  echo $value['team_name'];?></i>';//!$  此处加入了供应商姓名
                     html_video += '</li>';
                     $(".charge_list").prepend(html_video); //打印新的订单列表
                 <?php } ?>
                     //先判断是否已经选择摄像                
 
                 <?php
-                foreach ($video_data as $key => $value) {
-                    $data=$value['product_id'];
+                foreach ($video_selected_staff_id as $key => $value) {
                 ?>
-                    var video_id = "<?php echo $data; ?>";   //php从后端取得此数，此处暂时做个示例
-                    if (video_id != "") {
-                        $("[video-id='" + video_id + "']").removeClass("list_more");
-                        $("[video-id='" + video_id + "']").addClass("selected");
-                    };
+                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[staff-id='<?php echo $value?>']").addClass("selected");
                 <?php 
                 }
                 ?>
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("video-id") + "&type=edit&tab=video&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=video&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("video-id") + "&type=new&tab=video&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -245,40 +238,33 @@
 
                 );*/
                 foreach ($arr_category_camera as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $arr_camera[$key1] = $value1;
-                }
                 ?>
                     var html_camera;
-                    html_camera = '<li class="ulist_item list_more " camera-id="<?php  echo $arr_camera['product_id'];?>">';
+                    html_camera = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
                     html_camera += '<div class="item ">';
-                    html_camera += '<p class="name"><?php  echo $arr_camera['name'];?></p>';
-                    html_camera += '</div><i class="name"><?php  echo $arr_camera['supplier_name'];?></i>';
+                    html_camera += '<p class="name"><?php  echo $value['name'];?></p>';
+                    html_camera += '</div><i class="name"><?php  echo $value['team_name'];?></i>';
                     html_camera += '</li>';
 
                     $(".charge_list").prepend(html_camera); //打印新的订单列表
                 <?php } ?>
                     //先判断是否已经选择摄影
                 <?php
-                foreach ($camera_data as $key => $value) {
-                    $data=$value['product_id'];
+                foreach ($camera_selected_staff_id as $key => $value) {
                 ?>
-                    var camera_id = "<?php echo $data; ?>";   //php从后端取得此数，此处暂时做个示例
-                    if (camera_id != "") {
-                        $("[camera-id='" + camera_id + "']").removeClass("list_more");
-                        $("[camera-id='" + camera_id + "']").addClass("selected");
-                    };
-                <?php
+                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[staff-id='<?php echo $value?>']").addClass("selected");
+                <?php 
                 }
                 ?>
                     
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("camera-id") + "&type=edit&tab=camera&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=camera&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("camera-id") + "&type=new&tab=camera&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -301,40 +287,33 @@
 
                 );*/
                 foreach ($arr_category_makeup as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $arr_makeup[$key1] = $value1;
-                }
                 ?>
                     var html_makeup;
-                    html_makeup = '<li class="ulist_item list_more " makeup-id="<?php  echo $arr_makeup['product_id'];?>">';
+                    html_makeup = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
                     html_makeup += '<div class="item ">';
-                    html_makeup += '<p class="name"><?php  echo $arr_makeup['name'];?></p>';
-                    html_makeup += '</div><i class="name"><?php  echo $arr_makeup['supplier_name'];?></i>';   //!$ 此处去掉了价格，加入了供应商姓名
-                    html_camera += '</li>';
+                    html_makeup += '<p class="name"><?php  echo $value['name'];?></p>';
+                    html_makeup += '</div><i class="name"><?php  echo $value['team_name'];?></i>';   //!$ 此处去掉了价格，加入了供应商姓名
+                    html_makeup += '</li>';
 
                     $(".charge_list").prepend(html_makeup); //打印新的订单列表
                 <?php  } ?>
                     //先判断是否已经选择摄影
                 <?php
-                foreach ($makeup_data as $key => $value) {
-                    $data=$value['product_id'];
+                foreach ($makeup_selected_staff_id as $key => $value) {
                 ?>
-                    var makeup_id = "<?php echo $data; ?>";   //php从后端取得此数，此处暂时做个示例
-                    if (makeup_id != "") {
-                        $("[makeup-id='" + makeup_id + "']").removeClass("list_more");
-                        $("[makeup-id='" + makeup_id + "']").addClass("selected");
-                    };
-                <?php
+                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[staff-id='<?php echo $value?>']").addClass("selected");
+                <?php 
                 }
                 ?>
                     
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("makeup-id") + "&type=edit&tab=makeup&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=makeup&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("makeup-id") + "&type=new&tab=makeup&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -362,34 +341,30 @@
                 }
                 ?>
                     var html_other;
-                    html_other = '<li class="ulist_item list_more" other-id="<?php  echo $arr_makeup['product_id'];?>">';
+                    html_other = '<li class="ulist_item list_more" staff-id="<?php  echo $value['staff_id'];?>">';
                     html_other += '<div class="item ">';
-                    html_other += '<p class="name"><?php  echo $arr_makeup['name'];?></p>';
-                    html_other += '</div><i class="name"><?php  echo $arr_makeup['supplier_name'];?></i>'; //!$ 此处加入了供应商姓名
+                    html_other += '<p class="name"><?php  echo $value['name'];?></p>';
+                    html_other += '</div><i class="name"><?php  echo $value['team_name'];?></i>'; //!$ 此处加入了供应商姓名
                     html_other += '</li>';
                     $(".charge_list").prepend(html_other); //打印新的订单列表
                 <?php  } ?>
                     //先判断是否已经选择摄影
                 <?php
-                foreach ($other_data as $key => $value) {
-                    $data=$value['product_id'];
+                foreach ($other_selected_staff_id as $key => $value) {
                 ?>
-                    var other_id = "<?php echo $data; ?>";   //php从后端取得此数，此处暂时做个示例
-                    if (other_id != "") {
-                        $("[other-id='" + other_id + "']").removeClass("list_more");
-                        $("[other-id='" + other_id + "']").addClass("selected");
-                    };
-                <?php
+                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[staff-id='<?php echo $value?>']").addClass("selected");
+                <?php 
                 }
                 ?>
                     
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("other-id") + "&type=edit&tab=other&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=other&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("other-id") + "&type=new&tab=other&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
             }

@@ -13,7 +13,7 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">婚礼</h2>
         <div class="r_btn">确定</div>
     </div>
@@ -32,7 +32,7 @@
                     <input class="align_r" type="text" placeholder="手机号" id="link_phone"/>
                 </div>
             </li>
-            <li class="int_ulist_item">
+            <!-- <li class="int_ulist_item">
                 <span class="label">微信</span>
                 <div class="int_bar">
                     <input class="align_r" type="text" placeholder="微信" id="link_wechat"/>
@@ -43,7 +43,7 @@
                 <div class="int_bar">
                     <input class="align_r" type="text" placeholder="QQ" id="link_qq"/>
                 </div>
-            </li>
+            </li> -->
         </ul>
     </div>
 </article>
@@ -52,36 +52,24 @@
 <script>
     $(function () {
         //点击返回按钮
-        $(".l_btn").on("click", function () {
-            location.href = "<?php echo $this->createUrl("plan/customerName", array());?>&from=" + $.util.param("from");
-        })
+        /*$(".l_btn").on("click", function () {
+            location.href = "<?php echo $this->createUrl("plan/customerName", array());?>&from=" + $.util.param("from") + "order_id=" + $.util.param("order_id");
+        })*/
 
         //点确定按钮
         $(".r_btn").on("click", function () {
-            var get_info = JSON.stringify(getinfo());
-            localStorage.setItem("linkman_info", get_info);
-            //console.log(localStorage.getItem("customer_info"));
-            //把linkman_info、customer_info,两个json合并成一个wed_second
-            var wed_second = {
-                "customer_info": $.parseJSON(localStorage.getItem("customer_info")),
-                "linkman_info": $.parseJSON(localStorage.getItem("linkman_info"))
-            }
+            var get_info = getinfo();
+
             if ($("#link_name").val() == "") {
                 alert("请输入联系人姓名");
             } else if ($("#link_phone").val() == "" || !$.regex.isPhone($("#link_phone").val())) {
                 alert("请输入正确的联系人手机号");
-            } else {
-                /*$.postJSON("#.php",wed_second,function(data){
-                 if(data.success){*/
-                localStorage.removeItem("customer_info");
-                localStorage.removeItem("linkman_info");
-                location.href = "<?php echo $this->createUrl("plan/detail", array());?>&from=my_order"//&order_id=" + data;
-                /*}else{
-                 alert("出错了，再试一下");
-                 }*/
-            }
-
-        })
+            };
+            
+            $.post('<?php echo $this->createUrl("plan/linkmaninsert", array());?>',get_info,function(){
+                location.href = "<?php echo $this->createUrl("order/order", array());?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";
+            });
+        });
 
 
         //获得页面数据
@@ -89,11 +77,12 @@
             var get_info = {
                 link_name: $("#link_name").val(),
                 link_phone: $("#link_phone").val(),
-                link_wechat: $("#link_wechat").val(),
-                link_qq: $("#link_qq").val()
+                /*link_wechat: $("#link_wechat").val(),
+                link_qq: $("#link_qq").val()*/
+                order_id:$.util.param("order_id"),
             }
             return get_info;
-        }
+        };
     })
 </script>
 </body>

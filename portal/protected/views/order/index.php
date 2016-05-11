@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>CRM</title>
+<title><?php echo $hotel_name?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -35,15 +35,15 @@
             </li>
             <li id="finance_report">
                 <span></span>
-                <p class="cat_name">财报</p>
+                <p class="cat_name">我的业绩</p>
             </li>
         </ul>
     </nav>
 
-  <div class="header">
+  <!-- <div class="header"> -->
     <!-- 当从my_order进去才显示返回按钮 -->
     <!-- <div class="l_btn" data-icon="&#xe679;"></div>  -->
-    <h2 class="page_title"><?php echo $hotel_name?>
+    <!-- <h2 class="page_title"> -->
     <?php 
         /*$user_type = "策划"; //用户类型+++++++++++++++++++++++++++所需数据
       if($user_type == "前台" ){ //当用户类型为“前台”时
@@ -75,12 +75,12 @@
         echo '</select>';
       }*/
   ?> 
-    </h2>
+    <!-- </h2> -->
 
     <!-- 当从my_order进入，则显示下一步按钮 -->
     <!-- <div class="r_btn" data-icon="&#xe767;"></div> -->
     
-  </div>
+  <!-- </div> -->
   <!-- 日历 -->
   <section class="calendar" id="calendar" data-id="2">
     <div class="month_control">
@@ -88,7 +88,7 @@
       <h4 class="calendar_title"><span class="year">2015年</span><span class="month">8月</span></h4>
       <span class="next" id="next_m" data-icon="&#xf011b;"></span>
     </div>
-    <div class="date_container">
+    <div class="date_container" id="data_container">
       <ul class="week">
         <li class="days_title weekend" data-id="6">日</li>
         <li class="days_title" data-id="0">一</li>
@@ -98,7 +98,7 @@
         <li class="days_title" data-id="4">五</li>
         <li class="days_title weekend" data-id="5">六</li>
       </ul>
-      <ol class="dates">
+      <ol class="dates ">
       </ol>
     </div>
   </section>
@@ -108,12 +108,15 @@
     <ul class="order_ulist" id='this_order'>
     </ul>
   </div>
-<!-- <script src="js/jquery.js"></script> -->
+
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.calendar.js"></script>
+<!-- <script src="js/jquery.1.7.2.min.js"></script> -->
 
 <script src="js/common.js"></script>
 <script type="text/javascript" src='js/nav.js'></script>
+<script type="text/javascript" src="js/mobile_touchwipe.js"></script>
+
 <script>
 $(function() {
   var first_show_year = <?php echo $first_show_year ;?>;
@@ -284,6 +287,12 @@ $(function() {
     location.href = "<?php echo $this->createUrl("order/selecttype", array());?>&code=";
   })
 
+  //日历左右滑动
+   $("#data_container").touchwipe({
+      wipeLeft:function(){ $("#next_m").trigger("click")},
+      wipeRight:function(){$("#prev_m").trigger("click")},
+  });
+
 
   /* ===========================
    * 显示选择日期的订单情况
@@ -304,6 +313,8 @@ $(function() {
 
 
 
+
+
     //导航
     $("#product_store").on("click",function(){
         location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
@@ -318,6 +329,21 @@ $(function() {
         
         location.href = "<?php echo $this->createUrl('report/financereport');?>";
     });
+
+    if("<?php echo $user_type ?>" == "1"){
+        var html ='<li id="order_count"><span></span><p class="cat_name">订单统计</p></li><li id="hotel_finance_report"><span></span><p class="cat_name">本店财报</p></li>';
+        $("#order").remove();
+        $("#finance_report").remove();
+        $("#index").after(html);
+        $("#order_count").on("click",function(){
+            location.href = "<?php echo $this->createUrl('report/order_report');?>";
+        });
+        $("#hotel_finance_report").on("click",function(){
+            location.href = "<?php echo $this->createUrl('report/hotel_finance_report');?>";
+        });
+    };
+
+
 
 
 });

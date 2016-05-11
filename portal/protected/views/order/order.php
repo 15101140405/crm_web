@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>订单</title>
+    <title><?php echo $hotel_name?></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/base1.css">
@@ -14,7 +14,7 @@
 
 </head>
 
-<body>  
+<body class="store_container">  
     <!--导航-->  
     <nav class="fixed_nav" id="main_nav">
         <ul>
@@ -32,7 +32,7 @@
             </li>
             <li id="finance_report">
                 <span></span>
-                <p class="cat_name">财报</p>
+                <p class="cat_name">我的业绩</p>
             </li>
         </ul>
     </nav>
@@ -60,49 +60,49 @@
         </ul>
     </section> -->
     <!--订单列表-->
-    <ul class="order_list" style="">
-<?php foreach ($order_data as $key => $value) {?>
-        <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>">
-            <h3><?php echo $value['order_name']?></h3>
-            <div class="info flexbox flexcenter_v">
-                <div class="flex1" order-status="<?php echo $value['order_status']?>">
-                    <span class="tag " ></span>
-                </div>
+        <ul class="order_list" style="">
+    <?php foreach ($order_data as $key => $value) {?>
+            <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>">
+                <h3><?php echo $value['order_name']?></h3>
+                <div class="info flexbox flexcenter_v">
+                    <div class="flex1" order-status="<?php echo $value['order_status']?>">
+                        <span class="tag " ></span>
+                    </div>
 
-                <div class="con flex1">
-                    <p class="flexbox"><img src="images/man_icon.png" alt="">负责人</p>
-                    <p><?php echo $value['planner_name']?></p>
+                    <div class="con flex1">
+                        <p class="flexbox"><img src="images/man_icon.png" alt="">负责人</p>
+                        <p><?php echo $value['planner_name']?></p>
+                    </div>
+                    <div class="con flex1">
+                        <p class="flexbox"><img src="images/time_s_icon.png" alt="">订单日期</p>
+                        <p><?php echo $value['order_date']?></p>
+                    </div>
                 </div>
-                <div class="con flex1">
-                    <p class="flexbox"><img src="images/time_s_icon.png" alt="">订单日期</p>
-                    <p><?php echo $value['order_date']?></p>
+            </li>
+    <?php }?>
+        </ul>
+        <!--悬浮按钮-->
+        <div class="add_btn"></div>
+        <!--侧滑时间筛选-->
+        <aside class="aslider time_filter_aslider" data-aslider="time_filter">
+            <div class="wrapper">
+                <h2>按时间筛选</h2>
+                <div class="slider">
+                    <ul class="time_list">
+                        <li>创建时间</li>
+                        <li class="in flexbox">
+                            <span>开始时间</span>
+                            <input type="text" name="appDates_tart" id="appDate_start" placeholder="年月日">
+                        </li>
+                        <li class="in flexbox">
+                            <span>结束时间</span>
+                            <input  type="text" name="appDate_end" id="appDate_end" placeholder="年月日">
+                        </li>
+                    </ul>
+                    <button class="close">确定</button>
                 </div>
             </div>
-        </li>
-<?php }?>
-    </ul>
-    <!--悬浮按钮-->
-    <div class="add_btn"></div>
-    <!--侧滑时间筛选-->
-    <aside class="aslider time_filter_aslider" data-aslider="time_filter">
-        <div class="wrapper">
-            <h2>按时间筛选</h2>
-            <div class="slider">
-                <ul class="time_list">
-                    <li>创建时间</li>
-                    <li class="in flexbox">
-                        <span>开始时间</span>
-                        <input type="text" name="appDates_tart" id="appDate_start" placeholder="年月日">
-                    </li>
-                    <li class="in flexbox">
-                        <span>结束时间</span>
-                        <input  type="text" name="appDate_end" id="appDate_end" placeholder="年月日">
-                    </li>
-                </ul>
-                <button class="close">确定</button>
-            </div>
-        </div>
-    </aside>
+        </aside>
 
     <script type="text/javascript" src='js/zepto.min.js'></script>
     <script type="text/javascript" src='js/base.js'></script>

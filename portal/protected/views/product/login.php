@@ -28,25 +28,22 @@
     <div class="int_ulist_module">
         <ul class="int_ulist">
             <li class="int_ulist_item name">
-                <span class="label" >ID</span>
+                <span class="label" >手机号</span>
                 <div class="int_bar">
-                    <input class="align_r" id="userid" type="text" placeholder="请输入员工ID" />
+                    <input class="align_r" id="phone" type="text" placeholder="请输入手机号"/>
                 </div>
             </li>
         </ul>
 
     <div class="btn" id="insert">登录</div>
 </article>
-
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js" type="text/javascript"></script>
 <script>
     $(function () {
         //点击新增
         $('#insert').on("click",function(){
-            alert(1);
-            $.post('<?php echo $this->createUrl("product/setuserid");?>',{userid:$("#userid").val()},function(data){
-                alert(2);
+            $.post('<?php echo $this->createUrl("product/setuserid");?>',{phone:$("#phone").val()},function(data){
                 if(data=="success"){
                     location.reload();   
                 }else{

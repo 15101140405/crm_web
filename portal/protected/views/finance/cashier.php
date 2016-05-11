@@ -146,7 +146,7 @@
         //点击编辑
         $("#update").on("click",function(){
 
-            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').attr('way-value'),payment_type:$('#type_ul .round_select_selected').attr('type-value'),paymentId:"<?php echo $_GET["paymentId"]?>",remarks:$("#remark").val()};
+            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').attr('way-value'),payment_type:$('#type_ul .round_select_selected').attr('type-value'),paymentId:"<?php echo $_GET["paymentId"]?>",remarks:$("#remark").val(),order_id:<?php echo $_GET["order_id"]?>};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/orderpaymentupdate");?>',data,function(retval){
                 location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>&from=<?php echo $_GET['from']?>';

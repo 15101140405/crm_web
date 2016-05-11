@@ -48,5 +48,5 @@ $(function () {
         , startYear: currYear - 10, //开始年份
         endYear: currYear + 10 //结束年份
     };
-    $("#appDate_start,#appDate_end").mobiscroll($.extend(opt['date'], opt['default']));
+    $("#appDate_start,#appDate_end,#appDate").mobiscroll($.extend(opt['date'], opt['default']));
 })

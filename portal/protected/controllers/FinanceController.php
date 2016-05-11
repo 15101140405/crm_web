@@ -332,6 +332,9 @@ class FinanceController extends InitController
     public function actionOrderpaymentupdate()
     {
         OrderPayment::model()->updateByPk($_POST['paymentId'],array('money'=>$_POST['payment'],'time'=>$_POST['payment_time'],'remarks'=>$_POST['remarks'],'way'=>$_POST['payment_way'],'type'=>$_POST['payment_type']));
+        if($_POST['payment_type'] == "0"){Order::model()->updateByPk($_POST['order_id'],array('order_status'=>2));};
+        if($_POST['payment_type'] == "1"){Order::model()->updateByPk($_POST['order_id'],array('order_status'=>3));};
+        if($_POST['payment_type'] == "2"){Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4));};
     }
 
     public function actionOrderpaymentdel()

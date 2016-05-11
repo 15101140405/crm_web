@@ -127,7 +127,7 @@
             console.log(data);
             $.post("<?php echo $this->createUrl('order/followinsert');?>",data,function(){
                 alert("添加成功");
-                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET['order_id']?>";
+                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET['order_id']?>&from=<?php echo $_GET['from']?>";
             })
         });
         //点击编辑
@@ -142,7 +142,7 @@
 
             $.post("<?php echo $this->createUrl('order/followupdate');?>",data,function(){
                 alert("修改成功");
-                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET["order_id"]?>";
+                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET["order_id"]?>&from=<?php echo $_GET['from']?>";
             })
         });
         //点击删除
@@ -152,7 +152,7 @@
 
             $.post("<?php echo $this->createUrl('order/followdel');?>",data,function(){
                 alert("删除成功");
-                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET["order_id"]?>";
+                location.href="<?php echo $this->createUrl('order/orderinfofollow');?>&order_id=<?php echo $_GET["order_id"]?>&from=<?php echo $_GET['from']?>";
             })
         });
 
