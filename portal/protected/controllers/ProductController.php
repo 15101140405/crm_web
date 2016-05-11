@@ -239,15 +239,17 @@ class ProductController extends InitController
 
     public function actionSet_list()
     {
+        $pricename = "unit_price";
         if ($_GET['from'] == "set") {
 
+            $pricename = "final_price";
             $list = Wedding_set::model()->findAll(array(
                     'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category',
                     'params' => array(
-                            ':account_id' => $_SESSION['staff_hotel_id'],
+                            ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
                             ':category' => $_GET['category']
                         ),
-                    'order' => 'unit_price'
+                    'order' => $pricename
                 ));
 
         } else {
@@ -259,7 +261,7 @@ class ProductController extends InitController
                             ':supplier_type_id' => $_GET['supplier_type_id'],
                             ':category' => $_GET['category']
                         ),
-                    'order' => 'unit_price'
+                    'order' => $pricename
                 ));
         }
 
@@ -273,14 +275,19 @@ class ProductController extends InitController
             $criteria->params[':supplier_product_id']=$value['id'];  
             $ProductImg = ProductImg::model()->find($criteria);
             $item['name'] = $value['name'];
-            $item['price'] = $value['unit_price'];
+            $item['price'] = $value[$pricename]."元/场";
+            $item['unit'] = "";
             // print_r($ProductImg);die;
             if (!empty($ProductImg)) {
                 $item['img_url'] = $ProductImg['img_url'];
             } else {
                 $item['img_url'] = "../../crm_product_img/d32.jpg";
             }
-            $item['unit'] = $value['unit'];
+            if ($_GET['from'] != "set") {
+                $item['unit'] = $value['unit'];
+                $item['price'] = $value[$pricename];
+            }
+            
             $item['id'] = $value['id'];
             $product_data[] = $item; 
         };

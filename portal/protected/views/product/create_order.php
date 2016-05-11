@@ -216,7 +216,7 @@
             var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
             var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
             var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
-            if("<?php echo $_GET['from']?>" == "wedding_set" || "<?php echo $_GET['from']?>" == "meeting_set"){
+            if("<?php echo $_GET['from']?>" == "set"){
                 $("#price").remove();
                 new_order_info = {
                     order_date: order_date,
