@@ -38,6 +38,7 @@ class Wedding_set extends InitActiveRecord
 		$criteria->compare('feast_discount',$this->feast_discount,true);
 		$criteria->compare('other_discount',$this->avatar,true);
 		$criteria->compare('product_list',$this->product_list,true);
+		$criteria->compare('category',$this->category,true);
 		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(
