@@ -918,11 +918,12 @@ class ReportController extends InitController
         $year = date("Y");
         $order_status_deal = array(2,3,4,5,6);
         $t = $this->staff_total($staff_id,$year,$order_status_deal);
-        foreach ($t as $key => $value) {
+        echo $t;
+        /*foreach ($t as $key => $value) {
             if($value['month']=='05'){
                 echo $value['id'].",";
             }
-        }
+        }*/
         /*$t = $this->order_feast_total_price(454);
         $t1 = $this->order_other_total_price(454);
         print_r($t);print_r($t1);*/
@@ -959,7 +960,7 @@ class ReportController extends InitController
         /*return $order_plan_id;*/
         foreach ($order_plan_id as $key => $value) {
             $t = $this->order_feast_total_price($value['id']);
-            $plan_total_sales += $t['total_price'];
+            $plan_total_sales += $t['total_price']/*."|".$value['id'].","*/;
 
             if($value['month'] == "01"){
                 $staff_total['month_order'][0] += (int)$t['total_price'];
@@ -1004,7 +1005,7 @@ class ReportController extends InitController
                             ':order_id' => $value['id']
                         )
                 ));
-            $staff_total['final_commission'] += $order_final['feast_profit']*0.01;
+            $staff_total['final_commission'] += $order_final['feast_profit']*0.01;              //  婚宴提成 ／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／／
             /*$staff_total['final_commission'] += $order_final['other_profit']*0.1;*/
             /*print_r($t);die;*/
         };
@@ -1036,7 +1037,7 @@ class ReportController extends InitController
         foreach ($order_design_id as $key => $value) {
             $t = $this->order_other_total_price($value['id']);
             /*print_r($t);die;*/
-            $design_total_sales += $t['total_price'];
+            $design_total_sales += $t['total_price']/*."|".$value['id'].","*/;
 
             if($value['month'] == "01"){
                 $staff_total['month_order'][0] += (int)$t['total_price'];
@@ -1087,6 +1088,7 @@ class ReportController extends InitController
             $staff_total['final_commission'] += $order_final['other_profit']*0.1;
             /*print_r($t);die;*/
         };
+        /*return $design_total_sales;*/
 
         $staff_total['sales'] = $plan_total_sales + $design_total_sales;
         /*$staff_total['commission'] = $plan_total_sales*0.01 + $design_total_gross_profit*0.1;*/
