@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>官网首页</title>
-    <link rel="stylesheet" type="text/css" href="style/base.css" />
-    <link rel="stylesheet" type="text/css" href="style/layout.css" />
+    <link rel="stylesheet" type="text/css" href="css/base_background.css" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
 </head>
 
 <body style="background:#6c5256;">
@@ -87,7 +87,7 @@
                             <a class="edit_btn left" href="javascript:;">编辑</a>
                         </div>
                     </li>
-                    <li class="clearfix">
+<!--                     <li class="clearfix">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
                                 <img src="images/video_img.jpg" alt="">
@@ -130,7 +130,7 @@
                             <span class="left state">转码中</span>
                             <a class="edit_btn left" href="javascript:;">编辑</a>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

@@ -61,18 +61,22 @@ class BackgroundController extends InitController
                 )
             ));
         if (empty($staff)) {
+            echo "not exist";
+        }else{
+            if($staff['password'] == $_POST['password']){
+                $cookie = new CHttpCookie('userid',$staff['id']);
+                $cookie->expire = time()+60*60*24*30*12*100;  //有限期100年
+                Yii::app()->request->cookies['userid']=$cookie;
 
-            echo "success";
+                $cookie = new CHttpCookie('account_id',$staff['account_id']);
+                Yii::app()->request->cookies['account_id']=$cookie;  
+
+                echo "success";
+            }else{
+                echo "password error";
+            }
         }
-        if ($staff['password'] == $_POST['password']) {
-            echo "µÇÂ¼³É¹¦";
-            Yii::app()->request->cookies['id'] = $staff['id'];
-            Yii::app()->request->cookies['account_id'] = $_POST['account_id'];
-
-
-        } else {
-            echo "password error";
-        }
+            
         
     }
 

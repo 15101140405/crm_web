@@ -15,7 +15,7 @@
                 <input class="loginItem" id="telephone" type="text" placeholder="手机号">
                 <input class="loginItem pswd" id="password" type="password" placeholder="密码">
                 <button class="login_btn" id="sure">登录</button>
-                <a class="go_regist" href="#">立即注册</a>
+                <!-- <a class="go_regist" href="#">立即注册</a> -->
             </div>
         </div>
         <!-- <div class="login_foot">
@@ -32,10 +32,23 @@ $(function(){
             'telephone' : $("#telephone").val(),
             'password' : $("#password").val(),
         };
-        $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(){
-            location.href = "<?php echo $this->createUrl("background/index");?>";
-        })
-    })
+        if(data.telephone == ""){
+            alert("请输入您的手机号！");
+        }else if(data.password == ""){
+            alert("请输入密码！");
+        }else{
+            $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
+                alert(retval);
+                if(retval == "success"){
+                    location.href = "<?php echo $this->createUrl("background/index");?>";    
+                }else if(retval == "not exist"){
+                    alert("您输入的手机号不存在！");
+                }else if(retval == "password error"){
+                    alert("您输入的密码错误！");
+                }
+            });
+        };
+    });
 })
 </script>
 </body>
