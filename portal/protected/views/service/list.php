@@ -162,7 +162,7 @@
             $("#person li").removeAttr("style");
 
             if($("#appDate").val() != ""){
-                info['date'] = $("#appDate").val()
+                info['date'] = $("#appDate").val();
             }; 
 
             if(!$("#team").hasClass("active")){

@@ -257,9 +257,9 @@ class ServiceController extends InitController
 
     public function actionDatefilter()
     {
-        $_POST['team'] = "1";
+        /*$_POST['team'] = "1";
         $_POST['gender'] ="";
-        $_POST['date'] ="";
+        $_POST['date'] ="";*/
 
         $service_order = ServiceOrder::model()->findAll();
         $result_date = array();
