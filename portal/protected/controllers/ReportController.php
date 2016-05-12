@@ -912,6 +912,22 @@ class ReportController extends InitController
         return $hotel_total_payment;
     }
 
+    public function actionCeshi()
+    {
+        $staff_id = 57;
+        $year = date("Y");
+        $order_status_deal = array(2,3,4,5,6);
+        $t = $this->staff_total($staff_id,$year,$order_status_deal);
+        foreach ($t as $key => $value) {
+            if($value['month']=='05'){
+                echo $value['id'].",";
+            }
+        }
+        /*$t = $this->order_feast_total_price(454);
+        $t1 = $this->order_other_total_price(454);
+        print_r($t);print_r($t1);*/
+    }
+
 
     public function staff_total($staff_id,$year,$order_status)
     {
@@ -934,7 +950,6 @@ class ReportController extends InitController
                 /*$order_plan_id[] = (int)$value['id'];*/
             };
         }
-        /*var_dump($order_id);die;*/
         /*return $order_plan_id;*/
 
 
@@ -1015,7 +1030,9 @@ class ReportController extends InitController
         /*var_dump($order_id);die;*/
         $design_total_sales = 0;
         $design_total_gross_profit = 0;
-        /*print_r($order_design_id);die;*/
+
+        /*return $order_design_id;*/
+
         foreach ($order_design_id as $key => $value) {
             $t = $this->order_other_total_price($value['id']);
             /*print_r($t);die;*/
@@ -2301,7 +2318,7 @@ class ReportController extends InitController
                 'unit' => $supplier_product2['unit'],
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
-                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])*$order_discount['feast_discount']*0.1,
+                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.1)*$order_discount['feast_discount']*0.1,
                 'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
                 'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'],
                 'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'])/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])),

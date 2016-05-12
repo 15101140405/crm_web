@@ -44,6 +44,7 @@
         //点击新增
         $('#insert').on("click",function(){
             $.post('<?php echo $this->createUrl("product/setuserid");?>',{phone:$("#phone").val()},function(data){
+                alert(data);
                 if(data=="success"){
                     location.reload();   
                 }else{
