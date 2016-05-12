@@ -1,0 +1,26 @@
+/* CSS Document */
+/*css reset*/
+*{margin:0; padding:0;}
+body{ background:#fff; font-family:"微软雅黑"; font-size:12px; color:#030303;}
+ul{ list-style:none;}
+a{ text-decoration:none; color:#030303;}
+img{ border:none;}
+
+.left{ float:left;}
+.right{ float:right;}
+.wapper{ width:1160px; margin:0 auto;}
+.clearfix:after{ content:"."; display:block; clear:both; height:0; overflow:hidden;}
+.clearfix{ zoom:1;}
+
+.FontColor{ color:#eecd67;}
+.FontSize14{ font-size:14px;}
+.FontSize18{ font-size:18px;}
+.FontSize24{ font-size:24px;}
+.FontFamily{ font-family:"微软雅黑"}
+.a1,.HoverYellow:hover{ color:#eecd67;}
+.a2{ color:#000;}
+.MarginBot25{ margin-bottom:25px;}
+.auto{margin:0 auto;}
+.rel{position: relative;}
+.abs{position: absolute;}
+.blue{color: #4c9ff8;}

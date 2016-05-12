@@ -1,0 +1,633 @@
+/*登录css*/
+
+.login_container {
+    position: relative;
+    width: 100%;
+    background: url("../images/loginbg.jpg") no-repeat center center;
+    background-size: cover;
+}
+
+.login_con {
+    position: absolute;
+    width: 380px;
+    height: 240px;
+    padding: 40px 35px 75px 35px;
+    background: #fafbf6;
+    -webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: #8197a5;
+}
+
+.login_con>div {
+    background: #fff;
+    padding-top: 30px;
+    padding-bottom: 60px;
+}
+
+.login_con>div .loginItem {
+    display: block;
+    height: 40px;
+    width: 315px;
+    line-height: 40px;
+    border: 1px solid #e6e6e6;
+    color: #333;
+    background: url('../images/l_ico01.png') no-repeat;
+    padding-left: 35px;
+    margin: 0 auto 15px;
+}
+
+.login_con>div .loginItem.pswd {
+    background: url('../images/l_ico02.png') no-repeat;
+}
+
+.login_con .login_btn {
+    display: block;
+    background: #3f89ec;
+    color: #fff;
+    width: 350px;
+    margin: 20px auto 10px;
+    border: none;
+    height: 40px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.go_regist {
+    display: block;
+    text-align: right;
+    color: #3f89ec;
+    margin-right: 15px;
+    font-size: 12px;
+}
+
+.login_foot {
+    position: absolute;
+    left: 120px;
+    bottom: 60px;
+    font-size: 14px;
+    color: #fff;
+}
+/*regist css*/
+
+.regist_top {
+    height: 60px;
+    line-height: 60px;
+    font-size: 14px;
+    border-bottom: 1px solid #e6e6e6;
+    overflow: hidden;
+    color: #666;
+}
+
+.regist_top .logo {
+    margin: 8px 15px 0 0;
+}
+
+.regist_top .logo img {
+    width: 110px;
+}
+
+.slogan {
+    float: left;
+    padding-left: 24px;
+    border-left: 1px solid #989898;
+    line-height: 40px;
+    margin-top: 10px;
+}
+
+.go_login .desc {
+    color: #666;
+    margin-right: 10px;
+}
+
+.go_login button {
+    padding: 3px 10px;
+    background: #f2f2f2;
+    border: 1px solid #d2d2d2;
+}
+
+.regist_con {
+    padding-top: 60px;
+}
+
+.regist_ulist li {
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.regist_ulist li label {
+    float: left;
+    width: 85px;
+    color: #333;
+    font-size: 14px;
+    margin-right: 10px;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.regist_ulist li .inputItem {
+    height: 40px;
+    width: 340px;
+    border: 1px solid #e6e6e6;
+    padding-left: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 40px;
+}
+
+.regist_ulist li .inputItem.short {
+    width: 150px;
+}
+
+.get_code {
+    float: left;
+    color: #030303;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    width: 160px;
+    border: 1px solid #d1d1d1;
+    margin-left: 20px;
+    background: #f4f4f4;
+    text-align: center;
+}
+
+.agree_txt {
+    margin-left: 95px;
+    color: #666;
+}
+
+.agree_txt input {
+    margin-right: 5px;
+}
+
+.agree_txt span {
+    color: #3f89ec;
+}
+
+.registbtn {
+    background: #3f89ec;
+    color: #fff;
+    width: 350px;
+    margin: 20px auto 10px;
+    border: none;
+    height: 40px;
+    font-size: 14px;
+    margin-left: 95px;
+}
+/*首页css*/
+
+.index_container {
+    margin-top: 60px;
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    height: 305px;
+    background: url("../images/top_img.jpg") no-repeat center center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    padding-top: 100px;
+    border-bottom: 3px solid #f82d00;
+}
+
+.header .title {
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+
+.nav_box {
+    background: #fff;
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.nav_box ul {
+    float: right;
+    margin-right: 100px;
+}
+
+.nav_box ul li {
+    float: left;
+    margin: 0 10px;
+}
+
+.nav_box ul li a {
+    padding-bottom: 3px;
+    color: #666;
+}
+
+.nav_box ul li a.active,
+.nav_box ul li a:hover {
+    border-bottom: 1px solid #f82d00;
+}
+
+.index_con_box {
+    background: #f2f2f2;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.index_con_box.center {
+    text-align: center;
+}
+
+.upload_btn {
+    width: 190px;
+    height: 60px;
+    background: #6b9f00;
+    color: #fff;
+    font-size: 24px;
+    border: none;
+    margin: 240px auto 120px auto;
+}
+
+.upload_btn img {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.upload_notice {
+    color: #333;
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.upload_notice a {
+    color: #6b9f00;
+}
+
+.index_foot {
+    background: #fff;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    color: #666;
+}
+
+.index_con_box .con {
+    background: #fff;
+    margin: 0 20px;
+    padding: 0 20px;
+}
+
+.index_con_box .con .top {
+    height: 30px;
+    border-bottom: 1px solid #333;
+    padding: 15px 0;
+    line-height: 30px;
+    color: #666;
+}
+
+.index_con_box .con .top .num {
+    color: #6b9913;
+}
+
+.upload_new_btn {
+    width: 100px;
+    height: 30px;
+    color: #fff;
+    background: #6b9913;
+    margin-right: 70px;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+}
+
+.upload_list li {
+    padding: 20px 35px;
+    border-bottom: 1px solid #333;
+}
+
+.upload_list li:last-child {
+    border: none;
+}
+
+.video_img {
+    position: relative;
+    margin-right: 20px;
+}
+
+.video_img img {
+    width: 175px;
+    border: 1px solid #ccc;
+}
+
+.video_img span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #6b9913;
+    color: #fff;
+    padding: 5px;
+}
+
+.video_info {
+    color: #999;
+}
+
+.video_info h3 {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 28px;
+}
+
+.video_info .state_box {
+    height: 18px;
+    line-height: 18px;
+}
+
+.video_info .state_box img {
+    height: 18px;
+    margin-right: 5px;
+}
+
+.video_info .from {
+    margin-left: 15px;
+}
+
+.video_info .tag {
+    color: #333;
+    margin-top: 10px;
+}
+
+.video_info .tag span {
+    border: 1px solid #d2d2d2;
+    padding: 3px;
+    margin-left: 10px;
+}
+
+.edit_btn_box .state {
+    color: #666;
+    margin-right: 100px;
+    margin-top: 35px;
+}
+
+.edit_btn_box .edit_btn {
+    display: block;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background: #6b9913;
+    margin-right: 35px;
+    margin-top: 35px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.select_box {
+    position: relative;
+    height: 35px;
+    width: 150px;
+    line-height: 35px;
+    border: 1px solid #e6e6e6;
+    padding-left: 5px;
+    background: #fff;
+    margin-right: 10px;
+}
+
+.select_con {
+    float: left;
+    width: 110px;
+    overflow: hidden;
+    /*自动隐藏文字*/
+    
+    text-overflow: ellipsis;
+    /*文字隐藏后添加省略号*/
+    
+    white-space: nowrap;
+    /*强制不换行*/
+}
+
+.select_box .my_select .down {
+    float: right;
+    display: inline-block;
+    width: 30px;
+    height: 35px;
+    background: url('../images/down_gray.jpg') no-repeat;
+    background-size: 30px 35px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.select_box select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 35px;
+    width: 150px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.select_box select option {
+    height: 35px;
+}
+/*上传css*/
+
+.upload_wapper {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.upload_top {
+    height: 55px;
+    width: 100%;
+    background: #202122;
+    margin-bottom: 10px;
+}
+
+.upload_top .nick {
+    color: #fff;
+    line-height: 55px;
+    padding-right: 25px;
+    background: url('../images/level.jpg') no-repeat right center;
+}
+
+.desc_item {
+    margin-bottom: 10px;
+}
+
+.desc_item .input_box {
+    width: 415px;
+}
+
+.desc_item .input_box input {
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #e6e6e6;
+    color: #999;
+}
+
+.desc_item .input_box textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #e6e6e6;
+    color: #999;
+}
+
+.desc_item .must {
+    color: red;
+}
+
+.desc_item .tit_box {
+    width: 75px;
+    text-align: right;
+    margin-right: 10px;
+    line-height: 30px;
+}
+
+.video_desc {
+    margin-bottom: 50px;
+}
+
+.video_cover {
+    margin-right: 200px;
+}
+
+.video_cover .cover_box {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 20px;
+}
+
+.video_cover button {
+    width: 110px;
+    height: 40px;
+    background: #6b9e03;
+    color: #fff;
+    border: none;
+}
+
+.upload_pro_list li {
+    width: 910px;
+    padding: 20px 25px;
+    background: #f3f3f3;
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.upload_pro_list .upload_name {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.upload_pro_list .upload_name span {
+    color: #6b9e03;
+}
+
+.progress_bar {
+    width: 800px;
+    height: 12px;
+    background: #dededf;
+    border-radius: 12px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.progress_bar .progress {
+    position: relative;
+    height: 100%;
+    background: #6b9e03;
+    border-radius: 12px;
+}
+
+.progress_bar .progress .num {
+    position: absolute;
+    top: -31px;
+    right: -36px;
+    height: 25px;
+    width: 75px;
+    text-align: center;
+    line-height: 25px;
+    background: #fff;
+    color: #6b9e03;
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
+}
+
+.progress_bar .progress .num i {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: url('../images/bullet_ico.jpg') no-repeat 0 center;
+}
+
+.progress_box .calcel {
+    padding-left: 10px;
+    background: url('../images/close.jpg') no-repeat 0 center;
+}
+
+.upload_state p {
+    margin-right: 25px;
+}
+
+.progress_box .info {
+    color: #999;
+    margin-bottom: 10px;
+    padding-left: 30px;
+    background: url('../images/upload_ico.jpg') no-repeat 0 center;
+}
+
+.upload_btn_box {
+    text-align: center;
+}
+
+.upload_btn_box .btn {
+    display: inline-block;
+    width: 120px;
+    height: 35px;
+    line-height: 35px;
+    background: #dededf;
+    border-radius: 4px;
+    color: #fff;
+    margin: 20px 25px;
+}
+
+.upload_btn_box .btn.active,
+.upload_btn_box .btn:hover {
+    background: #6b9e03;
+}
+
+.footer {
+    border-top: 1px solid #e6e6e6;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    color: #666;
+}
+
+.footer_link_list {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.footer_link_list li {
+    float: left;
+    margin: 0 30px;
+}
+
+.footer_link_list li a {
+    color: #333;
+}
+
+.footer_link_list li a:hover,
+.footer_link_list li a.active {
+    color: #6b9e03;
+}
+
+.footer p {
+    line-height: 20px;
+}
