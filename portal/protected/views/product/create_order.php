@@ -199,7 +199,7 @@
 
         var new_order_info = {};
 
-        if("<?php echo $_GET['from']?>" == "wedding_set" || "<?php echo $_GET['from']?>" == "meeting_set"){
+        if("<?php echo $_GET['from']?>" == "set"){
             $("#price").remove();
         };
 
