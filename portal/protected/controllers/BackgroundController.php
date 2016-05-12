@@ -62,16 +62,16 @@ class BackgroundController extends InitController
             ));
         if (empty($staff)) {
 
-            echo "ç”¨æˆ·ä¸å­˜åœ¨";
+            echo "ÓÃ»§²»´æÔÚ";
         }
         if ($staff['password'] == $_POST['password']) {
-            echo "ç™»å½•æˆåŠŸ";
+            echo "µÇÂ¼³É¹¦";
             Yii::app()->request->cookies['id'] = $staff['id'];
             Yii::app()->request->cookies['account_id'] = $_POST['account_id'];
 
 
         } else {
-            echo "å¯†ç é”™è¯¯";
+            echo "ÃÜÂë´íÎó";
         }
         
     }
@@ -95,5 +95,10 @@ class BackgroundController extends InitController
 
     }
 
+
+    public function actionIndex()
+    {
+        $this->render("index");
+    }
 
 }

@@ -12,19 +12,32 @@
     <div class="login_container">
         <div class="login_con">
             <div>
-                <input class="loginItem" type="text" placeholder="手机/邮箱/用户名">
-                <input class="loginItem pswd" type="password" placeholder="密码">
-                <button class="login_btn">登录</button>
+                <input class="loginItem" id="telephone" type="text" placeholder="手机号">
+                <input class="loginItem pswd" id="password" type="password" placeholder="密码">
+                <button class="login_btn" id="sure">登录</button>
                 <a class="go_regist" href="#">立即注册</a>
             </div>
         </div>
-        <div class="login_foot">
-            <p>you are best</p>
-            <p>QQ:1021797188</p>
-        </div>
+        <!-- <div class="login_foot">
+            <p>浩瀚一方</p>
+            <p>@2016</p>
+        </div> -->
     </div>
-    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<script>
+$(function(){
+    $("#sure").on("click",function(){
+        var data = {
+            'telephone' : $("#telephone").val(),
+            'password' : $("#password").val(),
+        };
+        $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(){
+            location.href = "<?php echo $this->createUrl("background/index");?>";
+        })
+    })
+})
+</script>
 </body>
 
 </html>
