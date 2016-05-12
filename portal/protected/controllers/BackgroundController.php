@@ -50,4 +50,50 @@ class BackgroundController extends InitController
         $this->render("login");
     }
 
+    public function actionLogin_pro()
+    {
+
+        $staff = Staff::model()->find(array(
+
+            "condition" => "telephone = :telephone",
+            "params"    => array(
+                ":telephone" => $_POST['telephone']
+                )
+            ));
+        if (empty($staff)) {
+
+            echo "用户不存在";
+        }
+        if ($staff['password'] == $_POST['password']) {
+            echo "登录成功";
+            Yii::app()->request->cookies['id'] = $staff['id'];
+            Yii::app()->request->cookies['account_id'] = $_POST['account_id'];
+
+
+        } else {
+            echo "密码错误";
+        }
+        
+    }
+
+    public function actionCase_list()
+    {
+
+        $staff_id = $_COOKIE['id'];
+        $result = yii::app()->db->createCommand("select * from case_info where ".
+
+            "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
+                "(select account_id from staff where id=".$staff_id.") ) ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
+            "(select hotel_list from staff where id=".$staff_id.") ) ".
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+            " and CI_Show=1 order by CI_Sort Desc");
+        $list = $result->queryAll();
+        echo json_encode($list);
+
+
+    }
+
+
 }
