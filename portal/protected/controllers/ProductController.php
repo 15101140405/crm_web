@@ -240,9 +240,11 @@ class ProductController extends InitController
     public function actionSet_list()
     {
         $pricename = "unit_price";
-        if ($_GET['from'] == "set") {
+        if ($_GET['from'] == "set") {//套系
 
             $pricename = "final_price";
+            $table = "Wedding_set_img";
+            $idname = "wedding_set_id";
             $list = Wedding_set::model()->findAll(array(
                     'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category',
                     'params' => array(
@@ -252,8 +254,10 @@ class ProductController extends InitController
                     'order' => $pricename
                 ));
 
-        } else {
+        } else {//婚宴，会议餐
         
+            $table = "ProductImg";
+            $idname = "supplier_product_id";
             $list = SupplierProduct::model()->findAll(array(
                     'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
                     'params' => array(
@@ -270,10 +274,10 @@ class ProductController extends InitController
         foreach ($list as $key => $value) {
             $item = array();
             $criteria = new CDbCriteria; 
-            $criteria->addCondition("img_type = :img_type && supplier_product_id = :supplier_product_id");    
+            $criteria->addCondition("img_type = :img_type && ".$idname." = :id");    
             $criteria->params[':img_type']=1; 
-            $criteria->params[':supplier_product_id']=$value['id'];  
-            $ProductImg = ProductImg::model()->find($criteria);
+            $criteria->params[':id']=$value['id'];  
+            $ProductImg = $table::model()->find($criteria);
             $item['name'] = $value['name'];
             $item['price'] = $value[$pricename]."元/场";
             $item['unit'] = "";
