@@ -50,4 +50,9 @@ class BackgroundController extends InitController
         $this->render("login");
     }
 
+    public function actionIndex()
+    {
+        $this->render("index");
+    }
+
 }
