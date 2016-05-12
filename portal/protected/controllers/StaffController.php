@@ -21,6 +21,28 @@ class StaffController extends InitController
         );
     }
 
+    public function actionLogin()
+    {
+
+        $staff = Staff::model()->find(array(
+
+            "condition" => "telephone = :telephone",
+            "params"    => array(
+                ":telephone" => $_POST['telephone']
+                )
+            ));
+        if (empty($staff)) {
+
+            echo "用户不存在";
+        }
+        if ($staff['password'] == $_POST['password']) {
+            echo "登录成功";
+        } else {
+            echo "密码错误";
+        }
+        
+    }
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.

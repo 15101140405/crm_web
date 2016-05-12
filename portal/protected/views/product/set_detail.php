@@ -25,7 +25,13 @@
     </ul>
     <div class="fixed_bot_btn flexbox v_center">
         <div class="flex1 fixed_content" style="width: 40%;float: left;">
-            <p class="now_price">&yen;<strong><?php echo $supplier_product['unit_price']?></strong>
+            <p class="now_price">&yen;<strong><?php
+            if ($_GET['from'] == "set") {
+                echo $supplier_product['final_price']; 
+            } else {
+                echo $supplier_product['unit_price'];
+            }
+            ?></strong>
             </p>
             <!-- <del class="original_price">&yen;<em>160</em></del> -->
         </div>

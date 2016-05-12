@@ -305,15 +305,29 @@ class ProductController extends InitController
     public function actionSet_detail()
     {
         $id=$_GET['product_id'];
-        $supplier_product = SupplierProduct::model()->find(array(
+        if ($_GET['from'] == "set") {//套系
+
+            $pricename = "final_price";
+            $table = "Wedding_set";
+            $imgtable = "Wedding_set_img";
+            $idname = "wedding_set_id";
+            
+        } else {//婚宴，会议餐
+        
+            $table = "SupplierProduct";
+            $imgtable = "ProductImg";
+            $idname = "supplier_product_id";
+            
+        }
+        $supplier_product = $table::model()->find(array(
                 'condition' => 'id = :id',
                 'params' => array(
                         ':id' => $id
                     )
             ));
 
-        $img = ProductImg::model()->findAll(array(
-                'condition' => 'supplier_product_id = :id && img_type = :img_type',
+        $img = $imgtable::model()->findAll(array(
+                'condition' => $idname.' = :id && img_type = :img_type',
                 'params' => array(
                         ':id' => $id,
                         ':img_type' => 2
