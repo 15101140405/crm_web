@@ -62,16 +62,16 @@ class BackgroundController extends InitController
             ));
         if (empty($staff)) {
 
-            echo "用户不存在";
+            echo "success";
         }
         if ($staff['password'] == $_POST['password']) {
-            echo "登录成功";
+            echo "碌脟脗录鲁脡鹿娄";
             Yii::app()->request->cookies['id'] = $staff['id'];
             Yii::app()->request->cookies['account_id'] = $_POST['account_id'];
 
 
         } else {
-            echo "密码错误";
+            echo "password error";
         }
         
     }
