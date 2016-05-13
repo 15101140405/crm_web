@@ -80,10 +80,10 @@ class BackgroundController extends InitController
         
     }
 
-    public function actionCase_list()
+    public function actionIndex()
     {
-
-        $staff_id = $_COOKIE['id'];
+        $url ="http://file.cike360.com";
+        $staff_id = $_COOKIE['userid'];
         $result = yii::app()->db->createCommand("select * from case_info where ".
 
             "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
@@ -94,15 +94,38 @@ class BackgroundController extends InitController
             " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
             " and CI_Show=1 order by CI_Sort Desc");
         $list = $result->queryAll();
-        echo json_encode($list);
-
-
+        foreach($list as  $key => $val){
+            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+            };
+        };
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));
+        /*print_r($tap);die;*/
+        $this->render("index",array(
+                'case_data' => $list,
+                'tap' => $tap,
+            ));
+    }
+    public function actionUpload_product()
+    {
+        $result = yii::app()->db->createCommand("select supplier.id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']);
+        $supplier = $result->queryAll();
+        /*print_r($supplier);die;*/
+        $this->render("upload_product",array(
+                'supplier' => $supplier
+            ));
     }
 
-
-    public function actionIndex()
-    {
-        $this->render("index");
+    function startwith($str,$pattern) {
+        if(strpos($str,$pattern) === 0)
+              return true;
+        else
+              return false;
     }
 
 }

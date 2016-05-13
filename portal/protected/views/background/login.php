@@ -38,9 +38,9 @@ $(function(){
             alert("请输入密码！");
         }else{
             $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
-                alert(retval);
+                /*alert(retval);*/
                 if(retval == "success"){
-                    location.href = "<?php echo $this->createUrl("background/index");?>";    
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";    
                 }else if(retval == "not exist"){
                     alert("您输入的手机号不存在！");
                 }else if(retval == "password error"){
