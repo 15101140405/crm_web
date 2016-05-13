@@ -109,15 +109,30 @@ class BackgroundController extends InitController
         $this->render("index",array(
                 'case_data' => $list,
                 'tap' => $tap,
+                
             ));
     }
     public function actionUpload_product()
     {
-        $result = yii::app()->db->createCommand("select supplier.id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']);
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']);
         $supplier = $result->queryAll();
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
         /*print_r($supplier);die;*/
         $this->render("upload_product",array(
-                'supplier' => $supplier
+                'supplier' => $supplier,
+                'decoration_tap' => $decoration_tap,
+                'supplier_type' => $supplier_type,
             ));
     }
 
@@ -130,9 +145,9 @@ class BackgroundController extends InitController
 
     public function actionCase_upload()
     {
-        $_POST['CI_Name'] = 333;
+        /*$_POST['CI_Name'] = 333;
         $_POST['CI_Pic'] = 333;
-        $_POST['CI_Remarks'] = 333;
+        $_POST['CI_Remarks'] = 333;*/
 
         $data = new CaseInfo;  
         $data ->CI_Name = $_POST['CI_Name']; 
@@ -173,8 +188,9 @@ class BackgroundController extends InitController
         // $_POST['CI_Remarks'] = 333;
         $data = new SupplierProduct;
         $data ->account_id = $_COOKIE['account_id'];
-        $data ->supplier_id = $_POST['supplier_id']; 
+        $data ->supplier_id = (int)$_POST['supplier_id']; 
         $data ->supplier_type_id = $_POST['supplier_type_id'];
+        $data ->decoration_tap = $_POST['decoration_tap'];
         $data ->standard_type = $_POST['standard_type'];
         $data ->name = $_POST['name'];
         $data ->category = $_POST['category'];
@@ -183,7 +199,7 @@ class BackgroundController extends InitController
         $data ->unit = $_POST['unit'];
         $data ->service_charge_ratio = $_POST['service_charge_ratio'];
         $data ->ref_pic_url = $_POST['ref_pic_url'];
-        $data ->decription = $_POST['decription'];
+        $data ->description = $_POST['description'];
         $data ->update_time = $_POST['update_time'];
         $data->save();
     }
@@ -205,11 +221,8 @@ class BackgroundController extends InitController
         $data ->account_id = $_COOKIE['account_id'];
         $data ->type_id = $_POST['type_id'];
         $data ->staff_id = $id;
-        $data ->contract_url = $_POST['contract_url'];
+        $data ->contract_url = "";
         $data ->update_time = $_POST['update_time'];
         $data ->save();
     }
-
-
-
 }

@@ -181,7 +181,7 @@
 /*首页css*/
 
 .index_container {
-    margin-top: 60px;
+    /*margin-top: 60px;*/
 }
 
 .header {
@@ -513,7 +513,7 @@
     margin-top: 50px;
 }
 .video_desc {
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
 }
 
 .video_cover {
@@ -603,9 +603,9 @@
 .msgbox .msgbox_c{
     position: absolute;
     left: 40%;
-    top: 40%;
+    top: 20%;
     display: inline-block;
-    width: 350px;
+    width: 362px;
     background: #fff;
     color: #666;
 }
@@ -631,7 +631,7 @@
 }
 .msgbox .msgbox_c .con>div label{
     float: left;
-    width:60px;
+    width:72px;
     margin-right: 10px;
     text-align: right;
     line-height: 40px;
@@ -646,10 +646,10 @@
     box-sizing: border-box;
 }
 .msgbox .msgbox_c .con .btn_box button{
-    background: #f2f2f2;
-    border: 1px solid #d2d2d2;
-    padding:3px 10px;
-    color: #666;
+    background: #6B9E03;
+    border: 1px solid #6B9E03;
+    padding:8px 30px;
+    color: #fff;
     margin: 20px 5px 0 0;
 }
 .hid{

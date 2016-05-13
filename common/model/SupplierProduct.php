@@ -100,6 +100,7 @@ class SupplierProduct extends InitActiveRecord
 		$criteria->compare('account_id',$this->account_id);
 		$criteria->compare('supplier_id',$this->supplier_id);
 		$criteria->compare('supplier_type_id',$this->supplier_type_id);
+		$criteria->compare('decoration_tap',$this->decoration_tap);
 		$criteria->compare('standard_id',$this->standard_id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('category',$this->category,true);
