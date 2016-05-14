@@ -23,6 +23,7 @@ $base_config = require($WEB_BASE_DIR . '/conf/base_config.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => $APP_NAME,
+    'defaultController'=>'background',
 
     'timeZone' => 'Asia/Chongqing',
     'language' => 'zh_cn',

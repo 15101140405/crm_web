@@ -62,7 +62,7 @@
                     <?php }?>
                         </select>
                     </div>
-                    <span class="left add add_supplier">新增供应商</span>
+                    <span class="left add add_supplier">新增<场地布置>供应商</span>
                     <span class="left tip hid" id="supplier_t">请选择供应商</span>
                 </li>
                 <li class="desc_item clearfix">
@@ -195,7 +195,7 @@
     <div class="msgbox msgbox_supplier">
         <div class="msgbox_c">
             <div class="tit_box clearfix">
-                <h2 class="left">新增供应商</h2>
+                <h2 class="left">新增<场地布置>供应商</h2>
                 <img class="right close" src="images/close.jpg" alt="">
             </div>
             <div class="con clearfix">
@@ -205,17 +205,17 @@
                 <div class="clearfix">
                     <label for="">手机号：</label><input id="telephone" class="inputItem" type="text">
                 </div>
-                <div class="clearfix">
+                <!-- <div class="clearfix">
                     <label for="">供应商类别：</label>
                     <div class="select_c left">
                         <select name="" id="supplier_type" style="height: 30px;width: 235px;margin-top: 5px;">
                             <option value="">请选择</option>
-                    <?php foreach ($supplier_type as $key => $value) {?>
-                            <option value="<?php echo $value['name']?>" supplier-type-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php /*foreach ($supplier_type as $key => $value)*/ {?>
+                            <option value="" supplier-type-id=""></option>
                     <?php }?>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="btn_box right">
                     <button id="insert_supplier">保存</button>
                 </div>

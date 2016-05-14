@@ -82,7 +82,7 @@ class CController extends CBaseController
 	/**
 	 * @var string the name of the default action. Defaults to 'index'.
 	 */
-	public $defaultAction='index';
+	public $defaultAction='login';
 
 	private $_id;
 	private $_action;

@@ -82,39 +82,73 @@ class BackgroundController extends InitController
 
     public function actionIndex()
     {
-        $url ="http://file.cike360.com";
-        $staff_id = $_COOKIE['userid'];
-        $result = yii::app()->db->createCommand("select * from case_info where ".
+        $url = "http://file.cike360.com";
+        if($_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 2){
+            $staff_id = $_COOKIE['userid'];
+            $result = yii::app()->db->createCommand("select * from case_info where ".
 
-            "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
-                "(select account_id from staff where id=".$staff_id.") ) ".
+                "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
+                    "(select account_id from staff where id=".$staff_id.") ) ".
 
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
-            "(select hotel_list from staff where id=".$staff_id.") ) ".
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
-            " and CI_Show=1 order by CI_Sort Desc");
-        $list = $result->queryAll();
-        foreach($list as  $key => $val){
-            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
-                $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+                " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
+                "(select hotel_list from staff where id=".$staff_id.") ) ".
+                " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+                " and CI_Show=1 order by CI_Sort Desc");
+            $list = $result->queryAll();
+            foreach($list as  $key => $val){
+                if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                    $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+                };
             };
-        };
-        $tap = SupplierProductDecorationTap::model()->findAll(array(
-                'condition' => 'account_id=:account_id',
-                'params' => array(
-                        ':account_id' => $_COOKIE['account_id']
-                    )
-            ));
-        /*print_r($tap);die;*/
-        $this->render("index",array(
-                'case_data' => $list,
-                'tap' => $tap,
-                
-            ));
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));
+            /*print_r($tap);die;*/
+            $this->render("index",array(
+                    'case_data' => $list,
+                    'tap' => $tap,
+                ));
+        }else{
+            $product = SupplierProduct::model()->findAll(array(
+                    'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':standard_type' => 0,
+                            ':supplier_type_id' => 20, 
+
+                        )
+                ));
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));
+            /*print_r($product);die;*/
+            $this->render("index",array(
+                    'case_data' => $product,
+                    'tap' => $tap,
+                ));
+        }
+            
     }
+
+    public function actionUpload_case()
+    {
+        $this->render('upload_case');
+    }
+
+    public function actionUpload_set()
+    {
+        $this->render('upload_set');
+    }
+
     public function actionUpload_product()
     {
-        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']);
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
         $supplier = $result->queryAll();
         $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
@@ -219,7 +253,7 @@ class BackgroundController extends InitController
         //新增供应商
         $data = new Supplier;
         $data ->account_id = $_COOKIE['account_id'];
-        $data ->type_id = $_POST['type_id'];
+        $data ->type_id = 20;
         $data ->staff_id = $id;
         $data ->contract_url = "";
         $data ->update_time = $_POST['update_time'];
