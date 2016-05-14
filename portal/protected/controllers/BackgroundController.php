@@ -1,6 +1,10 @@
 <?php
 
 include_once('../library/WPRequest.php');
+include "../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php";
+date_default_timezone_set('Asia/Shanghai'); 
+// include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/top/TopClient.php');
+// include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/top/request/AlibabaAliqinFcSmsNumSendRequest.php');
 
 class BackgroundController extends InitController
 {
@@ -43,6 +47,24 @@ class BackgroundController extends InitController
                 'users' => array('*'),
             ),
         );
+    }
+
+    public function actionRegister_pro()
+    {
+        $appkey = 23365214;
+        $secret = "2059843bfceda38bfcfe84565ea207b0";
+        $c = new TopClient;
+        $c->appkey = $appkey;
+        $c->secretKey = $secret;
+        $req = new AlibabaAliqinFcSmsNumSendRequest;
+        $req->setExtend("1");
+        $req->setSmsType("normal");
+        $req->setSmsFreeSignName("注册验证");
+        $req->setSmsParam("{code:'1',product:'1'}");
+        $req->setRecNum("15101140405");
+        $req->setSmsTemplateCode("SMS_9445074");
+        $resp = $c->execute($req);
+
     }
 
     public function actionLogin()
@@ -166,11 +188,18 @@ class BackgroundController extends InitController
         }
     }
 
+    public function actionDecoration_tap()
+    {
+        $data = new SupplierProductDecorationTap;
+        $data ->account_id = $_COOKIE['account_id'];
+        $data ->name = $_POST['name'];
+        $data ->pic = $_POST['pic'];
+        $data ->update_time = $_POST['update_time'];
+        $data->save();
+    }
+
     public function actionProduct_upload()
     {
-        // $_POST['CI_Name'] = 333;
-        // $_POST['CI_Pic'] = 333;
-        // $_POST['CI_Remarks'] = 333;
         $data = new SupplierProduct;
         $data ->account_id = $_COOKIE['account_id'];
         $data ->supplier_id = $_POST['supplier_id']; 
@@ -209,6 +238,10 @@ class BackgroundController extends InitController
         $data ->update_time = $_POST['update_time'];
         $data ->save();
     }
+
+
+
+
 
 
 
