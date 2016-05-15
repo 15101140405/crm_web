@@ -59,7 +59,7 @@
         $("#back").on("click",function(){
             location.href = "<?php echo $this->createUrl("background/login");?>";
         });
-
+        
     })
 </script>
 </body>

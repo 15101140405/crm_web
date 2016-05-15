@@ -88,12 +88,15 @@ class OrderProduct extends InitActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('account_id',$this->account_id);
 		$criteria->compare('order_id',$this->order_id);
+		$criteria->compare('product_type',$this->product_type);
 		$criteria->compare('product_id',$this->product_id);
+		$criteria->compare('sort',$this->sort);
 		$criteria->compare('actual_price',$this->actual_price);
 		$criteria->compare('unit',$this->unit);
 		$criteria->compare('update_time',$this->update_time,true);
 		$criteria->compare('actual_unit_cost',$this->actual_unit_cost);
 		$criteria->compare('actual_service_ratio',$this->actual_service_ratio);
+		$criteria->compare('remark',$this->remark);
 
 
 		return new CActiveDataProvider($this, array(
