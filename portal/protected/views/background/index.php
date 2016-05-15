@@ -19,7 +19,10 @@
         <!--header end-->
         <!--nav start-->
         <div class="nav_box">
-            <ul class="nav_list clearfix">
+            <ul class="nav_list clearfix" style="margin-right:20px;">
+                <li><a href="<?php echo $this->createUrl("background/login");?>">退出</li>
+            </ul>
+            <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=1" id="case">案例</a>
                 </li>
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" id="set">套系</a>

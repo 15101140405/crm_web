@@ -4,8 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>注册</title>
-    <link rel="stylesheet" type="text/css" href="style/base.css" />
-    <link rel="stylesheet" type="text/css" href="style/layout.css" />
+    <link rel="stylesheet" type="text/css" href="css/base_background.css" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 
             <div class="right go_login">
                 <a class="desc" href="">我已注册，现在就</a>
-                <button>登录</button>
+                <button id="back">登录</button>
             </div>
         </div>
     </div>
@@ -52,7 +52,16 @@
         </ul>
     </div>
     <!--con end-->
-    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script>
+    $(function  () {
+        //返回登录页面
+        $("#back").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/login");?>";
+        });
+
+    })
+</script>
 </body>
 
 </html>

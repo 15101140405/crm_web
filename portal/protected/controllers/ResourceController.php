@@ -292,14 +292,36 @@ class ResourceController extends InitController
     public function actionOrderlist()
     {
         $_POST['token']=100;
-        $result = yii::app()->db->createCommand("select `order`.id,order_status,order_name,staff.name as designer_name,`order`.order_date from `order` left join staff on `order`.designer_id=staff.id where designer_id=".$_POST['token']);
+        $result = yii::app()->db->createCommand("select `order`.id as orderid,order_status as orderstatus,order_name as ordername,staff.name as designername,`order`.order_date as orderdate from `order` left join staff on `order`.designer_id=staff.id where designer_id=".$_POST['token']." order by orderdate DESC");
         $result = $result->queryAll();
         foreach ($result as $key => $value) {
-            $product = yii::app()->db->createCommand("select order_product.id as productid,sort,supplier_product.name as productname,order_product.actual_price as unitprice,product_type,order_product.unit as amount,supplier_product.unit from order_product left join supplier_product on order_product.product_id=supplier_product.id where order_product.order_id=".$value['id']);
+            $product = yii::app()->db->createCommand("select order_product.id as productid,sort,supplier_product.name as productname,order_product.actual_price as unitprice,product_type as producttype,order_product.unit as amount,supplier_product.unit from order_product left join supplier_product on order_product.product_id=supplier_product.id where order_product.order_id=".$value['orderid']." order by sort");
             $product = $product->queryAll();
             $result[$key]['product']=$product;
         };
-        echo json_encode($result);
+        foreach ($result as $key => $value) {
+            if($value['orderstatus'] == 1){
+                $result[$key]['orderstatus'] = "未交订金";
+            };
+            if($value['orderstatus'] == 2){
+                $result[$key]['orderstatus'] = "已交订金";
+            };
+            if($value['orderstatus'] == 3){
+                $result[$key]['orderstatus'] = "付中期款";
+            };
+            if($value['orderstatus'] == 4){
+                $result[$key]['orderstatus'] = "已付尾款";
+            };
+            if($value['orderstatus'] == 5){
+                $result[$key]['orderstatus'] = "结算中";
+            };
+            if($value['orderstatus'] == 6){
+                $result[$key]['orderstatus'] = "已完成";
+            };
+            $t = explode(" ", $value['orderdate']);
+            $result[$key]['orderdate'] = $t[0];
+        }
+        
     }   
     
     public function array_remove(&$arr,$offset) 

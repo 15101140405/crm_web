@@ -50,6 +50,11 @@ class BackgroundController extends InitController
         $this->render("login");
     }
 
+    public function actionRegist()
+    {
+        $this->render("regist");
+    }
+
     public function actionLogin_pro()
     {
 
@@ -183,36 +188,57 @@ class BackgroundController extends InitController
         $_POST['CI_Pic'] = 333;
         $_POST['CI_Remarks'] = 333;*/
 
-        $data = new CaseInfo;  
-        $data ->CI_Name = $_POST['CI_Name']; 
+        $data = new CaseInfo;
+        $data ->CI_Name = $_POST['CI_Name'];
         $data ->CI_Place = "";
         $data ->CI_Pic = $_POST['CI_Pic'];
         // $data ->CI_Time = $_POST['CI_Time'];
         $data ->CI_Sort = 1;
-        $data ->CI_Show = 1;
-        $data ->CI_Remarks = $_POST['CI_Remarks']; 
+        $data ->CI_Show = $_POST['CI_Show'];
+        $data ->CI_Remarks = "";
         $data ->CI_Type = 1;
         $data->save();
 
         $CI_ID = $data->attributes['CI_ID'];
         
         $data = new CaseBind;
-        $data ->CI_Type = 1; 
-        $data ->TypeID = $_COOKIE['account_id'];
+        $data ->CB_Type = 1;
+        $data ->TypeID = $_POST['account_id'];
         $data ->CI_ID = $CI_ID;
         $data->save();
 
-        $data = new CaseResources;
-        $data ->CI_ID = $CI_ID;
-        $data ->CR_Sort = 1;
-        $data ->CR_Show = 1;
-        foreach ($_POST['resources'] as $key => $value) {
-            $data ->CR_Type = $vale['Cr_Type'];
-            $data ->CR_Name = $vale['Cr_Name'];
-            $data ->CR_Path = $vale['Cr_Path'];
-            $data ->CR_Remarks = $vale['Remarks'];
+
+        //resource 处理
+        $url ="http://file.cike360.com";
+        $_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
+        $t = explode(",",$_POST['resource']);
+        $resources = array();
+        foreach ($t as $key => $value) {
+            $t1 = explode(".", $value);
+            $item = array();
+            if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                $item['Cr_Type'] = 1 ;
+            }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                $item['Cr_Type'] = 2 ;
+            }
+            $item['Cr_Path'] = $url.$value;
+            $resources[]=$item;
+        };
+        /*print_r($resources);die;*/
+
+
+        $i = 1;
+        foreach ($resources as $key => $value) {
+            $data = new CaseResources;
+            $data ->CI_ID = $CI_ID;
+            $data ->CR_Show = 1;
+            $data ->CR_Type = $value['Cr_Type'];
+            $data ->CR_Name = "";
+            $data ->CR_Path = $value['Cr_Path'];
+            $data ->CR_Remarks = "";
+            $data ->CR_Sort = $i++;
             $data->save();
-        }
+        };
     }
 
     public function actionProduct_upload()
@@ -256,6 +282,16 @@ class BackgroundController extends InitController
         $data ->type_id = 20;
         $data ->staff_id = $id;
         $data ->contract_url = "";
+        $data ->update_time = $_POST['update_time'];
+        $data ->save();
+    }
+
+    public function actionTap_add()
+    {
+        $data = new SupplierProductDecorationTap;
+        $data ->account_id = $_POST['account_id'];
+        $data ->name = $_POST['name'];
+        $data ->pic = $_POST['pic'];
         $data ->update_time = $_POST['update_time'];
         $data ->save();
     }

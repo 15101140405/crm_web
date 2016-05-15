@@ -115,7 +115,51 @@ function uploadSuccess(file, serverData) {
         progress.setStatus("上传成功");
         progress.toggleCancel(false);
 
-        
+    } catch (ex) {
+        this.debug(ex);
+    }
+}
+
+function uploadSuccess2(file, serverData) {
+    try {
+        //addImage("thumbnail.aspx?id=" + serverData);
+        //alert("success");
+        $.cookie("img", serverData);
+        console.log($.cookie("img"));
+        $("#f_" + file.id).remove();
+        var t1 = serverData.split("/");
+        var t2 = t1[2].split(".");
+        var url = "http://file.cike360.com/"+t1[1]+"/"+t2[0]+"_sm."+t2[1];
+        $("#poster_img").attr("src",url).css("width","120px");
+
+
+        var progress = new FileProgress(file, this.customSettings.upload_target);
+       
+        progress.setStatus("上传成功");
+        progress.toggleCancel(false);
+
+    } catch (ex) {
+        this.debug(ex);
+    }
+}
+
+function uploadSuccess3(file, serverData) {
+    try {
+        //addImage("thumbnail.aspx?id=" + serverData);
+        //alert("success");
+        $.cookie("img1", serverData);
+        console.log($.cookie("img1"));
+        $("#f_" + file.id).remove();
+        var t1 = serverData.split("/");
+        var t2 = t1[2].split(".");
+        var url = "http://file.cike360.com/"+t1[1]+"/"+t2[0]+"_sm."+t2[1];
+        $("#poster_img1").attr("src",url).css("width","120px");
+
+
+        var progress = new FileProgress(file, this.customSettings.upload_target);
+       
+        progress.setStatus("上传成功");
+        progress.toggleCancel(false);
 
     } catch (ex) {
         this.debug(ex);
