@@ -3402,6 +3402,27 @@ class DesignController extends InitController
         ));
     }
 
+    public function actionUpdate_order_product()
+    {
+        OrderProduct::model()->deleteAll('order_id=:order_id',array(':order_id'=>$_POST['orderid']));
+        $staff = Staff::model()->findByPk($_POST['token']);
+        foreach ($_POST['product'] as $key => $value) {
+            $data = new OrderProduct;
+            $data ->account_id = $staff['account_id'];
+            $data ->order_id = $_POST['orderid'];
+            $data ->product_type = $value['producttype'];
+            $data ->product_id = $value['productid'];
+            $data ->sort = $value['sort'];
+            $data ->actual_price = $value['unitprice'];
+            $data ->unit = $value['ammount'];
+            $data ->actual_unit_cost = $value['unitcost'];
+            $data ->update_time = date('y-m-d h:i:s',time());
+            $data ->actual_service_ratio = 0;
+            $data ->remark = "";
+            $data ->save();
+        }; 
+    }
+
     public function actioinAdd_to_order()
     {   
         $code = 0;

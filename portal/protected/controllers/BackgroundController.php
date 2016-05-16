@@ -83,6 +83,11 @@ class BackgroundController extends InitController
         $this->render("login");
     }
 
+    public function actionRegist()
+    {
+        $this->render("regist");
+    }
+
     public function actionLogin_pro()
     {
 
@@ -115,39 +120,123 @@ class BackgroundController extends InitController
 
     public function actionIndex()
     {
-        $url ="http://file.cike360.com";
-        $staff_id = $_COOKIE['userid'];
-        $result = yii::app()->db->createCommand("select * from case_info where ".
+        $url = "http://file.cike360.com";
+        if($_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 2){
+            $staff_id = $_COOKIE['userid'];
+            $result = yii::app()->db->createCommand("select * from case_info where ".
 
-            "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
-                "(select account_id from staff where id=".$staff_id.") ) ".
+                "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
+                    "(select account_id from staff where id=".$staff_id.") ) ".
 
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
-            "(select hotel_list from staff where id=".$staff_id.") ) ".
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
-            " and CI_Show=1 order by CI_Sort Desc");
-        $list = $result->queryAll();
-        foreach($list as  $key => $val){
-            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
-                $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+                " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
+                "(select hotel_list from staff where id=".$staff_id.") ) ".
+                " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+                " and CI_Show=1 order by CI_Sort Desc");
+            $list = $result->queryAll();
+            foreach($list as  $key => $val){
+                if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                    $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+                };
             };
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));
+            /*print_r($tap);die;*/
+            $this->render("index",array(
+                    'case_data' => $list,
+                    'tap' => $tap,
+                ));
+        }else{
+            $product = SupplierProduct::model()->findAll(array(
+                    'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':standard_type' => 0,
+                            ':supplier_type_id' => 20, 
+
+                        )
+                ));
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));
+            /*print_r($product);die;*/
+            $this->render("index",array(
+                    'case_data' => $product,
+                    'tap' => $tap,
+                ));
+        }
+            
+    }
+
+    public function actionUpload_case()
+    {
+        $this->render('upload_case');
+    }
+
+    public function actionEdit_case()
+    {
+        $url = "http://file.cike360.com";
+
+        //取资源信息
+        $resources = CaseResources::model()->findAll(array(
+                'condition' => 'CI_ID=:CI_ID',
+                'params' => array(
+                        ':CI_ID' => $_GET['ci_id'],
+                    ),
+                'order' => 'CR_Sort',
+            ));
+        foreach ($resources as $key => $value) {
+            $t = explode('.', $value['CR_Path']);
+            /*print_r($value['CR_Path']);die;*/
+            $resources[$key]['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
         };
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        $t= explode('.', $case['CI_Pic']);
+        $case['CI_Pic'] = $url.$t[0].'_sm.'.$t[1];
+        $cookie = new CHttpCookie('img',$case['CI_Pic']);
+        Yii::app()->request->cookies['img']=$cookie;
+
+        //取场布产品信息
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
         $tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
                 'params' => array(
                         ':account_id' => $_COOKIE['account_id']
                     )
             ));
-        /*print_r($tap);die;*/
-        $this->render("index",array(
-                'case_data' => $list,
+        /*print_r($product);die;*/
+        $this->render("edit_case",array(
+                'resources' => $resources,
+                'case' => $case,
+                'case_data' => $product,
                 'tap' => $tap,
-                
             ));
     }
+
+    public function actionUpload_set()
+    {
+        $this->render('upload_set');
+    }
+
     public function actionUpload_product()
     {
-        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']);
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
         $supplier = $result->queryAll();
         $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
@@ -182,36 +271,56 @@ class BackgroundController extends InitController
         $_POST['CI_Pic'] = 333;
         $_POST['CI_Remarks'] = 333;*/
 
-        $data = new CaseInfo;  
-        $data ->CI_Name = $_POST['CI_Name']; 
+        $data = new CaseInfo;
+        $data ->CI_Name = $_POST['CI_Name'];
         $data ->CI_Place = "";
         $data ->CI_Pic = $_POST['CI_Pic'];
         // $data ->CI_Time = $_POST['CI_Time'];
         $data ->CI_Sort = 1;
-        $data ->CI_Show = 1;
-        $data ->CI_Remarks = $_POST['CI_Remarks']; 
+        $data ->CI_Show = $_POST['CI_Show'];
+        $data ->CI_Remarks = "";
         $data ->CI_Type = 1;
         $data->save();
 
         $CI_ID = $data->attributes['CI_ID'];
         
         $data = new CaseBind;
-        $data ->CI_Type = 1; 
-        $data ->TypeID = $_COOKIE['account_id'];
+        $data ->CB_Type = 1;
+        $data ->TypeID = $_POST['account_id'];
         $data ->CI_ID = $CI_ID;
         $data->save();
 
-        $data = new CaseResources;
-        $data ->CI_ID = $CI_ID;
-        $data ->CR_Sort = 1;
-        $data ->CR_Show = 1;
-        foreach ($_POST['resources'] as $key => $value) {
-            $data ->CR_Type = $vale['Cr_Type'];
-            $data ->CR_Name = $vale['Cr_Name'];
-            $data ->CR_Path = $vale['Cr_Path'];
-            $data ->CR_Remarks = $vale['Remarks'];
+
+        //resource 处理
+        $_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
+        $t = explode(",",$_POST['resource']);
+        $resources = array();
+        foreach ($t as $key => $value) {
+            $t1 = explode(".", $value);
+            $item = array();
+            if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                $item['Cr_Type'] = 1 ;
+            }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                $item['Cr_Type'] = 2 ;
+            }
+            $item['Cr_Path'] = $value;
+            $resources[]=$item;
+        };
+        /*print_r($resources);die;*/
+
+
+        $i = 1;
+        foreach ($resources as $key => $value) {
+            $data = new CaseResources;
+            $data ->CI_ID = $CI_ID;
+            $data ->CR_Show = 1;
+            $data ->CR_Type = $value['Cr_Type'];
+            $data ->CR_Name = "";
+            $data ->CR_Path = $value['Cr_Path'];
+            $data ->CR_Remarks = "";
+            $data ->CR_Sort = $i++;
             $data->save();
-        }
+        };
     }
 
     public function actionDecoration_tap()
@@ -259,13 +368,34 @@ class BackgroundController extends InitController
         //新增供应商
         $data = new Supplier;
         $data ->account_id = $_COOKIE['account_id'];
-        $data ->type_id = $_POST['type_id'];
+        $data ->type_id = 20;
         $data ->staff_id = $id;
         $data ->contract_url = "";
         $data ->update_time = $_POST['update_time'];
         $data ->save();
     }
 
+    public function actionTap_add()
+    {
+        $data = new SupplierProductDecorationTap;
+        $data ->account_id = $_POST['account_id'];
+        $data ->name = $_POST['name'];
+        $data ->pic = $_POST['pic'];
+        $data ->update_time = $_POST['update_time'];
+        $data ->save();
+    }
 
+    public function actionDel_resource()
+    {
+        CaseResources::model()->deleteByPk($_POST['CR_ID']); 
+    }
 
+    public function actionBind_product()
+    {
+        $data = new CaseResourcesProduct;
+        $data ->CR_ID = $_POST['CR_ID'];
+        $data ->supplier_product_id = $_POST['supplier_product_id'];
+        $data ->update_time = date('y-m-d h:i:s',time());
+        $data ->save();
+    }
 }

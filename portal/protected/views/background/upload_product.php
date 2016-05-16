@@ -7,8 +7,97 @@
     <title>上传</title>
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <script type="text/javascript" src="http://file.cike360.com/swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="js/handlers.js"></script>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/input.js"></script>
+    <script type="text/javascript" src="js/upload.js"></script>
     <!-- 引用控制层插件样式 -->
-    <link rel="stylesheet" href="css/zyUpload.css" type="text/css">
+    <!-- <link rel="stylesheet" href="css/zyUpload.css" type="text/css"> -->
+    <script type="text/javascript">
+        var swfu;
+        var swfu2;
+        var uploadsite = "http://file.cike360.com";
+        window.onload = function () {
+            $.cookie("imgs", "");
+            var settings2= {
+                flash_url: uploadsite + "/swfupload/swfupload.swf",
+                upload_url: uploadsite + "/upload.ashx",
+                post_params: {},
+                file_size_limit: "4100MB",
+                file_types: "*.jpg;*.gif;*.png;*.bmp;",
+                file_types_description: "图片文件",
+                file_upload_limit: 100,
+                file_queue_limit: 100,
+                custom_settings: {
+                    progressTarget: "fsUploadProgress",
+                    cancelButtonId: "btnCancel"
+                },
+                debug: false,
+                button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                //button_action: SWFUpload.BUTTON_ACTION.SELECT_FILES,
+                // Button Settings
+                button_placeholder_id: "uploadsingle",
+                button_image_url: "images/btn.png",
+                button_width: 120,
+                button_height: 35,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND, 
+                swfupload_preload_handler: preLoad,
+                swfupload_load_failed_handler: loadFailed,
+                file_queued_handler: fileQueued,
+                file_queue_error_handler: fileQueueError,
+                file_dialog_complete_handler: fileDialogComplete,
+                upload_progress_handler: uploadProgress,
+                upload_error_handler: uploadError,
+                upload_success_handler: uploadSuccess2,
+                upload_complete_handler: uploadComplete,
+                file_dialog_start_handler: fileDialogStart,
+            };
+            
+            var settings3= {
+                flash_url: uploadsite + "/swfupload/swfupload.swf",
+                upload_url: uploadsite + "/upload.ashx",
+                post_params: {},
+                file_size_limit: "4100MB",
+                file_types: "*.jpg;*.gif;*.png;*.bmp;",
+                file_types_description: "图片文件",
+                file_upload_limit: 100,
+                file_queue_limit: 100,
+                custom_settings: {
+                    progressTarget: "fsUploadProgress",
+                    cancelButtonId: "btnCancel"
+                },
+                debug: false,
+                button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                //button_action: SWFUpload.BUTTON_ACTION.SELECT_FILES,
+                // Button Settings
+                button_placeholder_id: "uploadsingle1",
+                button_image_url: "images/btn.png",
+                button_width: 120,
+                button_height: 35,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND, 
+                swfupload_preload_handler: preLoad,
+                swfupload_load_failed_handler: loadFailed,
+                file_queued_handler: fileQueued,
+                file_queue_error_handler: fileQueueError,
+                file_dialog_complete_handler: fileDialogComplete,
+                upload_progress_handler: uploadProgress,
+                upload_error_handler: uploadError,
+                upload_success_handler: uploadSuccess3,
+                upload_complete_handler: uploadComplete,
+                file_dialog_start_handler: fileDialogStart,
+            };
+            swfu2 = new SWFUpload(settings2);
+            swfu3 = new SWFUpload(settings3);
+        }
+        function queueComplete() {
+            //location.href="";
+        }
+
+    </script>
 </head>
 
 <body style="background:#fff;">
@@ -46,7 +135,7 @@
                     <?php }?>
                         </select>
                     </div>
-                    <span class="left add add_supplier">新增类别</span>
+                    <span class="left add add_class">新增类别</span>
                     <span class="left tip hid" id="tap_t">请选择供应商</span>
                 </li>
                 <li class="desc_item clearfix">
@@ -62,7 +151,7 @@
                     <?php }?>
                         </select>
                     </div>
-                    <span class="left add add_supplier">新增供应商</span>
+                    <span class="left add add_supplier">新增<场地布置>供应商</span>
                     <span class="left tip hid" id="supplier_t">请选择供应商</span>
                 </li>
                 <li class="desc_item clearfix">
@@ -111,17 +200,18 @@
                     <span class="left tip hid" id="remarks_t">请填写产品描述</span>
                 </li>
             </ul>
-            <!-- <div class="right video_cover">
+            <div class="right video_cover" style="position: absolute;right: 120px;">
                 <div class="cover_box">
-                    <img src="images/cover.jpg" alt="">
+                    <img src="images/cover.jpg" id="poster_img">
                 </div>
-                <button>上传视频封面</button>
-                <span class="tip tip2">请填写信息标题</span>
-            </div> -->
+                <button id="uploadsingle">上传产品示意图</button>
+                <!--  -->
+                <span class="tip tip2 hid" id="ref_pic_t">请上传示意图</span>
+            </div>
         </div>
 
         <!--产品图片-->
-        <div class="upload_wapper">
+        <!-- <div class="upload_wapper">
             <div class="video_desc clearfix">
                 <ul class="left desc_box">
                     <li class="desc_item clearfix">
@@ -163,7 +253,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> -->
 
         <div class="upload_btn_box">
             <button href="javascript:;" class="btn active" id="sure">添加产品</button>
@@ -175,18 +265,28 @@
     <div class="msgbox msgbox_class">
         <div class="msgbox_c">
             <div class="tit_box clearfix">
-                <h2 class="left">弹框标题</h2>
+                <h2 class="left">新增<场地布置｜产品类别></h2>
                 <img class="right close" src="images/close.jpg" alt="">
             </div>
             <div class="con clearfix">
+                <div class="video_cover" style="margin-right:0px;">
+                    <label for="">类别封面：</label>
+                    <div class="cover_box" style="margin-left:105px;">
+                        <img src="images/cover.jpg" id="poster_img1">
+                    </div>
+                    <button id="uploadsingle1">上传产品示意图</button>
+                    <!--  -->
+                    <span class="tip tip2 hid" id="tap_poster_t">请上传类别封面</span>
+                </div>
                 <div class="clearfix">
-                    <label for="">售价：</label><input class="inputItem" type="text">
+                    <label for="">类别名称：</label><input id="tap_name" class="inputItem" type="text">
+                    <span class="tip tip2 hid" id="tap_name_t">请输入类别名称</span>
                 </div>
                 <div class="btn_box right">
-                <button>保存</button>
-                <button>不保存</button>
-                <button class="close">取消</button>
-            </div>
+                    <button id="insert_tap">保存</button>
+                    <!-- <button>不保存</button> -->
+                    <button class="close">取消</button>
+                </div>
             </div>
             
         </div>
@@ -195,7 +295,7 @@
     <div class="msgbox msgbox_supplier">
         <div class="msgbox_c">
             <div class="tit_box clearfix">
-                <h2 class="left">新增供应商</h2>
+                <h2 class="left">新增<场地布置>供应商</h2>
                 <img class="right close" src="images/close.jpg" alt="">
             </div>
             <div class="con clearfix">
@@ -205,17 +305,17 @@
                 <div class="clearfix">
                     <label for="">手机号：</label><input id="telephone" class="inputItem" type="text">
                 </div>
-                <div class="clearfix">
+                <!-- <div class="clearfix">
                     <label for="">供应商类别：</label>
                     <div class="select_c left">
                         <select name="" id="supplier_type" style="height: 30px;width: 235px;margin-top: 5px;">
                             <option value="">请选择</option>
-                    <?php foreach ($supplier_type as $key => $value) {?>
-                            <option value="<?php echo $value['name']?>" supplier-type-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php /*foreach ($supplier_type as $key => $value)*/ {?>
+                            <option value="" supplier-type-id=""></option>
                     <?php }?>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="btn_box right">
                     <button id="insert_supplier">保存</button>
                 </div>
@@ -241,19 +341,18 @@
             <p>京公网安备11010502022785号 京公网安备11010502022785号</p>
             <p>京公网安备11010502022785号</p>
         </div>
-<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="js/input.js"></script>
-<script type="text/javascript" src="js/upload.js"></script>
+
 <!-- 引用核心层插件 -->
-<script type="text/javascript" src="js/zyFile.js"></script>
+<!-- <script type="text/javascript" src="js/zyFile.js"></script> -->
 <!-- 引用控制层插件 -->
-<script type="text/javascript" src="js/zyUpload.js"></script>
+<!-- <script type="text/javascript" src="js/zyUpload.js"></script> -->
 <!-- 引用初始化JS -->
-<script type="text/javascript" src="js/demo.js"></script>
+<!-- <script type="text/javascript" src="js/demo.js"></script> -->
 <script>
     $(function(){
         //添加产品
         $("#sure").on("click",function(){
+            var url = "http://file.cike360.com";
             var mydate = new Date();
             var time = mydate.toLocaleDateString();
             var data = {
@@ -268,9 +367,8 @@
                 unit_price : $("#price").val(),
                 unit_cost : $("#cost").val(),
                 service_charge_ratio : 0,
-                ref_pic_url : $("#fileImage").val(),
+                ref_pic_url : url + $.cookie('img'),
                 update_time : time
-
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -283,10 +381,13 @@
             if(data.unit_price==""){$("#price_t").removeClass("hid")};
             if(data.unit_cost==""){$("#cost_t").removeClass("hid")};
             if(data.ref_pic_url==""){$("#file_t").removeClass("hid")};
-            if(data.name==""||data.decription==""||data.supplier_id==null||data.supplier_type_id ==null||data.unit==""||data.unit_price==""||data.unit_cost==""||data.ref_pic_url==""||data.decoration_tap==null){
+            if($.cookie('img')== "null" || $.cookie('img')== null){$("#ref_pic_t").removeClass("hid")};
+            if($.cookie('img')== "null" || $.cookie('img')== null || data.name==""||data.decription==""||data.supplier_id==null||data.supplier_type_id ==null||data.unit==""||data.unit_price==""||data.unit_cost==""||data.ref_pic_url==""||data.decoration_tap==null){
                 alert("请补全信息！");
             }else{
                 $.post("<?php echo $this->createUrl("background/product_upload");?>",data,function(){
+                    $.cookie('img', null); 
+                    $.cookie('img1', null); 
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=4";
                 });
             };
@@ -299,18 +400,45 @@
             var data = {
                 name : $("#supplier_name").val(),
                 telephone : $("#telephone").val(),
-                type_id : $("#supplier_type option:selected").val(),
                 update_time : time
             };
+            /*if(data.)*/
             $.post("<?php echo $this->createUrl("background/supplier_add");?>",data,function(){
                 location.href="<?php echo $this->createUrl("background/upload_product");?>";
             });
         });
 
+        //增加产品类别
+        $("#insert_tap").on("click",function(){
+            var mydate = new Date();
+            var time = mydate.toLocaleDateString();
+            var data = {
+                account_id : $.cookie('account_id'),
+                name : $("#tap_name").val(),
+                pic : $.cookie('img1'),
+                update_time : time
+            };
+            console.log(data);
+            $(".tip").removeClass("hid");
+            $(".tip").addClass("hid");
+            if($("#tap_name").val() == ""){$("#tap_name_t").removeClass("hid")};
+            if($.cookie('img1') == 'null' || $.cookie('img1') == null){$("#tap_poster_t").removeClass("hid")};
+            if($("#tap_name").val() == "" || $.cookie('img1') == 'null' || $.cookie('img1') == null){
+                alert('请补全信息');
+            }else{
+                $.post("<?php echo $this->createUrl("background/tap_add");?>",data,function(){
+                    $.cookie('img1', null); 
+                    location.href = "<?php echo $this->createUrl("background/upload_product");?>";
+                });
+            };
+        });
+
         //返回
         $("#b").on("click",function(){
+            $.cookie('img', null); 
+            $.cookie('img1', null); 
             location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=4";
-        })
+        });
     })
 </script>
 </body>

@@ -11,14 +11,14 @@
  * @property string $update_time
  * @property string $avatar
  */
-class CaseInfo extends InitActiveRecord
+class CaseResourcesProduct extends InitActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'case_info';
+		return 'case_resources_product';
 	}
 
 	/**
@@ -31,17 +31,10 @@ class CaseInfo extends InitActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('CI_ID',$this->CI_ID);
-		$criteria->compare('CI_Name',$this->CI_Name);
-		$criteria->compare('CI_Place',$this->CI_Place,true);
-		$criteria->compare('CI_Pic',$this->CI_Pic,true);
-		$criteria->compare('CI_Time',$this->CI_Time,true);
-		$criteria->compare('CI_CreateTime',$this->CI_CreateTime,true);
-		$criteria->compare('CI_Sort',$this->CI_Sort,true);
-		$criteria->compare('CI_Show',$this->CI_Show,true);
-		$criteria->compare('CI_Remarks',$this->CI_Remarks,true);
-		$criteria->compare('CI_Type',$this->CI_Type,true);
-
+		$criteria->compare('id',$this->id);
+		$criteria->compare('CR_ID',$this->CR_ID);
+		$criteria->compare('supplier_product_id',$this->supplier_product_id,true);
+		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

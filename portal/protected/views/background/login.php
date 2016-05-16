@@ -15,7 +15,7 @@
                 <input class="loginItem" id="telephone" type="text" placeholder="手机号">
                 <input class="loginItem pswd" id="password" type="password" placeholder="密码">
                 <button class="login_btn" id="sure">登录</button>
-                <!-- <a class="go_regist" href="#">立即注册</a> -->
+                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="font-size: 1rem;margin-top: 20px;">立即注册</a>
             </div>
             
         </div>
