@@ -118,7 +118,7 @@
                         <span class="must">*</span>
                     </div>
                     <div class="input_box left clearfix">
-                        <input class="input_in" type="text" value="" placeholder="请输入产品名称" id="name">
+                        <input class="input_in" type="text" value="<?php echo $product['name']?>" placeholder="请输入产品名称" id="name">
                     </div>
                     <span class="left tip hid" id="name_t">请填写产品名称</span>
                 </li>
@@ -175,7 +175,7 @@
                         <span class="must">*</span>
                     </div>
                     <div class="input_box left has_unit">
-                        <input class="input_in" type="text" value="" placeholder="请输入产品售价" id="price"><span>元</span>
+                        <input class="input_in" type="text" value="<?php echo $product['unit_price']?>" placeholder="请输入产品售价" id="price"><span>元</span>
                     </div>
                     <span class="left tip hid" id="price_t">请填写产品售价</span>
                 </li>
@@ -185,7 +185,7 @@
                         <span class="must">*</span>
                     </div>
                     <div class="input_box left has_unit">
-                        <input class="input_in" type="text" value="" placeholder="请输入产品底价" id="cost"><span>元</span>
+                        <input class="input_in" type="text" value="<?php echo $product['unit_cost']?>" placeholder="请输入产品底价" id="cost"><span>元</span>
                     </div>
                     <span class="left tip hid" id="cost_t">请填写产品底价</span>
                 </li>
@@ -195,14 +195,14 @@
                         <span class="must">*</span>
                     </div>
                     <div class="input_box left">
-                        <textarea class="input_in" name="" id="remarks" cols="30" placeholder="请输入产品描述" rows="10"></textarea>
+                        <textarea class="input_in" name="" id="remarks" cols="30" placeholder="请输入产品描述" rows="10"><?php echo $product['description']?></textarea>
                     </div>
                     <span class="left tip hid" id="remarks_t">请填写产品描述</span>
                 </li>
             </ul>
             <div class="right video_cover" style="position: absolute;right: 120px;">
                 <div class="cover_box">
-                    <img src="images/cover.jpg" id="poster_img" style="width:120px;">
+                    <img src="<?php echo "http://file.cike360.com".$product['ref_pic_url']?>" id="poster_img" style="width:120px;">
                 </div>
                 <button id="uploadsingle">上传产品示意图</button>
                 <!--  -->
@@ -256,7 +256,7 @@
         </div> -->
 
         <div class="upload_btn_box">
-            <button href="javascript:;" class="btn active" id="sure">添加产品</button>
+            <button href="javascript:;" class="btn active" id="sure">确定</button>
             <button href="javascript:;" class="btn" id="b">返回</button>
             <!-- <a href="javascript:;" class="btn" id="back">返回</a> -->
         </div>
@@ -350,24 +350,31 @@
 <!-- <script type="text/javascript" src="js/demo.js"></script> -->
 <script>
     $(function(){
+        //初始渲染
+        $("#unit").val("<?php echo $product['unit']?>");
+        $("#tap").val($("[tap-id='<?php echo $product['decoration_tap']?>']").val());
+        $("#supplier").val($("[supplier-id='<?php echo $product['supplier_id']?>']").val());
+        $.cookie('img',"<?php echo $product['ref_pic_url']?>");
         //添加产品
         $("#sure").on("click",function(){
+            var url = "http://file.cike360.com";
             var mydate = new Date();
             var time = mydate.toLocaleDateString();
             var data = {
-                name : $("#name").val(),
-                description : $("#remarks").val(),
-                supplier_id : $("#supplier option:selected").attr("supplier-id"),
-                supplier_type_id : $("#supplier option:selected").attr("supplier-type-id"),
-                decoration_tap : $("#tap option:selected").attr("tap-id"),
-                standard_type : 0,
-                category : 2,
-                unit : $("#unit option:selected").val(),
-                unit_price : $("#price").val(),
-                unit_cost : $("#cost").val(),
-                service_charge_ratio : 0,
-                ref_pic_url : $.cookie('img'),
-                update_time : time
+                    product_id : <?php echo $_GET['product_id']?>,
+                    name : $("#name").val(),
+                    description : $("#remarks").val(),
+                    supplier_id : $("#supplier option:selected").attr("supplier-id"),
+                    supplier_type_id : $("#supplier option:selected").attr("supplier-type-id"),
+                    decoration_tap : $("#tap option:selected").attr("tap-id"),
+                    standard_type : 0,
+                    category : 2,
+                    unit : $("#unit option:selected").val(),
+                    unit_price : $("#price").val(),
+                    unit_cost : $("#cost").val(),
+                    service_charge_ratio : 0,
+                    ref_pic_url : $.cookie('img'),
+                    update_time : time
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -384,7 +391,7 @@
             if($.cookie('img')== "null" || $.cookie('img')== null || data.name==""||data.decription==""||data.supplier_id==null||data.supplier_type_id ==null||data.unit==""||data.unit_price==""||data.unit_cost==""||data.ref_pic_url==""||data.decoration_tap==null){
                 alert("请补全信息！");
             }else{
-                $.post("<?php echo $this->createUrl("background/product_upload");?>",data,function(){
+                $.post("<?php echo $this->createUrl("background/product_edit");?>",data,function(){
                     $.cookie('img', null); 
                     $.cookie('img1', null); 
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=4";

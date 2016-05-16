@@ -138,7 +138,7 @@
             </ul>
             <div class="right video_cover">
                 <div class="cover_box">
-                    <img src="<?php echo $case['CI_Pic']?>" alt="" id="poster_img" style="width: 120px;">
+                    <img src="<?php echo $pic?>" alt="" id="poster_img" style="width: 120px;">
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>

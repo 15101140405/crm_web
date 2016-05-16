@@ -159,6 +159,9 @@ class BackgroundController extends InitController
 
                         )
                 ));
+            foreach($product as  $key => $val){
+                $product[$key]["ref_pic_url"]=$url.$val["ref_pic_url"];
+            };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
                     'condition' => 'account_id=:account_id',
                     'params' => array(
@@ -170,8 +173,7 @@ class BackgroundController extends InitController
                     'case_data' => $product,
                     'tap' => $tap,
                 ));
-        }
-            
+        };   
     }
 
     public function actionUpload_case()
@@ -210,9 +212,7 @@ class BackgroundController extends InitController
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
-        $case['CI_Pic'] = $url.$t[0].'_sm.'.$t[1];
-        $cookie = new CHttpCookie('img',$case['CI_Pic']);
-        Yii::app()->request->cookies['img']=$cookie;
+        $Pic = $url.$t[0].'_sm.'.$t[1];
 
         //取场布产品信息
         $product = SupplierProduct::model()->findAll(array(
@@ -232,6 +232,7 @@ class BackgroundController extends InitController
             ));
         /*print_r($product);die;*/
         $this->render("edit_case",array(
+                'pic' => $Pic,
                 'resources' => $resources,
                 'case' => $case,
                 'case_data' => $product,
@@ -275,6 +276,33 @@ class BackgroundController extends InitController
               return false;
     }
 
+    public function actionEdit_product()
+    {
+        //取产品数据
+         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
+
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
+        $supplier = $result->queryAll();
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $this->render('edit_product',array(
+                'product' => $product,
+                'supplier' => $supplier,
+                'decoration_tap' => $decoration_tap,
+                'supplier_type' => $supplier_type,
+            ));
+    }
+
     public function actionCase_upload()
     {
         /*$_POST['CI_Name'] = 333;
@@ -303,7 +331,7 @@ class BackgroundController extends InitController
 
         //resource 处理
         //$_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
-        $t = explode(",",$_POST['resource']);
+        $t = explode(",",$_POST['case_resource']);
         $resources = array();
         foreach ($t as $key => $value) {
             $t1 = explode(".", $value);
@@ -361,6 +389,21 @@ class BackgroundController extends InitController
         $data ->description = $_POST['description'];
         $data ->update_time = $_POST['update_time'];
         $data->save();
+    }
+
+    public function actionProduct_edit()
+    {
+        SupplierProduct::model()->updateByPk($_POST['product_id'],array(
+                'name' => $_POST['name'],
+                'description' => $_POST['description'],
+                'supplier_id' => $_POST['supplier_id'],
+                'supplier_type_id' => $_POST['supplier_type_id'],
+                'decoration_tap' => $_POST['decoration_tap'],
+                'unit' => $_POST['unit'],
+                'unit_price' => $_POST['unit_price'],
+                'unit_cost' => $_POST['unit_cost'],
+                'ref_pic_url' => $_POST['ref_pic_url'],
+            ));
     }
 
     public function actionSupplier_add()
