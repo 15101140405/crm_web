@@ -184,21 +184,31 @@ class BackgroundController extends InitController
         $url = "http://file.cike360.com";
 
         //取资源信息
-        $resources = CaseResources::model()->findAll(array(
+        $data = CaseResources::model()->findAll(array(
                 'condition' => 'CI_ID=:CI_ID',
                 'params' => array(
                         ':CI_ID' => $_GET['ci_id'],
                     ),
                 'order' => 'CR_Sort',
             ));
-        foreach ($resources as $key => $value) {
+        $resources = array();
+        foreach ($data as $key => $value) {
             $t = explode('.', $value['CR_Path']);
-            /*print_r($value['CR_Path']);die;*/
-            $resources[$key]['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
-        };
+            $result = yii::app()->db->createCommand("select case_resources_product.id as bind_id,name,unit,unit_price from case_resources_product left join supplier_product on supplier_product_id=supplier_product.id where case_resources_product.CR_ID=".$value['CR_ID']);
+            $result = $result->queryAll();
+            $item = array();
+            $item['product'] = $result;
+            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            $item['CR_ID'] = $value['CR_ID'];
+            $item['CR_Sort'] = $value['CR_Sort'];
+            $resources[] = $item;
+        };  
+
+        /*print_r($resources);die;*/
 
         //取案例信息
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
         $case['CI_Pic'] = $url.$t[0].'_sm.'.$t[1];
         $cookie = new CHttpCookie('img',$case['CI_Pic']);
@@ -292,7 +302,7 @@ class BackgroundController extends InitController
 
 
         //resource 处理
-        $_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
+        //$_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
         $t = explode(",",$_POST['resource']);
         $resources = array();
         foreach ($t as $key => $value) {
@@ -397,5 +407,43 @@ class BackgroundController extends InitController
         $data ->supplier_product_id = $_POST['supplier_product_id'];
         $data ->update_time = date('y-m-d h:i:s',time());
         $data ->save();
+    }
+
+    public function actionDel_bind()
+    {
+        CaseResourcesProduct::model()->deleteByPk($_POST['bind_id']); 
+    }
+
+    public function actionCase_edit()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+            $i = $_POST['CR_Sort']+1;
+            foreach ($resources as $key => $value) {
+                $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+            };
+        };
     }
 }

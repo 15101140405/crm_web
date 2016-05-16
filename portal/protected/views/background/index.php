@@ -137,7 +137,7 @@
             $("#product_item li").removeClass("hid");
             $("#product_item li").addClass("hid");
             var tap = $(this).children('option:selected').attr("type-id");
-            $("[tap='"+tap+"']").removeClass("hid")
+            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
         });
 
         //点击编辑

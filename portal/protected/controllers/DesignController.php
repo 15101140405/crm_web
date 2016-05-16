@@ -3423,7 +3423,7 @@ class DesignController extends InitController
         }; 
     }
 
-    public function actioinAdd_to_order()
+    public function actionAdd_to_order()
     {   
         $code = 0;
         $result['msg'] = "";
