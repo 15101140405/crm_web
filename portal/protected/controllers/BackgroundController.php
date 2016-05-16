@@ -146,6 +146,56 @@ class BackgroundController extends InitController
         $this->render('upload_case');
     }
 
+    public function actionEdit_case()
+    {
+        $url = "http://file.cike360.com";
+
+        //取资源信息
+        $resources = CaseResources::model()->findAll(array(
+                'condition' => 'CI_ID=:CI_ID',
+                'params' => array(
+                        ':CI_ID' => $_GET['ci_id'],
+                    ),
+                'order' => 'CR_Sort',
+            ));
+        foreach ($resources as $key => $value) {
+            $t = explode('.', $value['CR_Path']);
+            /*print_r($value['CR_Path']);die;*/
+            $resources[$key]['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+        };
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        $t= explode('.', $case['CI_Pic']);
+        $case['CI_Pic'] = $url.$t[0].'_sm.'.$t[1];
+        $cookie = new CHttpCookie('img',$case['CI_Pic']);
+        Yii::app()->request->cookies['img']=$cookie;
+
+        //取场布产品信息
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));
+        /*print_r($product);die;*/
+        $this->render("edit_case",array(
+                'resources' => $resources,
+                'case' => $case,
+                'case_data' => $product,
+                'tap' => $tap,
+            ));
+    }
+
     public function actionUpload_set()
     {
         $this->render('upload_set');
@@ -209,7 +259,6 @@ class BackgroundController extends InitController
 
 
         //resource 处理
-        $url ="http://file.cike360.com";
         $_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
         $t = explode(",",$_POST['resource']);
         $resources = array();
@@ -221,7 +270,7 @@ class BackgroundController extends InitController
             }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
                 $item['Cr_Type'] = 2 ;
             }
-            $item['Cr_Path'] = $url.$value;
+            $item['Cr_Path'] = $value;
             $resources[]=$item;
         };
         /*print_r($resources);die;*/
@@ -293,6 +342,20 @@ class BackgroundController extends InitController
         $data ->name = $_POST['name'];
         $data ->pic = $_POST['pic'];
         $data ->update_time = $_POST['update_time'];
+        $data ->save();
+    }
+
+    public function actionDel_resource()
+    {
+        CaseResources::model()->deleteByPk($_POST['CR_ID']); 
+    }
+
+    public function actionBind_product()
+    {
+        $data = new CaseResourcesProduct;
+        $data ->CR_ID = $_POST['CR_ID'];
+        $data ->supplier_product_id = $_POST['supplier_product_id'];
+        $data ->update_time = date('y-m-d h:i:s',time());
         $data ->save();
     }
 }

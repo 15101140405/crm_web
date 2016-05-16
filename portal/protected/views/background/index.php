@@ -59,7 +59,7 @@
             <?php foreach ($case_data as $key => $value) {
                 if($_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 2){
                     if($value['CI_Type'] == $_GET['CI_Type']){?>
-                    <li class="clearfix" tap=''>
+                    <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
                                 <img src="<?php echo $value['CI_Pic']?>" alt="">
@@ -82,7 +82,7 @@
                         </div>
                     </li>
             <?php }}else{?>
-                    <li class="clearfix" tap='<?php echo $value['decoration_tap']?>'>
+                    <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
                                 <img src="<?php echo $value['ref_pic_url']?>" alt="">
@@ -138,6 +138,13 @@
             $("#product_item li").addClass("hid");
             var tap = $(this).children('option:selected').attr("type-id");
             $("[tap='"+tap+"']").removeClass("hid")
+        });
+
+        //点击编辑
+        $(".edit_btn").on("click",function(){
+            if("<?php echo $_GET['CI_Type']?>" == 1){
+                location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            };
         });
     })
 </script>
