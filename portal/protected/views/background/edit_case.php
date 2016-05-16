@@ -13,6 +13,7 @@
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/upload.js"></script>
     <script type="text/javascript" src="js/input.js"></script>
+    <script type="text/javascript" src="js/select.js"></script>
     <script type="text/javascript">
         var swfu;
         var swfu2;
@@ -137,7 +138,7 @@
             </ul>
             <div class="right video_cover">
                 <div class="cover_box">
-                    <img src="<?php echo $case['CI_Pic']?>" alt="" id="poster_img" style="width: 120px;">
+                    <img src="<?php echo $pic?>" alt="" id="poster_img" style="width: 120px;">
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>
@@ -146,21 +147,24 @@
         <!-- 已上传资源 -->
         <div class="index_con_box" style="margin-bottom:20px;">
             <div class="con">
-                <ul class="upload_list" >
+                <ul class="upload_list" id="resources_list">
             <?php foreach ($resources as $key => $value) {?>
-                    <li class="clearfix" tap='' CR-ID="<?php echo $value['CR_ID']?>">
+                    <li class="clearfix" tap='' CR-Sort="<?php echo $value['CR_Sort']?>" CR-ID="<?php echo $value['CR_ID']?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
                                 <img src="<?php echo $value['CR_Path']?>" alt="">
-                                <span>私密视频</span>
+                                <!-- <span>私密视频</span> -->
                             </div>
                             <div class="video_info left">
-                                <h3></h3>
-                                <div class="state_box clearfix">
+                        <?php foreach ($value['product'] as $key1 => $value1) {?>
+                                <div class="state_box clearfix" product-id="<?php echo $value1['bind_id']?>">
                                     <img class="left" src="images/up06.jpg" alt="">
-                                    <span class="left"></span>
-                                    <span class="from left">来自：爱奇艺网页</span>
+                                    <span class="left"><?php echo $value1['name']?></span>
+                                    <span class="from left"><?php echo $value1['unit_price']?>元／<?php echo $value1['unit']?></span>
+                                    <img class="right del_product" src="images/close.png" alt="" style="margin-left:30px;width:10px;height:10px;margin-top:2px;border: 1px solid black;" >
                                 </div>
+
+                        <?php }?>
                                 <!-- cover_box -->
                             </div>
                         </div>
@@ -256,14 +260,19 @@
     </div>
 <script>
     $(function(){
+        //初始渲染
+        $.cookie('img',"<?php echo $case['CI_Pic']?>");
+        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
         //保存
         $("#save").on("click",function(){
             var data = {
+                CI_ID : <?php echo $_GET['ci_id']?>,
                 CI_Name : $("#case_name").val(),
                 CI_Show : $("#CI_Show option:selected").val(),
                 CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
+                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -274,7 +283,7 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
-                $.post("<?php echo $this->createUrl("background/case_upload");?>",data,function(){
+                $.post("<?php echo $this->createUrl("background/case_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
@@ -302,8 +311,20 @@
                 location.reload();
             })
         })
+        //按分类筛选产品
+        $('#select_type').change(function(){
+            $("#product_item li").removeClass("hid");
+            $("#product_item li").addClass("hid");
+            var tap = $(this).children('option:selected').attr("type-id");
+            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
+        });
+        //删除绑定
+        $(".del_product").on("click",function(){
+            $.post("<?php echo $this->createUrl("background/del_bind");?>",{bind_id:$(this).parent().attr("product-id")},function(){
+                location.reload();
+            });
+        });
     })
 </script>
 </body>
-
 </html>

@@ -168,6 +168,9 @@ class BackgroundController extends InitController
 
                         )
                 ));
+            foreach($product as  $key => $val){
+                $product[$key]["ref_pic_url"]=$url.$val["ref_pic_url"];
+            };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
                     'condition' => 'account_id=:account_id',
                     'params' => array(
@@ -179,8 +182,7 @@ class BackgroundController extends InitController
                     'case_data' => $product,
                     'tap' => $tap,
                 ));
-        }
-            
+        };   
     }
 
     public function actionUpload_case()
@@ -193,25 +195,33 @@ class BackgroundController extends InitController
         $url = "http://file.cike360.com";
 
         //取资源信息
-        $resources = CaseResources::model()->findAll(array(
+        $data = CaseResources::model()->findAll(array(
                 'condition' => 'CI_ID=:CI_ID',
                 'params' => array(
                         ':CI_ID' => $_GET['ci_id'],
                     ),
                 'order' => 'CR_Sort',
             ));
-        foreach ($resources as $key => $value) {
+        $resources = array();
+        foreach ($data as $key => $value) {
             $t = explode('.', $value['CR_Path']);
-            /*print_r($value['CR_Path']);die;*/
-            $resources[$key]['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
-        };
+            $result = yii::app()->db->createCommand("select case_resources_product.id as bind_id,name,unit,unit_price from case_resources_product left join supplier_product on supplier_product_id=supplier_product.id where case_resources_product.CR_ID=".$value['CR_ID']);
+            $result = $result->queryAll();
+            $item = array();
+            $item['product'] = $result;
+            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            $item['CR_ID'] = $value['CR_ID'];
+            $item['CR_Sort'] = $value['CR_Sort'];
+            $resources[] = $item;
+        };  
+
+        /*print_r($resources);die;*/
 
         //取案例信息
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
-        $case['CI_Pic'] = $url.$t[0].'_sm.'.$t[1];
-        $cookie = new CHttpCookie('img',$case['CI_Pic']);
-        Yii::app()->request->cookies['img']=$cookie;
+        $Pic = $url.$t[0].'_sm.'.$t[1];
 
         //取场布产品信息
         $product = SupplierProduct::model()->findAll(array(
@@ -231,6 +241,7 @@ class BackgroundController extends InitController
             ));
         /*print_r($product);die;*/
         $this->render("edit_case",array(
+                'pic' => $Pic,
                 'resources' => $resources,
                 'case' => $case,
                 'case_data' => $product,
@@ -274,6 +285,33 @@ class BackgroundController extends InitController
               return false;
     }
 
+    public function actionEdit_product()
+    {
+        //取产品数据
+         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
+
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
+        $supplier = $result->queryAll();
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $this->render('edit_product',array(
+                'product' => $product,
+                'supplier' => $supplier,
+                'decoration_tap' => $decoration_tap,
+                'supplier_type' => $supplier_type,
+            ));
+    }
+
     public function actionCase_upload()
     {
         /*$_POST['CI_Name'] = 333;
@@ -301,8 +339,8 @@ class BackgroundController extends InitController
 
 
         //resource 处理
-        $_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
-        $t = explode(",",$_POST['resource']);
+        //$_POST['resource']= '/upload/wutai0120160515094855.jpg,/upload/wutai0220160515094857.png,/upload/wutai0320160515094859.png,/upload/wutai0420160515094900.jpg,/upload/wutai0520160515094901.jpg,/upload/wutai0620160515094902.jpg,/upload/wutai0720160515094903.jpg,/upload/wutai0820160515094905.jpg';
+        $t = explode(",",$_POST['case_resource']);
         $resources = array();
         foreach ($t as $key => $value) {
             $t1 = explode(".", $value);
@@ -362,6 +400,21 @@ class BackgroundController extends InitController
         $data->save();
     }
 
+    public function actionProduct_edit()
+    {
+        SupplierProduct::model()->updateByPk($_POST['product_id'],array(
+                'name' => $_POST['name'],
+                'description' => $_POST['description'],
+                'supplier_id' => $_POST['supplier_id'],
+                'supplier_type_id' => $_POST['supplier_type_id'],
+                'decoration_tap' => $_POST['decoration_tap'],
+                'unit' => $_POST['unit'],
+                'unit_price' => $_POST['unit_price'],
+                'unit_cost' => $_POST['unit_cost'],
+                'ref_pic_url' => $_POST['ref_pic_url'],
+            ));
+    }
+
     public function actionSupplier_add()
     {
         $data = new Staff;
@@ -406,5 +459,43 @@ class BackgroundController extends InitController
         $data ->supplier_product_id = $_POST['supplier_product_id'];
         $data ->update_time = date('y-m-d h:i:s',time());
         $data ->save();
+    }
+
+    public function actionDel_bind()
+    {
+        CaseResourcesProduct::model()->deleteByPk($_POST['bind_id']); 
+    }
+
+    public function actionCase_edit()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+            $i = $_POST['CR_Sort']+1;
+            foreach ($resources as $key => $value) {
+                $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+            };
+        };
     }
 }

@@ -51,7 +51,7 @@
                             <?php }?>
                             </select>
                         </div>
-                        <p class="left" id="shaixuan_remark">共<span class="num">1</span>个视频</p>
+                        <!-- <p class="left" id="shaixuan_remark">共<span class="num">1</span>个视频</p> -->
                     </div>
                     <button class="right upload_new_btn" id="upload">上传新视频</button>
                 </div>
@@ -68,16 +68,16 @@
                             <div class="video_info left">
                                 <h3><?php echo $value['CI_Name']?></h3>
                                 <div class="state_box clearfix">
-                                    <img class="left" src="images/up06.jpg" alt="">
+                                    <!-- <img class="left" src="images/up06.jpg" alt=""> -->
                                     <span class="left"><?php echo $value['CI_Remarks']?></span>
-                                    <span class="from left">来自：爱奇艺网页</span>
+                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
                                 </div>
-                                <p class="tag">标签:<span>分销</span>
-                                </p>
+                                <!-- <p class="tag">标签:<span>分销</span>
+                                </p> -->
                             </div>
                         </div>
                         <div class="edit_btn_box right clearfix">
-                            <span class="left state">转码中</span>
+                            <!-- <span class="left state">转码中</span> -->
                             <a class="edit_btn left" href="javascript:;">编辑</a>
                         </div>
                     </li>
@@ -91,12 +91,12 @@
                             <div class="video_info left">
                                 <h3><?php echo $value['name']?></h3>
                                 <div class="state_box clearfix">
-                                    <img class="left" src="images/up06.jpg" alt="">
+                                    <!-- <img class="left" src="images/up06.jpg" alt=""> -->
                                     <span class="left"><?php echo $value['description']?></span>
-                                    <span class="from left">来自：爱奇艺网页</span>
+                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
                                 </div>
-                                <p class="tag">标签:<span>分销</span>
-                                </p>
+                                <!-- <p class="tag">标签:<span>分销</span>
+                                </p> -->
                             </div>
                         </div>
                         <div class="edit_btn_box right clearfix">
@@ -137,7 +137,7 @@
             $("#product_item li").removeClass("hid");
             $("#product_item li").addClass("hid");
             var tap = $(this).children('option:selected').attr("type-id");
-            $("[tap='"+tap+"']").removeClass("hid")
+            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
         });
 
         //点击编辑
@@ -145,6 +145,9 @@
             if("<?php echo $_GET['CI_Type']?>" == 1){
                 location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
             };
+            if('<?php echo $_GET['CI_Type']?>' == 4){
+                location.href = "<?php echo $this->createUrl("background/edit_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
+            }
         });
     })
 </script>
