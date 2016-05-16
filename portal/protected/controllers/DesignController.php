@@ -3402,4 +3402,135 @@ class DesignController extends InitController
         ));
     }
 
+    public function actioinAdd_to_order()
+    {   
+        $code = 0;
+        $result['msg'] = "";
+        try {
+            $staff = Staff::model()->find(array(
+                "condition" => "id = :id",
+                "params"    => array(
+                    ":id" => $_POST['token'],
+            )));
+
+            $account_id = $staff['account_id'];
+
+            $data = new OrderProduct;
+            $data ->account_id = $account_id;
+            $data ->order_id = $_POST['orderid'];
+
+            $supplier_product_id = array();
+
+            foreach ($_POST['product'] as $key => $value) {
+                $supplier_product_id[] = $value ->productid;
+            }
+
+            $criteria = new CDbCriteria; 
+            $criteria ->addInCondition("id",$supplier_product_id);
+            
+            $supplier_product = SupplierProduct::model()->findAll($criteria);
+
+            foreach ($_POST['product'] as $key1 => $value1) {
+                foreach ($supplier_product as $key2 => $value2) {
+                    if ($value1['productid'] == $value2['id']) {
+                        $data ->actual_unit_cost = $value2['unit_cost'];
+                    }
+                }
+                $data ->product_type = $value1['producttype'];
+                $data ->product_id = $value1['productid'];
+                $data ->unit = $value1['amount'];
+                $data ->actual_price = $value1['unitprice'];
+                $data ->sort = 1;
+
+                $data->save();
+            }
+            $code = 1;
+        } catch (Exception $e) {
+            $result['msg'] = $e;
+        }
+        $result['code'] = $code;
+        echo json_encode($result);
+    }
+
+     public function actioinAdd_order()
+    {   
+        $code = 0;
+        $result['msg'] = "";
+        try {
+            $staff = Staff::model()->find(array(
+                "condition" => "id = :id",
+                "params"    => array(
+                    ":id" => $_POST['token'],
+            )));
+
+            $account_id = $staff['account_id'];
+
+            $data = new Order;
+            $data ->account_id = $account_id;
+            $data ->designer_id = $staff['id'];
+            $data ->planner_id = $staff['id'];
+            $data ->adder_id = $staff['id'];
+            $data ->staff_hotel_id = $_POST['hotelid'];
+            $data ->order_name = $_POST['groomname']."&".$_POST['bridename'];
+            $data ->order_type = 2;
+            $data ->order_data = $_POST['orderdate'];
+            $data ->order_status = 1;
+            $data ->other_discount = 10;
+            $data ->feast_discount = 10;
+            $data ->cut_price = 0;
+
+            $data->save();
+
+            $order_id = $data->attributes['id'];
+
+            $data = new OrderWedding;
+            $data ->account_id = $account_id;
+            $data ->order_id = $staff['id'];
+            $data ->groom_name = $_POST['groomname'];
+            $data ->groom_phone = $_POST['groomtelephone'];
+            $data ->bride_name = $_POST['bridename'];
+            $data ->bride_phone = $_POST['bridetelephone'];
+            $data ->contact_name = $_POST['linkmanname'];
+            $data ->contact_phone = $_POST['linkmantelephone'];
+            
+            $data->save();
+
+            //复制自self actioinAdd_to_order()    有改动，注释       ////////////////
+            $data = new OrderProduct;
+            $data ->account_id = $account_id;
+            $data ->order_id = $_POST['orderid'];
+
+            $supplier_product_id = array();
+
+            foreach ($_POST['product'] as $key => $value) {
+                $supplier_product_id[] = $value ->productid;
+            }
+
+            $criteria = new CDbCriteria; 
+            $criteria ->addInCondition("id",$supplier_product_id);
+            
+            $supplier_product = SupplierProduct::model()->findAll($criteria);
+
+            foreach ($_POST['product'] as $key1 => $value1) {
+                foreach ($supplier_product as $key2 => $value2) {
+                    if ($value1['productid'] == $value2['id']) {
+                        $data ->actual_unit_cost = $value2['unit_cost'];
+                    }
+                }
+                $data ->product_type = $value1['producttype'];
+                $data ->product_id = $value1['productid'];
+                $data ->unit = $value1['amount'];
+                $data ->actual_price = $value1['unitprice'];
+                $data ->sort = $value1['sort'];//原是固定1，这里的情况有值
+
+                $data->save();
+            }
+            $code = 1;
+        } catch (Exception $e) {
+            $result['msg'] = $e;
+        }
+        $result['code'] = $code;
+        echo json_encode($result);
+    }
+
 }

@@ -1,8 +1,7 @@
 <?php
 
 include_once('../library/WPRequest.php');
-include "../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php";
-date_default_timezone_set('Asia/Shanghai'); 
+include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php');
 // include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/top/TopClient.php');
 // include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/top/request/AlibabaAliqinFcSmsNumSendRequest.php');
 
@@ -51,20 +50,32 @@ class BackgroundController extends InitController
 
     public function actionRegister_pro()
     {
-        $appkey = 23365214;
-        $secret = "2059843bfceda38bfcfe84565ea207b0";
-        $c = new TopClient;
-        $c->appkey = $appkey;
-        $c->secretKey = $secret;
-        $req = new AlibabaAliqinFcSmsNumSendRequest;
-        $req->setExtend("1");
-        $req->setSmsType("normal");
-        $req->setSmsFreeSignName("注册验证");
-        $req->setSmsParam("{code:'1',product:'1'}");
-        $req->setRecNum("15101140405");
-        $req->setSmsTemplateCode("SMS_9445074");
-        $resp = $c->execute($req);
+        // $telephone = $_POST['telephone'];
 
+        $url = "http://localhost:8080/crm_web_new/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
+
+        // $staff = Staff::model()->find(array(
+        //     "condition" => "telephone = :telephone",
+        //     "params"    => array(
+        //         ":telephone" => $_POST['telephone']
+        //         )
+        //     ));
+        // if (empty($staff)) {
+        //     echo "not exist";
+        // } elseif (!empty($staff['password'])){
+        //     echo "registered";
+        // } else {
+        //     $data = json_encode(array(
+        //         'telephone' => $_POST['telephone'],
+        //     ), JSON_UNESCAPED_UNICODE);
+        //     WPRequest::post($url, $data);
+        // }
+        // $data = array(1);
+        $result = WPRequest::post($url, $data);
+        // print_r($data);
+        // echo "result:".$result;
+
+       
     }
 
     public function actionLogin()

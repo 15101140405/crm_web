@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 include_once('../library/WPRequest.php');
 
@@ -570,6 +570,29 @@ class ServiceController extends InitController
             ));
         }  */
     }
+
+    public function actionHotel_list_pro()
+    {
+        $staff = Staff::model()->findByPk($_POST['token']);
+
+        $hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $staff['account_id']
+                    )
+            ));
+
+        $hotel_arr = array();
+
+        foreach ($hotel as $key => $value) {
+            $data = array(
+                'hotelid' => $value['id'],
+                'hotelname' => $value['name'],);
+            $hotel_arr[] = $data;
+        }
+        echo json_encode($hotel_arr);
+    }
+
 
     public function actionService_product_list()
     {
