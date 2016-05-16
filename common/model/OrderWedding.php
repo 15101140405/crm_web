@@ -25,47 +25,47 @@ class OrderWedding extends InitActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('account_id, order_id, update_time', 'required'),
-			array('account_id, order_id', 'numerical', 'integerOnly'=>true),
-			// array('feast_discount, wedding_discount', 'numerical'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, account_id, order_id, groom_name, groom_phone, groom_wechat, groom_qq,bride_name,bride_phone,bride_wechat,bride_qq, update_time', 'safe', 'on'=>'search'),
-		);
-	}
+	// public function rules()
+	// {
+	// 	// NOTE: you should only define rules for those attributes that
+	// 	// will receive user inputs.
+	// 	return array(
+	// 		array('account_id, order_id, update_time', 'required'),
+	// 		array('account_id, order_id', 'numerical', 'integerOnly'=>true),
+	// 		// array('feast_discount, wedding_discount', 'numerical'),
+	// 		// The following rule is used by search().
+	// 		// @todo Please remove those attributes that should not be searched.
+	// 		array('id, account_id, order_id, groom_name, groom_phone, groom_wechat, groom_qq,bride_name,bride_phone,bride_wechat,bride_qq, update_time', 'safe', 'on'=>'search'),
+	// 	);
+	// }
 
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
-	}
+	// public function relations()
+	// {
+	// 	// NOTE: you may need to adjust the relation name and the related
+	// 	// class name for the relations automatically generated below.
+	// 	return array(
+	// 	);
+	// }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'account_id' => 'Account',
-			'order_id' => 'Order',
-			// 'expect_table_count' => 'Expect Table Count',
-			// 'feast_discount' => 'Feast Discount',
-			// 'wedding_discount' => 'Wedding Discount',
-			// ‘, groom_phone, groom_wechat, groom_qq,bride_name,bride_phone,bride_wechat,bride_qq,contact_name,contact_phone,
-			'update_time' => 'Update Time',
-		);
-	}
+	// public function attributeLabels()
+	// {
+	// 	return array(
+	// 		'id' => 'ID',
+	// 		'account_id' => 'Account',
+	// 		'order_id' => 'Order',
+	// 		// 'expect_table_count' => 'Expect Table Count',
+	// 		// 'feast_discount' => 'Feast Discount',
+	// 		// 'wedding_discount' => 'Wedding Discount',
+	// 		// ‘, groom_phone, groom_wechat, groom_qq,bride_name,bride_phone,bride_wechat,bride_qq,contact_name,contact_phone,
+	// 		'update_time' => 'Update Time',
+	// 	);
+	// }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -96,6 +96,8 @@ class OrderWedding extends InitActiveRecord
 		$criteria->compare('bride_phone',$this->bride_phone);	
 		$criteria->compare('bride_wechat',$this->bride_wechat);	
 		$criteria->compare('bride_qq',$this->bride_qq);		
+		$criteria->compare('contact_name',$this->bride_qq);		
+		$criteria->compare('contact_phone',$this->bride_qq);		
 		$criteria->compare('update_time',$this->update_time);
 
 		return new CActiveDataProvider($this, array(

@@ -3423,26 +3423,28 @@ class DesignController extends InitController
         }; 
     }
 
-    public function actioinAdd_to_order()
+    public function actionAdd_to_order()
     {   
         $code = 0;
         $result['msg'] = "";
+        $post = json_decode(file_get_contents('php://input'));
+        // print_r($post->token);die;
         try {
             $staff = Staff::model()->find(array(
                 "condition" => "id = :id",
                 "params"    => array(
-                    ":id" => $_POST['token'],
+                    ":id" => $post->token,
             )));
 
             $account_id = $staff['account_id'];
 
             $data = new OrderProduct;
             $data ->account_id = $account_id;
-            $data ->order_id = $_POST['orderid'];
+            $data ->order_id = $post->orderid;
 
             $supplier_product_id = array();
 
-            foreach ($_POST['product'] as $key => $value) {
+            foreach ($post->product as $key => $value) {
                 $supplier_product_id[] = $value ->productid;
             }
 
@@ -3451,16 +3453,16 @@ class DesignController extends InitController
             
             $supplier_product = SupplierProduct::model()->findAll($criteria);
 
-            foreach ($_POST['product'] as $key1 => $value1) {
+            foreach ($post->product as $key1 => $value1) {
                 foreach ($supplier_product as $key2 => $value2) {
-                    if ($value1['productid'] == $value2['id']) {
+                    if ($value1->productid == $value2['id']) {
                         $data ->actual_unit_cost = $value2['unit_cost'];
                     }
                 }
-                $data ->product_type = $value1['producttype'];
-                $data ->product_id = $value1['productid'];
-                $data ->unit = $value1['amount'];
-                $data ->actual_price = $value1['unitprice'];
+                $data ->product_type = $value1->producttype;
+                $data ->product_id = $value1->productid;
+                $data ->unit = $value1->amount;
+                $data ->actual_price = $value1->unitprice;
                 $data ->sort = 1;
 
                 $data->save();
@@ -3473,15 +3475,16 @@ class DesignController extends InitController
         echo json_encode($result);
     }
 
-     public function actioinAdd_order()
-    {   
+     public function actionAdd_order()
+    {
+        $post = json_decode(file_get_contents('php://input'));
         $code = 0;
         $result['msg'] = "";
-        try {
+        // try {
             $staff = Staff::model()->find(array(
                 "condition" => "id = :id",
                 "params"    => array(
-                    ":id" => $_POST['token'],
+                    ":id" => $post->token,
             )));
 
             $account_id = $staff['account_id'];
@@ -3491,10 +3494,10 @@ class DesignController extends InitController
             $data ->designer_id = $staff['id'];
             $data ->planner_id = $staff['id'];
             $data ->adder_id = $staff['id'];
-            $data ->staff_hotel_id = $_POST['hotelid'];
-            $data ->order_name = $_POST['groomname']."&".$_POST['bridename'];
+            $data ->staff_hotel_id = $post->hotelid;
+            $data ->order_name = $post->groomname."&".$post->bridename;
             $data ->order_type = 2;
-            $data ->order_data = $_POST['orderdate'];
+            $data ->order_date = $post->orderdate;
             $data ->order_status = 1;
             $data ->other_discount = 10;
             $data ->feast_discount = 10;
@@ -3506,24 +3509,24 @@ class DesignController extends InitController
 
             $data = new OrderWedding;
             $data ->account_id = $account_id;
-            $data ->order_id = $staff['id'];
-            $data ->groom_name = $_POST['groomname'];
-            $data ->groom_phone = $_POST['groomtelephone'];
-            $data ->bride_name = $_POST['bridename'];
-            $data ->bride_phone = $_POST['bridetelephone'];
-            $data ->contact_name = $_POST['linkmanname'];
-            $data ->contact_phone = $_POST['linkmantelephone'];
+            $data ->order_id = $order_id;
+            $data ->groom_name = $post->groomname;
+            $data ->groom_phone = $post->groomtelephone;
+            $data ->bride_name = $post->bridename;
+            $data ->bride_phone = $post->bridetelephone;
+            $data ->contact_name = $post->linkmanname;
+            $data ->contact_phone = $post->linkmantelephone;
             
             $data->save();
 
             //复制自self actioinAdd_to_order()    有改动，注释       ////////////////
             $data = new OrderProduct;
             $data ->account_id = $account_id;
-            $data ->order_id = $_POST['orderid'];
+            $data ->order_id = $order_id;//新建的订单
 
             $supplier_product_id = array();
 
-            foreach ($_POST['product'] as $key => $value) {
+            foreach ($post->product as $key => $value) {
                 $supplier_product_id[] = $value ->productid;
             }
 
@@ -3532,24 +3535,24 @@ class DesignController extends InitController
             
             $supplier_product = SupplierProduct::model()->findAll($criteria);
 
-            foreach ($_POST['product'] as $key1 => $value1) {
+            foreach ($post->product as $key1 => $value1) {
                 foreach ($supplier_product as $key2 => $value2) {
-                    if ($value1['productid'] == $value2['id']) {
+                    if ($value1->productid == $value2['id']) {
                         $data ->actual_unit_cost = $value2['unit_cost'];
                     }
                 }
-                $data ->product_type = $value1['producttype'];
-                $data ->product_id = $value1['productid'];
-                $data ->unit = $value1['amount'];
-                $data ->actual_price = $value1['unitprice'];
-                $data ->sort = $value1['sort'];//原是固定1，这里的情况有值
+                $data ->product_type = $value1->producttype;
+                $data ->product_id = $value1->productid;
+                $data ->unit = $value1->amount;
+                $data ->actual_price = $value1->unitprice;
+                $data ->sort = $value1->sort;//原是固定1，这里的情况有值
 
                 $data->save();
             }
             $code = 1;
-        } catch (Exception $e) {
-            $result['msg'] = $e;
-        }
+        // } catch (Exception $e) {
+        //     $result['msg'] = $e;
+        // }
         $result['code'] = $code;
         echo json_encode($result);
     }
