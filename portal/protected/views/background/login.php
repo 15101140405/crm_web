@@ -17,6 +17,7 @@
                 <button class="login_btn" id="sure">登录</button>
                 <!-- <a class="go_regist" href="#">立即注册</a> -->
             </div>
+            
         </div>
         <!-- <div class="login_foot">
             <p>浩瀚一方</p>

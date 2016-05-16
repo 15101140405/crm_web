@@ -48,7 +48,7 @@ pre{font-family:'simsun';}
     top: 0;
 }
 .filePicker{
-	background: none repeat scroll 0 0 #00B7EE;
+	background: none repeat scroll 0 0 #6B9E03;
     border-radius: 3px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     color: #FFFFFF;
@@ -67,7 +67,7 @@ pre{font-family:'simsun';}
 	-o-transition: background 0.2s;
 }
 .filePicker:hover{
-	background: none repeat scroll 0 0 #00A2D4;
+	background: none repeat scroll 0 0 #6B9E03;
 }
 
 .demo{
@@ -126,7 +126,7 @@ pre{font-family:'simsun';}
 	border: 1px solid #BBB;
 }
 .upload_btn1{
-    background: none repeat scroll 0 0 #00B7EE;
+    background: none repeat scroll 0 0 #6B9E03;
     border-radius: 3px;
     color: #fff;
     cursor: pointer;
