@@ -1,0 +1,240 @@
+/*上传设置css*/
+
+.nav_area {
+    position: fixed;
+    top: 55px;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    background: #f2f2f2;
+}
+
+.nav_area>div {
+    position: relative;
+}
+
+.nav_list {
+    height: 35px;
+    line-height: 35px;
+}
+
+.nav_list>li {
+    float: left;
+    color: #999;
+    font-size: 14px;
+}
+
+.nav_list>li a {
+    color: #666;
+    padding: 0 20px;
+}
+
+.nav_area>div .sub_nav_list {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    z-index: 99;
+    width: 200px;
+    background: #fff;
+    border: 1px solid #d2d2d2;
+}
+
+.sub_nav_list li a {
+    display: block;
+    line-height: 16px;
+    padding: 0 15px;
+    margin: 10px 0;
+    color: #666;
+}
+
+.sub_nav_list li a:hover,
+.nav_list>li a:hover {
+    color: #bf0e16;
+}
+
+.upload_set_c {
+    margin-top: 110px;
+    margin-bottom: 200px;
+}
+
+.upload_set_c .left_area {
+    position: fixed;
+    overflow-y: scroll;
+    width: 710px;
+}
+
+.upload_set_c .left_area .goods_list li {
+    float: left;
+    width: 160px;
+    margin-right: 11px;
+    margin-bottom: 15px;
+    border: 1px solid #d2d2d2;
+}
+
+.upload_set_c .goods_list li .img_box {
+    position: relative;
+}
+
+.upload_set_c .goods_list li .img_box img {
+    width: 160px;
+}
+
+.upload_set_c .goods_list li .img_box span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .8);
+    color: #fff;
+    padding: 0 3px;
+}
+
+.upload_set_c .goods_list li .info_box {
+    padding: 5px;
+}
+
+.upload_set_c .goods_list li .info_box .name {
+    width: 100%;
+    color: #333;
+    line-height: 16px;
+    font-size: 14px;
+    margin-bottom: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.upload_set_c .goods_list li .info_box .price {
+    color: #bb1114;
+    font-size: 14px;
+}
+
+.upload_set_c .goods_list li .info_box .price strong {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.upload_set_c .goods_list li .info_box .original_price {
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.upload_set_c .goods_list li .info_box button {
+    display: block;
+    height: 35px;
+    width: 100%;
+    background: #bb1114;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+}
+
+.upload_set_c .right_area {
+    position: fixed;
+    width: 230px;
+    border: 1px solid #d2d2d2;
+    background: #f2f2f2;
+    padding: 0 5px 5px;
+/*    overflow-y: scroll;*/
+}
+
+.upload_set_c .right_area>div:first-child {
+    position: relative;
+    width: 236px;
+    overflow-y: scroll;
+}
+
+.upload_set_c .right_area .tit_box {
+    position: fixed;
+    width: 220px;
+    line-height: 40px;
+    color: #333;
+    background: #f2f2f2;
+}
+
+.upload_set_c .right_area h2 {
+    color: #666;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.upload_set_c .add_list {
+    background: #fff;
+    padding-top: 50px;
+}
+
+.upload_set_c .add_list li {
+    border-bottom: 1px solid #e6e6e6;
+    padding: 5px;
+}
+
+.upload_set_c .add_list li img {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+
+.upload_set_c .add_list li .con {
+    width: 88px;
+    margin-right: 5px;
+}
+
+.upload_set_c .add_list li .con h3 {
+    color: #999;
+    margin-bottom: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.counter_box .count {
+    width: 40px;
+    height: 20px;
+    border: none;
+    border-top: 1px solid #bebebe;
+    border-bottom: 1px solid #bebebe;
+    text-align: center;
+}
+
+.counter_box .btn {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid #bebebe;
+    background: #fff;
+    color: #999;
+    font-size: 20px;
+}
+
+.counter_box .btn.disabled {
+    background: #f2f2f2;
+    color: #dfdfdf;
+}
+
+.upload_set_c .add_list li .unit_price {
+    color: #999;
+    font-size: 16px;
+    margin-top: 8px;
+    line-height: 30px;
+}
+
+.upload_set_c .add_list li .unit_price input {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #bf0e16;
+    color: #333;
+    text-align: right;
+    padding: 0 3px;
+}
+
+.upload_set_c .button_box {
+    width: 220px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 5px;
+    background: #bf0e16;
+    color: #fff;
+}

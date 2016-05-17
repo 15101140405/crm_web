@@ -437,10 +437,13 @@
 }
 
 .upload_top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
     height: 55px;
     width: 100%;
     background: #202122;
-    margin-bottom: 30px;
 }
 
 .upload_top .nick {
@@ -448,6 +451,10 @@
     line-height: 55px;
     padding-right: 25px;
     background: url('../images/level.jpg') no-repeat right center;
+}
+
+.upload_c {
+    margin-top: 30px;
 }
 
 .desc_item {

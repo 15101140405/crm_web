@@ -282,6 +282,8 @@
                 CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
+                product_list : "<?php echo $_GET['product_list']?>",
+                final_price : "<?php echo $_GET['final_price']?>",
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -292,7 +294,7 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
-                $.post("<?php echo $this->createUrl("background/case_upload");?>",data,function(){
+                $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
