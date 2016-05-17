@@ -303,7 +303,7 @@ class BackgroundController extends InitController
     public function actionEdit_product()
     {
         //取产品数据
-         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
+        $product = SupplierProduct::model()->findByPk($_GET['product_id']);
 
         $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
         $supplier = $result->queryAll();
@@ -516,15 +516,56 @@ class BackgroundController extends InitController
 
     public function actionSet_upload()
     {
-        $data = new CaseResources;
-        $data ->CI_ID = $_POST['CI_ID'];
-        $data ->CR_Show = 1;
-        $data ->CR_Type = $value['Cr_Type'];
-        $data ->CR_Name = "";
-        $data ->CR_Path = $value['Cr_Path'];
-        $data ->CR_Remarks = "";
-        $data ->CR_Sort = $i++;
+        $data = new Wedding_set;
+        $data ->staff_hotel_id = $_POST['staff_hotel_id'];
+        $data ->name = $_POST['name'];
+        $data ->category = 2;
+        $data ->final_price = $_POST['final_price'];
+        $data ->feast_discount = 1;
+        $data ->other_discount = 1;
+        $data ->product_id = $_POST['product_list'];
         $data->save();
+        $id = $data->attributes['id'];
 
+        $data = new CaseInfo;
+        $data ->CI_Name = $_POST['name'];
+        $data ->CI_Pic = $_POST['CI_Pic'];
+        $data ->CI_Show = 1;
+        $data ->CI_Type = 5;
+        $data ->CT_ID = $id;
+        $data->save();
+        $CI_ID = $data->attributes['CI_ID'];
+
+        $data = new CaseBind;
+        $data ->CB_Type = 1;
+        $data ->TypeID = $_COOKIE['account_id'];
+        $data ->CI_ID = $CI_ID;
+        $data->save();
+        // $id = $data->attributes['id'];
+
+        $data = new CaseResources;
+        $data ->CI_ID = $CI_ID;
+        $data ->CR_Show = 1;
+
+        //复制于Case_edit()，改Cr_Type为CR_Type    ////////////////
+        $t = explode(",",$_POST['case_resource']);
+        $resources = array();
+        foreach ($t as $key => $value) {
+            $t1 = explode(".", $value);
+            $item = array();
+            if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                $item['CR_Type'] = 1 ;
+            }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                $item['CR_Type'] = 2 ;
+            }
+            $item['CR_Path'] = $value;
+            $resources[]=$item;
+        }
+        foreach ($resources as $key => $value) {
+            $data ->CR_Type = $value['Cr_Type'];
+            $data ->CR_Path = $value['Cr_Path'];
+            $data->save();
+        };
+        $data->save();
     }
 }
