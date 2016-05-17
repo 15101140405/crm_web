@@ -240,9 +240,9 @@ class BackgroundController extends InitController
             ));
     }
 
-    public function actionUpload_set()
+    public function actionUpload_set1()
     {
-        $this->render('upload_set');
+        $this->render('upload_set1');
     }
 
     public function actionUpload_product()
