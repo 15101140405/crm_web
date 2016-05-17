@@ -249,9 +249,24 @@ class BackgroundController extends InitController
             ));
     }
 
-    public function actionUpload_set()
+    public function actionUpload_set1()
     {
-        $this->render('upload_set');
+        $account_id = $_COOKIE['account_id'];
+
+        $decoration_tap = SupplierProductDecorationTap::model()->find(array(
+            "condition" => "account_id = :account_id",
+            "params"    => array(
+                ":account_id" => $account_id,
+                )));
+        $supplier_product = SupplierProduct::model()->findAll(array(
+            'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    )));
+        $this -> render("upload_set1",array(
+            'decoration_tap' => $decoration_tap,
+            'supplier_product' => $supplier_product,
+            ));
     }
 
     public function actionUpload_product()
@@ -497,5 +512,19 @@ class BackgroundController extends InitController
                 $data->save();
             };
         };
+    }
+
+    public function actionSet_upload()
+    {
+        $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+
     }
 }

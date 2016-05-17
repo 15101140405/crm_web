@@ -3405,22 +3405,40 @@ class DesignController extends InitController
     public function actionUpdate_order_product()
     {
         $post = json_decode(file_get_contents('php://input'));
+
         OrderProduct::model()->deleteAll('order_id=:order_id',array(':order_id'=>$post->orderid));
         $staff = Staff::model()->findByPk($post->token);
+
+        $account_id = $staff['account_id'];
+
+        $data = new OrderProduct;
+        $data ->account_id = $account_id;
+        $data ->order_id = $post->orderid;
+
+        $supplier_product_id = array();
+
         foreach ($post->product as $key => $value) {
-            $data = new OrderProduct;
-            $data ->account_id = $staff['account_id'];
-            $data ->order_id = $post->orderid;
-            $data ->product_type = $post->producttype;
-            $data ->product_id = $post->productid;
-            $data ->sort = $post->sort;
-            $data ->actual_price = $post->unitprice;
-            $data ->unit = $post->ammount;
-            $data ->actual_unit_cost = $post->unitcost;
-            $data ->update_time = date('y-m-d h:i:s',time());
-            $data ->actual_service_ratio = 0;
-            $data ->remark = "";
-            $data ->save();
+            $supplier_product_id[] = $value ->productid;
+        }
+
+        $criteria = new CDbCriteria; 
+        $criteria ->addInCondition("id",$supplier_product_id);
+
+        $supplier_product = SupplierProduct::model()->findAll($criteria);
+
+        foreach ($post->product as $key1 => $value1) {
+            foreach ($supplier_product as $key2 => $value2) {
+                if ($value1->productid == $value2['id']) {
+                    $data ->actual_unit_cost = $value2['unit_cost'];
+                }
+            }
+            $data ->product_type = $value1->producttype;
+            $data ->product_id = $value1->productid;
+            $data ->unit = $value1->amount;
+            $data ->actual_price = $value1->unitprice;
+            $data ->sort = $value1->sort;
+
+            $data->save();
         }; 
     }
 
