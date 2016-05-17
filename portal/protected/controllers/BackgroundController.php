@@ -517,14 +517,14 @@ class BackgroundController extends InitController
     public function actionSet_upload()
     {
         $data = new CaseResources;
-                $data ->CI_ID = $_POST['CI_ID'];
-                $data ->CR_Show = 1;
-                $data ->CR_Type = $value['Cr_Type'];
-                $data ->CR_Name = "";
-                $data ->CR_Path = $value['Cr_Path'];
-                $data ->CR_Remarks = "";
-                $data ->CR_Sort = $i++;
-                $data->save();
+        $data ->CI_ID = $_POST['CI_ID'];
+        $data ->CR_Show = 1;
+        $data ->CR_Type = $value['Cr_Type'];
+        $data ->CR_Name = "";
+        $data ->CR_Path = $value['Cr_Path'];
+        $data ->CR_Remarks = "";
+        $data ->CR_Sort = $i++;
+        $data->save();
 
     }
 }
