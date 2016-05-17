@@ -253,19 +253,34 @@ class BackgroundController extends InitController
     {
         $account_id = $_COOKIE['account_id'];
 
-        $decoration_tap = SupplierProductDecorationTap::model()->find(array(
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
             "condition" => "account_id = :account_id",
             "params"    => array(
                 ":account_id" => $account_id,
                 )));
         $supplier_product = SupplierProduct::model()->findAll(array(
-            'condition' => 'account_id=:account_id',
+            'condition' => 'account_id=:account_id && standard_type=:standard_type',
                 'params' => array(
                         ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0
                     )));
+        /*print_r($decoration_tap);die;*/
         $this -> render("upload_set1",array(
             'decoration_tap' => $decoration_tap,
             'supplier_product' => $supplier_product,
+            ));
+    }
+
+    public function actionUpload_set2()
+    {
+        $hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $this->render("upload_set2",array(
+                'hotel' => $hotel,
             ));
     }
 

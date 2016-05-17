@@ -41,6 +41,7 @@ class CaseInfo extends InitActiveRecord
 		$criteria->compare('CI_Show',$this->CI_Show,true);
 		$criteria->compare('CI_Remarks',$this->CI_Remarks,true);
 		$criteria->compare('CI_Type',$this->CI_Type,true);
+		$criteria->compare('CT_ID',$this->CT_ID,true);
 
 
 		return new CActiveDataProvider($this, array(

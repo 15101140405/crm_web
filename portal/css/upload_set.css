@@ -165,12 +165,12 @@
 
 .upload_set_c .add_list li {
     border-bottom: 1px solid #e6e6e6;
-    padding: 10px;
+    padding: 5px;
 }
 
 .upload_set_c .add_list li img {
     width: 40px;
-    height: 60px;
+    height: 40px;
     margin-right: 5px;
 }
 

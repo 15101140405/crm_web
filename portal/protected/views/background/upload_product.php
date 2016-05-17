@@ -109,7 +109,7 @@
         </div>
     </div>
     <!--视频描述-->
-    <div class="upload_wapper" style="margin-bottom:170px;">
+    <div class="upload_wapper" style="margin-bottom:170px;margin-top:80px">
         <div class="video_desc clearfix">
             <ul class="left desc_box">
                 <li class="desc_item clearfix">
