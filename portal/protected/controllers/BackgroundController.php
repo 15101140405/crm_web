@@ -50,29 +50,38 @@ class BackgroundController extends InitController
 
     public function actionRegister_pro()
     {
-        // $telephone = $_POST['telephone'];
+        $telephone = $_POST['telephone'];
+        // $telephone = "18611323194";
 
         $url = "http://localhost:8080/crm_web_new/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
 
-        // $staff = Staff::model()->find(array(
-        //     "condition" => "telephone = :telephone",
-        //     "params"    => array(
-        //         ":telephone" => $_POST['telephone']
-        //         )
-        //     ));
-        // if (empty($staff)) {
-        //     echo "not exist";
-        // } elseif (!empty($staff['password'])){
-        //     echo "registered";
-        // } else {
-        //     $data = json_encode(array(
-        //         'telephone' => $_POST['telephone'],
-        //     ), JSON_UNESCAPED_UNICODE);
-        //     WPRequest::post($url, $data);
-        // }
-        // $data = array(1);
-        $result = WPRequest::post($url, $data);
-        // print_r($data);
+        $staff = Staff::model()->find(array(
+            "condition" => "telephone = :telephone",
+            "params"    => array(
+                ":telephone" => $_POST['telephone']
+                )
+            ));
+        if (empty($staff)) {
+            echo "not exist";
+        } elseif (!empty($staff['password'])){
+            echo "registered";
+        } elseif (isset($_POST['password'])) {
+            if ($_POST['password'] == $_SESSION['code']) {
+                Staff::model()->updateByPk( $staff['id'] ,array('password'=>$_POST['password']));
+                echo "success";
+            } else {
+                echo "errow";
+            }
+            
+        } else {
+            // $data = json_encode(array(
+            //     'telephone' => $_POST['telephone'],
+            // ), JSON_UNESCAPED_UNICODE);
+            $data = array('telephone' => $telephone, );
+            WPRequest::post($url, $data);
+        }
+
+        // $result = WPRequest::post($url, $data);
         // echo "result:".$result;
 
        
@@ -242,7 +251,22 @@ class BackgroundController extends InitController
 
     public function actionUpload_set1()
     {
-        $this->render('upload_set1');
+        $account_id = $_COOKIE['account_id'];
+
+        $decoration_tap = SupplierProductDecorationTap::model()->find(array(
+            "condition" => "account_id = :account_id",
+            "params"    => array(
+                ":account_id" => $account_id,
+                )));
+        $supplier_product = SupplierProduct::model()->findAll(array(
+            'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    )));
+        $this -> render("upload_set1",array(
+            'decoration_tap' => $decoration_tap,
+            'supplier_product' => $supplier_product,
+            ));
     }
 
     public function actionUpload_product()
@@ -488,5 +512,19 @@ class BackgroundController extends InitController
                 $data->save();
             };
         };
+    }
+
+    public function actionSet_upload()
+    {
+        $data = new CaseResources;
+        $data ->CI_ID = $_POST['CI_ID'];
+        $data ->CR_Show = 1;
+        $data ->CR_Type = $value['Cr_Type'];
+        $data ->CR_Name = "";
+        $data ->CR_Path = $value['Cr_Path'];
+        $data ->CR_Remarks = "";
+        $data ->CR_Sort = $i++;
+        $data->save();
+
     }
 }

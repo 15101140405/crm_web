@@ -573,7 +573,8 @@ class ServiceController extends InitController
 
     public function actionHotel_list_pro()
     {
-        $staff = Staff::model()->findByPk($_POST['token']);
+        $post = json_decode(file_get_contents('php://input'));
+        $staff = Staff::model()->findByPk($post->token);
 
         $hotel = StaffHotel::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
