@@ -3411,10 +3411,6 @@ class DesignController extends InitController
 
         $account_id = $staff['account_id'];
 
-        $data = new OrderProduct;
-        $data ->account_id = $account_id;
-        $data ->order_id = $post->orderid;
-
         $supplier_product_id = array();
 
         foreach ($post->product as $key => $value) {
@@ -3427,6 +3423,9 @@ class DesignController extends InitController
         $supplier_product = SupplierProduct::model()->findAll($criteria);
 
         foreach ($post->product as $key1 => $value1) {
+            $data = new OrderProduct;
+            $data ->account_id = $account_id;
+            $data ->order_id = $post->orderid;
             foreach ($supplier_product as $key2 => $value2) {
                 if ($value1->productid == $value2['id']) {
                     $data ->actual_unit_cost = $value2['unit_cost'];
@@ -3457,10 +3456,6 @@ class DesignController extends InitController
 
             $account_id = $staff['account_id'];
 
-            $data = new OrderProduct;
-            $data ->account_id = $account_id;
-            $data ->order_id = $post->orderid;
-
             $supplier_product_id = array();
 
             foreach ($post->product as $key => $value) {
@@ -3473,11 +3468,15 @@ class DesignController extends InitController
             $supplier_product = SupplierProduct::model()->findAll($criteria);
 
             foreach ($post->product as $key1 => $value1) {
+                $data = new OrderProduct;
                 foreach ($supplier_product as $key2 => $value2) {
                     if ($value1->productid == $value2['id']) {
                         $data ->actual_unit_cost = $value2['unit_cost'];
                     }
                 }
+                $data = new OrderProduct;
+                $data ->account_id = $account_id;
+                $data ->order_id = $post->orderid;
                 $data ->product_type = $value1->producttype;
                 $data ->product_id = $value1->productid;
                 $data ->unit = $value1->amount;
@@ -3539,9 +3538,7 @@ class DesignController extends InitController
             $data->save();
 
             //复制自self actioinAdd_to_order()    有改动，注释       ////////////////
-            $data = new OrderProduct;
-            $data ->account_id = $account_id;
-            $data ->order_id = $order_id;//新建的订单
+            
 
             $supplier_product_id = array();
 
@@ -3555,11 +3552,14 @@ class DesignController extends InitController
             $supplier_product = SupplierProduct::model()->findAll($criteria);
 
             foreach ($post->product as $key1 => $value1) {
+                $data = new OrderProduct;
                 foreach ($supplier_product as $key2 => $value2) {
                     if ($value1->productid == $value2['id']) {
                         $data ->actual_unit_cost = $value2['unit_cost'];
                     }
                 }
+                $data ->account_id = $account_id;
+                $data ->order_id = $order_id;//新建的订单
                 $data ->product_type = $value1->producttype;
                 $data ->product_id = $value1->productid;
                 $data ->unit = $value1->amount;
