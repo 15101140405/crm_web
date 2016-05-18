@@ -4,7 +4,6 @@ include "TopSdk.php";
 $telephone = $_POST['telephone'];
 // $telephone = "18611323194";
 $code = rand(100000, 999999);
-Yii::app()->session['code'] = $code;
 $product = "婚礼策划师";
 $appkey = "23365214";
 $secret = "2059843bfceda38bfcfe84565ea207b0";

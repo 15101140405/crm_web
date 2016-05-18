@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include_once('../library/WPRequest.php');
 include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php');
@@ -66,7 +67,7 @@ class BackgroundController extends InitController
         } elseif (!empty($staff['password'])){
             echo "registered";
         } elseif (isset($_POST['password'])) {
-            if ($_POST['password'] == $_SESSION['code']) {
+            if ($_POST['yzm'] == $_SESSION['code']) {
                 Staff::model()->updateByPk( $staff['id'] ,array('password'=>$_POST['password']));
                 echo "success";
             } else {
@@ -74,15 +75,20 @@ class BackgroundController extends InitController
             }
             
         } else {
+            echo "发送请求";
             // $data = json_encode(array(
             //     'telephone' => $_POST['telephone'],
             // ), JSON_UNESCAPED_UNICODE);
             $data = array('telephone' => $telephone, );
-            WPRequest::post($url, $data);
+            $result = WPRequest::post($url, $data);
+            Yii::app()->session['code'] = $result;
+
         }
 
+        // $data = array('telephone' => $telephone, );
         // $result = WPRequest::post($url, $data);
         // echo "result:".$result;
+        // print_r($_SESSION);
 
        
     }
