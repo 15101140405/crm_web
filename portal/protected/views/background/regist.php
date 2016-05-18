@@ -73,7 +73,7 @@
                     if(data == "not exist"){
                         alert("您输入的手机号不存在！请与工作人员联系：15101140405");
                     };
-                    alert("data");
+                    alert(data);
                 });
             };  
         });

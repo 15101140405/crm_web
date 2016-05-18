@@ -88,7 +88,11 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
             "(select hotel_list from staff where id=".$staff_id.") ) ".
+
             " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  ".
+
             " and CI_Show=1 order by CI_Sort Desc");
         $list = $result->queryAll();
 
@@ -159,132 +163,64 @@ class ResourceController extends InitController
                 else{
                     $cur_resourceobj["product"]=array();
                 }
-
-
-                // if($rkey == 0){
-                //     print_r($rval['CR_ID']);die;
-                //     $cur_resource = $rval['CR_ID'];
-                //     if($rval['id'] != null){
-
-                //         $product[] = array_splice($resources[$rkey], 7);
-                //     }else{
-                //         /*echo "1";die;*/
-                //         array_splice($resources[$rkey], 7);
-                //         /*print_r($resources[$rkey]);die;*/
-                //     };
-                //     /*print_r($product);die;*/
-                // }else{
-                //     if($rval['CR_ID'] == $cur_resource){
-                //         $product[] = array_splice($resources[$rval], 7);
-                //         /*print_r($product);die;*/
-                //         $this->array_remove($resources, $rval-$i);
-                //         $i++;
-                //     }else{
-                //         if($rval['id'] != null){
-                //             $resources[$rkey-$i-1]['product']=$product;
-                //             $cur_resource = $rval['CR_ID'];
-                //             $product = array();
-                //             $product[] = array_splice($resources[$rkey], 7);
-                //         }else{
-                //             $cur_resource = $rval['CR_ID'];
-                //             /*print_r($list[$key_case]['resources'][$key_resource]);die;*/
-                //             $product = array();
-                //             $product[] = array_splice($resources[$rkey], 7);
-                //         };
-                        
-                //     };
-                // };
-            
-            /*echo json_encode($resources);die;*/
-            //$rval["size"]=$this->getUrlFileSize($rval["CR_Path"]);
             }
-
-            /*print_r($resources);die;*/
-
-
             $list[$key]["resources"]= $jsonresources;
         };
-        /*print_r($list);die;*/
-        /*$cur_resource = 0;
-        $cur_product =0;
-        $result = array();
-
-        foreach ($list as $key_case => $case) {
-            $product = array();
-            $i = 0;
-            foreach ( $case['resources'] as $key_resource => $resource ) {
-                
+        $staff = Staff::model()->findByPk($staff_id);
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $staff['account_id'],
+                    ),
+            ));
+        foreach ($tap as $key => $value) {
+            $item = array(
+                'CI_ID' => 0,
+                "CI_Name"=> $value['name'],
+                "CI_Place"=> "",
+                "CI_Pic"=> "http://file.cike360.com".$value['pic'],
+                "CI_Time"=> null,
+                "CI_CreateTime"=> null,
+                "CI_Sort"=> "999",
+                "CI_Show"=> "1",
+                "CI_Remarks"=> "",
+                "CI_Type"=> "7",
+                "CT_ID"=> "0"
+            );
+            $supplier_product = SupplierProduct::model()->findAll(array(
+                    'condition' => 'decoration_tap=:tap',
+                    'params' => array(':tap' => $value['id'])
+                ));
+            $resources = array();
+            foreach ($supplier_product as $key => $value) {
+                $t = array(
+                    "CR_ID"=> 0,
+                    "CR_Name"=> $value['name'],
+                    "CR_Path"=> "http://file.cike360.com".$value['ref_pic_url'],
+                    "CR_Sort"=> "1",
+                    "CR_Show"=> "1",
+                    "CR_Remarks"=> null,
+                    "CR_Type"=> "1",
+                );
+                $t['product'] = array();
+                $t1 = array(
+                        "id"=> $value['id'],
+                        "name"=> $value['name'],
+                        "unit_price"=> $value['unit_price'],
+                        "unit"=> $value['unit'],
+                        "description"=> $value['description'],
+                        "ref_pic_url"=> "000",
+                    );
+                $t['product'][] = $t1;
+                $resources[] = $t;
             };
+            
+            $item['resources'] = $resources;
+            
+            $list[] = $item;
         };
-*/
 
 
-
-
-        /*$CR_ID_list = array();
-        $CR_ID_list[0] = $list[0]['resources'][0]['CR_ID'];
-        foreach ($list as $key => $value) {
-            foreach ($value['resources'] as $key1 => $value1) {
-                $t = 0;
-                if($value1['id'] != null){
-                    foreach ($CR_ID_list as $key2 => $value2) {
-                        if($value1['CR_ID'] == $value2){
-                            $t++;
-                        };
-                    };
-                    if($t == 0){
-                        $CR_ID_list[]=$value1['CR_ID'];
-                    };
-                };
-            };
-        };*/
-        /*print_r($CR_ID_list);die;*/
-        /*echo json_encode($list);die;*/
-        /*print_r($CR_ID_list);die;*/
-        /*foreach ($CR_ID_list as $key => $value) {
-            $item = array();
-
-            foreach ($list as $key1 => $value1) {
-                $CR_in_CI = 0;
-                $chongfu = 0;
-                $i=0;
-                foreach ($value1['resources'] as $key2 => $value2) {
-                    if($value2['CR_ID'] == $value){
-                        $CR_in_CI++;
-                        if($chongfu == 0){
-                            $item1 = array_splice($list[$key1]['resources'][$key2-$i], 7);
-                            $item[] = $item1;*/
-                            /*print_r($value2);die; */
-                            /*$chongfu++;
-                        }else{
-                            $item1 = array_splice($list[$key1]['resources'][$key2-$i], 7);
-                            $item[] = $item1;
-                            $this->array_remove($list[$key1]['resources'], $key2-$i);
-                            $i = $i + 1;
-                        };
-                    }else{
-                        print_r($key2);
-                        $this->array_remove($list[$key1]['resources'], $key2);
-                        $list[$key1]['resources'][$key2-$i]['product']=array();
-                    }
-                };
-                foreach ($value1['resources'] as $key3 => $value3) {
-                    if($value3['CR_ID'] == $value){
-                        $list[$key1]['resources'][$key3]['product']=$item;
-                    };
-                };
-            };
-            echo json_encode($item);
-            unset($item);*/
-            /*foreach ($list as $key1 => $value1) {
-                foreach ($value1['resources'] as $key2 => $value2) {
-                    if($value != $value2['CR_ID']){
-                        $this->array_remove($list[$key1]['resources'], $key2);
-                        $list[$key1]['resources'][$key2]['product']=array();
-                    };
-                };
-            };*/
-        /*};*/
         echo json_encode($list);
 
     }
