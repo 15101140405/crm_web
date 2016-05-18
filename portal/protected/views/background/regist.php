@@ -69,7 +69,7 @@
             }else if($("#telephone").val().length != 11 || !myreg.test($("#telephone").val())){
                 alert("请输入有效的手机号码！");
             }else {
-                $.post(/*"<?php echo $this->createUrl("background/register_pro");?>"*/"http://192.168.1.20:8080/crm_web_new/portal/index.php?r=background/register_pro",{telephone : $("#telephone").val()},function(data){
+                $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#telephone").val()},function(data){
                     if(data == "not exist"){
                         alert("您输入的手机号不存在！请与工作人员联系：15101140405");
                     };
@@ -97,7 +97,7 @@
                         };
                         $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
                             if(retval == "success"){
-                                location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";    
+                                location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";    
                             };
                         });
                     };

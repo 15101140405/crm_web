@@ -133,6 +133,19 @@
                         </select>
                     </div>
                 </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择门店</label>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="hotel">
+                            <!-- <option value="">请选择</option> -->
+                    <?php foreach ($hotel as $key => $value) {?>
+                            <option value="<?php echo $value['name']?>" staff-hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php }?>
+                        </select>
+                    </div>
+                </li>
                     
                 <!-- <li class="desc_item">
                     <div class="tit_box left">
@@ -284,6 +297,7 @@
                 account_id : $.cookie('account_id'),
                 product_list : "<?php echo $_GET['product_list']?>",
                 final_price : "<?php echo $_GET['final_price']?>",
+                staff_hotel_id : $("#hotel option:selected").val(),
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -297,7 +311,7 @@
                 $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
                 });
             };  
         });

@@ -111,7 +111,7 @@
     </div>
     <!--视频描述-->
     <div class="upload_wapper">
-        <div class="video_desc clearfix" style="margin-bottom:30px;">
+        <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px;">
             <ul class="left desc_box">
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
@@ -286,7 +286,7 @@
                 $.post("<?php echo $this->createUrl("background/case_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
                 });
             };  
         });

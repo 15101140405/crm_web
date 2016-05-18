@@ -130,7 +130,7 @@ class BackgroundController extends InitController
     public function actionIndex()
     {
         $url = "http://file.cike360.com";
-        if($_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 2){
+        if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 5){
             $staff_id = $_COOKIE['userid'];
             $result = yii::app()->db->createCommand("select * from case_info where ".
 
@@ -158,7 +158,7 @@ class BackgroundController extends InitController
                     'case_data' => $list,
                     'tap' => $tap,
                 ));
-        }else{
+        }else if($_GET['CI_Type'] == 7){
             $product = SupplierProduct::model()->findAll(array(
                     'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
                     'params' => array(
@@ -533,17 +533,17 @@ class BackgroundController extends InitController
     {
         $data = new Wedding_set;
         $data ->staff_hotel_id = $_POST['staff_hotel_id'];
-        $data ->name = $_POST['name'];
+        $data ->name = $_POST['CI_Name'];
         $data ->category = 2;
         $data ->final_price = $_POST['final_price'];
         $data ->feast_discount = 1;
         $data ->other_discount = 1;
-        $data ->product_id = $_POST['product_list'];
+        $data ->product_list = $_POST['product_list'];
         $data->save();
         $id = $data->attributes['id'];
 
         $data = new CaseInfo;
-        $data ->CI_Name = $_POST['name'];
+        $data ->CI_Name = $_POST['CI_Name'];
         $data ->CI_Pic = $_POST['CI_Pic'];
         $data ->CI_Show = 1;
         $data ->CI_Type = 5;
@@ -558,9 +558,7 @@ class BackgroundController extends InitController
         $data->save();
         // $id = $data->attributes['id'];
 
-        $data = new CaseResources;
-        $data ->CI_ID = $CI_ID;
-        $data ->CR_Show = 1;
+        
 
         //复制于Case_edit()，改Cr_Type为CR_Type    ////////////////
         $t = explode(",",$_POST['case_resource']);
@@ -577,8 +575,11 @@ class BackgroundController extends InitController
             $resources[]=$item;
         }
         foreach ($resources as $key => $value) {
-            $data ->CR_Type = $value['Cr_Type'];
-            $data ->CR_Path = $value['Cr_Path'];
+            $data = new CaseResources;
+            $data ->CI_ID = $CI_ID;
+            $data ->CR_Show = 1;
+            $data ->CR_Type = $value['CR_Type'];
+            $data ->CR_Path = $value['CR_Path'];
             $data->save();
         };
         $data->save();

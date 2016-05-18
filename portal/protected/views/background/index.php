@@ -23,11 +23,11 @@
                 <li><a href="<?php echo $this->createUrl("background/login");?>">退出</li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=1" id="case">案例</a>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" id="case">案例</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" id="set">套系</a>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=5" id="set">套系</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=4" id="decration">场地布置</a>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=7" id="decration">场地布置</a>
                 </li>
                 <!-- <li><a href="javascript:;">ABOUT US</a>
                 </li> -->
@@ -57,7 +57,7 @@
                 </div>
                 <ul class="upload_list" id="product_item">
             <?php foreach ($case_data as $key => $value) {
-                if($_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 2){
+                if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 5){
                     if($value['CI_Type'] == $_GET['CI_Type']){?>
                     <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>">
                         <div class="upload_con_box left clearfix">
@@ -118,19 +118,19 @@
 <script>
     $(function(){
         //下拉筛选
-        if(<?php echo $_GET['CI_Type']?> == 1){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 2){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 4){$("#decration").addClass("active")};
+        if(<?php echo $_GET['CI_Type']?> == 2){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 5){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 7){$("#decration").addClass("active")};
 
         //上传按钮
-        if(<?php echo $_GET['CI_Type']?> == 1){$("#upload").html("新增案例")};
-        if(<?php echo $_GET['CI_Type']?> == 2){$("#upload").html("新增套系")};
-        if(<?php echo $_GET['CI_Type']?> == 4){$("#upload").html("新增产品")};
+        if(<?php echo $_GET['CI_Type']?> == 2){$("#upload").html("新增案例")};
+        if(<?php echo $_GET['CI_Type']?> == 5){$("#upload").html("新增套系")};
+        if(<?php echo $_GET['CI_Type']?> == 7){$("#upload").html("新增产品")};
 
         $("#upload").on("click",function(){
-            if(<?php echo $_GET['CI_Type']?> == 1){location.href="<?php echo $this->createUrl("background/upload_case");?>"};
-            if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_set1");?>"};
-            if(<?php echo $_GET['CI_Type']?> == 4){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_case");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 5){location.href="<?php echo $this->createUrl("background/upload_set1");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 7){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
         });
 
         $('#select_type').change(function(){
@@ -142,10 +142,10 @@
 
         //点击编辑
         $(".edit_btn").on("click",function(){
-            if("<?php echo $_GET['CI_Type']?>" == 1){
+            if("<?php echo $_GET['CI_Type']?>" == 2){
                 location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
             };
-            if('<?php echo $_GET['CI_Type']?>' == 4){
+            if('<?php echo $_GET['CI_Type']?>' == 7){
                 location.href = "<?php echo $this->createUrl("background/edit_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
             }
         });
