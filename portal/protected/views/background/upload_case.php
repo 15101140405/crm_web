@@ -295,7 +295,7 @@
                 $.post("<?php echo $this->createUrl("background/case_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
                 });
             };  
         });

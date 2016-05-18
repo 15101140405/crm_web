@@ -97,7 +97,7 @@
                         };
                         $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
                             if(retval == "success"){
-                                location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";    
+                                location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";    
                             };
                         });
                     };

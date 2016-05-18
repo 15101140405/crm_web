@@ -436,7 +436,7 @@
         $("#b").on("click",function(){
             $.cookie('img', null); 
             $.cookie('img1', null); 
-            location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=4";
+            location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=7";
         });
     })
 </script>

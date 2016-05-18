@@ -109,7 +109,7 @@
         </div>
     </div>
     <!--视频描述-->
-    <div class="upload_wapper" style="margin-bottom:170px;">
+    <div class="upload_wapper" style="margin-bottom:170px;margin-top:80px;">
         <div class="video_desc clearfix">
             <ul class="left desc_box">
                 <li class="desc_item clearfix">
@@ -394,7 +394,7 @@
                 $.post("<?php echo $this->createUrl("background/product_edit");?>",data,function(){
                     $.cookie('img', null); 
                     $.cookie('img1', null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=4";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=7";
                 });
             };
         });

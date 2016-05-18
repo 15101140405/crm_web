@@ -42,7 +42,7 @@ $(function(){
             $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
                 /*alert(retval);*/
                 if(retval == "success"){
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";    
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";    
                 }else if(retval == "not exist"){
                     alert("您输入的手机号不存在！");
                 }else if(retval == "password error"){
