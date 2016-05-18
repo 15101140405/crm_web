@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include_once('../library/WPRequest.php');
 include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php');
@@ -54,7 +53,7 @@ class BackgroundController extends InitController
         $telephone = $_POST['telephone'];
         // $telephone = "18611323194";
 
-        $url = "http://localhost:8080/crm_web_new/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
+        $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
 
         $staff = Staff::model()->find(array(
             "condition" => "telephone = :telephone",
