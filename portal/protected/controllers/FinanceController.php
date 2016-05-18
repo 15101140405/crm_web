@@ -1,5 +1,5 @@
 <?php
-
+include_once('../library/WPRequest.php');
 
 class FinanceController extends InitController
 {
@@ -371,6 +371,15 @@ class FinanceController extends InitController
         }else if($_POST['order_status'] == 3){
             Order::model()->updateByPk($_POST['order_id'],array('order_status'=>4,'final_payments'=>$_POST['payment'],'final_payments_way'=>$_POST['payment_way'],'final_payments_time'=>$_POST['payment_time'])); 
         }*/
+        $payment = OrderPayment::model()->find(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                    ':order_id' => $_POST['order_id']
+                    )
+            ));
+        if (empty($payment)) {
+            WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        }
 
         $payment= new OrderPayment;
         $payment->order_id=$_POST['order_id'];

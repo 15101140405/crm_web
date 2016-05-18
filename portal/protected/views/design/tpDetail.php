@@ -576,7 +576,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : parseFloat(<?php echo $productData['unit_cost'] ?>) ,
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())*0.01
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())
                 };
                 console.log(get_info);
             }

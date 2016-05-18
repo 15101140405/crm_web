@@ -88,7 +88,7 @@
             }else if($("#telephone").val().length != 11 || !myreg.test($("#telephone").val())){
                 alert("请输入有效的手机号！");
             }else {
-                $.post(/*"<?php echo $this->createUrl("background/register_pro");?>"*/"http://192.168.1.20:8080/crm_web_new/portal/index.php?r=background/register_pro",{telephone : $("#telephone").val() , password : $("#password").val() , yzm : $("#yzm").val()},function(data){
+                $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#telephone").val() , password : $("#password").val() , yzm : $("#yzm").val()},function(data){
                     if(data == "errow"){alert("您输入的验证码有误，请重新输入！");}
                     if(data == "success"){
                         data = {

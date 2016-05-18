@@ -3493,7 +3493,60 @@ class DesignController extends InitController
         echo json_encode($result);
     }
 
-     public function actionAdd_order()
+    public function actionAdd_temporary()
+    {   
+        $code = 0;
+        $result['msg'] = "";
+        // print_r($post->token);die;
+        try {
+            $post = json_decode(file_get_contents('php://input'));
+            $staff = Staff::model()->find(array(
+                "condition" => "id = :id",
+                "params"    => array(
+                    ":id" => $post->token,
+            )));
+            $account_id = $staff['account_id'];
+
+            $data = new SupplierProduct;
+            $data ->account_id = $account_id;
+            $data ->supplier_id = $post->supplierid;
+            $data ->supplier_type_id = $post->suppliertypeid;
+            $data ->decoration_tap = $post->decorationtap;
+            $data ->standard_type = 1;
+            $data ->name = $post->name;
+            $data ->cotegory = 2;
+            $data ->unit_price = $post->unitprice;
+            $data ->unit_cost = $post->unit_cost;
+            $data ->unit = $post->unit;
+            $data ->service_charge_ratio = 0;
+            $data ->ref_pic_url = $post->refpicurl;
+            $data ->description = $post->description;
+
+            $data->save();            
+            $product_id = $data->attributes['id'];
+
+            $data = new OrderProduct;     
+            $data ->account_id = $account_id;
+            $data ->order_id = $post->orderid;
+            $data ->product_type = 0;
+            $data ->product_id = $product_id;
+            $data ->unit = $post->amount;
+            $data ->actual_price = $post->unitprice;
+            $data ->sort = 1;
+
+            $data->save();
+
+            
+            }
+            $code = 1;
+        } catch (Exception $e) {
+            $result['msg'] = $e;
+        }
+        $result['code'] = $code;
+        echo json_encode($result);
+    }
+
+    public function actionAdd_order()
     {
         $post = json_decode(file_get_contents('php://input'));
         $code = 0;
@@ -3522,7 +3575,6 @@ class DesignController extends InitController
             $data ->cut_price = 0;
 
             $data->save();
-
             $order_id = $data->attributes['id'];
 
             $data = new OrderWedding;
