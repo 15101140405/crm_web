@@ -1117,8 +1117,11 @@ class BackgroundController extends InitController
                     ),
             ));
         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
+        $t = explode(".", $product['ref_pic_url']);
+        $picture = "http://file.cike360.com".$t[0]."_sm.".$t[1];
         /*print_r($supplier);die;*/
         $this->render("edit_supplier_product",array(
+                'picture' => $picture,
                 'product' => $product,
                 'supplier' => $supplier,
                 'decoration_tap' => $decoration_tap,

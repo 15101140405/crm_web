@@ -10,8 +10,8 @@
     Count.prototype = {
         constructor: Count,
         init: function () {
-            this.$ele.find('.minus_btn').on('click', $.proxy(this.minus, this));
-            this.$ele.find('.add_btn').on('click', $.proxy(this.add, this));
+            this.$ele.find('.minus_btn').live('click', $.proxy(this.minus, this));
+            this.$ele.find('.add_btn').live('click', $.proxy(this.add, this));
         },
         minus: function () {
             var $count = this.$ele.find('.count'),
@@ -19,7 +19,8 @@
                 $minus_btn = this.$ele.find('.minus_btn'),
                 num = $count.val();
             if (Number(num) > 1) {
-                $count.val(Number(num) - 1);
+                //$count.val(Number(num) - 1);
+                $count.attr('value',Number(num) - 1)
                 $add_btn.removeClass('disabled');
                 if (Number(num) - 1 == 1) {
                     $minus_btn.addClass('disabled');
@@ -33,7 +34,8 @@
                 num = $count.val(),
                 limitnum = this.settings.limitnum;
             if (Number(num) < limitnum || limitnum == 'null') {
-                $count.val(Number($count.val()) + 1);
+                //$count.val(Number($count.val()) + 1);
+                $count.attr('value',Number(num) + 1)
                 $minus_btn.removeClass('disabled');
                 if (Number(num) == limitnum - 1) {
                     $add_btn.addClass('disabled');
@@ -58,7 +60,7 @@ $(function () {
         })
         /*数量增减控制*/
     $(".counter_box").count({
-            limitnum: 5
+            limitnum: 1000
         })
         /*左侧固定*/
     var $right_fixed = $(".upload_set_c .right_area"),

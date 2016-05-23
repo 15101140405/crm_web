@@ -203,7 +203,7 @@
             </ul>
             <div class="right video_cover" style="position: absolute;right: 120px;">
                 <div class="cover_box">
-                    <img src="<?php echo $product['ref_pic_url']?>" id="poster_img" style="width:120px;">
+                    <img src="<?php echo $picture?>" id="poster_img" style="width:120px;">
                 </div>
                 <button id="uploadsingle">上传产品示意图</button>
                 <!--  -->
@@ -353,13 +353,16 @@
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $product['ref_pic_url']?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#tap").val($("[tap-id=<?php echo $product['decoration_tap']?>]").val());
+        $("#supplier").val($("[supplier-id=<?php echo $product['supplier_id']?>]").val());
+        $("#unit").val("<?php echo $product['unit']?>");
 
         //添加产品
         $("#sure").on("click",function(){
             var mydate = new Date();
             var time = mydate.toLocaleDateString();
             var data = {
+                product_id : <?php echo $product['id']?>,
                 name : $("#name").val(),
                 description : $("#remarks").val(),
                 supplier_id : $("#supplier option:selected").attr("supplier-id"),
@@ -389,7 +392,7 @@
             if($.cookie('img')== "null" || $.cookie('img')== null || data.name==""||data.decription==""||data.supplier_id==null||data.supplier_type_id ==null||data.unit==""||data.unit_price==""||data.unit_cost==""||data.ref_pic_url==""||data.decoration_tap==null){
                 alert("请补全信息！");
             }else{
-                $.post("<?php echo $this->createUrl("background/product_upload");?>",data,function(){
+                $.post("<?php echo $this->createUrl("background/product_edit");?>",data,function(){
                     $.cookie('img', null); 
                     $.cookie('img1', null); 
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=7";

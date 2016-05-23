@@ -72,9 +72,9 @@
             </ul>
         </div>
         <!--右侧内容区域-->
-        <div class="right_area right" style="background:#fff;">
+        <div class="right_area right" style="background:#fff;width:247px;">
             <div>
-                <div class="tit_box clearfix" style="width:230px;background:#fff;border-bottom: 1px solid #e6e6e6;">
+                <div class="tit_box clearfix" style="width:253px;background:#fff;border-bottom: 1px solid #e6e6e6;">
                     <h2 class="left">加入本套系的产品</h2>
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
@@ -126,6 +126,7 @@
 <script type="text/javascript" src="js/upload_set.js"></script>
 <script>
     $(function(){
+
         //初始渲染
         $("#product li").addClass("hid");
         $("[supplier-type-id='20']").removeClass("hid");
@@ -215,12 +216,18 @@
             total_price(); 
         });
         $(".shopping_car").find(".counter_box").count({limitnum:5});
+        $(".add_btn").live("click",function(){
+            total_price(); 
+        });
+        $(".minus_btn").live("click",function(){
+            total_price(); 
+        });
         
         //总价计算，并刷新
         function total_price(){
             var total_price = 0;
             $("#shopping_car li").each(function(){
-                total_price += $(this).find(".amount").val() * $(this).find(".product_price").val();
+                total_price += $(this).find(".count").val() * $(this).find(".product_price").val();
             });
             $("#total_price").html(total_price);
         };
