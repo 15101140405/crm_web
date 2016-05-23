@@ -226,7 +226,9 @@ class ReportController extends InitController
 
     public function actionOrder_report()
     {
-        $staff = Staff::model()->findByPk($_SESSION['userid']);
+        $staff = Staff::model()->findByPk(222222);
+        $_SESSION['staff_hotel_id'] = 1;
+        // $staff = Staff::model()->findByPk($_SESSION['userid']);
         $str =  rtrim($staff['department_list'], "]"); 
         $str =  ltrim($str, "[");
         $t = explode(",", $str);
@@ -246,26 +248,60 @@ class ReportController extends InitController
         $today = date('Y-m-d',time());
         /*print_r($today);die;*/
         $year = date('Y',time());
+        $month = date('m',time());
+        $d=strtotime("+1 Months");
+
         $order_data = array();
         /*print_r($year);die;*/
         $order_num = array(
-                'order_open' => 0,
-                'wed_finish' => 0,
-                'wed_doing' => 0,
-                'wed_clear' => 0,
-                'meeting_finish' => 0,
-                'meeting_doing' => 0,
-                'meeting_clear' => 0,
+                'order_open'        => 0,
+                'wed_m_open'        => 0,
+                'wed_m_pay'         => 0,
+                'wed_finish'        => 0,
+                'wed_doing'         => 0,
+                'wed_clear'         => 0,
+                'meeting_m_open'    => 0,
+                'meeting_m_pay'     => 0,
+                'meeting_finish'    => 0,
+                'meeting_doing'     => 0,
+                'meeting_clear'     => 0,
             );
+        $orderidlist = array();
         foreach ($order as $key => $value) {
+            $orderidlist[] = $value['id'];
+        };
+        $criteria3 = new CDbCriteria; 
+        $criteria3->addInCondition('order_id', $orderidlist);
+        $criteria3->order = 'time DESC';
+        $payment = OrderPayment::model()->findAll($criteria3); 
+        $firstpay = array();
+        foreach ($orderidlist as $key1 => $value1) {
+            //print_r($value1);die;
+            $firstpaytime = array();
+            foreach ($payment as $key2 => $value2) {
+                if ($value2['order_id'] == $value1) {//按时间倒叙的结果，每一个订单号的最后一个为最早的pay
+                    $firstpaytime = explode(" ",$value2['time']);
+                    $firstpaydate = explode("-",$firstpaytime[0]);
+                } 
+            }
+            if(!empty($firstpaytime)){
+                // print_r($value1);die;
+                $firstpay[] = array(//形成该分店所有订单的最早pay
+                'order_id'  => $value1,
+                'firsty'    => $firstpaydate['0'],
+                'firstm'    => $firstpaydate['1']
+                );
+            }   
+        }
+        //var_dump($firstpay);die;
+        foreach ($order as $key => $value){
             $t = explode(" ",$value['update_time']);
-
+            $tt = explode("-",$t[0]);
             $t1 = explode(" ",$value['order_date']);
             $t2 = explode("-",$t1[0]);
             /*print_r($t1[0]);die;*/
             $planner = Staff::model()->findByPk($value['planner_id']);
             $designer = Staff::model()->findByPk($value['designer_id']);
-
 
             $item = array();// 开单统计
             if($t2[0] == $year){
@@ -277,9 +313,46 @@ class ReportController extends InitController
                     $item['planner_name'] = $planner['name'];
                     $item['designer_name'] = $designer['name'];
                     $item['order_id'] = $value['id'];
-                    $item['order_type'] = $value['order_type'];
                 };
             };
+            $item3 = array();
+            if ($t2[0] >= $year) {//本月进店
+                if ($tt[1] == $month) {
+                    if ($value['order_type'] == 2) {
+                        $order_num['wed_m_open']++;
+                        $item3['order_type']="婚礼";
+                        $item3['type']=11;//本月婚礼开单
+                    } else {
+                        $order_num['meeting_m_open']++;
+                        $item3['order_type']="会议";
+                        $item3['type']=12;//本月会议开单
+                    }
+                    $item3['order_date'] = $t1[0];
+                    $item3['planner_name'] = $planner['name'];
+                    $item3['designer_name'] = $designer['name'];
+                    $item3['order_id'] = $value['id'];
+                    }
+                }
+            $item4 = array();
+            //var_dump($firstpay);die;
+            foreach ($firstpay as $key1 => $value1) {//构造首pay是当月的
+                if ($value1['order_id'] == $value['id'] && $value1['firsty'] == date('Y',time()) && $value1['firstm'] == date('m',time())) {
+                    if ($value['order_type'] == 2) {
+                        $order_num['wed_m_pay']++;
+                        $item4['order_type']="婚礼";
+                        $item4['type']=13;//本月婚礼首pay
+                    } else {
+                        $order_num['meeting_m_pay']++;
+                        $item4['order_type']="会议";
+                        $item4['type']=14;//本月会议首pay
+                    }
+                    $item4['order_date'] = $t1[0];
+                    $item4['planner_name'] = $planner['name'];
+                    $item4['designer_name'] = $designer['name'];
+                    $item4['order_id'] = $value['id'];
+                    // var_dump($value1);die;
+                }
+            }
 
             $item1 = array(); //订单统计
             $item2 = array(); //结算申请
@@ -293,7 +366,6 @@ class ReportController extends InitController
                         $item1['planner_name'] = $planner['name'];
                         $item1['designer_name'] = $designer['name'];
                         $item1['order_id'] = $value['id'];
-                        $item1['order_type'] = $value['order_type'];
                     };
                     if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4){ //待执行会议
                         $order_num['meeting_doing']++;
@@ -303,7 +375,6 @@ class ReportController extends InitController
                         $item1['planner_name'] = $planner['name'];
                         $item1['designer_name'] = $designer['name'];
                         $item1['order_id'] = $value['id'];
-                        $item1['order_type'] = $value['order_type'];
                     }
 
                     if($value['order_status'] == 5){ //结算中
@@ -314,7 +385,6 @@ class ReportController extends InitController
                         $item2['planner_name'] = $planner['name'];
                         $item2['designer_name'] = $designer['name'];
                         $item2['order_id'] = $value['id'];
-                        $item2['order_type'] = $value['order_type'];
                     };
                 }else{
                     if($value['order_status'] == 5 || $value['order_status'] == 6){ //已完成婚礼
@@ -325,7 +395,6 @@ class ReportController extends InitController
                         $item1['planner_name'] = $planner['name'];
                         $item1['designer_name'] = $designer['name'];
                         $item1['order_id'] = $value['id'];
-                        $item1['order_type'] = $value['order_type'];
                     };
                     
                     if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4){ //待执行婚礼
@@ -336,7 +405,6 @@ class ReportController extends InitController
                         $item1['planner_name'] = $planner['name'];
                         $item1['designer_name'] = $designer['name'];
                         $item1['order_id'] = $value['id'];
-                        $item1['order_type'] = $value['order_type'];
                     };
 
                     if($value['order_status'] == 5){ //结算中
@@ -347,13 +415,14 @@ class ReportController extends InitController
                         $item2['planner_name'] = $planner['name'];
                         $item2['designer_name'] = $designer['name'];
                         $item2['order_id'] = $value['id'];
-                        $item2['order_type'] = $value['order_type'];
                     };
                 };
             };
             if(!empty($item)){$order_data['open'][] = $item;};
             if(!empty($item1)){$order_data['order'][] = $item1;};            
             if(!empty($item2)){$order_data['clear'][] = $item2;}; 
+            if(!empty($item3)){$order_data['mopen'][] = $item3;}; 
+            if(!empty($item4)){$order_data['mpay'][] = $item4;}; 
         };
         /*print_r($order_data);die;*/
         $this->render("order_report",array(

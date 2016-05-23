@@ -15,6 +15,7 @@
 
 </head>
 
+
 <body style="background:#fff">
     <!--导航-->
     <nav class="fixed_nav" id="main_nav">
@@ -42,12 +43,47 @@
         <h2 class="daily_tit">今日进店</h2>
         <ul class="daily_list">
             <li data-aslider-in="aslider1|fade" id="open">
-                <img class="item_icon" src="images/order_open.png" />
+                <img class="item_icon" src="images/today.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">今日开单</span>
                     <span class="num"><?php echo $order_num['order_open']?></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
+            </li>
+        </ul>
+        <h2 class="daily_tit">本月统计</h2>
+        <ul class="daily_list">
+            <li data-aslider-in="aslider1|fade" id="wed_m_open">
+                <img class="item_icon" src="images/wed_m_open.png" />
+                <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
+                    <span class="flex1">进店婚礼</span>
+                    <span class="num"><?php echo $order_num['wed_m_open']?></span>
+                    <img class="arrow" src="images/arrow_right.png" />
+                </div>
+            </li>
+            <li data-aslider-in="aslider1|fade" id="wed_m_pay">
+                <img class="item_icon" src="images/wed_m_pay.png" />
+                <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
+                    <span class="flex1">婚礼成单</span>
+                    <span class="num"><?php echo $order_num['wed_m_pay']?></span>
+                    <img class="arrow" src="images/arrow_right.png" />
+                </div>
+             <li data-aslider-in="aslider1|fade" id="meeting_m_open">
+                <img class="item_icon" src="images/meeting_m_open.png" />
+                <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
+                    <span class="flex1">进店会议</span>
+                    <span class="num"><?php echo $order_num['meeting_m_open']?></span>
+                    <img class="arrow" src="images/arrow_right.png" />
+                </div>
+            </li>
+            <li data-aslider-in="aslider1|fade" id="meeting_m_pay">
+                <img class="item_icon" src="images/meeting_m_pay.png" />
+                <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
+                    <span class="flex1">会议成单</span>
+                    <span class="num"><?php echo $order_num['meeting_m_pay']?></span>
+                    <img class="arrow" src="images/arrow_right.png" />
+                </div>
+            </li>
             </li>
         </ul>
         <h2 class="daily_tit">婚礼订单</h2>
@@ -116,7 +152,7 @@
     <aside class="aslider filter_aslider" data-aslider="aslider1" style="z-index: 100001;">
         <div class="wrapper">
             <div class="tit_box flexbox v_center">
-                <img class="close" src="images/close.png" />
+                <!-- <img class="close" src="images/close.png" /> -->
                 <h2 class="flex1">订单列表</h2>
             </div>
             <div class="slider">
@@ -139,10 +175,22 @@
                         <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
                     </li>
             <?php }}?>
+            <?php if(!empty($order_data['mopen'])){foreach ($order_data['mopen'] as $key => $value) {?>
+                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+                        <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
+                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                    </li>
+            <?php }}?>
+            <?php if(!empty($order_data['mpay'])){foreach ($order_data['mpay'] as $key => $value) {?>
+                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+                        <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
+                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                    </li>
+            <?php }}?>
                 </ul>
             </div>
             <div class="btn_box flexbox">
-                <button class="sure_btn flex1 close">确定</button>
+                <button class="sure_btn flex1 close">返回</button>
             </div>
         </div>
     </aside>
@@ -196,10 +244,25 @@
             $("#list li").addClass("hid");
             $("[type='6']").removeClass("hid");
         });
-        $("#meeting_clearing").on("click",function(){
+        $("#wed_m_open").on("click",function(){
             $("#list li").removeClass("hid");
             $("#list li").addClass("hid");
-            $("[type='7']").removeClass("hid");
+            $("[type='11']").removeClass("hid");
+        });
+        $("#meeting_m_open").on("click",function(){
+            $("#list li").removeClass("hid");
+            $("#list li").addClass("hid");
+            $("[type='12']").removeClass("hid");
+        });
+        $("#wed_m_pay").on("click",function(){
+            $("#list li").removeClass("hid");
+            $("#list li").addClass("hid");
+            $("[type='13']").removeClass("hid");
+        });
+        $("#meeting_m_pay").on("click",function(){
+            $("#list li").removeClass("hid");
+            $("#list li").addClass("hid");
+            $("[type='14']").removeClass("hid");
         });
 
         //导航
@@ -220,9 +283,9 @@
         $(".aslider_order_list li").on("click",function(){
             order_type = $(this).attr("order-type");
             order_id = $(this).attr("order-id");
-            if(order_type == 2){
+            if(order_type == "婚礼"){
                 location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=" + order_id + "&from=my_order";
-            }else if(order_type == 1){
+            }else if(order_type == "会议"){
                 location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=" + order_id + "&from=my_order";
             };
         });

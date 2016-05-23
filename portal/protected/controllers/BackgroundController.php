@@ -104,6 +104,7 @@ class BackgroundController extends InitController
                                 ':telephone' => $_POST['telephone']
                             )
                     ));
+                $staff_id = "";
                 if(empty($staff)){ //手机号未注册，新建一个staff
                     $data = new Staff;
                     $data ->name = $_POST['name'];
@@ -113,15 +114,22 @@ class BackgroundController extends InitController
                     $data ->save();
                     $staff_id = $data->attributes['id'];
                 }else{  //手机号已经注册，但不是主持人，修改staff的department_list
+                    $staff['department_list']=rtrim($staff['department_list'], "]");
+                    $staff['department_list']=ltrim($staff['department_list'], "[");
+                    $t=explode(',',$staff['department_list']);
                     $department_list = "[";
                     foreach ($t as $key => $value) {
                         $department_list .= $value . ",";
                     };
-                    $department_list = rtrim($department_list,",");
-                    $department_list .= "]";
-                    Staff::model()->updateCounters(array('department_list'=>$department_list),'telephone=:telephone',array(':telephone'=>$_POST['telephone'])); 
-                };  
-
+                    $department_list .= "11]";
+                    $staff = Staff::model()->find(array(
+                        'condition' => 'telephone=:telephone',
+                        'params' => array(
+                            ':telephone' => $_POST['telephone']
+                        )
+                    ));
+                    Staff::model()->updateByPk($staff['id'],array('department_list'=>$department_list,'password'=>$_POST['password'],'name'=>$_POST['name']));
+                };
                 $data = new CaseInfo;
                 $data ->CI_Name = $_POST['name'];
                 $data ->CI_Pic = "";
@@ -162,7 +170,7 @@ class BackgroundController extends InitController
                 if($staff['department_list'] != ""){
                     $staff['department_list']=rtrim($staff['department_list'], "]");
                     $staff['department_list']=ltrim($staff['department_list'], "[");
-                    $t=explode($staff['department_list'], ',');
+                    $t=explode(',',$staff['department_list']);
                     $i = 0;
                     if(!empty($t)){
                         foreach ($t as $key => $value) {
@@ -180,7 +188,7 @@ class BackgroundController extends InitController
                     };
                 };
             }else{ // 如果手机号还未注册
-                echo "验证码已发送到您的手机！";
+                echo "您的手机未注册，验证码已发送到您的手机！";
                 $data = array('telephone' => $telephone, );
                 $result = WPRequest::post($url, $data);
                 Yii::app()->session['code'] = $result;
@@ -577,10 +585,10 @@ class BackgroundController extends InitController
     public function actionEdit_product()
     {
         //取产品数据
-        $product = ServiceProduct::model()->findAll(array(
-                'condition' => 'service_person_id=:service_person_id',
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'id=:id',
                 'params' => array(
-                        ':service_person_id' => $_GET['service_person_id'],
+                        ':id' => $_GET['product_id'],
                     ),
             ));
         /*print_r($product);die;*/

@@ -375,10 +375,39 @@ class FinanceController extends InitController
                 'condition' => 'order_id=:order_id',
                 'params' => array(
                     ':order_id' => $_POST['order_id']
-                    )
-            ));
+                    )));
+        $order = Order::model()->find(array(
+                'condition' => 'id=:id',
+                'params' => array(
+                    ':id' => $_POST['order_id']
+                    )));
+        $date = explode(' ', $order['order_date']);
+        $hotel = StaffHotel::model()->find(array(
+                'condition' => 'id=:id',
+                'params' => array(
+                    ':id' => $order['staff_hotel_id']
+                    )));   
+        $staff1 = Staff::model()->findByPK($order['designer_id']);
+        $staff2 = Staff::model()->findByPK($order['planner_id']);
+        if ($order['order_type'] == 1) {
+            $order_type = "会议";
+        } else {
+            $order_type = "婚礼";
+        }
+        
+
         if (empty($payment)) {
-            WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+            $touser = "@all";
+            $toparty = "";
+            $content = "成单了！[".$hotel['name']."]
+订单类型：".$order_type."
+日期：".$date[0]."
+策划师：".$staff1['name']."
+统筹师：".$staff2['name'];
+            $corpid = "wxee0a719fd467c364";
+            $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+            WPRequest::sendMessage_Text($touser,$toparty,$content,$corpid,$corpsecret);
+
         }
 
         $payment= new OrderPayment;
