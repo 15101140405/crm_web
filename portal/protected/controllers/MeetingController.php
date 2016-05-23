@@ -1020,9 +1020,15 @@ class MeetingController extends InitController
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."        "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."
+订单类型：婚礼
+日期：".$date[0]."
+开单人：".$staff["name"];
         }else if($order['order_type'] == 1){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."        "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+            $html = "新客人进店了[".$hotel['name']."] "."
+订单类型：会议
+日期：".$date[0]."
+开单人：".$staff["name"];
         };
         
         /*print_r($html);die;*/

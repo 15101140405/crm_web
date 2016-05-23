@@ -3536,8 +3536,6 @@ class DesignController extends InitController
 
             $data->save();
 
-            
-            }
             $code = 1;
         } catch (Exception $e) {
             $result['msg'] = $e;
