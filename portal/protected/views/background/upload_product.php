@@ -165,6 +165,7 @@
                             <option value="只">只</option>
                             <option value="组">组</option>
                             <option value="天">天</option>
+                            <option value="米">米</option>
                         </select>
                     </div>
                     <span class="left tip hid" id="unit_t">请选择单位</span>
@@ -387,7 +388,7 @@
                 $.post("<?php echo $this->createUrl("background/product_upload");?>",data,function(){
                     $.cookie('img', null); 
                     $.cookie('img1', null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=4";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=7";
                 });
             };
         });

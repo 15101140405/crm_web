@@ -79,6 +79,21 @@
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:230px;" id="shopping_car">
+            <?php foreach ($product_list as $key => $value) {?>
+                    <li class="clearfix hid new_hid" product-id="<?php echo $value['product_id']?>" unit-cost="<?php echo $value['cost']?>" style="display: list-item;">
+                        <img class="left product_pic" src="http://file.cike360.com/upload/2r20160516111246.jpg" alt="">
+                        <div class="con left">
+                            <h3 class="product_name"></h3>
+                            <div class="counter_box clearfix">
+                                <span class="minus_btn btn disabled left">-</span>
+                                <input class="count left amount" type="text" readonly="true" value="<?php echo $value['amount']?>">
+                                <span class="add_btn btn left">+</span>
+                            </div>
+                        </div>
+                        <img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px">
+                        <p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥<input class="product_price" type="text" value="<?php echo $value['price']?>"></p>
+                    </li>
+            <?php }?>
                 </ul>
                  
             </div>
@@ -114,6 +129,12 @@
         //初始渲染
         $("#product li").addClass("hid");
         $("[supplier-type-id='20']").removeClass("hid");
+        $("#shopping_car li").each(function(){
+            var product = $("#product [product-id='"+$(this).attr('product-id')+"']");
+            $(this).find(".product_id").html(product.find(".name").html());
+            $(this).find(".product_pic").attr("src",product.find("img").attr("src"));
+            total_price(); 
+        });
 
         //点击加入套系
         $(".add_product").on("click",function(){
@@ -182,7 +203,7 @@
                 product_list += $(this).attr('product-id') +"|"+ $(this).find(".product_price").val() +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html();
+            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html();
         })
 
         //改变数量、单价时，刷新总价

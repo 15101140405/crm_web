@@ -297,7 +297,7 @@
                 account_id : $.cookie('account_id'),
                 product_list : "<?php echo $_GET['product_list']?>",
                 final_price : "<?php echo $_GET['final_price']?>",
-                staff_hotel_id : $("#hotel option:selected").val(),
+                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
             };
             console.log(data);
             $(".tip").removeClass("hid");

@@ -234,7 +234,7 @@
                     <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
-                                <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
+                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
                                 <!-- <span>私密视频</span> -->
                             </div>
                             <div class="video_info left">
