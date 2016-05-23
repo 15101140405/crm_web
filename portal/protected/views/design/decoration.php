@@ -16,89 +16,77 @@
         <div class="l_btn" data-icon="&#xe679;"></div>
         <h2 class="page_title">场地布置</h2>
     </div>
-    <!-- 所有的子项目报价单都是此模板 -->
-    <?php
-    $total = 3242; //总价
-    $li_head = array(
-        '0' => '例图',
-        '1' => '品名',
-        '2' => '单价',
-        '3' => '规格',
-        '4' => '数量',
-        '5' => '总价'
-    );
-    /*$product_list = array(
-        '0' => array(
-            'poduct_id' => '1',
-            'img' => 'meeting_layout.jpg',
-            'name' => '桌花',
-            'unit_price' => '2000',
-            'unit' => '个',
-            'amount' => '4',
-            'total' => '6003'
-
-
-        ),
-        '1' => array(
-            'poduct_id' => '2',
-            'img' => 'meeting_layout.jpg',
-            'name' => '桌花',
-            'unit_price' => '2003',
-            'unit' => '个',
-            'amount' => '3',
-            'total' => '6003'
-
-        )
-
-
-    );*/
-
-    ?>
     <div class="order_abstract mar_b10">
         <p class="title" style="width:70%;display:inline-block !important;">总价 &yen;<?php echo $product_total; ?></p>
         <div class="singup" style="text-align:center;" id="add">添加商品</div>
     </div>
-
+    <div class="tab_module">
+        <p class="tab_btn act" type-id="standard">
+            <span>标准产品</span>
+        </p>
+        <p class="tab_btn" type-id="nostandard">
+            <span>非标产品</span>
+        </p>
+    </div>
     <div class="ulist_module">
-        <ul class="ulist aligncenter">
-            <!-- 表头处理方式和列表一样即可 -->
-            <!-- <li class="ulist_item flex">
-                <?php
-                foreach ($li_head as $key => $value) {
-                    ?>
-                    <span class="flex1"><?php echo $value; ?></span>
-                <?php } ?>
-            </li> -->
-            <!-- 正文部分多 class pad_tb10 -->
-            <?php
-            foreach ($product_list as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $product[$key1] = $value1;
-                    
-                }
-                ?>
-                <li class="ulist_item pad_tb10 flex" poduct-id="<?php echo $product['product_id']; ?>">
-                    <!-- <div class="flex1">
-                        <img src="images/<?php echo $product['img']; ?>"/>
-                    </div> -->
-                    <div class="flex1">
-                        <span class="flex1" style="white-space:nowrap;overflow:hidden;display:block;"><?php echo $product['name']; ?></span>
-                        <span class="flex1">&yen;<?php echo $product['unit_price']; ?></span>
-                        <span class="flex1"><?php echo $product['unit']; ?></span>
-                    </div>
-                    <div class="flex1">
-                        <span class="flex1 t_green">总价 ：<?php echo $product['total']; ?></span></br>
-                        <span class="flex1 t_green">数量 ：<?php echo $product['amount'] ?></span>
-                    </div>
-                </li>
-            <?php } ?>
+        <ul class="ulist charge_list" id="product">
         </ul>
     </div>
-</article>
+</article>   
 <script src="js/zepto.min.js"></script>
 <script src="js/common.js"></script>
 <script>
     $(function () {
+        //从item返回，渲染对应item页面
+        if ($.util.param("tab") != "") {
+            showdata($.util.param("tab"));
+            $("[type-id='" + $.util.param("tab") + "']").addClass("act");
+            $("[type-id='" + $.util.param("tab") + "']").siblings().removeClass("act");
+        } else {
+            showdata("standard");
+        }
+
+        //点击导航条，渲染对应内容
+        $(".tab_btn").on("click", function () {
+            //改变按钮状态
+            $(this).addClass("act");
+            $(this).siblings().removeClass("act");
+            showdata($(this).attr("type-id"));
+        })
+
+
+
+        //返回
+        $(".l_btn").on("click", function () {
+            if("<?php echo $_GET['from']?>" == "design"){
+                location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+            }else if("<?php echo $_GET['from']?>" == "meeting"){
+                location.href = "<?php echo $this->createUrl("meeting/bill");?>&order_id=<?php echo $_GET['order_id']?>";
+            }
+                
+        });
+
+        //渲染对应内容
+        function showdata(data) {
+            var type_id = data;
+            switch (type_id) {
+                case "standard":
+                    var html_standard = '';
+                    <?php
+                    foreach ($product_list as $key => $value) {
+                        foreach ($value as $key1 => $value1) {
+                            $product[$key1] = $value1;
+                        }
+                    ?>
+                    html_standard += '<li class="ulist_item list_more " poduct-id="<?php echo $product['id']; ?>"><div class="item"><p class="name"><?php echo $product['product_name'];?></p></div><i class="name"><?php echo $product['staff_name'];?></p></i></li>';
+                    <?php } ?>
+    
+                    $("#product").empty(); //清空订单列表
+                    $("#product").prepend(html_standard); //打印新的订单列表
+            
+                    //先判断是否已经选择主持人
+                
+            }};
         //点击返回按钮，判断from，返回对应页面
         $(".l_btn").on("click", function () {
             location.href = "<?php echo $this->createUrl("design/bill", array());?>&order_id=" + $.util.param("order_id");
@@ -107,12 +95,14 @@
         //添加商品
         $("#add").on("click", function () {
             location.href = "<?php echo $this->createUrl("design/decorationDetail", array());?>&type=new&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
-        })
+        });
 
         //编辑商品
         $("li.pad_tb10").on("click", function () {
             location.href = "<?php echo $this->createUrl("design/decorationDetail", array());?>&type=edit&product_id=" + $(this).attr("poduct-id") + "&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id")
-        })
+        });
+
+
 
 
     })

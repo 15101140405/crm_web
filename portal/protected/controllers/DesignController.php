@@ -2556,40 +2556,38 @@ class DesignController extends InitController
 
     public function actionDecoration()
     {
-        $Supplier = Supplier::model()->findAll(array(
-            "condition" => "type_id=:type_id",
-            "params" => array(
-                ":type_id" => 20,
-            ),
-        ));
-// var_dump($Supplier);die;
-        $supplier_id = array();
-        foreach($Supplier as $key => $value){
-            $supplier_id[$key] = $value['id'];
+//         $Supplier = Supplier::model()->findAll(array(
+//             "condition" => "type_id=:type_id",
+//             "params" => array(
+//                 ":type_id" => 20,
+//             ),
+//         ));
+//         $supplier_id = array();
+//         foreach($Supplier as $key => $value){
+//             $supplier_id[$key] = $value['id'];
 
-        }
+//         }
+//         $criteria = new CDbCriteria; 
+//         $criteria->addInCondition("supplier_id",$supplier_id);
+//         $SupplierProducts = SupplierProduct::model()->findAll($criteria);
+//         $product_id = array();
+//         foreach($SupplierProducts as $key => $value){
+//             $product_id[$key] = $value['id'];
+//         }
+//         $criteria1 = new CDbCriteria; 
+//         $criteria1->addInCondition("product_id",$product_id);
+//         $criteria1->addCondition("order_id=:order_id");
+//         $criteria1->params[':order_id']=$_GET['order_id']; 
+//         $OrderProducts = OrderProduct::model()->findAll($criteria1);
+//         $product_list = array();
 
-        // var_dump($supplier_id);die;
-        $criteria = new CDbCriteria; 
-        $criteria->addInCondition("supplier_id",$supplier_id);
-        $SupplierProducts = SupplierProduct::model()->findAll($criteria);
-        $product_id = array();
-        foreach($SupplierProducts as $key => $value){
-            $product_id[$key] = $value['id'];
+        $data = $this -> actionGetOrderProduct(20);
 
-        }
+        $supplier_product = yii::app()->db->createCommand("select supplier_product.id,supplier_product.name as product_name,staff.name as staff_name from supplier_product left join supplier on supplier_id=supplier.id left join staff on staff_id=staff.id where supplier_product.account_id=".$_SESSION['account_id']." and supplier_type_id=20 and standard_type=0");
+        $product_list = $supplier_product->queryAll();
 
-        // var_dump($product_id);die;
-        $criteria1 = new CDbCriteria; 
-        $criteria1->addInCondition("product_id",$product_id);
-        $criteria1->addCondition("order_id=:order_id");
-        $criteria1->params[':order_id']=$_GET['order_id']; 
-        $OrderProducts = OrderProduct::model()->findAll($criteria1);
-        // var_dump($OrderProducts);die;
-        //print_r($OrderProducts);die;
-        $product_list = array();
         $product_total = 0 ;
-        foreach($OrderProducts as $key => $value){
+        foreach($data as $key => $value){
             $product_list[$key]['product_id'] = $value['product_id'];
             $product_list[$key]['unit_price'] = $value['actual_price'];
             $product_list[$key]['amount'] = $value['unit'];
@@ -2597,21 +2595,22 @@ class DesignController extends InitController
             $product_list[$key]['total'] += $value['actual_price'] * $value['unit'];
             $product_total += $value['actual_price'] * $value['unit'];
 
-            $Product = SupplierProduct::model()->find(array(
-                "condition" => "id=:id",
-                "params" => array(
-                    ":id" => $value['product_id'],
-                ),
-            ));
-            $product_list[$key]['img'] = $Product['ref_pic_url'];
-            $product_list[$key]['name'] = $Product['name'];
-            $product_list[$key]['unit'] = $Product['unit'];
+            // $Product = SupplierProduct::model()->find(array(
+            //     "condition" => "id=:id",
+            //     "params" => array(
+            //         ":id" => $value['product_id'],
+            //     ),
+            // ));
+            // $product_list[$key]['img'] = $Product['ref_pic_url'];
+            // $product_list[$key]['name'] = $Product['name'];
+            // $product_list[$key]['unit'] = $Product['unit'];
         }
-        
+        /*print_r($data);die;*/
         $this->render("decoration",
             array(
                 'product_list' => $product_list,
-                'product_total' => $product_total
+                'product_total' => $product_total,
+                'data' => $data,
                 // 'arr_category_appliance' => $supplierProducts1,
             ));
         // $this->render("decoration");
@@ -3117,7 +3116,7 @@ class DesignController extends InitController
             ));
     }
 
-    public function actionGetOrderProduct($supplier_type_id)
+    public function actionGetOrderProduct($supplier_type_id)//获取本订单的相应种类的已选产品
     {
         $OrderHost = SupplierProduct::model()->findAll(array(
             "select" => "id",
@@ -3537,7 +3536,7 @@ class DesignController extends InitController
             $data->save();
 
             
-            }
+            
             $code = 1;
         } catch (Exception $e) {
             $result['msg'] = $e;
