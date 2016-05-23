@@ -22,6 +22,9 @@
             <ul class="nav_list clearfix" style="margin-right:20px;">
                 <li><a href="<?php echo $this->createUrl("background/login");?>">退出</li>
             </ul>
+            <ul class="nav_list clearfix" style="margin-right:20px;">
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=6" id="host">我的主持</li>
+            </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" id="case">案例</a>
                 </li>
@@ -56,10 +59,10 @@
                     <button class="right upload_new_btn" id="upload">上传新视频</button>
                 </div>
                 <ul class="upload_list" id="product_item">
-            <?php foreach ($case_data as $key => $value) {
-                if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 5){
+            <?php if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 5){
+                    foreach ($case_data as $key => $value) {
                     if($value['CI_Type'] == $_GET['CI_Type']){?>
-                    <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>">
+                    <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>" CT-ID="<?php echo $value['CT_ID']?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
                                 <img src="<?php echo $value['CI_Pic']?>" alt="">
@@ -81,7 +84,8 @@
                             <a class="edit_btn left" href="javascript:;">编辑</a>
                         </div>
                     </li>
-            <?php }}else{?>
+            <?php }}}else if($_GET['CI_Type']== 7){
+                        foreach ($case_data as $key => $value) {?>
                     <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
@@ -104,7 +108,60 @@
                             <a class="edit_btn left" href="javascript:;">编辑</a>
                         </div>
                     </li>
-            <?php }}?>
+            <?php }}else if($_GET['CI_Type']== 6){?>
+                    <li class="clearfix" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/self_info.png" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3>个人信息</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="self_info" href="javascript:;">管理个人信息</a>
+                        </div>
+                    </li>
+                    <li class="clearfix" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/host_video.png" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3>我的视频</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="video" href="javascript:;">管理视频</a>
+                        </div>
+                    </li>
+                    <li class="clearfix" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/host_img.jpeg" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3>我的图片</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="img" href="javascript:;">管理图片</a>
+                        </div>
+                    </li>
+                    <li class="clearfix" service-person-id="<?php echo $service_person['id']?>" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/host_price.jpeg" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3>我的报价</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="product" href="javascript:;">管理报价</a>
+                        </div>
+                    </li>
+            <?php }?>
                 </ul>
             </div>
         </div>
@@ -117,14 +174,38 @@
 <script type="text/javascript" src="js/select.js"></script>
 <script>
     $(function(){
+        //如果不是策划师，则去掉：案例、套系、产品
+        var department_list = "<?php if(isset($_COOKIE['department_list'])){echo $_COOKIE['department_list'];}?>";
+        department_list = department_list.substring(0,department_list.length-1);
+        department_list = department_list.substring(1);
+        var list = new Array();
+        list = department_list.split(',');
+        var t = 0;
+        var t1 = 0;
+        for (i=0;i<list.length;i++) {
+            if(list[i] == 2 || list[i] == 3 || list[i] == 5 || list[i] == 6){t++};
+            if(list[i] == 11){t1++};
+        };
+        console.log(list);
+        console.log(t);
+        if(t==0){
+            $("#case").remove();
+            $("#set").remove();
+            $("#decration").remove();
+        }else if(t1==0){
+            $("#host").remove();
+        }  
+
         //下拉筛选
         if(<?php echo $_GET['CI_Type']?> == 2){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 6){$("#host").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7){$("#decration").addClass("active")};
 
         //上传按钮
         if(<?php echo $_GET['CI_Type']?> == 2){$("#upload").html("新增案例")};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#upload").html("新增套系")};
+        if(<?php echo $_GET['CI_Type']?> == 6){$("#upload").remove()};
         if(<?php echo $_GET['CI_Type']?> == 7){$("#upload").html("新增产品")};
 
         $("#upload").on("click",function(){
@@ -145,9 +226,26 @@
             if("<?php echo $_GET['CI_Type']?>" == 2){
                 location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
             };
+            if("<?php echo $_GET['CI_Type']?>" == 5){
+                location.href = "<?php echo $this->createUrl("background/edit_set1");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
+            };
             if('<?php echo $_GET['CI_Type']?>' == 7){
                 location.href = "<?php echo $this->createUrl("background/edit_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
-            }
+            };
+        });
+
+        //我的视频
+        $("#self_info").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/edit_host_self_info");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+        });
+        $("#video").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/edit_host_video");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+        });
+        $("#img").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/edit_host_img");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+        });
+        $("#product").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/edit_product");?>&service_person_id=" + $(this).parent().parent().attr('service-person-id') + "&ci_id=" + $(this).parent().parent().attr('CI-ID');
         });
     })
 </script>

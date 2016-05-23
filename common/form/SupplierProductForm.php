@@ -153,7 +153,7 @@ class SupplierProductForm extends InitForm
     public function getSupplierProductList($accountId)
     {
         $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id ",
+                "condition" => "type_id=:type_id && account_id=:account_id",
                 "params" => array(
                     ":type_id" => 3,
                     ":account_id" => $accountId,
@@ -219,7 +219,7 @@ class SupplierProductForm extends InitForm
     public function getSupplierProductList1($accountId)
         {
             $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id ",
+                "condition" => "type_id=:type_id && account_id=:account_id",
                 "params" => array(
                     ":type_id" => 4,
                     ":account_id" => $accountId,
@@ -296,7 +296,7 @@ class SupplierProductForm extends InitForm
     public function getSupplierProductList2($accountId)
         {
             $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id ",
+                "condition" => "type_id=:type_id && account_id=:account_id",
                 "params" => array(
                     ":type_id" => 5,
                     ":account_id" => $accountId,
@@ -373,7 +373,7 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductList3($accountId)
         {
             $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id=:account_id",
                 "params" => array(
                     ":type_id" => 6,
                     ":account_id" => $accountId,
@@ -452,7 +452,7 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductList4($accountId)
         {
             $supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id",
+                "condition" => "type_id=:type_id && account_id=:account_id",
                 "params" => array(
                     ":type_id" => 7,
                     ":account_id" => $accountId,

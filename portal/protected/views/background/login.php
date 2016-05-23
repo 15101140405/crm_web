@@ -15,7 +15,8 @@
                 <input class="loginItem" id="telephone" type="text" placeholder="手机号">
                 <input class="loginItem pswd" id="password" type="password" placeholder="密码">
                 <button class="login_btn" id="sure">登录</button>
-                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: right;font-size: 1rem;margin-top: 20px;">立即注册</a>
+                <a class="go_regist" href="<?php echo $this->createUrl("background/regist_host");?>" style="float: right;font-size: 1rem;margin-top: 20px;color:#EC3F3F;">主持人注册</a>
+                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: right;font-size: 1rem;margin-top: 20px;">策划师注册</a>
                 <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: left;margin-left: 15px;font-size: 1rem;margin-top: 20px;">忘记密码</a>
             </div>
             
@@ -42,7 +43,20 @@ $(function(){
             $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){
                 /*alert(retval);*/
                 if(retval == "success"){
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";    
+                    var department_list = "<?php if(isset($_COOKIE['department_list'])){echo $_COOKIE['department_list'];}?>";
+                    department_list = department_list.substring(0,department_list.length-1);
+                    department_list = department_list.substring(1);
+                    var list = new Array();
+                    list = department_list.split(',');
+                    var t=0;
+                    for (i=0;i<list.length;i++) {
+                        if(list[i] == 11){t++};
+                    };
+                    if(t==0){
+                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
+                    }else{
+                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
+                    };  
                 }else if(retval == "not exist"){
                     alert("您输入的手机号不存在！");
                 }else if(retval == "password error"){

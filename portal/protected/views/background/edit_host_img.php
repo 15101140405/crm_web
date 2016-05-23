@@ -7,7 +7,7 @@
     <title>上传</title>
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
-    <script type="text/javascript" src="http://file.cike360.com/swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="js/swfupload.js"></script>
     <script type="text/javascript" src="js/handlers.js"></script>
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -113,7 +113,7 @@
     <div class="upload_wapper">
         <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px;">
             <ul class="left desc_box">
-                <li class="desc_item clearfix">
+                <!-- <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
                         <span class="must">*</span>
@@ -129,20 +129,19 @@
                     </div>
                     <div class="select_c left">
                         <select name="" id="CI_Show">
-                            <!-- <option value="">请选择</option> -->
                             <option value="1">显示</option>
                             <option value="0">隐藏</option>
                         </select>
                     </div>
-                </li>
+                </li> -->
             </ul>
-            <div class="right video_cover">
+            <!-- <div class="right video_cover">
                 <div class="cover_box">
-                    <img src="<?php echo $pic?>" alt="" id="poster_img" style="width: 120px;">
+                    <img src="  " alt="" id="poster_img" style="width: 120px;">
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>
-            </div>
+            </div> -->
         </div>
         <!-- 已上传资源 -->
         <div class="index_con_box" style="margin-bottom:20px;">
@@ -170,7 +169,7 @@
                         </div>
                         <div class="edit_btn_box right clearfix" style="width:40%">
                             <!-- <span class="left state">转码中</span> -->
-                            <a class="edit_btn left add_class bind" href="javascript:;">绑定产品</a>
+                            <!-- <a class="edit_btn left add_class bind" href="javascript:;">绑定产品</a> -->
                             <a class="edit_btn left del_resource" href="javascript:;">删除</a>
                         </div>
                     </li>
@@ -234,7 +233,7 @@
                     <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
-                                <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
+                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
                                 <!-- <span>私密视频</span> -->
                             </div>
                             <div class="video_info left">
@@ -267,28 +266,25 @@
         $("#save").on("click",function(){
             var data = {
                 CI_ID : <?php echo $_GET['ci_id']?>,
-                CI_Name : $("#case_name").val(),
-                CI_Show : $("#CI_Show option:selected").val(),
-                CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
                 CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
             };
             console.log(data);
-            $(".tip").removeClass("hid");
+            /*$(".tip").removeClass("hid");
             $(".tip").addClass("hid");
             if(data.CI_Name == ""){$("#name_t").removeClass("hid")};
             if(data.CI_Pic == "null" || data.CI_Pic == null){$("#poster_t").removeClass("hid")};
             if(data.case_resource == "null" || data.case_resource == null){$("#resources_t").removeClass("hid")};
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
-            }else{
-                $.post("<?php echo $this->createUrl("background/case_edit");?>",data,function(){
+            }else{*/
+                $.post("<?php echo $this->createUrl("background/host_video_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
                 });
-            };  
+            /*}; */ 
         });
         //删除资源
         $(".del_resource").on("click",function(){

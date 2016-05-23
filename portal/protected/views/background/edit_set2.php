@@ -135,6 +135,19 @@
                         </select>
                     </div>
                 </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择门店</label>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="hotel">
+                            <!-- <option value="">请选择</option> -->
+                    <?php foreach ($hotel as $key => $value) {?>
+                            <option value="<?php echo $value['name']?>" staff-hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php }?>
+                        </select>
+                    </div>
+                </li>
             </ul>
             <div class="right video_cover">
                 <div class="cover_box">
@@ -234,7 +247,7 @@
                     <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
-                                <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
+                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
                                 <!-- <span>私密视频</span> -->
                             </div>
                             <div class="video_info left">
@@ -263,16 +276,21 @@
         //初始渲染
         $.cookie('img',"<?php echo $case['CI_Pic']?>");
         $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#hotel").val($("#hotel [staff-hotel-id='<?php echo $Wedding_set['staff_hotel_id']?>']").val());
         //保存
         $("#save").on("click",function(){
             var data = {
                 CI_ID : <?php echo $_GET['ci_id']?>,
+                CT_ID : <?php echo $_GET['ct_id']?>,
                 CI_Name : $("#case_name").val(),
                 CI_Show : $("#CI_Show option:selected").val(),
+                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
                 CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
-                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
+                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort"),
+                product_list : "<?php echo $_GET['product_list']?>",
+                final_price : <?php echo $_GET['final_price']?>,
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -283,47 +301,14 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
-                $.post("<?php echo $this->createUrl("background/case_edit");?>",data,function(){
+                $.post("<?php echo $this->createUrl("background/set_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
                 });
             };  
         });
-        //删除资源
-        $(".del_resource").on("click",function(){
-            $.post("<?php echo $this->createUrl("background/del_resource");?>",{CR_ID : $(this).parent().parent().attr("cr-id")},function(){
-                location.reload();
-            })
-        })
-        //点绑定产品，cr-id 存cookie
-        $('.bind').on("click",function(){
-            $.cookie('temp_resource_id',$(this).parent().parent().attr('cr-id'));
-        });
-        //点确认绑定
-        $(".sure_bind").on("click",function(){
-            data = {
-                CR_ID : $.cookie('temp_resource_id'),
-                supplier_product_id : $(this).parent().parent().attr("product-id"),
-            }
-            $.post("<?php echo $this->createUrl("background/bind_product");?>",data,function(){
-                $.cookie('temp_resource_id',null);
-                location.reload();
-            })
-        })
-        //按分类筛选产品
-        $('#select_type').change(function(){
-            $("#product_item li").removeClass("hid");
-            $("#product_item li").addClass("hid");
-            var tap = $(this).children('option:selected').attr("type-id");
-            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
-        });
-        //删除绑定
-        $(".del_product").on("click",function(){
-            $.post("<?php echo $this->createUrl("background/del_bind");?>",{bind_id:$(this).parent().attr("product-id")},function(){
-                location.reload();
-            });
-        });
+
     })
 </script>
 </body>

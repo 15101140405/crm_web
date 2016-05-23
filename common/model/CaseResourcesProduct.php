@@ -34,6 +34,7 @@ class CaseResourcesProduct extends InitActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('CR_ID',$this->CR_ID);
 		$criteria->compare('supplier_product_id',$this->supplier_product_id,true);
+		$criteria->compare('service_product_id',$this->service_product_id,true);
 		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(

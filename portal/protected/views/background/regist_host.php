@@ -29,6 +29,10 @@
     <div class="regist_con wapper clearfix">
         <ul class="regist_ulist">
             <li>
+                <label>姓名：</label>
+                <input class="inputItem" type="text" id="name" placeholder="请输入您的姓名" />
+            </li>
+            <li>
                 <label>手机：</label>
                 <input class="inputItem" type="text" id="telephone" placeholder="请输入手机号" />
             </li>
@@ -69,15 +73,17 @@
             }else if($("#telephone").val().length != 11 || !myreg.test($("#telephone").val())){
                 alert("请输入有效的手机号码！");
             }else {
-                $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#telephone").val()},function(data){
+                $.post("<?php echo $this->createUrl("background/register_host_pro");?>",{telephone : $("#telephone").val()},function(data){
                     if(data == "not exist"){
                         alert("您输入的手机号不存在！请与工作人员联系：15101140405");
                     };
+                    alert(data);
                 });
             };  
         });
         //立即注册
         $("#regist").on("click",function(){
+            alert(1);
             if($("#telephone").val() == ""){
                 alert("请输入手机号！");
             }else if($("#yzm").val() == ""){
@@ -87,7 +93,9 @@
             }else if($("#telephone").val().length != 11 || !myreg.test($("#telephone").val())){
                 alert("请输入有效的手机号！");
             }else {
-                $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#telephone").val() , password : $("#password").val() , yzm : $("#yzm").val()},function(data){
+                alert(2);
+                $.post("<?php echo $this->createUrl("background/register_host_pro");?>",{telephone : $("#telephone").val() , password : $("#password").val() , yzm : $("#yzm").val() , name :$("#name").val()},function(data){
+                    alert(data);
                     if(data == "errow"){alert("您输入的验证码有误，请重新输入！");}
                     if(data == "success"){
                         data = {

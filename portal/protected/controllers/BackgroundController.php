@@ -92,6 +92,104 @@ class BackgroundController extends InitController
        
     }
 
+    public function actionRegister_host_pro()
+    {
+        $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
+
+        if (isset($_POST['password'])) {
+            if ($_POST['yzm'] == $_SESSION['code']) {
+                $staff = Staff::model()->find(array(
+                        'condition' => 'telephone=:telephone',
+                        'params' => array(
+                                ':telephone' => $_POST['telephone']
+                            )
+                    ));
+                if(empty($staff)){ //手机号未注册，新建一个staff
+                    $data = new Staff;
+                    $data ->name = $_POST['name'];
+                    $data ->telephone = $_POST['telephone'];
+                    $data ->department_list = "[11]";
+                    $data ->password = $_POST['password'];
+                    $data ->save();
+                    $staff_id = $data->attributes['id'];
+                }else{  //手机号已经注册，但不是主持人，修改staff的department_list
+                    $department_list = "[";
+                    foreach ($t as $key => $value) {
+                        $department_list .= $value . ",";
+                    };
+                    $department_list = rtrim($department_list,",");
+                    $department_list .= "]";
+                    Staff::model()->updateCounters(array('department_list'=>$department_list),'telephone=:telephone',array(':telephone'=>$_POST['telephone'])); 
+                };  
+
+                $data = new CaseInfo;
+                $data ->CI_Name = $_POST['name'];
+                $data ->CI_Pic = "";
+                $data ->CI_Sort = 1;
+                $data ->CI_Show = 1;
+                $data ->CI_Type = 6;
+                $data ->CT_ID = $staff_id;
+                $data ->save();
+                $CI_ID = $data->attributes['CI_ID'];
+
+                $data = new CaseBind;
+                $data ->CB_Type = 4;
+                $data ->TypeID = 0;
+                $data ->CI_ID = $CI_ID;
+                $data ->save();
+
+                $staff_company = StaffCompany::model()->findAll();
+
+                foreach ($staff_company as $key => $value) {
+                    $data = new Supplier;
+                    $data ->account_id = $value['id'];
+                    $data ->type_id = 3;
+                    $data ->staff_id = $staff_id;
+                    $data ->save();
+                }
+                echo "success"; 
+            } else {
+                echo "errow"  ;
+            };
+        } else {
+            $staff = Staff::model()->find(array(
+                        'condition' => 'telephone=:telephone',
+                        'params' => array(
+                                ':telephone' => $_POST['telephone']
+                            )
+                    ));
+            if(!empty($staff)){ //如果手机号已经注册
+                if($staff['department_list'] != ""){
+                    $staff['department_list']=rtrim($staff['department_list'], "]");
+                    $staff['department_list']=ltrim($staff['department_list'], "[");
+                    $t=explode($staff['department_list'], ',');
+                    $i = 0;
+                    if(!empty($t)){
+                        foreach ($t as $key => $value) {
+                            if($value == 11){$i++;};
+                        };
+                    };
+                    if($i != 0){  //如果注册者已经是主持人
+                        echo "该手机号已经注册！" ; 
+                    }else{  //注册者还不是主持人
+                        echo "验证码已发送到您的手机！";
+                        $data = array('telephone' => $_POST['telephone'], );
+                        $result = WPRequest::post($url, $data);
+                        Yii::app()->session['code'] = $result;
+                        //echo $_SESSION['code'];
+                    };
+                };
+            }else{ // 如果手机号还未注册
+                echo "验证码已发送到您的手机！";
+                $data = array('telephone' => $telephone, );
+                $result = WPRequest::post($url, $data);
+                Yii::app()->session['code'] = $result;
+                //echo $_SESSION['code'];
+            };
+        };
+    }
+
+
     public function actionLogin()
     {
         $this->render("login");
@@ -100,6 +198,11 @@ class BackgroundController extends InitController
     public function actionRegist()
     {
         $this->render("regist");
+    }
+
+    public function actionRegist_host()
+    {
+        $this->render("regist_host");   
     }
 
     public function actionLogin_pro()
@@ -122,6 +225,9 @@ class BackgroundController extends InitController
 
                 $cookie = new CHttpCookie('account_id',$staff['account_id']);
                 Yii::app()->request->cookies['account_id']=$cookie;  
+
+                $cookie = new CHttpCookie('department_list',$staff['department_list']);
+                Yii::app()->request->cookies['department_list']=$cookie;  
 
                 echo "success";
             }else{
@@ -149,7 +255,8 @@ class BackgroundController extends InitController
             $list = $result->queryAll();
             foreach($list as  $key => $val){
                 if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
-                    $list[$key]["CI_Pic"]=$url.$val["CI_Pic"];
+                    $t = explode(".", $val['CI_Pic']);
+                    $list[$key]["CI_Pic"]=$url.$t[0]."_sm.".$t[1];
                 };
             };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
@@ -174,7 +281,8 @@ class BackgroundController extends InitController
                         )
                 ));
             foreach($product as  $key => $val){
-                $product[$key]["ref_pic_url"]=$url.$val["ref_pic_url"];
+                $t = explode(".", $val['ref_pic_url']);
+                $product[$key]["ref_pic_url"]=$url.$t[0]."_sm.".$t[1];
             };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
                     'condition' => 'account_id=:account_id',
@@ -187,7 +295,33 @@ class BackgroundController extends InitController
                     'case_data' => $product,
                     'tap' => $tap,
                 ));
-        };   
+        }else if($_GET['CI_Type'] == 6){
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));
+            $case = CaseInfo::model()->find(array(
+                    'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                    'params' => array(
+                            ':CI_Type' => 6,
+                            ':CT_ID' => $_COOKIE['userid']
+                        )
+                ));
+            $service_person = ServicePerson::model()->find(array(
+                    'condition' => 'staff_id=:staff_id',
+                    'params' => array(
+                            ':staff_id' => $case['CT_ID'],
+                        ),
+                ));
+            // print_r($case);die;
+            $this->render('index',array(
+                    'tap'=>$tap,
+                    'case' => $case,
+                    'service_person' => $service_person,
+                ));
+        };  
     }
 
     public function actionUpload_case()
@@ -238,6 +372,10 @@ class BackgroundController extends InitController
 
                     )
             ));
+        foreach ($product as $key => $value) {
+            $t = explode(".", $value['ref_pic_url']);
+            $product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];
+        };
         $tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
                 'params' => array(
@@ -269,6 +407,12 @@ class BackgroundController extends InitController
                         ':account_id' => $_COOKIE['account_id'],
                         ':standard_type' => 0
                     )));
+        foreach ($supplier_product as $key => $value) {
+            $t=explode('.', $value['ref_pic_url']);
+            if(isset($t[0]) && isset($t[1])){
+                $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
+            };
+        };
         /*print_r($decoration_tap);die;*/
         $this -> render("upload_set1",array(
             'decoration_tap' => $decoration_tap,
@@ -286,6 +430,116 @@ class BackgroundController extends InitController
             ));
         $this->render("upload_set2",array(
                 'hotel' => $hotel,
+            ));
+    }
+
+    public function actionEdit_set1()
+    {
+        $account_id = $_COOKIE['account_id'];
+
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+            "condition" => "account_id = :account_id",
+            "params"    => array(
+                ":account_id" => $account_id,
+                )));
+        $supplier_product = SupplierProduct::model()->findAll(array(
+            'condition' => 'account_id=:account_id && standard_type=:standard_type',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0
+                    )));
+        foreach ($supplier_product as $key => $value) {
+            $t=explode('.', $value['ref_pic_url']);
+            if(isset($t[0]) && isset($t[1])){
+                $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
+            };
+        };
+        $product_list = array();
+        $Wedding_set = Wedding_set::model()->findByPk($_GET['ct_id']);
+        if($Wedding_set['product_list']!=""){
+            $t = explode(",", $Wedding_set['product_list']);
+            foreach ($t as $key => $value) {
+                $item = array();
+                $t1 = explode("|", $value);
+                $item['product_id'] = $t1[0];
+                $item['price'] = $t1[1];
+                $item['amount'] = $t1[2];
+                $item['cost'] = $t1[3];
+                $product_list[]=$item;
+            };
+        };
+        $this->render("edit_set1",array(
+            'decoration_tap' => $decoration_tap,
+            'supplier_product' => $supplier_product,
+            'product_list' => $product_list,
+            ));
+    }
+
+    public function actionEdit_set2()
+    {
+        $hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $Wedding_set = Wedding_set::model()->findByPk($_GET['ct_id']);
+        $url = "http://file.cike360.com";
+
+        //取资源信息
+        $data = CaseResources::model()->findAll(array(
+                'condition' => 'CI_ID=:CI_ID',
+                'params' => array(
+                        ':CI_ID' => $_GET['ci_id'],
+                    ),
+                'order' => 'CR_Sort',
+            ));
+        $resources = array();
+        foreach ($data as $key => $value) {
+            $t = explode('.', $value['CR_Path']);
+            $result = yii::app()->db->createCommand("select case_resources_product.id as bind_id,name,unit,unit_price from case_resources_product left join supplier_product on supplier_product_id=supplier_product.id where case_resources_product.CR_ID=".$value['CR_ID']);
+            $result = $result->queryAll();
+            $item = array();
+            $item['product'] = $result;
+            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            $item['CR_ID'] = $value['CR_ID'];
+            $item['CR_Sort'] = $value['CR_Sort'];
+            $resources[] = $item;
+        };  
+
+        /*print_r($resources);die;*/
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
+        $t= explode('.', $case['CI_Pic']);
+        $Pic = $url.$t[0].'_sm.'.$t[1];
+
+        //取场布产品信息
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));
+
+        $this->render("edit_set2",array(
+                'hotel' => $hotel,
+                'Wedding_set' => $Wedding_set,
+                'pic' => $Pic,
+                'resources' => $resources,
+                'case' => $case,
+                'case_data' => $product,
+                'tap' => $tap,
             ));
     }
 
@@ -323,28 +577,21 @@ class BackgroundController extends InitController
     public function actionEdit_product()
     {
         //取产品数据
-        $product = SupplierProduct::model()->findByPk($_GET['product_id']);
-
-        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
-        $supplier = $result->queryAll();
-        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
-                'condition' => 'account_id=:account_id',
+        $product = ServiceProduct::model()->findAll(array(
+                'condition' => 'service_person_id=:service_person_id',
                 'params' => array(
-                        ':account_id' => $_COOKIE['account_id'],
+                        ':service_person_id' => $_GET['service_person_id'],
                     ),
             ));
-        $supplier_type = SupplierType::model()->findAll(array(
-                'condition' => 'account_id=:account_id',
-                'params' => array(
-                        ':account_id' => $_COOKIE['account_id'],
-                    ),
-            ));
+        /*print_r($product);die;*/
         $this->render('edit_product',array(
                 'product' => $product,
-                'supplier' => $supplier,
-                'decoration_tap' => $decoration_tap,
-                'supplier_type' => $supplier_type,
             ));
+    }
+
+    public function actionEdit_product_detail()
+    {
+        $this->render('edit_product_detail');
     }
 
     public function actionCase_upload()
@@ -361,7 +608,7 @@ class BackgroundController extends InitController
         $data ->CI_Sort = 1;
         $data ->CI_Show = $_POST['CI_Show'];
         $data ->CI_Remarks = "";
-        $data ->CI_Type = 1;
+        $data ->CI_Type = 2;
         $data->save();
 
         $CI_ID = $data->attributes['CI_ID'];
@@ -588,5 +835,260 @@ class BackgroundController extends InitController
             $data->save();
         };
         $data->save();
+    }
+
+    public function actionSet_edit()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
+        Wedding_set::model()->updateByPk($_POST['CT_ID'],array('staff_hotel_id'=>$_POST['staff_hotel_id'],'name'=>$_POST['CI_Name'],'final_price'=>$_POST['final_price'],'product_list'=>$_POST['product_list']));
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+            $i = $_POST['CR_Sort']+1;
+            foreach ($resources as $key => $value) {
+                $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+            };
+        };
+    }
+
+    public function actionEdit_host_video()
+    {
+        $url = "http://file.cike360.com";
+
+        //取资源信息
+        $data = CaseResources::model()->findAll(array(
+                'condition' => 'CI_ID=:CI_ID && CR_Type=:CR_Type',
+                'params' => array(
+                        ':CI_ID' => $_GET['ci_id'],
+                        ':CR_Type' => 2,
+                    ),
+                'order' => 'CR_Sort',
+            ));
+        $resources = array();
+        foreach ($data as $key => $value) {
+            $t = explode('.', $value['CR_Path']);
+            $result = yii::app()->db->createCommand("select case_resources_product.id as bind_id,name,unit,unit_price from case_resources_product left join supplier_product on supplier_product_id=supplier_product.id where case_resources_product.CR_ID=".$value['CR_ID']);
+            $result = $result->queryAll();
+            $item = array();
+            $item['product'] = $result;
+            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            $item['CR_ID'] = $value['CR_ID'];
+            $item['CR_Sort'] = $value['CR_Sort'];
+            $resources[] = $item;
+        };  
+
+        /*print_r($resources);die;*/
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
+        $t= explode('.', $case['CI_Pic']);
+        $Pic = $url.$t[0].'_sm.'.$t[1];
+
+        //取场布产品信息
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));
+        /*print_r($product);die;*/
+        $this->render("edit_host_video",array(
+                'pic' => $Pic,
+                'resources' => $resources,
+                'case' => $case,
+                'case_data' => $product,
+                'tap' => $tap,
+            ));
+    }
+
+    public function actionEdit_host_img()
+    {
+        $url = "http://file.cike360.com";
+
+        //取资源信息
+        $data = CaseResources::model()->findAll(array(
+                'condition' => 'CI_ID=:CI_ID && CR_Type=:CR_Type',
+                'params' => array(
+                        ':CI_ID' => $_GET['ci_id'],
+                        ':CR_Type' => 1,
+                    ),
+                'order' => 'CR_Sort',
+            ));
+        $resources = array();
+        foreach ($data as $key => $value) {
+            $t = explode('.', $value['CR_Path']);
+            $result = yii::app()->db->createCommand("select case_resources_product.id as bind_id,name,unit,unit_price from case_resources_product left join supplier_product on supplier_product_id=supplier_product.id where case_resources_product.CR_ID=".$value['CR_ID']);
+            $result = $result->queryAll();
+            $item = array();
+            $item['product'] = $result;
+            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            $item['CR_ID'] = $value['CR_ID'];
+            $item['CR_Sort'] = $value['CR_Sort'];
+            $resources[] = $item;
+        };  
+
+        /*print_r($resources);die;*/
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
+        $t= explode('.', $case['CI_Pic']);
+        $Pic = $url.$t[0].'_sm.'.$t[1];
+
+        //取场布产品信息
+        $product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));
+        /*print_r($product);die;*/
+        $this->render("edit_host_img",array(
+                'pic' => $Pic,
+                'resources' => $resources,
+                'case' => $case,
+                'case_data' => $product,
+                'tap' => $tap,
+            ));
+    }
+
+    public function actionEdit_host_self_info()
+    {
+        $url = "http://file.cike360.com";
+
+        //取案例信息
+        $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+        /*print_r($case['CI_Pic']);die;*/
+        $t= explode('.', $case['CI_Pic']);
+        $Pic = $url.$t[0].'_sm.'.$t[1];
+
+        $staff = Staff::model()->findByPk($case['CT_ID']);
+        /*print_r($product);die;*/
+        $this->render("edit_host_self_info",array(
+                'pic' => $Pic,
+                'case' => $case,
+                'staff' => $staff,
+            ));
+    }
+
+    public function actionHost_video_edit()
+    {
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+            $i = $_POST['CR_Sort']+1;
+            foreach ($resources as $key => $value) {
+                $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+            };
+        };
+    }
+
+    public function actionHost_self_info_edit()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Pic'=>$_POST['CI_Pic']));
+        $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
+        Staff::model()->updateByPk($case['CT_ID'],array('name' => $_POST['CI_Name'],'telephone'=>$_POST['phone']));
+    }
+
+    public function actionHost_product_edit()
+    {
+        //新建service_product，并返回service_product_id
+        $data = new ServiceProduct;
+        $data ->service_person_id = $_POST['service_person_id'];
+        $data ->service_type = $_POST['service_type'];
+        $data ->product_name = $_POST['product_name'];
+        $data ->price = $_POST['price'];
+        $data ->unit = $_POST['unit'];
+        $data ->update_time = date('y-m-d h:i:s',time());
+        $data ->description = $_POST['description'];
+        $data ->save();
+
+        $service_product_id = $data->attributes['id'];
+
+        //给所有公司新增一个supplier_product
+        $supplier_id = yii::app()->db->createCommand("select supplier.id as supplier_id from case_info left join staff on CT_ID=staff.id left join supplier on staff.id=supplier.staff_id where case_info.CI_ID=".$_POST['CI_ID']);
+        $supplier_id = $supplier_id->queryAll();
+
+        $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
+
+        $company = StaffCompany::model()->findAll();
+        foreach ($company as $key => $value) {
+            $data = new SupplierProduct;
+            $data ->account_id = $value['id'];
+            $data ->supplier_id = $supplier_id;
+            $data ->supplier_type_id = $_POST['service_type'];
+            $data ->decoration_tap = 0;
+            $data ->standard_type = 0;
+            $data ->name = $_POST['product_name'];
+            $data ->category = 2;
+            $data ->unit_price = $_POST['price']*2;
+            $data ->unit_cost = $_POST['price'];
+            $data ->unit = $_POST['unit'];
+            $data ->service_charge_ratio = 0;
+            $data ->ref_pic_url = $case['CI_Pic'];
+            $data ->description = $_POST['description'];
+            $data ->update_time = date('y-m-d h:i:s',time());
+            $data ->save();
+        };
+
     }
 }
