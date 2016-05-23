@@ -230,7 +230,7 @@
                 location.href = "<?php echo $this->createUrl("background/edit_set1");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
             };
             if('<?php echo $_GET['CI_Type']?>' == 7){
-                location.href = "<?php echo $this->createUrl("background/edit_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
+                location.href = "<?php echo $this->createUrl("background/edit_supplier_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
             };
         });
 

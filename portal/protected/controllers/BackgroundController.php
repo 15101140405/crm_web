@@ -693,16 +693,16 @@ class BackgroundController extends InitController
     public function actionProduct_edit()
     {
         SupplierProduct::model()->updateByPk($_POST['product_id'],array(
-                'name' => $_POST['name'],
-                'description' => $_POST['description'],
-                'supplier_id' => $_POST['supplier_id'],
-                'supplier_type_id' => $_POST['supplier_type_id'],
-                'decoration_tap' => $_POST['decoration_tap'],
-                'unit' => $_POST['unit'],
-                'unit_price' => $_POST['unit_price'],
-                'unit_cost' => $_POST['unit_cost'],
-                'ref_pic_url' => $_POST['ref_pic_url'],
-            ));
+            'name' => $_POST['name'],
+            'description' => $_POST['description'],
+            'supplier_id' => $_POST['supplier_id'],
+            'supplier_type_id' => $_POST['supplier_type_id'],
+            'decoration_tap' => $_POST['decoration_tap'],
+            'unit' => $_POST['unit'],
+            'unit_price' => $_POST['unit_price'],
+            'unit_cost' => $_POST['unit_cost'],
+            'ref_pic_url' => $_POST['ref_pic_url'],
+        ));
     }
 
     public function actionSupplier_add()
@@ -1098,5 +1098,31 @@ class BackgroundController extends InitController
             $data ->save();
         };
 
+    }
+
+    public function actionEdit_supplier_product()
+    {
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
+        $supplier = $result->queryAll();
+        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $product = SupplierProduct::model()->findByPk($_GET['product_id']);
+        /*print_r($supplier);die;*/
+        $this->render("edit_supplier_product",array(
+                'product' => $product,
+                'supplier' => $supplier,
+                'decoration_tap' => $decoration_tap,
+                'supplier_type' => $supplier_type,
+            ));
     }
 }
