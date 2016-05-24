@@ -225,10 +225,10 @@ class ProductController extends InitController
                         'telephone' => $_POST['phone']
                     )
             ));
-
-        $cookie = new CHttpCookie('userid',$staff['id']);
-        $cookie->expire = time()+60*60*24*30*12*100;  //有限期100年
-        Yii::app()->request->cookies['userid']=$cookie;
+        // $cookie = new CHttpCookie('userid',$staff['id']);
+        // $cookie->expire = time()+60*60*24*30*12*100;  //有限期100年
+        // Yii::app()->request->cookies['userid']=$staff['id'];
+        $_COOKIE['userid'] = $staff['id'];
 
         if(isset($_COOKIE['userid'])){
             echo 'success';
