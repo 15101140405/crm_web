@@ -108,20 +108,25 @@ $(function  () {
 
     // li点击跳转
     $(".order_list li").on("click",function(){
-        // data = {
-        //     'product_id' : '<?php echo $_GET['product_id']?>',
-        //     'order_id' : $(this).attr("order-id"),
-        //     'order_type' : $(this).attr("order-type"),
-        // };
-        // $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
+        if ("<?php echo $_GET['tab'];?>" == "set") {
+            data = {
+                'set_id' : '<?php echo $_GET['product_id']?>',
+                'order_id' : $(this).attr("order-id"),
+                'order_type' : $(this).attr("order-type"),
+            };
+            $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
+                alert("添加套系成功！");
+                location.href = "<?php echo $this->createUrl('product/store')."&account_id=".$_SESSION['account_id']."&staff_hotel_id=".$_SESSION['staff_hotel_id'];?>";
+            });
+        } else{
             location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
-        // });
+        };
 
     });
 
     //新增订单
     $(".add_btn").on("click",function(){
-        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
+            location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
     });
 })
 </script>

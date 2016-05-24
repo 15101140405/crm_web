@@ -42,7 +42,7 @@
 <script>
     $(function(){
         $("#insert").on("click",function(){
-            location.href = "<?php echo $this->createUrl('product/selectorder');?>&product_id=<?php echo $_GET['product_id']?>&category=<?php echo $_GET['category']?>&from=<?php echo $_GET['from']?>";
+            location.href = "<?php echo $this->createUrl('product/selectorder');?>&product_id=<?php echo $_GET['product_id']?>&tab=set&category=<?php echo $_GET['category']?>&from=<?php echo $_GET['from']?>";
         });
 
         /*var picList = [

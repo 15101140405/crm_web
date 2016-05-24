@@ -522,33 +522,20 @@ class ProductController extends InitController
 
     public function actionInsert_order_set()
     {
-        // if (condition) {
-        //     $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-        //     $productdata_list = explode(",",$wedding_set['product_list']);
-        //     foreach ($productdata_list as $key => $value) {
-        //         $product = explode("|", $value);
-        //         $admin=new OrderProduct;         
-        //         $admin->account_id=$_SESSION['account_id']; 
-        //         $admin->order_id=$_POST['order_id'];
-        //         $admin->product_id=$product[0]; 
-        //         $admin->actual_price=$product[1]; 
-        //         $admin->unit=$product[2]; 
-        //         $admin->actual_unit_cost=$product[3]; 
-        //         $admin->save();
-        // } else {
-        //     $product = SupplierProduct::model()->findByPk($_POST['product_id']);
-        //     $admin=new OrderProduct;         
-        //     $admin->account_id=$_SESSION['account_id']; 
-        //     $admin->order_id=$_POST['order_id'];
-        //     $admin->product_id=$_POST['product_id']; 
-        //     $admin->actual_price=$product['unit_price']; 
-        //     $admin->unit=1; 
-        //     $admin->actual_unit_cost=; 
-        //     $admin->update_time=date('y-m-d h:i:s',time());
-        //     $admin->save();
-        //     }
-        // }
-
+        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+        $productdata_list = explode(",",$wedding_set['product_list']);
+        foreach ($productdata_list as $key => $value) {
+            $product = explode("|", $value);
+            $admin=new OrderProduct;         
+            $admin->account_id=$_SESSION['account_id']; 
+            $admin->order_id=$_POST['order_id'];
+            $admin->product_id=$product[0]; 
+            $admin->actual_price=$product[1]; 
+            $admin->unit=$product[2]; 
+            $admin->actual_unit_cost=$product[3]; 
+            $admin->save();
+     
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
+        }
     }
 }
