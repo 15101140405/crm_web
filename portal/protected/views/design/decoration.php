@@ -77,15 +77,65 @@
                         foreach ($value as $key1 => $value1) {
                             $product[$key1] = $value1;
                         }
+                        if ($product['standard_type'] == 0) {
                     ?>
-                    html_standard += '<li class="ulist_item list_more " poduct-id="<?php echo $product['id']; ?>"><div class="item"><p class="name"><?php echo $product['product_name'];?></p></div><i class="name"><?php echo $product['staff_name'];?></p></i></li>';
-                    <?php } ?>
+                        html_standard += '<li class="ulist_item list_more" product-id="<?php echo $product['id']; ?>"><div class="item"><p class="name"><?php echo $product['product_name'];?></p></div><i class="name"><?php echo $product['staff_name'];?></p></i></li>';
+                    <?php }} ?>
     
                     $("#product").empty(); //清空订单列表
                     $("#product").prepend(html_standard); //打印新的订单列表
             
-                    //先判断是否已经选择主持人
+                    //已选产品
+                    <?php
+                    foreach ($data as $key => $value) {
+                        $data_id=$value['product_id'];
+                    ?>
+                        var product_id = "<?php echo $data_id; ?>";    //php从后端取得“已经选择的产品的id”，此处暂时做个示例
+                        if (product_id != "") {
+                            $("[product-id='" + product_id + "']").removeClass("list_more");
+                            $("[product-id='" + product_id + "']").addClass("selected");
+                        };
+                    <?php } ?>
+
+                    //点击li跳转子页(渲染后界面)
+                    $("#product li.selected").on("click", function () {
+                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("product-id") + "&type=edit&tab=standard&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                    })
+                    $("#product li.list_more").on("click", function () {
+                        location.href = "<?php echo $this->createUrl("design/tpDetail", array());?>&product_id=" + $(this).attr("product-id") + "&type=new&tab=standard&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                    })
+                    break;
+
+                case "nostandard":
+                    var html_nostandard = '';
+                    <?php
+                    foreach ($product_list as $key => $value) {
+                        foreach ($value as $key1 => $value1) {
+                            $product[$key1] = $value1;
+                        };
+                        if ($product['standard_type'] == 1) {
+
+                    ?>
+                        html_nostandard += '<li class="ulist_item selected linshi" linshi-id="<?php echo $product['id']; ?>"><div class="item"><p class="name"><?php echo $product['product_name'];?></p></div><i class="name"><?php echo $product['staff_name'];?></p></i></li>';
+                    <?php }} ?>
+
+                    $("#product").empty(); //清空订单列表
+                    $("#product").prepend(html_nostandard); //打印新的订单列表 
+
+                    //已选
+                    $(".linshi").addClass('hid');
+                    <?php
+                    foreach ($data as $key => $value) {
+                        $data_id=$value['product_id'];
+                    ?>
+                        var product_id = "<?php echo $data_id; ?>";   //php从后端取得此数，此处暂时做个示例
+                        $("[linshi-id='" + product_id + "']").removeClass("hid");
                 
+                    <?php
+                    }
+                    ?>
+
+                    break;
             }};
         //点击返回按钮，判断from，返回对应页面
         $(".l_btn").on("click", function () {
@@ -98,8 +148,8 @@
         });
 
         //编辑商品
-        $("li.pad_tb10").on("click", function () {
-            location.href = "<?php echo $this->createUrl("design/decorationDetail", array());?>&type=edit&product_id=" + $(this).attr("poduct-id") + "&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id")
+        $(".linshi").live("click", function () {
+            location.href = "<?php echo $this->createUrl("design/decorationDetail", array());?>&type=edit&product_id=" + $(this).attr("linshi-id") + "&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id")
         });
 
 

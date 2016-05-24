@@ -214,7 +214,7 @@
 
             $.post("<?php echo $this->createUrl('design/savedec', array());?>",get_info,function(data){
                 alert("提交成功！");
-                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id") +"&tab=nostandard";
             })
         });
 
@@ -255,7 +255,7 @@
 
             $.post("<?php echo $this->createUrl('design/updatedec', array());?>",get_info,function(data){
                 alert("提交成功！");
-                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id") +"&tab=nostandard";
             })
         });
 
@@ -268,7 +268,7 @@
             console.log(get_info);
             $.post("<?php echo $this->createUrl('design/deltp');?>",get_info,function(retval){
                 alert('删除成功');
-                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                location.href = "<?php echo $this->createUrl('design/decoration', array());?>&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id") +"&tab=nostandard";
             });
         });
 
