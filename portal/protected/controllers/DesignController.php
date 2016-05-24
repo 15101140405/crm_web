@@ -165,10 +165,10 @@ class DesignController extends InitController
                 'unit' => $supplier_product2['unit'],
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
-                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']),
+                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01),
                 'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
-                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'],
-                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'])/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])),
+                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01,
+                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01)),
                 /*'remark' => $wed_feast['']*/
             );
         }
@@ -2583,7 +2583,7 @@ class DesignController extends InitController
 
         $data = $this -> actionGetOrderProduct(20);
 
-        $supplier_product = yii::app()->db->createCommand("select supplier_product.id,supplier_product.name as product_name,staff.name as staff_name from supplier_product left join supplier on supplier_id=supplier.id left join staff on staff_id=staff.id where supplier_product.account_id=".$_SESSION['account_id']." and supplier_type_id=20 and standard_type=0");
+        $supplier_product = yii::app()->db->createCommand("select standard_type,supplier_product.id,supplier_product.name as product_name,staff.name as staff_name from supplier_product left join supplier on supplier_id=supplier.id left join staff on staff_id=staff.id where supplier_product.account_id=".$_SESSION['account_id']." and supplier_type_id=20");
         $product_list = $supplier_product->queryAll();
 
         $product_total = 0 ;
@@ -2605,7 +2605,7 @@ class DesignController extends InitController
             // $product_list[$key]['name'] = $Product['name'];
             // $product_list[$key]['unit'] = $Product['unit'];
         }
-        /*print_r($data);die;*/
+        //print_r($data);die;
         $this->render("decoration",
             array(
                 'product_list' => $product_list,
@@ -2995,22 +2995,26 @@ class DesignController extends InitController
         /*取order_product  主持人*/
         /*********************************************************************************************************************/
 
-        $host_data = $this -> actionGetOrderProduct(3);
-        $host_id = array();
-        /*foreach ($host_data as $key => $value) {
-            $item = SupplierProduct::model()->findByPk($value['product_id']);
-            $host_id[] = $item['supplier_id'];
-        };*/
+        $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as supplier_product_id,actual_price,order_product.unit,supplier.staff_id from order_product left join supplier_product on product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
+        $host_data = $result->queryAll();
+        /*print_r($host_data);die;*/
         $host_selected_staff_id = array();
+        $host_id = array();
         $host_total = 0 ;
-        if(!empty($host_data)){
+        foreach ($host_data as $key => $value) {
+            $host_selected_staff_id[] = $value['staff_id'];
+            $host_total += $value['actual_price']*$value['unit'];
+        };
+        
+        
+        /*if(!empty($host_data)){
             foreach ($host_data as $key => $value) {
-                $host_total += $value['actual_price']*$value['unit'];
+                
                 $supplier_product = SupplierProduct::model()->findByPk($value['product_id']);
                 $supplier = Supplier::model()->findByPk($supplier_product['supplier_id']);
                 $host_selected_staff_id[] = $supplier['staff_id'];
             }
-        }
+        }*/
 
         /*********************************************************************************************************************/
         /*取order_product  摄像师*/
@@ -3094,6 +3098,7 @@ class DesignController extends InitController
         
 
         /*print_r($supplierProducts);die;*/
+
 
         $this->render("servicePersonnel",
             array(

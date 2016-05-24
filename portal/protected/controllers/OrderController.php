@@ -1112,15 +1112,16 @@ class OrderController extends InitController
             Order::model()->updateByPk($_POST['order_id'],array('planner_id' => $_POST['staff_id']));
             $content = "“".$user['name']."”将订单"."[".$date[0]."会议]转移给“".$target['name']."”";   
         };
-        $this->sendMessage($content);
+        $account = StaffCompany::model()->findByPk($_SESSION['account_id']);
+        $this->sendMessage($content,$account['corpid'],$account['corpsecret']);
     }
 
-    public function sendMessage($html)
+    public function sendMessage($html,$corpid,$corpsecret)
     {
         $touser="@all";//你要发的人
         $toparty="";
         $content = $html;
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         print_r($result);
     }
 

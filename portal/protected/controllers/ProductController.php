@@ -240,6 +240,8 @@ class ProductController extends InitController
     public function actionSet_list()
     {
         $pricename = "unit_price";
+        $product_data = array();
+
         if ($_GET['from'] == "set") {//套系
 
             $pricename = "final_price";
@@ -253,6 +255,29 @@ class ProductController extends InitController
                         ),
                     'order' => $pricename
                 ));
+            foreach ($list as $key => $value) {
+                $item = array();
+                $item['name'] = $value['name'];
+                $item['price'] = $value[$pricename]."元/场";
+                $item['unit'] = "";
+                $case_info = CaseInfo::model()->find(array(
+                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                        'params' => array(
+                                ':CI_Type' => 5,
+                                ':CT_ID' => $value['id'],
+                            )
+                    ));
+                $t = explode(".", $case_info['CI_Pic']);
+                $case_info['CI_Pic'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                if (!empty($case_info)) {
+                    $item['img_url'] = $case_info['CI_Pic'];
+                } else {
+                    $item['img_url'] = "../../crm_product_img/d32.jpg";
+                }
+                
+                $item['id'] = $value['id'];
+                $product_data[] = $item; 
+            };
 
         } else {//婚宴，会议餐
         
@@ -267,34 +292,35 @@ class ProductController extends InitController
                         ),
                     'order' => $pricename
                 ));
+            foreach ($list as $key => $value) {
+                $item = array();
+                $criteria = new CDbCriteria; 
+                $criteria->addCondition("img_type = :img_type && ".$idname." = :id");    
+                $criteria->params[':img_type']=1; 
+                $criteria->params[':id']=$value['id'];  
+                $ProductImg = $table::model()->find($criteria);
+                $item['name'] = $value['name'];
+                $item['price'] = $value[$pricename]."元/场";
+                $item['unit'] = "";
+                // print_r($ProductImg);die;
+                if (!empty($ProductImg)) {
+                    $item['img_url'] = $ProductImg['img_url'];
+                } else {
+                    $item['img_url'] = "../../crm_product_img/d32.jpg";
+                }
+                if ($_GET['from'] != "set") {
+                    $item['unit'] = $value['unit'];
+                    $item['price'] = $value[$pricename];
+                }
+                
+                $item['id'] = $value['id'];
+                $product_data[] = $item; 
+            };
         }
 
-        $product_data = array();
+        
 
-        foreach ($list as $key => $value) {
-            $item = array();
-            $criteria = new CDbCriteria; 
-            $criteria->addCondition("img_type = :img_type && ".$idname." = :id");    
-            $criteria->params[':img_type']=1; 
-            $criteria->params[':id']=$value['id'];  
-            $ProductImg = $table::model()->find($criteria);
-            $item['name'] = $value['name'];
-            $item['price'] = $value[$pricename]."元/场";
-            $item['unit'] = "";
-            // print_r($ProductImg);die;
-            if (!empty($ProductImg)) {
-                $item['img_url'] = $ProductImg['img_url'];
-            } else {
-                $item['img_url'] = "../../crm_product_img/d32.jpg";
-            }
-            if ($_GET['from'] != "set") {
-                $item['unit'] = $value['unit'];
-                $item['price'] = $value[$pricename];
-            }
-            
-            $item['id'] = $value['id'];
-            $product_data[] = $item; 
-        };
+        
 
         $this->render('set_list',array(
             "product_data" => $product_data,
@@ -389,7 +415,7 @@ class ProductController extends InitController
         $payment->planner_id =$_SESSION['userid'];
         $payment->adder_id =$_SESSION['userid'];
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
-        $payment->order_name =$_POST['groom_name'];
+        $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
         $payment->order_type =2;
         $payment->order_date =$_POST['order_date'];
         $payment->end_time =$_POST['end_time'];
@@ -419,6 +445,8 @@ class ProductController extends InitController
         $payment->bride_phone =$_POST['bride_phone'];
         $payment->bride_wechat =$_POST['bride_wechat'];
         $payment->bride_qq =$_POST['bride_qq'];
+        $payment->contact_name =$_POST['linkman_name'];
+        $payment->contact_phone =$_POST['linkman_phone'];
 
         $payment->save();
 
@@ -455,24 +483,39 @@ class ProductController extends InitController
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
         $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
+        if(isset($_POST['set_id'])){
+            $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+            $t1 = explode("/",$wedding_set['product_list']);
+            $t2 = explode(",", $t1[0]);
+            foreach ($t2 as $key => $value) {
+                $product = explode("|", $value);
+                $admin=new OrderProduct;         
+                $admin->account_id=$_SESSION['account_id']; 
+                $admin->order_id=$order['id'];
+                $admin->product_id=$product[0]; 
+                $admin->actual_price=$product[1]; 
+                $admin->unit=$product[2]; 
+                $admin->actual_unit_cost=$product[3]; 
+                $admin->update_time=date('y-m-d h:i:s',time());
+                $admin->save();
+            }
 
-        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-        $t1 = explode("/",$wedding_set['product_list']);
-        $t2 = explode(",", $t1[0]);
-        foreach ($t2 as $key => $value) {
-            $product = explode("|", $value);
+            //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
+
+        }else{
+            $supplier_product = SupplierProduct::model()->findByPk($_POST['product_id']);
             $admin=new OrderProduct;         
             $admin->account_id=$_SESSION['account_id']; 
             $admin->order_id=$order['id'];
-            $admin->product_id=$product[0]; 
-            $admin->actual_price=$product[1]; 
-            $admin->unit=$product[2]; 
-            $admin->actual_unit_cost=$product[3]; 
+            $admin->product_id=$_POST['product_id']; 
+            $admin->actual_price=$supplier_product['unit_price']; 
+            $admin->unit=$_POST['amount']; 
+            $admin->actual_unit_cost=$supplier_product['unit_cost']; 
+            $admin->actual_service_ratio=$supplier_product['service_charge_ratio']; 
+            $admin->remark=$_POST['remark']; 
             $admin->update_time=date('y-m-d h:i:s',time());
             $admin->save();
         }
-
-        Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
 
         echo $order['id'];
     }

@@ -60,11 +60,11 @@
         $(".r_btn").on("click", function () {
             var get_info = getinfo();
 
-            if ($("#link_name").val() == "") {
+            /*if ($("#link_name").val() == "") {
                 alert("请输入联系人姓名");
             } else if ($("#link_phone").val() == "" || !$.regex.isPhone($("#link_phone").val())) {
                 alert("请输入正确的联系人手机号");
-            };
+            };*/
             
             $.post('<?php echo $this->createUrl("plan/linkmaninsert", array());?>',get_info,function(){
                 location.href = "<?php echo $this->createUrl("order/order", array());?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";

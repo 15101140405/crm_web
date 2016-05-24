@@ -69,22 +69,22 @@
     </div>
     <div class="ulist_module pad_b40" style="margin-top:10px;" id="price">
         <ul class="ulist">
-            <li class="ulist_item flex">
+            <!-- <li class="ulist_item flex">
                 价格
                 <div class="flex1">
                     <input class="align_r t_green" type="text" id="price" value=""
                            placeholder="请输入价格"/>
                 </div>
                 <i class="mar_l10 t_green"></i>
-            </li>
+            </li> -->
             <li class="ulist_item flex" id="number">
-                数量
+                桌数
                 <div class="flex1">
                     <input class="align_r t_green" type="text" id="amount" value=""
                            placeholder="请输入数量"/>
                 </div>
             </li>
-            <li class="ulist_item flex">
+            <!-- <li class="ulist_item flex">
                 单位成本
                 <div class="flex1">
                     <input class="align_r t_green" id="cost" type="text" placeholder="输入单位成本" value="<?php /*echo $productData['unit_cost'];*/?>"/>
@@ -95,7 +95,7 @@
                 <div class="flex1">
                     <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  /*echo $productData['service_charge_ratio'];*/?>" id="fee"/>
                 </div>
-            </li>
+            </li> -->
             <li class="ulist_item">备注</li> 
             <li class="remark">
                 <div class="text_bar">
@@ -156,6 +156,22 @@
                 <span class="label">QQ</span>
                 <div class="int_bar">
                     <input class="align_r" type="text" placeholder="QQ" id="bride_qq"/>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;">
+        <ul class="int_ulist">
+            <li class="int_ulist_item">
+                <span class="label">联系人姓名</span>
+                <div class="int_bar">
+                    <input class="align_r" type="text" placeholder="新娘姓名" id="linkman_name"/>
+                </div>
+            </li>
+            <li class="int_ulist_item">
+                <span class="label">手机号</span>
+                <div class="int_bar">
+                    <input class="align_r" type="text" placeholder="手机号" id="linkman_phone"/>
                 </div>
             </li>
         </ul>
@@ -230,6 +246,8 @@
                     bride_phone: $("#bride_phone").val(),
                     bride_wechat: $("#bride_wechat").val(),
                     bride_qq: $("#bride_qq").val(),
+                    linkman_name : $("#linkman_name").val(),
+                    linkman_phone : $("#linkman_phone").val(),
                     set_id : "<?php echo $_GET['product_id'];?>",
                 };
             }else{
@@ -237,10 +255,10 @@
                     order_date: order_date,
                     end_time: end_time, 
                     update_time : time,
-                    price : $("#price").val(),
+                    /*price : $("#price").val(),*/
                     amount : $("#amount").val(),
-                    cost : $("#cost").val(),
-                    service_charge_ratio : $("#fuwufei_input").val(),
+                    /*cost : $("#cost").val(),*/
+                    /*service_charge_ratio : $("#fuwufei_input").val(),*/
                     groom_name: $("#groom_name").val(),
                     groom_phone: $("#groom_phone").val(),
                     groom_wechat: $("#groom_wechat").val(),
@@ -249,8 +267,10 @@
                     bride_phone: $("#bride_phone").val(),
                     bride_wechat: $("#bride_wechat").val(),
                     bride_qq: $("#bride_qq").val(),
+                    linkman_name : $("#linkman_name").val(),
+                    linkman_phone : $("#linkman_phone").val(),
                     product_id : "<?php echo $_GET['product_id'];?>",
-                    remark : $("#remark").val()
+                    remark : $("#remark").val(),
                 };
             }
             console.log(new_order_info);

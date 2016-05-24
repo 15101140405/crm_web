@@ -73,10 +73,19 @@
             var r = confirm("确定把订单分配给" + confirm_name + "?") //这里选择有点问题
             console.log({"order_id":"<?php echo $_GET['order_id']?>" , "staff_id":$(this).attr("staff-id"), "type":"<?php echo $_GET['type']?>"});
             if (r == true) {
-                $.post("<?php echo $this->createUrl("order/ordertransition", array());?>",{"order_id":"<?php echo $_GET['order_id']?>" , "staff_id":$(this).attr("staff-id"), "type":"<?php echo $_GET['type']?>"},function(retval){
+                alert(2);
+                var data = {
+                    "order_id":"<?php echo $_GET['order_id']?>" , 
+                    "staff_id":$(this).attr("staff-id"), 
+                    "type":"<?php echo $_GET['type']?>"
+                };
+                console.log(data);
+                $.post("<?php echo $this->createUrl("order/ordertransition")?>",data,function(retval){
+                    alert(retval);
                     if("<?php echo $_GET['from']?>" == 'meeting'){
                         location.href = "<?php echo $this->createUrl("meeting/bill")?>&order_id=<?php echo $_GET['order_id']?>";
                     }else if("<?php echo $_GET['from']?>" == 'wedding'){
+                        alert(1);
                         location.href = "<?php echo $this->createUrl("design/bill")?>&order_id=<?php echo $_GET['order_id']?>";
                     };
                 });

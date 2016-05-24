@@ -37,7 +37,7 @@
             if('<?php echo $_GET['order_id']?>' == ""){
                 location.href = "<?php echo $this->createUrl('product/selectorder');?>&category=2&from=&product_id="+$(this).attr("product-id");    
             }else{
-                location.href = "<?php echo $this->createUrl('design/tpDetail');?>&tab=<?php echo $_GET['tab']?>&from=&order_id=<?php echo $_GET['order_id']?>&type=edit&product_id="+$(this).attr("product-id");
+                location.href = "<?php echo $this->createUrl('design/tpDetail');?>&tab=<?php echo $_GET['tab']?>&from=&order_id=<?php echo $_GET['order_id']?>&type=new&product_id="+$(this).attr("product-id");
             }
             
         });

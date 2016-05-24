@@ -170,7 +170,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=host&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -216,7 +216,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=video&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=video&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -264,7 +264,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=camera&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=camera&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -313,7 +313,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=makeup&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=makeup&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -364,7 +364,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=other&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=other&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
             }
