@@ -21,18 +21,7 @@
     <div class="order_abstract mar_b10">
 
         <?php
-        /*$serve_bill = array(  //background data
-            'total' => '2322',
-            'desc' => array(
-                '主持人' => '10002',
-                '摄影师' => '10002',
-                '化妆师1' => '100',
-                '化妆师' => '1002',
-                '督导师' => '1602',
-                '灯光师' => '1802'
-            )
-
-        );*/
+        // print_r($host_selected_staff_id);die;
         ?>
 
         <p class="title">总价 &yen;<?php echo $serve_bill['total']; ?></p>

@@ -32,6 +32,8 @@
                 </li>
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=7" id="decration">场地布置</a>
                 </li>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=8" id="lss">灯光／音响／视频</a>
+                </li>
                 <!-- <li><a href="javascript:;">ABOUT US</a>
                 </li> -->
             </ul>
@@ -49,8 +51,12 @@
                             </div>
                             <select class="select_list" name="" id="select_type">
                                 <option value="请选择" type-id="0">请选择</option>
-                            <?php foreach ($tap as $key => $value) {?>
+                            <?php if($_GET['CI_Type'] == 7){foreach ($tap as $key => $value) {?>
                                 <option value="<?php echo $value['name']?>" type-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                            <?php }}else if($_GET['CI_Type'] == 8){?>
+                                <option value="灯光" type-id="8">灯光</option>
+                                <option value="音响" type-id="23">音响</option>
+                                <option value="视频" type-id="9">视频</option>
                             <?php }?>
                             </select>
                         </div>
@@ -161,7 +167,31 @@
                             <a class="edit_btn left" id="product" href="javascript:;">管理报价</a>
                         </div>
                     </li>
-            <?php }?>
+            <?php }else if($_GET['CI_Type'] == 8){
+                    foreach ($supplier_product as $key => $value) {?>
+                    <li class="clearfix" type-id='<?php echo $value['supplier_type_id']?>' product-id ="<?php echo $value['id'];?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
+                                <span>私密视频</span>
+                            </div>
+                            <div class="video_info left">
+                                <h3><?php echo $value['name']?></h3>
+                                <div class="state_box clearfix">
+                                    <!-- <img class="left" src="images/up06.jpg" alt=""> -->
+                                    <span class="left"><?php echo $value['description']?></span>
+                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
+                                </div>
+                                <!-- <p class="tag">标签:<span>分销</span>
+                                </p> -->
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <span class="left state">¥<?php echo $value['unit_price']?>元／<?php echo $value['unit']?></span>
+                            <a class="edit_btn left" href="javascript:;">编辑</a>
+                        </div>
+                    </li>
+            <?php }}?>
                 </ul>
             </div>
         </div>
@@ -192,33 +222,42 @@
             $("#case").remove();
             $("#set").remove();
             $("#decration").remove();
+            $("#lss").remove();
         }else if(t1==0){
             $("#host").remove();
         }  
 
-        //下拉筛选
+        //导航
         if(<?php echo $_GET['CI_Type']?> == 2){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 6){$("#host").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7){$("#decration").addClass("active")};
+        if(<?php echo $_GET['CI_Type']?> == 8){$("#lss").addClass("active")};
 
-        //上传按钮
+        //上传按钮－样式渲染
         if(<?php echo $_GET['CI_Type']?> == 2){$("#upload").html("新增案例")};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#upload").html("新增套系")};
         if(<?php echo $_GET['CI_Type']?> == 6){$("#upload").remove()};
-        if(<?php echo $_GET['CI_Type']?> == 7){$("#upload").html("新增产品")};
+        if(<?php echo $_GET['CI_Type']?> == 7 || <?php echo $_GET['CI_Type']?> == 8){$("#upload").html("新增产品")};
 
+        //上传按钮－点击事件
         $("#upload").on("click",function(){
             if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_case");?>"};
             if(<?php echo $_GET['CI_Type']?> == 5){location.href="<?php echo $this->createUrl("background/upload_set1");?>"};
             if(<?php echo $_GET['CI_Type']?> == 7){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 8){location.href="<?php echo $this->createUrl("background/upload_product_lss");?>"};
         });
 
+        //筛选导航
         $('#select_type').change(function(){
             $("#product_item li").removeClass("hid");
             $("#product_item li").addClass("hid");
             var tap = $(this).children('option:selected').attr("type-id");
+            <?php if($_GET['CI_Type'] == 7){?>
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
+            <?php }else if($_GET['CI_Type'] == 8){?>
+            if(tap != 0){$("[type-id='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
+            <?php }?>
         });
 
         //点击编辑
@@ -231,6 +270,9 @@
             };
             if('<?php echo $_GET['CI_Type']?>' == 7){
                 location.href = "<?php echo $this->createUrl("background/edit_supplier_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
+            };
+            if('<?php echo $_GET['CI_Type']?>' == 8){
+                location.href = "<?php echo $this->createUrl("background/edit_supplier_product");?>&type=lss&product_id=" + $(this).parent().parent().attr('product-id');
             };
         });
 

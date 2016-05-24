@@ -329,6 +329,23 @@ class BackgroundController extends InitController
                     'case' => $case,
                     'service_person' => $service_person,
                 ));
+        }else if($_GET['CI_Type'] == 8){
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('supplier_type_id', array(8,9,23));
+            $criteria->addCondition("account_id = :account_id");    
+            $criteria->params[':account_id']=$_COOKIE['account_id'];
+            $supplier_product = SupplierProduct::model()->findAll($criteria); 
+
+            foreach ($supplier_product as $key => $value) {
+                $t = explode(".", $value['ref_pic_url']);
+                if(isset($t[0]) && isset($t[1])){
+                    $supplier_product[$key]['ref_pic_url'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                };
+            };
+
+            $this->render("index",array(
+                    'supplier_product' => $supplier_product,
+                ));
         };  
     }
 
@@ -571,6 +588,23 @@ class BackgroundController extends InitController
         $this->render("upload_product",array(
                 'supplier' => $supplier,
                 'decoration_tap' => $decoration_tap,
+                'supplier_type' => $supplier_type,
+            ));
+    }
+
+    public function actionUpload_product_lss()
+    {
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.`name`,supplier_type.`name` as supplier_type_name from supplier left join staff on staff_id=staff.id left join supplier_type on supplier.type_id=supplier_type.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id in (8,9,23)");
+        $supplier = $result->queryAll();
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        /*print_r($supplier);die;*/
+        $this->render("upload_product_lss",array(
+                'supplier' => $supplier,
                 'supplier_type' => $supplier_type,
             ));
     }
@@ -1102,8 +1136,14 @@ class BackgroundController extends InitController
 
     public function actionEdit_supplier_product()
     {
-        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
-        $supplier = $result->queryAll();
+        $supplier = array();
+        if(!isset($_GET['type'])){
+            $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
+            $supplier = $result->queryAll();
+        }else{
+            $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.`name`,supplier_type.`name` as supplier_type_name from supplier left join staff on staff_id=staff.id left join supplier_type on supplier.type_id=supplier_type.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id in (8,9,23)");
+            $supplier = $result->queryAll();
+        };
         $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
                 'params' => array(
@@ -1118,7 +1158,11 @@ class BackgroundController extends InitController
             ));
         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
         $t = explode(".", $product['ref_pic_url']);
-        $picture = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+        if(isset($t[0]) && isset($t[1])){
+            $picture = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+        }else{
+            $picture = "images/cover.jpg";
+        };  
         /*print_r($supplier);die;*/
         $this->render("edit_supplier_product",array(
                 'picture' => $picture,

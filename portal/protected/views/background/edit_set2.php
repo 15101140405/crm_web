@@ -183,7 +183,7 @@
                         </div>
                         <div class="edit_btn_box right clearfix" style="width:40%">
                             <!-- <span class="left state">转码中</span> -->
-                            <a class="edit_btn left add_class bind" href="javascript:;">绑定产品</a>
+                            <!-- <a class="edit_btn left add_class bind" href="javascript:;">绑定产品</a> -->
                             <a class="edit_btn left del_resource" href="javascript:;">删除</a>
                         </div>
                     </li>
@@ -292,6 +292,8 @@
                 product_list : "<?php echo $_GET['product_list']?>",
                 final_price : <?php echo $_GET['final_price']?>,
             };
+            if($("#resources_list").find("li").length == 0){data.CR_Sort = 0;};
+            console.log($("#resources_list").find("li").length);
             console.log(data);
             $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
@@ -308,7 +310,12 @@
                 });
             };  
         });
-
+        //删除资源
+        $(".del_resource").on("click",function(){
+            $.post("<?php echo $this->createUrl("background/del_resource");?>",{CR_ID : $(this).parent().parent().attr("cr-id")},function(){
+                location.reload();
+            })
+        })
     })
 </script>
 </body>

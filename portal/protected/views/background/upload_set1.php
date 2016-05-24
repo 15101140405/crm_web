@@ -44,6 +44,12 @@
                 <li>|</li>
                 <li id="makeup"><a href="#">化妆</a>
                 </li>
+                <li>|</li>
+                <li id="other"><a href="#">其他人员</a>
+                </li>
+                <li>|</li>
+                <li id="lss"><a href="#">灯光／音响／视频</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -53,7 +59,7 @@
         <div class="left_area left">
             <ul class="goods_list clearfix" id="product">
         <?php foreach ($supplier_product as $key => $value) {
-            if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6){?>
+            if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
                 <li style="height: 200px;" tap="<?php echo $value['decoration_tap']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
                     <div class="img_box" style="height:60%">
                         <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
@@ -173,6 +179,20 @@
             $("#product li").removeClass("hid");
             $("#product li").addClass("hid");
             $("[supplier-type-id='6']").removeClass("hid");
+        });
+        //其他人员
+        $("#other").on("click",function(){
+            $("#product li").removeClass("hid");
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='7']").removeClass("hid");
+        });
+        //灯光／音响／视频
+        $("#lss").on("click",function(){
+            $("#product li").removeClass("hid");
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='8']").removeClass("hid");
+            $("[supplier-type-id='9']").removeClass("hid");
+            $("[supplier-type-id='23']").removeClass("hid");
         });
 
         //点击创建套系
