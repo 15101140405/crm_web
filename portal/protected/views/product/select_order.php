@@ -108,14 +108,15 @@ $(function  () {
 
     // li点击跳转
     $(".order_list li").on("click",function(){
-        data = {
-            'set_id' : '<?php echo $_GET['product_id']?>',
-            'order_id' : $(this).attr("order-id"),
-            'order_type' : $(this).attr("order-type"),
-        };
-        $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
-            location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
-        });
+        // data = {
+        //     'product_id' : '<?php echo $_GET['product_id']?>',
+        //     'order_id' : $(this).attr("order-id"),
+        //     'order_type' : $(this).attr("order-type"),
+        // };
+        // $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
+            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
+        // });
+
     });
 
     //新增订单

@@ -208,7 +208,13 @@
 
         //跳转详情页
         $("#person li").on("click",function(){
-            location.href = "<?php echo $this->createUrl('service/personnel_host');?>&from=design&service_person_id="+$(this).attr("service-person-id");
+            if (<?php echo $_GET['type_id'];?>==3) {
+                var tab = "host";
+            } else{
+                var tab = "";
+            };
+
+            location.href = "<?php echo $this->createUrl('service/personnel_host');?>&from=design&tab=" + tab + "&service_person_id="+$(this).attr("service-person-id");
         });
 
     })
