@@ -140,6 +140,17 @@ class BackgroundController extends InitController
                 $data ->save();
                 $CI_ID = $data->attributes['CI_ID'];
 
+                $data = new ServicePerson;
+                $data ->team_id = 2;
+                $data ->name = $_POST['name'];
+                $data ->gender = 1;
+                $data ->avatar = "";
+                $data ->telephone = $_POST['telephone'];
+                $data ->update_time = date('y-m-d h:i:s',time());
+                $data ->staff_id = $staff_id;
+                $data ->service_type = 3;
+                $data ->save();
+
                 $data = new CaseBind;
                 $data ->CB_Type = 4;
                 $data ->TypeID = 0;
