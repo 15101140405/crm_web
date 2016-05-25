@@ -411,7 +411,7 @@
                     location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=7";
                     <?php }else{?>
                     location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=8";
-                    <?php }?>
+                    <?php }?>   
                 });
             };
         });

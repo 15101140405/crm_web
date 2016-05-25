@@ -21,7 +21,7 @@
     <div class="order_abstract mar_b10">
 
         <?php
-        // print_r($host_selected_staff_id);die;
+        print_r($arr_category_host);die;
         ?>
 
         <p class="title">总价 &yen;<?php echo $serve_bill['total']; ?></p>
@@ -132,7 +132,7 @@
                 <?php
                 foreach ($arr_category_host as $key => $value) {?>
                     var html_host
-                    html_host = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';//id由php从后端取数，格式为host＋序号；
+                    html_host = '<li class="ulist_item list_more " supplier-id="<?php  echo $value['supplier_id'];?>">';//id由php从后端取数，格式为host＋序号；
                     html_host += '<div class="item">';
                     html_host += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_host += '</div><i class="name"><?php echo $value['team_name'];?></i>';
@@ -145,10 +145,10 @@
                     //先判断是否已经选择主持人
 
                 <?php
-                foreach ($host_selected_staff_id as $key => $value) {
+                foreach ($host_selected_supplier_id as $key => $value) {
                 ?>
-                    $("[staff-id='<?php echo $value?>']").removeClass("list_more");
-                    $("[staff-id='<?php echo $value?>']").addClass("selected");
+                    $("[supplier-id='<?php echo $value?>']").removeClass("list_more");
+                    $("[supplier-id='<?php echo $value?>']").addClass("selected");
                 <?php 
                 }
                 ?>
@@ -156,10 +156,10 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=host&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id") + "&supplier_id=" +  $(this).attr("supplier-id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=host&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=host&supplier_id=" + $(this).attr("supplier-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 

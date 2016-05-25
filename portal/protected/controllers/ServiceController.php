@@ -597,16 +597,16 @@ class ServiceController extends InitController
 
     public function actionService_product_list()
     {
-        $supplier = Supplier::model()->find(array(
-                'condition' => 'staff_id=:staff_id',
-                'params' => array(
-                        ':staff_id' => $_GET['staff_id']
-                    )
-            ));
+        // $supplier = Supplier::model()->find(array(
+        //         'condition' => 'staff_id=:staff_id',
+        //         'params' => array(
+        //                 ':staff_id' => $_GET['staff_id']
+        //             )
+        //     ));
         $supplier_product = SupplierProduct::model()->findAll(array(
                 'condition' => 'supplier_id=:supplier_id',
                 'params' => array(
-                        ':supplier_id' => $supplier['id']
+                        ':supplier_id' => $_GET['supplier_id']
                     )
             ));
         $this->render('service_product_list',array(

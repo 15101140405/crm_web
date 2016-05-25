@@ -2995,18 +2995,14 @@ class DesignController extends InitController
         /*取order_product  主持人*/
         /*********************************************************************************************************************/
 
-        $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as supplier_product_id,actual_price,order_product.unit,supplier.staff_id from order_product left join supplier_product on product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
+        $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as supplier_product_id,actual_price,order_product.unit,supplier.id as supplier_id from order_product left join supplier_product on order_product.product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
         $host_data = $result->queryAll();
-        /*print_r($host_data);die;*/
-        $host_selected_staff_id = array();
-        $host_id = array();
+        $host_selected_supplier_id = array();
         $host_total = 0 ;
         foreach ($host_data as $key => $value) {
-            $host_selected_staff_id[] = $value['staff_id'];
+            $host_selected_supplier_id[] = $value['supplier_id'];
             $host_total += $value['actual_price']*$value['unit'];
         };
-        
-        
         /*if(!empty($host_data)){
             foreach ($host_data as $key => $value) {
                 
@@ -3107,7 +3103,6 @@ class DesignController extends InitController
                 'arr_category_camera' => $supplierProducts2,
                 'arr_category_makeup' => $supplierProducts3,
                 'arr_category_other' => $supplierProducts4,
-                'host_id' => $host_id,
                 'video_data' => $video_data,
                 'camera_data' => $camera_data,
                 'makeup_data' => $makeup_data,
@@ -3117,7 +3112,7 @@ class DesignController extends InitController
                 'makeup_selected_staff_id' => $makeup_selected_staff_id,
                 'camera_selected_staff_id' => $camera_selected_staff_id,
                 'video_selected_staff_id' => $video_selected_staff_id,
-                'host_selected_staff_id' => $host_selected_staff_id,
+                'host_selected_supplier_id' => $host_selected_supplier_id,
             ));
     }
 
