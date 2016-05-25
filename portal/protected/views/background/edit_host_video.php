@@ -204,7 +204,7 @@
             <p>京公网安备11010502022785号</p>
         </div>
     <!--弹层1-->
-    <div class="msgbox msgbox_class">
+    <!-- <div class="msgbox msgbox_class">
         <div class="msgbox_c" style="width:860px;left:15%;top:10%;height:520px; overflow:scroll">
             <div class="tit_box clearfix">
                 <h2 class="left">绑定产品</h2>
@@ -221,42 +221,39 @@
                                 </div>
                                 <select class="select_list" name="" id="select_type">
                                     <option value="请选择" type-id="0">请选择</option>
-                                <?php foreach ($tap as $key => $value) {?>
-                                    <option value="<?php echo $value['name']?>" type-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
-                                <?php }?>
+                                    <option value="" type-id=""></option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                <ul class="upload_list" id="product_item">
-            <?php foreach ($case_data as $key => $value) { ?>
-                    <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
+                <ul class="upload_list" id="product_item"> -->
+                    <!-- <li class="clearfix" tap='' product-id ="">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
-                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
-                                <!-- <span>私密视频</span> -->
+                                <img src="" alt="">
+                                <span>私密视频</span>
                             </div>
                             <div class="video_info left">
-                                <h3><?php echo $value['name']?></h3>
+                                <h3></h3>
                                 <div class="state_box clearfix">
                                     <img class="left" src="images/up06.jpg" alt="">
-                                    <span class="left"><?php echo $value['description']?></span>
-                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
+                                    <span class="left"></span>
+                                    <span class="from left">来自：爱奇艺网页</span>
                                 </div>
-                                <!-- <p class="tag">标签:<span>分销</span>
-                                </p> -->
+                                <p class="tag">标签:<span>分销</span>
+                                </p>
                             </div>
                         </div>
                         <div class="edit_btn_box right clearfix">
-                            <span class="left state">¥<?php echo $value['unit_price']?>元／<?php echo $value['unit']?></span>
+                            <span class="left state">¥元／</span>
                             <a class="edit_btn left sure_bind" href="javascript:;">确定</a>
                         </div>
                     </li>
-            <?php }?>
+            
                 </ul>
             </div>
         </div>
-    </div>
+    </div> -->
 <script>
     $(function(){
         //初始渲染

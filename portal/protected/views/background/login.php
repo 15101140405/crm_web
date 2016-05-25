@@ -49,9 +49,14 @@ $(function(){
                     var list = new Array();
                     list = department_list.split(',');
                     var t=0;
+                    var j=0;
                     for (i=0;i<list.length;i++) {
-                        if(list[i] == 11){t++};
+                        if(list[j] == 11){t++;j++;};
                     };
+                    console.log(department_list);
+                    console.log(list);
+                    console.log(t);
+                    console.log(j);
                     if(t==0){
                         location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
                     }else{

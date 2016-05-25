@@ -95,7 +95,7 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  ".
 
-            " and CI_Show=1 and CI_Type in (1,2,3) order by CI_Sort Desc");
+            " and CI_Show=1 and CI_Type in (1,2,3,4,6) order by CI_Sort Desc");
         $list = $result->queryAll();
 
         /*$list = findAllBySql("select * from case_info where ".
@@ -153,7 +153,10 @@ class ResourceController extends InitController
                     $jsonresources[]=$cur_resourceobj;
                     //$cur_resourceobj=null;
                     $cur_product=array();
-                }
+                };
+                if($cur_crid==0){
+                    $jsonresources[] = $resourceobj;
+                };
                 $cur_crid = $rval["CR_ID"];
                 $cur_resourceobj=$resourceobj;
                 if($rval["id"]!=null){
@@ -256,6 +259,8 @@ class ResourceController extends InitController
             
             $list[] = $item;
         };
+
+
 
 
 
