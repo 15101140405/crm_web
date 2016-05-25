@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 /**
  * Class SupplierProduct
@@ -163,6 +163,7 @@ class SupplierProductForm extends InitForm
         foreach ($supplier as $key => $value) {
             $item = array();
             $item['staff_id'] = $value['staff_id'];
+            $item['supplier_id'] = $value['id'];
             $service_person = ServicePerson::model()->find(array(
                     'condition' => 'staff_id = :staff_id',
                     'params' => array(
