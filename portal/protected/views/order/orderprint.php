@@ -40,7 +40,7 @@
             $("#print").on("click",function(){
                 if('<?php echo $_GET['type']?>' == "design"){
                     $.post('<?php echo $this->createUrl("print/designbill")?>',{'email' : $("#email").val(),'order_id' : <?php echo $_GET['order_id']?>},function(revtal){
-                        //alert(revtal);
+                        alert(revtal);
                         alert('报价单已发送至邮箱，请查收！');
                     })
                 }else if('<?php echo $_GET['type']?>' == "meeting"){

@@ -60,8 +60,8 @@
             <li class="ulist_item flex">
                 折扣价
                 <div class="flex1">
-                    <input class="align_r t_green" type="text" id="price" value=""
-                           placeholder="标准价格：<?php echo $productData['unit_price']; ?>"/>
+                    <input class="align_r t_green" type="text" id="price" value="<?php echo $productData['unit_price']; ?>"
+                           placeholder=""/>
                 </div>
                 <i class="mar_l10 t_green"><?php echo $productData['unit'];?></i>
             </li>
@@ -265,7 +265,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : $("#fuwufei_input").val()*0.01,
+                    'actual_service_ratio' : $("#fuwufei_input").val(),
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);
@@ -421,7 +421,7 @@
                     'unit' : "<?php echo $productData['unit'] ?>",
                     'actual_unit_cost' : $("#cost").val(),
                     'update_time' : update_time,
-                    'actual_service_ratio' : parseInt($("#fuwufei_input").val())*0.01,
+                    'actual_service_ratio' : parseInt($("#fuwufei_input").val()),
                     'remark' : $("#remark").val()
                 };
                 console.log(get_info);

@@ -400,6 +400,7 @@
             var data = {
                 name : $("#supplier_name").val(),
                 telephone : $("#telephone").val(),
+                supplier_type : 20,
                 update_time : time
             };
             /*if(data.)*/

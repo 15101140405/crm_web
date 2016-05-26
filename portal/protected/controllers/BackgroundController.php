@@ -96,6 +96,25 @@ class BackgroundController extends InitController
     {
         $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
 
+        $person_data = array();
+
+        if($_POST['department'] == 11){
+            $person_data['CI_Type'] = 6;
+            $person_data['service_type'] = 3;
+        };
+        if($_POST['department'] == 12){
+            $person_data['CI_Type'] = 9;
+            $person_data['service_type'] = 4;
+        };
+        if($_POST['department'] == 13){
+            $person_data['CI_Type'] = 10;
+            $person_data['service_type'] = 5;
+        };
+        if($_POST['department'] == 14){
+            $person_data['CI_Type'] = 11;
+            $person_data['service_type'] = 6;
+        };
+
         if (isset($_POST['password'])) {
             if ($_POST['yzm'] == $_SESSION['code']) {
                 $staff = Staff::model()->find(array(
@@ -109,7 +128,7 @@ class BackgroundController extends InitController
                     $data = new Staff;
                     $data ->name = $_POST['name'];
                     $data ->telephone = $_POST['telephone'];
-                    $data ->department_list = "[11]";
+                    $data ->department_list = "[".$_POST['department']."]";
                     $data ->password = $_POST['password'];
                     $data ->save();
                     $staff_id = $data->attributes['id'];
@@ -121,7 +140,7 @@ class BackgroundController extends InitController
                     foreach ($t as $key => $value) {
                         $department_list .= $value . ",";
                     };
-                    $department_list .= "11]";
+                    $department_list .= $_POST['department']."]";
                     $staff = Staff::model()->find(array(
                         'condition' => 'telephone=:telephone',
                         'params' => array(
@@ -135,7 +154,7 @@ class BackgroundController extends InitController
                 $data ->CI_Pic = "";
                 $data ->CI_Sort = 1;
                 $data ->CI_Show = 1;
-                $data ->CI_Type = 6;
+                $data ->CI_Type = $person_data['CI_Type'];
                 $data ->CT_ID = $staff_id;
                 $data ->save();
                 $CI_ID = $data->attributes['CI_ID'];
@@ -148,7 +167,7 @@ class BackgroundController extends InitController
                 $data ->telephone = $_POST['telephone'];
                 $data ->update_time = date('y-m-d h:i:s',time());
                 $data ->staff_id = $staff_id;
-                $data ->service_type = 3;
+                $data ->service_type = $person_data['service_type'];
                 $data ->save();
 
                 $data = new CaseBind;
@@ -162,7 +181,7 @@ class BackgroundController extends InitController
                 foreach ($staff_company as $key => $value) {
                     $data = new Supplier;
                     $data ->account_id = $value['id'];
-                    $data ->type_id = 3;
+                    $data ->type_id = $person_data['service_type'];
                     $data ->staff_id = $staff_id;
                     $data ->save();
                 }
@@ -752,20 +771,31 @@ class BackgroundController extends InitController
 
     public function actionSupplier_add()
     {
-        $data = new Staff;
-        $data ->account_id = $_COOKIE['account_id'];
-        $data ->name = $_POST['name'];
-        $data ->telephone = $_POST['telephone'];
-        $data ->department_list = "[4]";
-        $data ->update_time = $_POST['update_time'];
-        $data ->save();
-        //查找新增的员工ID
-        $id = $data->attributes['id'];
+        $staff = Staff::model()->find(array(
+                'condition' => 'telephone=:telephone',
+                'params' => array(
+                        ':telephone' => $_POST['telephone']
+                    )
+            ));
+        $id="";
+        if(empty($staff)){
+            $data = new Staff;
+            $data ->account_id = $_COOKIE['account_id'];
+            $data ->name = $_POST['name'];
+            $data ->telephone = $_POST['telephone'];
+            $data ->department_list = "[4]";
+            $data ->update_time = $_POST['update_time'];
+            $data ->save();
+            //查找新增的员工ID
+            $id = $data->attributes['id'];
+        }else{
+            $id = $staff['id'];
+        };  
 
         //新增供应商
         $data = new Supplier;
         $data ->account_id = $_COOKIE['account_id'];
-        $data ->type_id = 20;
+        $data ->type_id = $_POST['supplier_type'];
         $data ->staff_id = $id;
         $data ->contract_url = "";
         $data ->update_time = $_POST['update_time'];

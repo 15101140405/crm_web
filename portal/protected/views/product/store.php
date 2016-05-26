@@ -46,8 +46,8 @@
                     <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2&from=wedding_feast">
                         <img class="icon" src="images/set01.png" alt="">
                         <div class="info flex1">
-                            <p>婚宴</p>
-                            <p>20元起</p>
+                            <p> 婚  宴</p>
+                            <p style='font-size:10px;'>WEDDING FEAST</p>
                         </div>
                     </a>
                 </li>
@@ -55,8 +55,8 @@
                     <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1&from=meeting_feast">
                         <img class="icon" src="images/set02.png" alt="">
                         <div class="info flex1">
-                            <p>会议餐</p>
-                            <p>20元起</p>
+                            <p> 会议餐</p>
+                            <p style='font-size:10px;'>MEETING FEAST</p>
                         </div>
                     </a>
                 </li>
@@ -65,7 +65,7 @@
                         <img class="icon" src="images/set03.png" alt="">
                         <div class="info flex1">
                             <p>婚礼套系</p>
-                            <p>20元起</p>
+                            <p style='font-size:10px;'>WEDDING SET</p>
                         </div>
                     </a>
                 </li>
@@ -74,7 +74,7 @@
                         <img class="icon" src="images/set04.png" alt="">
                         <div class="info flex1">
                             <p>会议套系</p>
-                            <p>20元起</p>
+                            <p style='font-size:10px;'>METTING SET</p>
                         </div>
                     </a>
                 </li>

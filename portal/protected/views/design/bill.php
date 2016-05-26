@@ -159,7 +159,8 @@ $arr_locate = array(
                     </div>
                     <div>
                         <p class="price">&yen;<?php echo $arr_wed_feast['unit_price'] . $arr_wed_feast['unit']; ?></p>
-                        <p class="fee"><?php echo $arr_wed_feast['service_charge_ratio']; ?>服务费</p>
+                        <p class="fee">服务费：<?php echo $arr_wed_feast['service_charge_ratio']; ?>%</p>
+                        <p class="fee">备注：<?php echo $arr_wed_feast['remark']; ?></p>
                     </div>
                     <span class="account">X <?php echo $arr_wed_feast['table_num']; ?></span>
                 </li>

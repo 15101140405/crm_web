@@ -91,7 +91,7 @@
                 file_dialog_start_handler: fileDialogStart,
             };
             swfu2 = new SWFUpload(settings2);
-            swfu3 = new SWFUpload(settings3);
+            /*swfu3 = new SWFUpload(settings3);*/
         }
         function queueComplete() {
             //location.href="";
@@ -215,6 +215,16 @@
                 <div class="clearfix">
                     <label for="">手机号：</label><input id="telephone" class="inputItem" type="text">
                 </div>
+                <div class="clearfix">
+                    <label for="">供应商类别：</label>
+                    <div class="select_c left" id="supplier_type">
+                        <select name="" id="unit">
+                            <option value="灯光" supplier-type="8">灯光</option>
+                            <option value="音响" supplier-type="23">音响</option>
+                            <option value="视频" supplier-type="9">视频</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="btn_box right">
                     <button id="insert_supplier">保存</button>
                 </div>
@@ -298,11 +308,12 @@
             var data = {
                 name : $("#supplier_name").val(),
                 telephone : $("#telephone").val(),
+                supplier_type : $("#supplier_type option:selected").attr("supplier-type"),
                 update_time : time
             };
             /*if(data.)*/
             $.post("<?php echo $this->createUrl("background/supplier_add");?>",data,function(){
-                location.href="<?php echo $this->createUrl("background/upload_product");?>";
+                location.href="<?php echo $this->createUrl("background/upload_product_lss");?>";
             });
         });
 
@@ -326,7 +337,7 @@
             }else{
                 $.post("<?php echo $this->createUrl("background/tap_add");?>",data,function(){
                     $.cookie('img1', null); 
-                    location.href = "<?php echo $this->createUrl("background/upload_product");?>";
+                    location.href = "<?php echo $this->createUrl("background/upload_product_lss");?>";
                 });
             };
         });

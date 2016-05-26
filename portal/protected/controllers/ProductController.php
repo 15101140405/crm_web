@@ -335,7 +335,6 @@ class ProductController extends InitController
 
             $pricename = "final_price";
             $table = "Wedding_set";
-            $imgtable = "Wedding_set_img";
             $idname = "wedding_set_id";
             
         } else {//婚宴，会议餐
@@ -352,15 +351,16 @@ class ProductController extends InitController
                     )
             ));
 
-        $img = $imgtable::model()->findAll(array(
-                'condition' => $idname.' = :id && img_type = :img_type',
-                'params' => array(
-                        ':id' => $id,
-                        ':img_type' => 2
-                    )
-            ));
+        $result = yii::app()->db->createCommand("select case_resources.CR_Path as img_url from case_resources where CI_ID in ( select CI_ID from case_info where CI_Type=5 and CT_ID=".$_GET['product_id'].") order by CR_Sort");
+        $img = $result->queryAll();
+        if(!empty($img)){
+            foreach ($img as $key => $value) {
+                $t=explode(".", $value['img_url']);
+                $img[$key]['img_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+            };
+        };
 
-
+        /*print_r($_SESSION['staff_hotel_id']);die;*/
         $this->render('set_detail',array(
             "supplier_product"  => $supplier_product,
             "img"               => $img

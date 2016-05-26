@@ -147,6 +147,7 @@ class DesignController extends InitController
                 $item['unit'] = $value->unit;
                 $item['actual_unit_cost'] = $value->actual_unit_cost;
                 $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $item['remark'] = $value->remark;
                 $wed_feast[] = $item;
             };
             /*print_r($wed_feast);*/
@@ -165,13 +166,14 @@ class DesignController extends InitController
                 'unit' => $supplier_product2['unit'],
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
+                'remark' => $wed_feast[0]['remark'],
                 'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01),
                 'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
                 'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01,
                 'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01)),
                 /*'remark' => $wed_feast['']*/
             );
-        }
+        };
         /*print_r($arr_wed_feast);*/
 
         /*********************************************************************************************************************/
@@ -3625,6 +3627,53 @@ class DesignController extends InitController
         // }
         $result['code'] = $code;
         echo json_encode($result);
+    }
+
+    public function actionSelect_supplier()
+    {
+        $result = yii::app()->db->createCommand("select staff.name as supplier_name,supplier.id as id from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_SESSION['account_id']." and type_id=20 order by supplier.update_time DESC");
+        $supplier = $result->queryAll();
+        $this->render("select_supplier",array(
+                'supplier' => $supplier,
+            ));
+    }
+
+    public function actionSelect_supplier_add()
+    {
+        $this->render("select_supplier_add");
+    }
+
+    public function actionSupplier_add()
+    {
+        $staff = Staff::model()->find(array(
+                'condition' => 'telephone=:telephone',
+                'params' => array(
+                        ':telephone' => $_POST['telephone']
+                    )
+            ));
+        $id="";
+        if(empty($staff)){
+            $data = new Staff;
+            $data ->account_id = $_SESSION['account_id'];
+            $data ->name = $_POST['name'];
+            $data ->telephone = $_POST['telephone'];
+            $data ->department_list = "[4]";
+            $data ->update_time = $_POST['update_time'];
+            $data ->save();
+            //查找新增的员工ID
+            $id = $data->attributes['id'];
+        }else{
+            $id = $staff['id'];
+        };  
+
+        //新增供应商
+        $data = new Supplier;
+        $data ->account_id = $_SESSION['account_id'];
+        $data ->type_id = $_POST['supplier_type'];
+        $data ->staff_id = $id;
+        $data ->contract_url = "";
+        $data ->update_time = $_POST['update_time'];
+        $data ->save();
     }
 
 }

@@ -213,10 +213,10 @@ class PrintController extends InitController
                 'unit' => $supplier_product2['unit'],
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
-                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])*$order_discount['feast_discount'],
+                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01)*$order_discount['feast_discount']*0.1,
                 'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
-                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'],
-                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio'])/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio'])),
+                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01,
+                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']*0.01)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']*0.01)),
                 /*'remark' => $wed_feast['']*/
             );
         }
@@ -903,14 +903,17 @@ class PrintController extends InitController
                 $criteria3->addCondition("id=:id");
                 $criteria3->params[':id']=$decoration[$key]['product_id']; 
                 $supplier_product2 = SupplierProduct::model()->find($criteria3);
-
-                
-                
+                $ref_pic_url = "";
+                $t = explode(".", $supplier_product2['ref_pic_url']);
+                if(isset($t[0]) && isset($t[1])){
+                    $ref_pic_url = "http://file.cike360.com".$t[0]."_sm.".$t[1];    
+                };
                 $item= array(
                     'name' => $supplier_product2['name'],
                     'unit_price' => $decoration[$key]['actual_price'],
                     'unit' => $supplier_product2['unit'],
                     'amount' => $decoration[$key]['unit'],
+                    'ref_pic_url' => $ref_pic_url,
                 );
                 $arr_decoration[]=$item;
                 $arr_decoration_total['total_price'] += $decoration[$key]['actual_price']*$decoration[$key]['unit'];
@@ -1318,7 +1321,7 @@ $html = '<html>
 <table class="tftable" border="1">
 <tr><th colspan="3">基本信息</th></tr>
 <tr><td width="10%">订单编号</td><td colspan="2" width="90%">'.$order_data["id"].'</td></tr>
-<tr><td width="10%">新娘信息</td><td width="50%">'.$order_data["groom_name"].'</td><td width="40%">'.$order_data["groom_phone"].'</td></tr>
+<tr><td width="10%">新郎信息</td><td width="50%">'.$order_data["groom_name"].'</td><td width="40%">'.$order_data["groom_phone"].'</td></tr>
 <tr><td width="10%">新娘信息</td><td width="50%">'.$order_data["bride_name"].'</td><td width="40%">'.$order_data["bride_phone"].'</td></tr>
 <tr><td width="10%">策划师</td><td colspan="2" width="90%">'.$order_data["designer_name"].'</td></tr>
 <tr><td width="10%">婚宴折扣</td><td colspan="2" width="90%">'.$order_data["feast_discount"].'</td></tr>
@@ -1327,17 +1330,15 @@ $html = '<html>
 <tr><td width="10%">订单总价</td><td colspan="2" width="90%">'.$arr_order_total['total_price'].'</td></tr>
 </table>
 
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+';
 
 /*<!-- 婚宴 -->*/
 if (!empty($arr_wed_feast)) {
 
 $html .= '<table class="tftable" border="1">
 <tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>
-<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">'.$arr_wed_feast['name'].'</td><td width="20%"></td><td width="4%">'.$arr_wed_feast['table_num'].'</td><td width="9%">'.$arr_wed_feast['unit'].'</td><td width="18%">'.$arr_wed_feast['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>
-</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">'.$arr_wed_feast['name'].'</td><td width="20%"></td><td width="4%">'.$arr_wed_feast['table_num'].'</td><td width="9%">'.$arr_wed_feast['unit'].'</td><td width="18%">'.$arr_wed_feast['unit_price'].'</td><td width="23%"> </td></tr>
+</table>';
 
 
 };
@@ -1358,18 +1359,16 @@ $html .= '<table class="tftable" border="1">
 
 
         if($i==1){
-$html .= '<tr><td width="10%" rowspan = "'.count($arr_light).'">灯光</td><td width="4%">'.$i.'</td><td width="12%">'.$light['name'].'</td><td width="20%"></td><td width="4%">'.$light['amount'].'</td><td width="4%">'.$light['unit'].'</td><td width="23%">'.$light['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .= '<tr><td width="10%" rowspan = "'.count($arr_light).'">灯光</td><td width="4%">'.$i.'</td><td width="12%">'.$light['name'].'</td><td width="20%"></td><td width="4%">'.$light['amount'].'</td><td width="4%">'.$light['unit'].'</td><td width="23%">'.$light['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$light['name'].'</td><td width="20%"></td><td width="4%">'.$light['amount'].'</td><td width="4%">'.$light['unit'].'</td><td width="23%">'.$light['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$light['name'].'</td><td width="20%"></td><td width="4%">'.$light['amount'].'</td><td width="4%">'.$light['unit'].'</td><td width="23%">'.$light['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .= '</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .= '</table>';
 };
 
 
@@ -1387,17 +1386,15 @@ $html .='<table class="tftable" border="1">
             }
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_video).'">视频</td><td width="4%">'.$i.'</td><td width="12%">'.$video['name'].'</td><td width="20%"></td><td width="4%">'.$video['amount'].'</td><td width="4%">'.$video['unit'].'</td><td width="23%">'.$video['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_video).'">视频</td><td width="4%">'.$i.'</td><td width="12%">'.$video['name'].'</td><td width="20%"></td><td width="4%">'.$video['amount'].'</td><td width="4%">'.$video['unit'].'</td><td width="23%">'.$video['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$video['name'].'</td><td width="20%"></td><td width="4%">'.$video['amount'].'</td><td width="4%">'.$video['unit'].'</td><td width="23%">'.$video['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$video['name'].'</td><td width="20%"></td><td width="4%">'.$video['amount'].'</td><td width="4%">'.$video['unit'].'</td><td width="23%">'.$video['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
   
     };
@@ -1416,18 +1413,16 @@ $html .='<table class="tftable" border="1">
             }
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_host).'">主持人</td><td width="4%">'.$i.'</td><td width="12%">'.$host['name'].'</td><td width="20%"></td><td width="4%">'.$host['amount'].'</td><td width="4%">'.$host['unit'].'</td><td width="23%">'.$host['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_host).'">主持人</td><td width="4%">'.$i.'</td><td width="12%">'.$host['name'].'</td><td width="20%"></td><td width="4%">'.$host['amount'].'</td><td width="4%">'.$host['unit'].'</td><td width="23%">'.$host['unit_price'].'</td><td width="23%"> </td></tr>';
 
             $i++;
             }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$host['name'].'</td><td width="20%"></td><td width="4%">'.$host['amount'].'</td><td width="4%">'.$host['unit'].'</td><td width="23%">'.$host['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$host['name'].'</td><td width="20%"></td><td width="4%">'.$host['amount'].'</td><td width="4%">'.$host['unit'].'</td><td width="23%">'.$host['unit_price'].'</td><td width="23%"> </td></tr>';
             $i++;
             }
         };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
  
     };
 
@@ -1446,18 +1441,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_camera).'">摄像</td><td width="4%">'.$i.'</td><td width="12%">'.$camera['name'].'</td><td width="20%"></td><td width="4%">'.$camera['amount'].'</td><td width="4%">'.$camera['unit'].'</td><td width="23%">'.$camera['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_camera).'">摄像</td><td width="4%">'.$i.'</td><td width="12%">'.$camera['name'].'</td><td width="20%"></td><td width="4%">'.$camera['amount'].'</td><td width="4%">'.$camera['unit'].'</td><td width="23%">'.$camera['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">.'.$camera['name'].'</td><td width="20%"></td><td width="4%">'.$camera['amount'].'</td><td width="4%">'.$camera['unit'].'</td><td width="23%">'.$camera['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">.'.$camera['name'].'</td><td width="20%"></td><td width="4%">'.$camera['amount'].'</td><td width="4%">'.$camera['unit'].'</td><td width="23%">'.$camera['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
 
     };
@@ -1477,18 +1470,16 @@ $html .='<table class="tftable" border="1">
         }
         if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_photo).'">摄影</td><td width="4%">'.$i.'</td><td width="12%">'.$photo['name'].'</td><td width="20%"></td><td width="4%">'.$photo['amount'].'</td><td width="4%">'.$photo['unit'].'</td><td width="23%">'.$photo['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_photo).'">摄影</td><td width="4%">'.$i.'</td><td width="12%">'.$photo['name'].'</td><td width="20%"></td><td width="4%">'.$photo['amount'].'</td><td width="4%">'.$photo['unit'].'</td><td width="23%">'.$photo['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$photo['name'].'</td><td width="20%"></td><td width="4%">'.$photo['amount'].'</td><td width="4%">'.$photo['unit'].'</td><td width="23%">'.$photo['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$photo['name'].'</td><td width="20%"></td><td width="4%">'.$photo['amount'].'</td><td width="4%">'.$photo['unit'].'</td><td width="23%">'.$photo['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
 
     };
@@ -1509,18 +1500,16 @@ $html .= '<table class="tftable" border="1">
 
             if($i==1){
 
-$html .= '<tr><td width="10%" rowspan = "'.count($arr_makeup).'">化妆</td><td width="4%">'.$i.'</td><td width="12%">'.$makeup['name'].'</td><td width="20%"></td><td width="4%">'.$makeup['amount'].'</td><td width="4%">'.$makeup['unit'].'</td><td width="23%">'.$makeup['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .= '<tr><td width="10%" rowspan = "'.count($arr_makeup).'">化妆</td><td width="4%">'.$i.'</td><td width="12%">'.$makeup['name'].'</td><td width="20%"></td><td width="4%">'.$makeup['amount'].'</td><td width="4%">'.$makeup['unit'].'</td><td width="23%">'.$makeup['unit_price'].'</td><td width="23%"> </td></tr>';
 
             $i++;
             }else{
 
-$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$makeup['name'].'</td><td width="20%"></td><td width="4%">'.$makeup['amount'].'</td><td width="4%">'.$makeup['unit'].'</td><td width="23%">'.$makeup['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$makeup['name'].'</td><td width="20%"></td><td width="4%">'.$makeup['amount'].'</td><td width="4%">'.$makeup['unit'].'</td><td width="23%">'.$makeup['unit_price'].'</td><td width="23%"> </td></tr>';
             $i++;
             }
         };
-$html .= '</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .= '</table>';
 
  
     };
@@ -1541,18 +1530,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_other).'">其他</td><td width="4%">'.$i.'</td><td width="12%">'.$other['name'].'</td><td width="20%"></td><td width="4%">'.$other['amount'].'</td><td width="4%">'.$other['unit'].'</td><td width="23%">'.$other['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_other).'">其他</td><td width="4%">'.$i.'</td><td width="12%">'.$other['name'].'</td><td width="20%"></td><td width="4%">'.$other['amount'].'</td><td width="4%">'.$other['unit'].'</td><td width="23%">'.$other['unit_price'].'</td><td width="23%"> </td></tr>';
 
             $i++;
             }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$other['name'].'</td><td width="20%"></td><td width="4%">'.$other['amount'].'</td><td width="4%">'.$other['unit'].'</td><td width="23%">'.$other['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$other['name'].'</td><td width="20%"></td><td width="4%">'.$other['amount'].'</td><td width="4%">'.$other['unit'].'</td><td width="23%">'.$other['unit_price'].'</td><td width="23%"> </td></tr>';
             $i++;
             }
         };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
     };
 
@@ -1572,18 +1559,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_decoration).'">场地布置</td><td width="4%">'.$i.'</td><td width="12%">'.$decoration['name'].'</td><td width="20%"></td><td width="4%">'.$decoration['amount'].'</td><td width="4%">'.$decoration['unit'].'</td><td width="23%">'.$decoration['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_decoration).'">场地布置</td><td width="4%">'.$i.'</td><td width="12%">'.$decoration['name'].'</td><td width="20%"></td><td width="4%">'.$decoration['amount'].'</td><td width="4%">'.$decoration['unit'].'</td><td width="23%">'.$decoration['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$decoration['name'].'</td><td width="20%"></td><td width="4%">'.$decoration['amount'].'</td><td width="4%">'.$decoration['unit'].'</td><td width="23%">'.$decoration['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$decoration['name'].'</td><td width="20%"></td><td width="4%">'.$decoration['amount'].'</td><td width="4%">'.$decoration['unit'].'</td><td width="23%">'.$decoration['unit_price'].'</td><td width="23%"><img style="height:150px" src="'.$decoration['ref_pic_url'].'"></img></td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
 
     };
@@ -1604,18 +1589,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_graphic).'">平面设计</td><td width="4%">'.$i.'</td><td width="12%">'.$graphic['name'].'</td><td width="20%"></td><td width="4%">'.$graphic['amount'].'</td><td width="4%">'.$graphic['unit'].'</td><td width="23%">'.$graphic['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_graphic).'">平面设计</td><td width="4%">'.$i.'</td><td width="12%">'.$graphic['name'].'</td><td width="20%"></td><td width="4%">'.$graphic['amount'].'</td><td width="4%">'.$graphic['unit'].'</td><td width="23%">'.$graphic['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$graphic['name'].'</td><td width="20%"></td><td width="4%">'.$graphic['amount'].'</td><td width="4%">'.$graphic['unit'].'</td><td width="23%">'.$graphic['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$graphic['name'].'</td><td width="20%"></td><td width="4%">'.$graphic['amount'].'</td><td width="4%">'.$graphic['unit'].'</td><td width="23%">'.$graphic['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
 
     };
@@ -1636,18 +1619,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_film).'">视频设计</td><td width="4%">'.$i.'</td><td width="12%">'.$film['name'].'</td><td width="20%"></td><td width="4%">'.$film['amount'].'</td><td width="4%">'.$film['unit'].'</td><td width="23%">'.$film['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_film).'">视频设计</td><td width="4%">'.$i.'</td><td width="12%">'.$film['name'].'</td><td width="20%"></td><td width="4%">'.$film['amount'].'</td><td width="4%">'.$film['unit'].'</td><td width="23%">'.$film['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$film['name'].'</td><td width="20%"></td><td width="4%">'.$film['amount'].'</td><td width="4%">'.$film['unit'].'</td><td width="23%">'.$film['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$film['name'].'</td><td width="20%"></td><td width="4%">'.$film['amount'].'</td><td width="4%">'.$film['unit'].'</td><td width="23%">'.$film['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
 
     };
@@ -1667,18 +1648,16 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_designer).'">策划费&杂费</td><td width="4%">'.$i.'</td><td width="12%">'.$designer['name'].'</td><td width="20%"></td><td width="4%">'.$designer['amount'].'</td><td width="4%">'.$designer['unit'].'</td><td width="23%">'.$designer['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_designer).'">策划费&杂费</td><td width="4%">'.$i.'</td><td width="12%">'.$designer['name'].'</td><td width="20%"></td><td width="4%">'.$designer['amount'].'</td><td width="4%">'.$designer['unit'].'</td><td width="23%">'.$designer['unit_price'].'</td><td width="23%"> </td></tr>';
 
             $i++;
             }else{
 
-$html .='<tr><td width="4%">.'.$i.'</td><td width="12%">'.$designer['name'].'</td><td width="20%"></td><td width="4%">'.$designer['amount'].'</td><td width="4%">'.$designer['unit'].'</td><td width="23%">'.$designer['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">.'.$i.'</td><td width="12%">'.$designer['name'].'</td><td width="20%"></td><td width="4%">'.$designer['amount'].'</td><td width="4%">'.$designer['unit'].'</td><td width="23%">'.$designer['unit_price'].'</td><td width="23%"> </td></tr>';
             $i++;
             }
         };
-$html .='</table>
-
-<p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
+$html .='</table>';
 
   
     };
@@ -1758,6 +1737,7 @@ $html .='</body>
 
         //發件人 
         $replyto = '2837745713@qq.com'; 
+        //$replyto = 'zhangsiheng0820@126.com'; 
 
         //內容 
         $message = ""; 
@@ -2226,7 +2206,7 @@ if (!empty($arr_wed_feast)) {
 
 $html .= '<table class="tftable" border="1">
 <tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>
-<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">'.$arr_wed_feast['name'].'</td><td width="20%"></td><td width="4%">'.$arr_wed_feast['table_num'].'</td><td width="9%">'.$arr_wed_feast['unit'].'</td><td width="18%">'.$arr_wed_feast['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>
+<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">'.$arr_wed_feast['name'].'</td><td width="20%"></td><td width="4%">'.$arr_wed_feast['table_num'].'</td><td width="9%">'.$arr_wed_feast['unit'].'</td><td width="18%">'.$arr_wed_feast['unit_price'].'</td><td width="23%"> </td></tr>
 </table>
 
 <p><small>Created with the <a href="http://www.textfixer.com/html/html-table-generator.php" target="_blank">HTML Table Generator</a></small></p>';
@@ -2243,7 +2223,7 @@ $html .='<table class="tftable" border="1">
 <tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>';
             
 
-$html .='<tr><td width="10%" rowspan = "1">场地费</td><td width="4%">'.$i.'</td><td width="12%">'.$arr_changdi_fee['name'].'</td><td width="20%"></td><td width="4%">'.$arr_changdi_fee['amount'].'</td><td width="4%">'.$arr_changdi_fee['unit'].'</td><td width="23%">'.$arr_changdi_fee['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "1">场地费</td><td width="4%">'.$i.'</td><td width="12%">'.$arr_changdi_fee['name'].'</td><td width="20%"></td><td width="4%">'.$arr_changdi_fee['amount'].'</td><td width="4%">'.$arr_changdi_fee['unit'].'</td><td width="23%">'.$arr_changdi_fee['unit_price'].'</td><td width="23%"> </td></tr>';
 
 
 $html .='</table>
@@ -2263,12 +2243,12 @@ $html .= '<table class="tftable" border="1">
     foreach ($arr_light as $key => $value) {
 
         if($i==1){
-$html .= '<tr><td width="10%" rowspan = "'.count($arr_light).'">灯光</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .= '<tr><td width="10%" rowspan = "'.count($arr_light).'">灯光</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%"> </td></tr>';
 
         $i++;
         }else{
 
-$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .= '<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
@@ -2290,11 +2270,11 @@ $html .='<table class="tftable" border="1">
 
             if($i==1){
 
-$html .='<tr><td width="10%" rowspan = "'.count($arr_video).'">视频</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:1 Cell:8</td></tr>';
+$html .='<tr><td width="10%" rowspan = "'.count($arr_video).'">视频</td><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }else{
 
-$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%">Row:2 Cell:8</td></tr>';
+$html .='<tr><td width="4%">'.$i.'</td><td width="12%">'.$value['name'].'</td><td width="20%"></td><td width="4%">'.$value['amount'].'</td><td width="4%">'.$value['unit'].'</td><td width="23%">'.$value['unit_price'].'</td><td width="23%"> </td></tr>';
         $i++;
         }
     };
