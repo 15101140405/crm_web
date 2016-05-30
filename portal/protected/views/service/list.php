@@ -41,7 +41,7 @@
     <section class="compere_container">
         <ul class="compere_list" id="person">
 <?php foreach ($service_data as $key => $value) {?>
-            <li class="flexbox v_center" starting-price="<?php echo $value['starting_price']?>" gender="<?php echo $value['gender']?>" service-person-id="<?php echo $value['id']?>">
+            <li class="flexbox v_center" starting-price="<?php echo $value['starting_price']?>" gender="<?php echo $value['gender']?>" service-person-id="<?php echo $value['id']?>" supplier-id="<?php echo $value['supplier_id']?>">
                 <img class="compere_img" src="<?php echo $value['avatar']?>" />
                 <div class="flex1 info_box">
                     <h3 class="tit"><?php echo $value['name']?><!-- <span><?php/* echo $value['team_name']*/?></span> --></h3>
@@ -139,18 +139,18 @@
     $(function () {
 
         //导航gen
-        $("#product_store").on("click",function(){
-            location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
-        });
-        $("#index").on("click",function(){
-            location.href = "<?php echo $this->createUrl('order/index');?>&from=";
-        });
-        $("#order").on("click",function(){
-            location.href = "<?php echo $this->createUrl('order/order');?>";
-        });
-        $("#finance_report").on("click",function(){            
-            location.href = "<?php echo $this->createUrl('report/financereport');?>";
-        });
+        // $("#product_store").on("click",function(){
+        //     location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+        // });
+        // $("#index").on("click",function(){
+        //     location.href = "<?php echo $this->createUrl('order/index');?>&from=";
+        // });
+        // $("#order").on("click",function(){
+        //     location.href = "<?php echo $this->createUrl('order/order');?>";
+        // });
+        // $("#finance_report").on("click",function(){            
+        //     location.href = "<?php echo $this->createUrl('report/financereport');?>";
+        // });
 
         //筛选
         $("#sure").on("click",function(){
@@ -214,7 +214,7 @@
                 var tab = "";
             };
 
-            location.href = "<?php echo $this->createUrl('service/personnel_host');?>&from=design&type_id=<?php echo $_GET['type_id']?>&tab=" + tab + "&service_person_id="+$(this).attr("service-person-id");
+            location.href = "<?php echo $this->createUrl('service/personnel_host');?>&from=design&tab=" + tab + "&service_person_id=" + $(this).attr("service-person-id") + "&supplier_id=" + $(this).attr("supplier-id");
         });
 
     })

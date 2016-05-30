@@ -21,11 +21,11 @@
         <!-- <div class="r_btn" data-icon="&#xe767;"></div> -->
     </div>
     <div class="int_ulist_module">
-        <ul class="int_ulist">
+        <ul class="charge_list">
             <?php foreach ($supplier_product as $value) { ?>
                 <li class="int_ulist_item list_more" supplier-id="<?php echo $value['supplier_id']?>" product-id="<?php echo $value['id']; ?>">
                     <span><?php echo $value['name']; ?></span>
-                    <div class="align_r supplier_type">[<?php echo $value['unit_price']?>]</div>
+                    <div style="color:green;">[<?php echo $value['unit_price']?>]</div>
                 </li>
             <?php } ?>
         </ul>
@@ -33,14 +33,26 @@
 </article>
 <script>
     $(function () {
-        $(".int_ulist li").on("click", function () {
+        <?php
+        foreach ($selected as $key => $value) {
+        ?>
+            $("[product-id='<?php echo $value['product_id']?>']").removeClass("list_more");
+            $("[product-id='<?php echo $value['product_id']?>']").addClass("selected");
+        <?php 
+        }
+        ?>
+        $("li.list_more").on("click", function () {
             if('<?php echo $_GET['order_id']?>' == ""){
                 location.href = "<?php echo $this->createUrl('product/selectorder');?>&category=2&from=&tab=" + $.util.param("tab") + "&product_id="+$(this).attr("product-id");    
             }else{
                 location.href = "<?php echo $this->createUrl('design/tpDetail');?>&tab=<?php echo $_GET['tab']?>&from=&order_id=<?php echo $_GET['order_id']?>&type=new&product_id="+$(this).attr("product-id");
             }
             
-        });
+        })
+        $("li.selected").on("click", function () {
+            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&tab=<?php echo $_GET['tab']?>&from=&order_id=<?php echo $_GET['order_id']?>&type=edit&product_id="+$(this).attr("product-id");
+        })
+;
     })
 </script>
 </body>

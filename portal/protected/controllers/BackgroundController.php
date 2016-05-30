@@ -294,7 +294,12 @@ class BackgroundController extends InitController
             foreach($list as  $key => $val){
                 if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
                     $t = explode(".", $val['CI_Pic']);
-                    $list[$key]["CI_Pic"]=$url.$t[0]."_sm.".$t[1];
+                    if(isset($t[0]) && $t[1]){
+                        $list[$key]["CI_Pic"]=$url.$t[0]."_sm.".$t[1];
+                    }else{
+                        $list[$key]["CI_Pic"]="images/cover.jpg";
+                    }
+                    
                 };
             };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
@@ -303,7 +308,7 @@ class BackgroundController extends InitController
                             ':account_id' => $_COOKIE['account_id']
                         )
                 ));
-            /*print_r($list);die;*/
+            /*print_r($tap);die;*/
             $this->render("index",array(
                     'case_data' => $list,
                     'tap' => $tap,
@@ -320,7 +325,12 @@ class BackgroundController extends InitController
                 ));
             foreach($product as  $key => $val){
                 $t = explode(".", $val['ref_pic_url']);
-                $product[$key]["ref_pic_url"]=$url.$t[0]."_sm.".$t[1];
+                if(isset($t[0]) && $t[1]){
+                        $product[$key]["ref_pic_url"]=$url.$t[0]."_sm.".$t[1];
+                    }else{
+                        $product[$key]["ref_pic_url"]="images/cover.jpg";
+                    }
+                
             };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
                     'condition' => 'account_id=:account_id',
@@ -433,7 +443,12 @@ class BackgroundController extends InitController
             $result = $result->queryAll();
             $item = array();
             $item['product'] = $result;
-            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            if(isset($t[0]) && isset($t[1])){
+                $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];    
+            }else{
+                $item['CR_Path'] = "images/cover.jpg";
+            };
+            
             $item['CR_ID'] = $value['CR_ID'];
             $item['CR_Sort'] = $value['CR_Sort'];
             $resources[] = $item;
@@ -445,7 +460,13 @@ class BackgroundController extends InitController
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
-        $Pic = $url.$t[0].'_sm.'.$t[1];
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];    
+        }else{
+            $Pic = "images/cover.jpg";
+        };
+        
 
         //取场布产品信息
         $product = SupplierProduct::model()->findAll(array(
@@ -459,7 +480,11 @@ class BackgroundController extends InitController
             ));
         foreach ($product as $key => $value) {
             $t = explode(".", $value['ref_pic_url']);
-            $product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];
+            if(isset($t[0]) && isset($t[1])){
+                $product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];
+            }else{
+                $product[$key]['ref_pic_url'] = "images/cover.jpg";
+            };
         };
         $tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
@@ -593,7 +618,11 @@ class BackgroundController extends InitController
             $result = $result->queryAll();
             $item = array();
             $item['product'] = $result;
-            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            if(isset($t[0]) && isset($t[1])){
+                $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            }else{
+                $item['CR_Path'] = "images/cover.jpg";
+            };
             $item['CR_ID'] = $value['CR_ID'];
             $item['CR_Sort'] = $value['CR_Sort'];
             $resources[] = $item;
@@ -605,7 +634,13 @@ class BackgroundController extends InitController
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
-        $Pic = $url.$t[0].'_sm.'.$t[1];
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];
+        }else{
+            $Pic = "images/cover.jpg";
+        };
+        
 
         //取场布产品信息
         $product = SupplierProduct::model()->findAll(array(
@@ -1022,7 +1057,12 @@ class BackgroundController extends InitController
             $result = $result->queryAll();
             $item = array();
             $item['product'] = $result;
-            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            if(isset($t[0]) && isset($t[1])){
+                $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            }else{
+                $item['CR_Path'] = "images/cover.jpg";
+            };
+            
             $item['CR_ID'] = $value['CR_ID'];
             $item['CR_Sort'] = $value['CR_Sort'];
             $resources[] = $item;
@@ -1034,6 +1074,13 @@ class BackgroundController extends InitController
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];
+        }else{
+            $Pic = "images/cover.jpg";
+        };
+        
         $Pic = $url.$t[0].'_sm.'.$t[1];
 
         //取场布产品信息
@@ -1082,7 +1129,11 @@ class BackgroundController extends InitController
             $result = $result->queryAll();
             $item = array();
             $item['product'] = $result;
-            $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            if(isset($t[0]) && isset($t[1])){
+                $item['CR_Path'] = $url.$t[0].'_sm.'.$t[1];
+            }else{
+                $item['CR_Path'] = "images/cover.jpg";
+            };
             $item['CR_ID'] = $value['CR_ID'];
             $item['CR_Sort'] = $value['CR_Sort'];
             $resources[] = $item;
@@ -1094,7 +1145,12 @@ class BackgroundController extends InitController
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
         $t= explode('.', $case['CI_Pic']);
-        $Pic = $url.$t[0].'_sm.'.$t[1];
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];
+        }else{
+            $Pic = "images/cover.jpg";
+        };
 
         //取场布产品信息
         /*$product = SupplierProduct::model()->findAll(array(
@@ -1129,6 +1185,13 @@ class BackgroundController extends InitController
         //取案例信息
         $case = CaseInfo::model()->findByPk($_GET['ci_id']);
         /*print_r($case['CI_Pic']);die;*/
+        $t= explode('.', $case['CI_Pic']);$Pic="";
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];    
+        }else{
+            $Pic = "images/cover.jpg";
+        };
         $t= explode('.', $case['CI_Pic']);
         $Pic="";
         if(isset($t[0]) && isset($t[1])){
@@ -1257,6 +1320,7 @@ class BackgroundController extends InitController
             ));
         $product = SupplierProduct::model()->findByPk($_GET['product_id']);
         $t = explode(".", $product['ref_pic_url']);
+        $picture="";
         if(isset($t[0]) && isset($t[1])){
             $picture = "http://file.cike360.com".$t[0]."_sm.".$t[1];
         }else{

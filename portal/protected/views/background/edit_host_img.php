@@ -199,6 +199,60 @@
             <li>|</li>
             <li><a href="javascript:;">关于我们</a>
             </li>
+            </ul>
+            <p>京公网安备11010502022785号 京公网安备11010502022785号</p>
+            <p>京公网安备11010502022785号</p>
+        </div>
+    <!--弹层1-->
+    <!-- <div class="msgbox msgbox_class">
+        <div class="msgbox_c" style="width:860px;left:15%;top:10%;height:520px; overflow:scroll">
+            <div class="tit_box clearfix">
+                <h2 class="left">绑定产品</h2>
+                <img class="right close" src="images/close.jpg" alt="">
+            </div>
+            <div class="index_con_box">
+                <div class="con" style="padding-top:0px;">
+                    <div class="top clearfix">
+                        <div class="left clearfix">
+                            <div class="select_box left" id="shaixuan1">
+                                <div class="my_select clearfix">
+                                    <span class="select_con">请选择</span>
+                                    <span class="down"></span>
+                                </div>
+                                <select class="select_list" name="" id="select_type">
+                                    <option value="请选择" type-id="0">请选择</option>
+                                    <option value="" type-id=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                <ul class="upload_list" id="product_item">
+                    <li class="clearfix" tap='' product-id ="">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="" alt="">
+                                <span>私密视频</span>
+                            </div>
+                            <div class="video_info left">
+                                <h3></h3>
+                                <div class="state_box clearfix">
+                                    <img class="left" src="images/up06.jpg" alt="">
+                                    <span class="left"></span>
+                                    <span class="from left">来自：爱奇艺网页</span>
+                                </div>
+                                <p class="tag">标签:<span>分销</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <span class="left state">¥元／</span>
+                            <a class="edit_btn left sure_bind" href="javascript:;">确定</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> -->
         </ul>
         <p>京公网安备11cd010502022785号 京公网安备11010502022785号</p>
         <p>京公网安备11010502022785号</p>
@@ -217,6 +271,22 @@
                 CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
             };
             if($("#resources_list").has("li").length == 0){data.CR_Sort = 0};
+            if($("#resources_list").find("li").length == 0){
+                var data = {
+                    CI_ID : <?php echo $_GET['ci_id']?>,
+                    case_resource : $.cookie('imgs'),
+                    account_id : $.cookie('account_id'),
+                    CR_Sort : 0
+                };
+            }else{
+                var data = {
+                    CI_ID : <?php echo $_GET['ci_id']?>,
+                    case_resource : $.cookie('imgs'),
+                    account_id : $.cookie('account_id'),
+                    CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
+                };
+            }
+                
             console.log(data);
             /*$(".tip").removeClass("hid");
             $(".tip").addClass("hid");

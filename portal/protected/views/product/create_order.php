@@ -244,7 +244,7 @@
                     bride_qq: $("#bride_qq").val(),
                     linkman_name : $("#linkman_name").val(),
                     linkman_phone : $("#linkman_phone").val(),
-                    set_id : "<?php echo $_GET['product_id'];?>",
+                    set_id : "<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>",
                 };
             }else{*/
             new_order_info = {
@@ -270,6 +270,29 @@
                 set_id : "<?php echo $_GET['product_id'];?>",
                 remark : $("#remark").val(),
             };
+            }else{
+                new_order_info = {
+                    order_date: order_date,
+                    end_time: end_time, 
+                    update_time : time,
+                    /*price : $("#price").val(),*/
+                    amount : $("#amount").val(),
+                    /*cost : $("#cost").val(),*/
+                    /*service_charge_ratio : $("#fuwufei_input").val(),*/
+                    groom_name: $("#groom_name").val(),
+                    groom_phone: $("#groom_phone").val(),
+                    groom_wechat: $("#groom_wechat").val(),
+                    groom_qq: $("#groom_qq").val(),
+                    bride_name: $("#bride_name").val(),
+                    bride_phone: $("#bride_phone").val(),
+                    bride_wechat: $("#bride_wechat").val(),
+                    bride_qq: $("#bride_qq").val(),
+                    linkman_name : $("#linkman_name").val(),
+                    linkman_phone : $("#linkman_phone").val(),
+                    product_id : "<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>",
+                    remark : $("#remark").val(),
+                };
+            }
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
                 console.log(retval);

@@ -21,7 +21,7 @@
     <div class="order_abstract mar_b10">
 
         <?php
-        print_r($arr_category_host);die;
+        // print_r($arr_category_host);die;
         ?>
 
         <p class="title">总价 &yen;<?php echo $serve_bill['total']; ?></p>

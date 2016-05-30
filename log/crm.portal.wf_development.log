@@ -406,3 +406,11 @@ in C:\xampp\htdocs\crm_web_new\common\base\InitController.php (186)
 in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (77)
 in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (19)
 in C:\xampp\htdocs\crm_web_new\common\base\InitController.php (186)
+2016/05/25 10:10:48 [error] [application] [ Guest ] portal: {"code":404,"type":"CHttpException","errorCode":0,"message":"\u65e0\u6cd5\u89e3\u6790\u8bf7\u6c42 \"store\"\u3002","file":"C:\\xampp\\htdocs\\crm_web_new\\library\\framework\\yii\\framework\\web\\CWebApplication.php","line":286,"trace":"#0 C:\\xampp\\htdocs\\crm_web_new\\library\\framework\\yii\\framework\\web\\CWebApplication.php(141): CWebApplication->runController('store')\n#1 C:\\xampp\\htdocs\\crm_web_new\\library\\framework\\yii\\framework\\base\\CApplication.php(180): CWebApplication->processRequest()\n#2 C:\\xampp\\htdocs\\crm_web_new\\portal\\index.php(26): CApplication->run()\n#3 {main}","traces":[{"file":"C:\\xampp\\htdocs\\crm_web_new\\library\\framework\\yii\\framework\\web\\CWebApplication.php","line":141,"function":"runController","class":"CWebApplication","type":"->","args":["store"]},{"file":"C:\\xampp\\htdocs\\crm_web_new\\library\\framework\\yii\\framework\\base\\CApplication.php","line":180,"function":"processRequest","class":"CWebApplication","type":"->","args":[]},{"file":"C:\\xampp\\htdocs\\crm_web_new\\portal\\index.php","line":26,"function":"run","class":"CApplication","type":"->","args":[]}]}
+in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (35)
+in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (18)
+in C:\xampp\htdocs\crm_web_new\common\base\InitController.php (186)
+2016/05/25 10:10:48 [error] [application] Failed logging to db! 
+in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (77)
+in C:\xampp\htdocs\crm_web_new\common\form\LogForm.php (19)
+in C:\xampp\htdocs\crm_web_new\common\base\InitController.php (186)

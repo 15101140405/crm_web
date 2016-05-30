@@ -108,16 +108,16 @@ $(function  () {
     // li点击跳转
     $(".order_list li").on("click",function(){
         if ("<?php echo $_GET['tab'];?>" == "set") {
-            location.href = "<?php echo $this->createUrl('product/select_set');?>&set_id=<?php echo $_GET['product_id']?>&category=<?php echo $_GET['category']?>&order_id=" + $(this).attr("order-id") + "&order_type=" + $(this).attr("order-type");
+            location.href = "<?php echo $this->createUrl('product/select_set');?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&category=<?php echo $_GET['category']?>&order_id=" + $(this).attr("order-id") + "&order_type=" + $(this).attr("order-type");
         } else{
-            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
+            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&type=new&tab=<?php echo $_GET['tab'];?>&from=selectorder<?php echo $_GET['from'];?>&order_id=" + $(this).attr("order-id");
         };
 
     });
 
     //新增订单
     $(".add_btn").on("click",function(){
-        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&category=<?php echo $_GET['category']?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
+        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&from=<?php echo $_GET['from']?>";
     });
 })
 </script>

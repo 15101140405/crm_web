@@ -2937,10 +2937,12 @@ class DesignController extends InitController
             "params" => array(":id" => $_GET['product_id']),
         ));
 
-        $orderproduct = OrderProduct::model()->find(array(
-            "condition" => "order_id = :order_id && product_id = :product_id",
-            "params" => array(":order_id" => $_GET['order_id'],':product_id' => $_GET['product_id']),
-        ));
+        if (!empty($_GET['order_id'])) {
+            $orderproduct = OrderProduct::model()->find(array(
+                "condition" => "order_id = :order_id && product_id = :product_id",
+                "params" => array(":order_id" => $_GET['order_id'],':product_id' => $_GET['product_id']),
+                ));
+        }
 
         // print_r($orderproduct);die;
 

@@ -194,8 +194,9 @@ class ProductController extends InitController
         Yii::app()->session['account_id']=$_GET['account_id'];
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
         
-        if(isset($_COOKIE['userid'])){
-            Yii::app()->session['userid']=$_COOKIE['userid'];
+        // if(isset($_COOKIE['userid'])){本机调试有问题，上线时回复这两行
+        //     Yii::app()->session['userid']=$_COOKIE['userid'];
+            Yii::app()->session['userid']=2222222;//本机调试有问题，上线时删去
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $str =  rtrim($staff['department_list'], "]"); 
             $str =  ltrim($str, "[");
@@ -212,9 +213,9 @@ class ProductController extends InitController
                     'hotel_name' => $hotel['name'],
                     'user_type' => $user_type
                 ));
-        }else{
-            $this->render('login');
-        };
+        // }else{本机调试有问题，上线时回复这三行
+        //     $this->render('login');
+        // };
     }
 
     public function actionSetuserid()
@@ -259,7 +260,7 @@ class ProductController extends InitController
         /*if ($_GET['from'] == "set") {*///套系
 
             $pricename = "final_price";
-            $table = "Wedding_set_img";
+            // $table = "Wedding_set_img";
             $idname = "wedding_set_id";
             $list = Wedding_set::model()->findAll(array(
                     'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category && set_show = :sh',
@@ -351,7 +352,7 @@ class ProductController extends InitController
 
     public function actionSet_detail()
     {
-        $id=$_GET['product_id'];
+        $id=$_GET['set_id'];
         $CI_Type = 0;
         if($_GET['category'] == 1){
             $CI_Type = 12;
@@ -385,7 +386,7 @@ class ProductController extends InitController
                     )
             ));
 
-        $result = yii::app()->db->createCommand("select case_resources.CR_Path as img_url from case_resources where CI_ID in ( select CI_ID from case_info where CI_Type=".$CI_Type." and CT_ID=".$_GET['product_id'].") order by CR_Sort");
+        $result = yii::app()->db->createCommand("select case_resources.CR_Path as img_url from case_resources where CI_ID in ( select CI_ID from case_info where CI_Type=".$CI_Type." and CT_ID=".$id.") order by CR_Sort");
         $img = $result->queryAll();
         if(!empty($img)){
             foreach ($img as $key => $value) {
@@ -417,7 +418,6 @@ class ProductController extends InitController
                     ),
                 'order' => 'order_date DESC'
             ));
-        /*print_r($order);die;*/
         $order_data = array();
         foreach ($order as $key => $value) {
             $item = array();
@@ -525,7 +525,7 @@ class ProductController extends InitController
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
 
         $table_num = 1;
@@ -538,9 +538,8 @@ class ProductController extends InitController
 
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-            $t1 = explode("/",$wedding_set['product_list']);
-            $t2 = explode(",", $t1[0]);
-            foreach ($t2 as $key => $value) {
+            $product_list = explode(",",$wedding_set['product_list']);
+            foreach ($product_list as $key => $value) {
                 $product = explode("|", $value);
                 $admin=new OrderProduct;         
                 $admin->account_id=$_SESSION['account_id']; 
@@ -557,7 +556,8 @@ class ProductController extends InitController
             //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
         };
 
-        echo $order['id'];
+        // echo $order['id'];
+        print_r($_POST);
     }
 
     public function actionInsert_order_set()
@@ -584,6 +584,7 @@ class ProductController extends InitController
 
         /*print_r($wedding_set);die;*/
         $productdata_list = explode(",",$wedding_set['product_list']);
+        $ces = 0;
         foreach ($productdata_list as $key => $value) {
             $product = explode("|", $value);
             // print_r($product); echo "||";
@@ -598,8 +599,10 @@ class ProductController extends InitController
             $admin->remark=$_POST['remark']; 
             $admin->update_time=date('y-m-d h:i:s',time());
             $admin->save();
+            $ces ++;
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
         }
+        print_r($ces);
     }
 
     public function actionSelect_set()
