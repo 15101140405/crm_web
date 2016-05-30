@@ -929,8 +929,9 @@ class ReportController extends InitController
         /*var_dump($order_id);die;*/
         $hotel_total_sales = 0;
         foreach ($order_id as $key => $value) {
-            $t = $this->order_wedding_total_price($value);
-            $hotel_total_sales += $t['total_price'];
+            $t_feast = $this->order_feast_total_price($value);
+            $t_other = $this->order_other_total_price($value);
+            $hotel_total_sales += $t_feast['total_price'] + $t_other['total_price'];
             /*print_r($t);die;*/
         }
 

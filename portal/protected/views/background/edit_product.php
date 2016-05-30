@@ -46,18 +46,20 @@
                         </div>
                         <div class="edit_btn_box right clearfix" style="width:40%">
                             <span class="left state" style="float: left;margin-right: 0;">报价：<?php echo $value['price']?>元／<?php echo $value['unit']?></span>
-                            <a class="edit_btn left del_resource"  style="float: right;margin-top: 25px;" href="javascript:;">删除</a>
+                            <div class="edit_btn left del_resource del" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">删除</div>
+                            <div class="edit_btn left del_resource edit" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">编辑</div>
                         </div>
                     </li>
             <?php }}?>
                 </ul>
             </div>
+            <div class="upload_btn_box">
+                <button href="javascript:;" class="btn active" id="insert">新增报价</button>
+                <button href="javascript:;" class="btn" id="b">返回</button>
+                <!-- <a href="javascript:;" class="btn" id="back">返回</a> -->
+            </div>
         </div>
-        <div class="upload_btn_box">
-            <button href="javascript:;" class="btn active" id="insert">新增报价</button>
-            <button href="javascript:;" class="btn" id="b">返回</button>
-            <!-- <a href="javascript:;" class="btn" id="back">返回</a> -->
-        </div>
+        
     </div>
     <!--底部-->
     <div class="footer">
@@ -97,6 +99,18 @@
             $.cookie('img1', null); 
             location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=6";
         });
+
+        //编辑
+        $(".edit").on("click",function(){
+            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type=3&ci_id=<?php echo $_GET['ci_id']?>&service_product_id="+$(this).attr("service-product-id");
+        });
+
+        //删除
+        $(".del").on("click",function(){
+            $.post("<?php echo $this->createUrl("background/del_service_product");?>",{id : $(this).attr("service-product-id")},function(){
+                location.reload();
+            })
+        })
     })
 </script>
 </body>

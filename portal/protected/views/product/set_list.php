@@ -12,7 +12,7 @@
 <body>
     <ul class="set_list">
 <?php foreach ($product_data as $key => $value) { ?>
-        <li class="set_item" product-id="<?php echo $value['id']?>">
+        <li class="set_item" set-id="<?php echo $value['id']?>">
             <a>
                 <img src="<?php echo $value['img_url']?>" alt="">
                 <div class="info flexbox v_center">
@@ -28,7 +28,7 @@
 <script>
     $(function () {
         $("li").on("click",function(){
-            location.href = "<?php echo $this->createUrl('product/set_detail');?>&product_id="+ $(this).attr("product-id") +"&category=" + $.util.param("category") + "&from=<?php echo $_GET['from']?>";
+            location.href = "<?php echo $this->createUrl('product/set_detail');?>&set_id="+ $(this).attr("set-id") +"&category=" + $.util.param("category") + "&from=<?php echo $_GET['from']?>";
         })
     })
 </script>

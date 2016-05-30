@@ -169,7 +169,7 @@
 }
 
 .registbtn {
-    background: #3f89ec;
+    background: #77921E;
     color: #fff;
     width: 350px;
     margin: 20px auto 10px;
@@ -182,6 +182,56 @@
 
 .index_container {
     /*margin-top: 60px;*/
+}
+
+.regist_ulist{
+    display:none;
+}
+.regist_ulist1{
+    display:none;
+}
+
+.regist_step{
+    margin-bottom: 40px;
+    text-align: center;
+}
+.regist_step_con{
+    text-align: center;
+}
+.regist_step_item .tit{
+    padding: 30px 0;
+    border-bottom: 1px dashed #e6e6e6;
+    font-size: 16px;
+    color: #77921E;
+}
+.regist_step_item .sele_box{
+    display: inline-block;
+    padding: 30px 0;
+}
+.regist_step_item .sele_box .name{
+    color: #999;
+    margin-top: 10px;
+}
+.regist_step_item .sele_box .seled_item{
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+    margin-right: 10px;
+}
+.regist_step_item .sele_list li{
+    float: left;
+    margin:0 20px;
+}
+.regist_step_item img{
+    width: 60px;
+    border-radius: 100%;
+}
+.regist_step_item img.active{
+    border:3px solid #77921E;
+}
+.registbtn_next{
+    display: block;
+    margin: 0 auto;
+    margin-top: 40px;
 }
 
 .header {
@@ -684,9 +734,9 @@
 .msgbox .msgbox_c{
     position: absolute;
     left: 40%;
-    top: 20%;
+    top: 40%;
     display: inline-block;
-    width: 362px;
+    width: 350px;
     background: #fff;
     color: #666;
 }
@@ -712,7 +762,7 @@
 }
 .msgbox .msgbox_c .con>div label{
     float: left;
-    width:72px;
+    width:60px;
     margin-right: 10px;
     text-align: right;
     line-height: 40px;
@@ -727,10 +777,10 @@
     box-sizing: border-box;
 }
 .msgbox .msgbox_c .con .btn_box button{
-    background: #6B9E03;
-    border: 1px solid #6B9E03;
-    padding:8px 30px;
-    color: #fff;
+    background: #f2f2f2;
+    border: 1px solid #d2d2d2;
+    padding:3px 10px;
+    color: #666;
     margin: 20px 5px 0 0;
 }
 .hid{

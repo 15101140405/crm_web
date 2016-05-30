@@ -248,7 +248,7 @@
                     bride_qq: $("#bride_qq").val(),
                     linkman_name : $("#linkman_name").val(),
                     linkman_phone : $("#linkman_phone").val(),
-                    set_id : "<?php echo $_GET['product_id'];?>",
+                    set_id : "<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>",
                 };
             }else{
                 new_order_info = {
@@ -269,14 +269,15 @@
                     bride_qq: $("#bride_qq").val(),
                     linkman_name : $("#linkman_name").val(),
                     linkman_phone : $("#linkman_phone").val(),
-                    product_id : "<?php echo $_GET['product_id'];?>",
+                    product_id : "<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>",
                     remark : $("#remark").val(),
                 };
             }
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
-                //console.log(retval);
-                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+                console.log(retval);
+                alert();
+                location.href = "<?php echo $this->createUrl('product/store');?>&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });
     

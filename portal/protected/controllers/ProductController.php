@@ -242,17 +242,32 @@ class ProductController extends InitController
     {
         $pricename = "unit_price";
         $product_data = array();
+        $CI_Type = 0;
+        if($_GET['category'] == 1){
+            $CI_Type = 12;
+        };
+        if($_GET['category'] == 2){
+            $CI_Type = 5;
+        };
+        if($_GET['category'] == 3){
+            $CI_Type = 9;
+        };
+        if($_GET['category'] == 4){
+            $CI_Type = 11;
+        };
 
-        if ($_GET['from'] == "set") {//套系
+
+        /*if ($_GET['from'] == "set") {*///套系
 
             $pricename = "final_price";
-            $table = "Wedding_set_img";
+            // $table = "Wedding_set_img";
             $idname = "wedding_set_id";
             $list = Wedding_set::model()->findAll(array(
-                    'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category',
+                    'condition' => 'staff_hotel_id = :staff_hotel_id && category = :category && set_show = :sh',
                     'params' => array(
                             ':staff_hotel_id' => $_SESSION['staff_hotel_id'],
-                            ':category' => $_GET['category']
+                            ':category' => $_GET['category'],
+                            ':sh' => 1,
                         ),
                     'order' => $pricename
                 ));
@@ -262,14 +277,19 @@ class ProductController extends InitController
                 $item['price'] = $value[$pricename]."元/场";
                 $item['unit'] = "";
                 $case_info = CaseInfo::model()->find(array(
-                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID && CI_Show=:CI_Show',
                         'params' => array(
-                                ':CI_Type' => 5,
+                                ':CI_Type' => $CI_Type,
                                 ':CT_ID' => $value['id'],
+                                ':CI_Show' => 1,
                             )
                     ));
                 $t = explode(".", $case_info['CI_Pic']);
-                $case_info['CI_Pic'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                $Pic = "";
+                if(isset($t[0]) && isset($t[1])){
+                    $Pic = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                };
+                $case_info['CI_Pic'] = $Pic;
                 if (!empty($case_info)) {
                     $item['img_url'] = $case_info['CI_Pic'];
                 } else {
@@ -280,16 +300,17 @@ class ProductController extends InitController
                 $product_data[] = $item; 
             };
 
-        } else {//婚宴，会议餐
+        /*} else {*///婚宴，会议餐
         
-            $table = "ProductImg";
+            /*$table = "ProductImg";
             $idname = "supplier_product_id";
             $list = SupplierProduct::model()->findAll(array(
-                    'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category',
+                    'condition' => 'account_id = :account_id && supplier_type_id = :supplier_type_id && category = :category && product_show=:product_show',
                     'params' => array(
                             ':account_id' => $_SESSION['account_id'],
                             ':supplier_type_id' => $_GET['supplier_type_id'],
-                            ':category' => $_GET['category']
+                            ':category' => $_GET['category'],
+                            ':product_show' => 1
                         ),
                     'order' => $pricename
                 ));
@@ -317,7 +338,7 @@ class ProductController extends InitController
                 $item['id'] = $value['id'];
                 $product_data[] = $item; 
             };
-        }
+        }*/
 
         
 
@@ -331,21 +352,33 @@ class ProductController extends InitController
 
     public function actionSet_detail()
     {
-        $id=$_GET['product_id'];
-        if ($_GET['from'] == "set") {//套系
+        $id=$_GET['set_id'];
+        $CI_Type = 0;
+        if($_GET['category'] == 1){
+            $CI_Type = 12;
+        };
+        if($_GET['category'] == 2){
+            $CI_Type = 5;
+        };
+        if($_GET['category'] == 3){
+            $CI_Type = 9;
+        };
+        if($_GET['category'] == 4){
+            $CI_Type = 11;
+        };
+        /*if ($_GET['from'] == "set") {*///套系
 
             $pricename = "final_price";
             $table = "Wedding_set";
-            $imgtable = "Wedding_set_img";
             $idname = "wedding_set_id";
             
-        } else {//婚宴，会议餐
+        /*} else {//婚宴，会议餐
         
             $table = "SupplierProduct";
             $imgtable = "ProductImg";
             $idname = "supplier_product_id";
             
-        }
+        }*/
         $supplier_product = $table::model()->find(array(
                 'condition' => 'id = :id',
                 'params' => array(
@@ -353,15 +386,16 @@ class ProductController extends InitController
                     )
             ));
 
-        $img = $imgtable::model()->findAll(array(
-                'condition' => $idname.' = :id && img_type = :img_type',
-                'params' => array(
-                        ':id' => $id,
-                        ':img_type' => 2
-                    )
-            ));
+        $result = yii::app()->db->createCommand("select case_resources.CR_Path as img_url from case_resources where CI_ID in ( select CI_ID from case_info where CI_Type=".$CI_Type." and CT_ID=".$id.") order by CR_Sort");
+        $img = $result->queryAll();
+        if(!empty($img)){
+            foreach ($img as $key => $value) {
+                $t=explode(".", $value['img_url']);
+                $img[$key]['img_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+            };
+        };
 
-
+        /*print_r($_SESSION['staff_hotel_id']);die;*/
         $this->render('set_detail',array(
             "supplier_product"  => $supplier_product,
             "img"               => $img
@@ -370,6 +404,11 @@ class ProductController extends InitController
 
     public function actionSelectorder()
     {
+        $category = 2;
+        if($_GET['category'] == 1 ||$_GET['category'] == 4){
+            $category == 1;
+        };
+
         /*Yii::app()->session['userid']=100;*/
         $order = Order::model()->findAll(array(
                 'condition' => 'planner_id = :planner_id || designer_id = :designer_id',
@@ -382,7 +421,7 @@ class ProductController extends InitController
         $order_data = array();
         foreach ($order as $key => $value) {
             $item = array();
-            if($_GET['category'] == $value['order_type']){
+            if($category == $value['order_type']){
                 $item['order_name'] = $value['order_name'];
                 $item['order_type'] = $value['order_type'];
                 $item['id'] = $value['id'];
@@ -481,13 +520,12 @@ class ProductController extends InitController
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-            $t1 = explode("/",$wedding_set['product_list']);
-            $t2 = explode(",", $t1[0]);
-            foreach ($t2 as $key => $value) {
+            $product_list = explode(",",$wedding_set['product_list']);
+            foreach ($product_list as $key => $value) {
                 $product = explode("|", $value);
                 $admin=new OrderProduct;         
                 $admin->account_id=$_SESSION['account_id']; 
@@ -517,13 +555,21 @@ class ProductController extends InitController
             $admin->save();
         }
 
-        echo $order['id'];
+        // echo $order['id'];
+        print_r($_POST);
     }
 
     public function actionInsert_order_set()
     {
+        $table_num = 1;
+        $fuwufei = 0;
+        if(isset($_POST['table_num']) && isset($_POST['fuwufei'])){
+            $table_num = $_POST['table_num'];
+            $fuwufei = $_POST['fuwufei'];
+        }
         $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
         $productdata_list = explode(",",$wedding_set['product_list']);
+        $ces = 0;
         foreach ($productdata_list as $key => $value) {
             $product = explode("|", $value);
             $admin=new OrderProduct;         
@@ -531,11 +577,19 @@ class ProductController extends InitController
             $admin->order_id=$_POST['order_id'];
             $admin->product_id=$product[0]; 
             $admin->actual_price=$product[1]; 
-            $admin->unit=$product[2]; 
+            $admin->unit=$product[2]*$table_num; 
             $admin->actual_unit_cost=$product[3]; 
+            $admin->actual_service_ratio=$fuwufei; 
+            $admin->remark=$_POST['remark']; 
             $admin->save();
-     
+            $ces ++;
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
         }
+        print_r($ces);
+    }
+
+    public function actionSelect_set()
+    {
+        $this->render("select_set");
     }
 }

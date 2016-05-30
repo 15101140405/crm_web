@@ -165,11 +165,17 @@
                     </div>
                     <div class="select_c left">
                         <select name="" id="unit">
+                    <?php if(!isset($_GET['type']) || $_GET['type'] != "dish"){?>
                             <option value="个">个</option>
                             <option value="只">只</option>
                             <option value="组">组</option>
                             <option value="天">天</option>
                             <option value="米">米</option>
+                    <?php }else{?>
+                            <option value="个">个</option>
+                            <option value="盘">盘</option>
+                            <option value="位">位</option>
+                    <?php }?>
                         </select>
                     </div>
                     <span class="left tip hid" id="unit_t">请选择单位</span>

@@ -291,6 +291,7 @@
                 CR_Sort : $("#resources_list li:last-child").attr("CR-Sort"),
                 product_list : "<?php echo $_GET['product_list']?>",
                 final_price : <?php echo $_GET['final_price']?>,
+                feast_discount : <?php echo $_GET['feast_discount']?>,
             };
             if($("#resources_list").find("li").length == 0){data.CR_Sort = 0;};
             console.log($("#resources_list").find("li").length);
@@ -306,7 +307,11 @@
                 $.post("<?php echo $this->createUrl("background/set_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
+                <?php if(!isset($_GET['type'])){?>
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
+                <?php }else if($_GET['type'] == 'menu'){?>
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=9";
+                <?php }?>
                 });
             };  
         });

@@ -301,11 +301,11 @@
                 feast_discount : <?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>,
                 other_discount : <?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>,
             <?php if(!isset($_GET['type'])){?>
-                category : 2,
-                CI_Type : 5,
-            <?php }else if($_GET['type'] == 'meeting_set'){?>
-                category : 1,
-                CI_Type : 12,
+                CI_Type : 9,
+                category : 3,
+            <?php }else if($_GET['type']=='meeting_menu'){?>
+                CI_Type : 11,
+                category : 4,
             <?php }?>
             };
             console.log(data);
@@ -320,7 +320,7 @@
                 $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=9";
                 });
             };  
         });

@@ -72,6 +72,12 @@
                     <input class="align_r t_green" id="cost" type="text" placeholder="输入单位成本" value="<?php echo $product_data['unit_cost'];?>"/>
                 </div>
             </li>
+            <li class="ulist_item flex list_more">
+                选择供应商
+                <div class="flex1">
+                    <input class="align_r t_green" id="cost" type="text" placeholder="请选择供应商" value="<?php echo $product_data['unit_cost'];?>"/>
+                </div>
+            </li>
             <li class="remark">
                 <p class="mar_tb10">备注</p>
                 <div class="text_bar">
@@ -125,6 +131,12 @@
                 单位成本
                 <div class="flex1">
                     <input class="align_r t_green" id="cost" type="text" placeholder="输入单位成本"/>
+                </div>
+            </li>
+            <li class="ulist_item flex list_more" supplier-id="" id="select_supplier">
+                选择供应商
+                <div class="flex1" style="margin-right: 10%;">
+                    <input class="align_r t_green" disabled="disabled" type="text" placeholder="请选择供应商" value=""/>
                 </div>
             </li>
             <li class="remark">
@@ -272,6 +284,16 @@
             });
         });
 
+        //选择供应商
+        $("#select_supplier").on("click",function(){
+            location.href = "<?php echo $this->createUrl('design/select_supplier')?>&type=<?php echo $_GET['type']?>&from=<?php $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>";
+        });
+
+        //选择完供应商渲染
+        <?php if(isset($_GET['supplier_id']) && isset($_GET['supplier_name'])){?>
+            $("#select_supplier input").val("<?php echo $_GET['supplier_name']?>");
+            $("#select_supplier").attr("supplier-id",<?php echo $_GET['supplier_id']?>);
+        <?php }?>
     })
 </script>
 </body>

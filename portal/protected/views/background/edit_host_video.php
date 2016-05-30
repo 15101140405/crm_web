@@ -268,7 +268,7 @@
                 CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
             };
             //alert($("#resources_list").has("li").length);
-            if($("#resources_list").has("li").length == 0){alert(1);data.CR_Sort = 0};
+            if($("#resources_list").has("li").length == 0){data.CR_Sort = 0};
             console.log(data);
             /*$(".tip").removeClass("hid");
             $(".tip").addClass("hid");

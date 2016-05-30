@@ -47,7 +47,6 @@
                 <div class="flex1" order-status="<?php echo $value['order_status']?>">
                     <span class="tag " ></span>
                 </div>
-
                 <div class="con flex1">
                     <p class="flexbox"><img src="images/man_icon.png" alt="">负责人</p>
                     <p><?php echo $value['planner_name']?></p>
@@ -109,24 +108,16 @@ $(function  () {
     // li点击跳转
     $(".order_list li").on("click",function(){
         if ("<?php echo $_GET['tab'];?>" == "set") {
-            data = {
-                'set_id' : '<?php echo $_GET['product_id']?>',
-                'order_id' : $(this).attr("order-id"),
-                'order_type' : $(this).attr("order-type"),
-            };
-            $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
-                alert("添加套系成功！");
-                location.href = "<?php echo $this->createUrl('product/store')."&account_id=".$_SESSION['account_id']."&staff_hotel_id=".$_SESSION['staff_hotel_id'];?>";
-            });
+            location.href = "<?php echo $this->createUrl('product/select_set');?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&category=<?php echo $_GET['category']?>&order_id=" + $(this).attr("order-id") + "&order_type=" + $(this).attr("order-type");
         } else{
-            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=selectorder<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
+            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&type=new&tab=<?php echo $_GET['tab'];?>&from=selectorder<?php echo $_GET['from'];?>&order_id=" + $(this).attr("order-id");
         };
 
     });
 
     //新增订单
     $(".add_btn").on("click",function(){
-            location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
+            location.href = "<?php echo $this->createUrl("product/createorder", array());?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&from=<?php echo $_GET['from']?>";
     });
 })
 </script>

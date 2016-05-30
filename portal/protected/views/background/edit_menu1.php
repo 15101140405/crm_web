@@ -22,7 +22,7 @@
     <div class="nav_area">
         <div class="upload_wapper">
             <ul class="nav_list upload_wapper clearfix">
-                <li ><a href="#" id="top">场地布置</a>
+                <li ><a href="#">场地布置</a>
                     <ul class="sub_nav_list" id="decoration">
                         <li tap-id="0"><a href="#">全部</a>
                         </li>
@@ -32,22 +32,22 @@
                 <?php }?>
                     </ul>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="host"><a href="#">主持</a>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="video"><a href="#">摄像</a>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="camera"><a href="#">摄影</a>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="makeup"><a href="#">化妆</a>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="other"><a href="#">其他人员</a>
                 </li>
-                <li class="shuxian">|</li>
+                <li>|</li>
                 <li id="lss"><a href="#">灯光／音响／视频</a>
                 </li>
             </ul>
@@ -58,7 +58,6 @@
         <!--左侧内容区域-->
         <div class="left_area left">
             <ul class="goods_list clearfix" id="product">
-        <?php if(!isset($_GET['type'])){?>
         <?php foreach ($supplier_product as $key => $value) {
             if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
                 <li style="height: 200px;" tap="<?php echo $value['decoration_tap']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
@@ -76,25 +75,6 @@
                     </div>
                 </li>
         <?php }}?>
-        <?php }else if($_GET["type"] == 'menu'){?>
-        <?php foreach ($supplier_product as $key => $value) {
-            if($value['supplier_type_id'] == 2){?>
-                <li style="height: 200px;" tap="<?php echo $value['dish_type']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
-                    <div class="img_box" style="height:60%">
-                        <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
-                        <!-- <span>已售233件</span> -->
-                    </div>
-                    <div class="info_box" style="height:40%">
-                        <p class="name"><?php echo $value['name']?></p>
-                        <p class="price">&yen;<strong><?php echo $value['unit_price']?></strong>
-                        </p>
-                        <!-- <p class="original_price">&yen;<del>400.00</del>
-                        </p> -->
-                        <button class="add_product">加入套系</button>
-                    </div>
-                </li>
-        <?php }}?>
-        <?php }?>
             </ul>
         </div>
         <!--右侧内容区域-->
@@ -102,7 +82,7 @@
             <div>
                 <div class="tit_box clearfix" style="width:253px;background:#fff;border-bottom: 1px solid #e6e6e6;">
                     <h2 class="left">折扣：</h2>
-                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="<?php echo $wedding_set['feast_discount']?>" placeholder="请输入折扣，如0.8">
+                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入折扣，如0.8">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:230px;" id="shopping_car">
@@ -155,20 +135,8 @@
     $(function(){
 
         //初始渲染
-        <?php if(!isset($_GET['type'])){?>
-            $("#product li").addClass("hid");
-            $("[supplier-type-id='20']").removeClass("hid");
-        <?php }else if($_GET['type'] == "menu"){?>
-            $("#host").remove();
-            $("#video").remove();
-            $("#camera").remove();
-            $("#makeup").remove();
-            $("#other").remove();
-            $("#lss").remove();
-            $(".shuxian").remove();
-            $("#top").html("婚宴／会议餐")
-        <?php }?>
-
+        $("#product li").addClass("hid");
+        $("[supplier-type-id='20']").removeClass("hid");
         $("#shopping_car li").each(function(){
             var product = $("#product [product-id='"+$(this).attr('product-id')+"']");
             $(this).find(".product_id").html(product.find(".name").html());
@@ -204,11 +172,7 @@
             $("#product li").removeClass("hid");
             $("#product li").addClass("hid");
             var tap = $(this).attr("tap-id");
-        <?php if(!isset($_GET['type'])){?>
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='20']").removeClass("hid");};
-        <?php }else if($_GET['type'] == "menu"){?>
-            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='2']").removeClass("hid");};
-        <?php }?>    
             $(".sub_nav_list").hide();
         });
 
@@ -262,11 +226,7 @@
                 product_list += $(this).attr('product-id') +"|"+ $(this).find(".product_price").val() +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-        <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
-        <?php }else if($_GET['type'] == "menu"){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&type=menu&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
-        <?php }?>
+            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html();
         })
 
         //改变数量、单价时，刷新总价
@@ -275,9 +235,6 @@
         });
         $(".del_product").live("click",function(){
             $(this).parent().remove();
-            total_price(); 
-        });
-        $('#feast_discount').live('change', function() {
             total_price(); 
         });
         $(".shopping_car").find(".counter_box").count({limitnum:5});
@@ -294,11 +251,6 @@
             $("#shopping_car li").each(function(){
                 total_price += $(this).find(".count").val() * $(this).find(".product_price").val();
             });
-            var feast_discount = $("#feast_discount").val();
-            if(feast_discount != ""){
-                total_price = total_price*feast_discount;
-                total_price = total_price.toFixed(2)
-            };
             $("#total_price").html(total_price);
         };
     })

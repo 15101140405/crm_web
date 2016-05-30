@@ -253,6 +253,10 @@
             </div>
         </div>
     </div> -->
+        </ul>
+        <p>京公网安备11cd010502022785号 京公网安备11010502022785号</p>
+        <p>京公网安备11010502022785号</p>
+    </div>
 <script>
     $(function(){
         //初始渲染
@@ -260,6 +264,13 @@
         $("#CI_Show").val(<?php echo $case['CI_Show']?>);
         //保存
         $("#save").on("click",function(){
+            var data = {
+                CI_ID : <?php echo $_GET['ci_id']?>,
+                case_resource : $.cookie('imgs'),
+                account_id : $.cookie('account_id'),
+                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
+            };
+            if($("#resources_list").has("li").length == 0){data.CR_Sort = 0};
             if($("#resources_list").find("li").length == 0){
                 var data = {
                     CI_ID : <?php echo $_GET['ci_id']?>,

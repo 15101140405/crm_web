@@ -15,9 +15,8 @@
                 <input class="loginItem" id="telephone" type="text" placeholder="手机号">
                 <input class="loginItem pswd" id="password" type="password" placeholder="密码">
                 <button class="login_btn" id="sure">登录</button>
-                <a class="go_regist" href="<?php echo $this->createUrl("background/regist_host");?>" style="float: right;font-size: 1rem;margin-top: 20px;color:#EC3F3F;">主持人注册</a>
-                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: right;font-size: 1rem;margin-top: 20px;">策划师注册</a>
-                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: left;margin-left: 15px;font-size: 1rem;margin-top: 20px;">忘记密码</a>
+                <a class="go_regist" href="<?php echo $this->createUrl("background/regist");?>" style="float: right;font-size: 1rem;margin-top: 20px;">立即注册</a>
+                <a class="go_regist" href="" style="float: left;margin-left: 15px;font-size: 1rem;margin-top: 20px;">忘记密码</a>
             </div>
             
         </div>

@@ -96,6 +96,25 @@ class BackgroundController extends InitController
     {
         $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
 
+        $person_data = array();
+
+        if($_POST['department'] == 11){
+            $person_data['CI_Type'] = 6;
+            $person_data['service_type'] = 3;
+        };
+        if($_POST['department'] == 12){
+            $person_data['CI_Type'] = 13;
+            $person_data['service_type'] = 4;
+        };
+        if($_POST['department'] == 13){
+            $person_data['CI_Type'] = 14;
+            $person_data['service_type'] = 5;
+        };
+        if($_POST['department'] == 14){
+            $person_data['CI_Type'] = 15;
+            $person_data['service_type'] = 6;
+        };
+
         if (isset($_POST['password'])) {
             if ($_POST['yzm'] == $_SESSION['code']) {
                 $staff = Staff::model()->find(array(
@@ -109,7 +128,7 @@ class BackgroundController extends InitController
                     $data = new Staff;
                     $data ->name = $_POST['name'];
                     $data ->telephone = $_POST['telephone'];
-                    $data ->department_list = "[11]";
+                    $data ->department_list = "[".$_POST['department']."]";
                     $data ->password = $_POST['password'];
                     $data ->save();
                     $staff_id = $data->attributes['id'];
@@ -121,7 +140,7 @@ class BackgroundController extends InitController
                     foreach ($t as $key => $value) {
                         $department_list .= $value . ",";
                     };
-                    $department_list .= "11]";
+                    $department_list .= $_POST['department']."]";
                     $staff = Staff::model()->find(array(
                         'condition' => 'telephone=:telephone',
                         'params' => array(
@@ -135,7 +154,7 @@ class BackgroundController extends InitController
                 $data ->CI_Pic = "";
                 $data ->CI_Sort = 1;
                 $data ->CI_Show = 1;
-                $data ->CI_Type = 6;
+                $data ->CI_Type = $person_data['CI_Type'];
                 $data ->CT_ID = $staff_id;
                 $data ->save();
                 $CI_ID = $data->attributes['CI_ID'];
@@ -148,7 +167,7 @@ class BackgroundController extends InitController
                 $data ->telephone = $_POST['telephone'];
                 $data ->update_time = date('y-m-d h:i:s',time());
                 $data ->staff_id = $staff_id;
-                $data ->service_type = 3;
+                $data ->service_type = $person_data['service_type'];
                 $data ->save();
 
                 $data = new CaseBind;
@@ -162,7 +181,7 @@ class BackgroundController extends InitController
                 foreach ($staff_company as $key => $value) {
                     $data = new Supplier;
                     $data ->account_id = $value['id'];
-                    $data ->type_id = 3;
+                    $data ->type_id = $person_data['service_type'];
                     $data ->staff_id = $staff_id;
                     $data ->save();
                 }
@@ -296,12 +315,12 @@ class BackgroundController extends InitController
                 ));
         }else if($_GET['CI_Type'] == 7){
             $product = SupplierProduct::model()->findAll(array(
-                    'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                    'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id && product_show=:product_show',
                     'params' => array(
                             ':account_id' => $_COOKIE['account_id'],
                             ':standard_type' => 0,
                             ':supplier_type_id' => 20, 
-
+                            ':product_show' => 1,
                         )
                 ));
             foreach($product as  $key => $val){
@@ -325,6 +344,12 @@ class BackgroundController extends InitController
                     'tap' => $tap,
                 ));
         }else if($_GET['CI_Type'] == 6){
+            /*$tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));*/
             $case = CaseInfo::model()->find(array(
                     'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
                     'params' => array(
@@ -340,14 +365,16 @@ class BackgroundController extends InitController
                 ));
             // print_r($case);die;
             $this->render('index',array(
+                    /*'tap'=>$tap,*/
                     'case' => $case,
                     'service_person' => $service_person,
                 ));
         }else if($_GET['CI_Type'] == 8){
             $criteria = new CDbCriteria;
             $criteria->addInCondition('supplier_type_id', array(8,9,23));
-            $criteria->addCondition("account_id = :account_id");    
+            $criteria->addCondition("account_id = :account_id && product_show=:product_show");    
             $criteria->params[':account_id']=$_COOKIE['account_id'];
+            $criteria->params[':product_show']=1;
             $supplier_product = SupplierProduct::model()->findAll($criteria); 
 
             foreach ($supplier_product as $key => $value) {
@@ -360,7 +387,36 @@ class BackgroundController extends InitController
             $this->render("index",array(
                     'supplier_product' => $supplier_product,
                 ));
-        };  
+        }else if($_GET['CI_Type'] == 9){
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("account_id = :account_id && product_show=:product_show && supplier_type_id=:supplier_type_id");    
+            $criteria->params[':account_id']=$_COOKIE['account_id'];
+            $criteria->params[':product_show']=1;
+            $criteria->params[':supplier_type_id']=2;
+            $criteria->order = 'update_time DESC';
+            $supplier_product = SupplierProduct::model()->findAll($criteria); 
+
+            foreach ($supplier_product as $key => $value) {
+                $t = explode(".", $value['ref_pic_url']);
+                if(isset($t[0]) && isset($t[1])){
+                    $supplier_product[$key]['ref_pic_url'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                };
+            };
+
+            $result = yii::app()->db->createCommand("select wedding_set.id as CT_ID,case_info.CI_ID as CI_ID,case_info.CI_Pic,wedding_set.`name`,wedding_set.final_price from wedding_set left join staff_hotel on staff_hotel_id=staff_hotel.id left join case_info on wedding_set.id=case_info.CT_ID where case_info.CI_Type in (9,11) and account_id=".$_COOKIE['account_id']." and category in (3,4) and CI_Show=1");
+            $menu = $result->queryAll();
+            foreach ($menu as $key => $value) {
+                $t = explode(".", $value['CI_Pic']);
+                if(isset($t[0]) && isset($t[1])){
+                    $menu[$key]['CI_Pic'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                };
+            };
+            /*print_r($supplier_product);die;*/
+            $this->render("index",array(
+                    'supplier_product' => $supplier_product,
+                    'menu' => $menu,
+                ));
+        };   
     }
 
     public function actionUpload_case()
@@ -490,12 +546,17 @@ class BackgroundController extends InitController
     public function actionEdit_set1()
     {
         $account_id = $_COOKIE['account_id'];
-
-        $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
-            "condition" => "account_id = :account_id",
-            "params"    => array(
-                ":account_id" => $account_id,
-                )));
+        $decoration_tap = array();
+        if(!isset($_GET['type'])){
+            $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                "condition" => "account_id = :account_id",
+                "params"    => array(
+                    ":account_id" => $account_id,
+                    )));
+        }else if($_GET['type'] == 'menu'){
+            $decoration_tap = DishType::model()->findAll();
+        };
+            
         $supplier_product = SupplierProduct::model()->findAll(array(
             'condition' => 'account_id=:account_id && standard_type=:standard_type',
                 'params' => array(
@@ -523,6 +584,7 @@ class BackgroundController extends InitController
             };
         };
         $this->render("edit_set1",array(
+            'wedding_set' => $Wedding_set,
             'decoration_tap' => $decoration_tap,
             'supplier_product' => $supplier_product,
             'product_list' => $product_list,
@@ -658,10 +720,13 @@ class BackgroundController extends InitController
     public function actionEdit_product()
     {
         //取产品数据
-        $product = SupplierProduct::model()->findAll(array(
-                'condition' => 'id=:id',
+        /*$result = yii::app()->db->createCommand("select * from supplier_product left join supplier on supplier_id=supplier.id left join staff on supplier.staff_id=staff.id left join service_person on staff.id=service_person.staff_id where service_person.id=".$_GET['service_person_id']);
+        $product = $result->queryAll();*/
+        $product = ServiceProduct::model()->findAll(array(
+                'condition' => 'service_person_id=:service_person_id && product_show=:product_show',
                 'params' => array(
-                        ':id' => $_GET['product_id'],
+                        ':service_person_id' => $_GET['service_person_id'],
+                        ':product_show' => 1,
                     ),
             ));
         /*print_r($product);die;*/
@@ -672,7 +737,14 @@ class BackgroundController extends InitController
 
     public function actionEdit_product_detail()
     {
-        $this->render('edit_product_detail');
+        if(!isset($_GET['service_product_id'])){
+            $this->render('edit_product_detail');
+        }else{
+            $service_product = ServiceProduct::model()->findByPk($_GET['service_product_id']);
+            $this->render('edit_product_detail',array(
+                    'product' => $service_product
+                ));
+        };
     }
 
     public function actionCase_upload()
@@ -750,6 +822,7 @@ class BackgroundController extends InitController
         $data ->supplier_id = (int)$_POST['supplier_id']; 
         $data ->supplier_type_id = $_POST['supplier_type_id'];
         $data ->decoration_tap = $_POST['decoration_tap'];
+        $data ->dish_type = $_POST['dish_type'];
         $data ->standard_type = $_POST['standard_type'];
         $data ->name = $_POST['name'];
         $data ->category = $_POST['category'];
@@ -780,20 +853,31 @@ class BackgroundController extends InitController
 
     public function actionSupplier_add()
     {
-        $data = new Staff;
-        $data ->account_id = $_COOKIE['account_id'];
-        $data ->name = $_POST['name'];
-        $data ->telephone = $_POST['telephone'];
-        $data ->department_list = "[4]";
-        $data ->update_time = $_POST['update_time'];
-        $data ->save();
-        //查找新增的员工ID
-        $id = $data->attributes['id'];
+        $staff = Staff::model()->find(array(
+                'condition' => 'telephone=:telephone',
+                'params' => array(
+                        ':telephone' => $_POST['telephone']
+                    )
+            ));
+        $id="";
+        if(empty($staff)){
+            $data = new Staff;
+            $data ->account_id = $_COOKIE['account_id'];
+            $data ->name = $_POST['name'];
+            $data ->telephone = $_POST['telephone'];
+            $data ->department_list = "[4]";
+            $data ->update_time = $_POST['update_time'];
+            $data ->save();
+            //查找新增的员工ID
+            $id = $data->attributes['id'];
+        }else{
+            $id = $staff['id'];
+        };  
 
         //新增供应商
         $data = new Supplier;
         $data ->account_id = $_COOKIE['account_id'];
-        $data ->type_id = 20;
+        $data ->type_id = $_POST['supplier_type'];
         $data ->staff_id = $id;
         $data ->contract_url = "";
         $data ->update_time = $_POST['update_time'];
@@ -867,10 +951,10 @@ class BackgroundController extends InitController
         $data = new Wedding_set;
         $data ->staff_hotel_id = $_POST['staff_hotel_id'];
         $data ->name = $_POST['CI_Name'];
-        $data ->category = 2;
+        $data ->category = $_POST['category'];
         $data ->final_price = $_POST['final_price'];
-        $data ->feast_discount = 1;
-        $data ->other_discount = 1;
+        $data ->feast_discount = $_POST['feast_discount'];
+        $data ->other_discount = $_POST['other_discount'];
         $data ->product_list = $_POST['product_list'];
         $data->save();
         $id = $data->attributes['id'];
@@ -879,7 +963,7 @@ class BackgroundController extends InitController
         $data ->CI_Name = $_POST['CI_Name'];
         $data ->CI_Pic = $_POST['CI_Pic'];
         $data ->CI_Show = 1;
-        $data ->CI_Type = 5;
+        $data ->CI_Type = $_POST['CI_Type'];
         $data ->CT_ID = $id;
         $data->save();
         $CI_ID = $data->attributes['CI_ID'];
@@ -921,7 +1005,7 @@ class BackgroundController extends InitController
     public function actionSet_edit()
     {
         CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
-        Wedding_set::model()->updateByPk($_POST['CT_ID'],array('staff_hotel_id'=>$_POST['staff_hotel_id'],'name'=>$_POST['CI_Name'],'final_price'=>$_POST['final_price'],'product_list'=>$_POST['product_list']));
+        Wedding_set::model()->updateByPk($_POST['CT_ID'],array('staff_hotel_id'=>$_POST['staff_hotel_id'],'name'=>$_POST['CI_Name'],'final_price'=>$_POST['final_price'],'feast_discount'=>$_POST['feast_discount'],'product_list'=>$_POST['product_list']));
         if($_POST['case_resource'] != ""){
             $t = explode(",",$_POST['case_resource']);
             $resources = array();
@@ -996,11 +1080,31 @@ class BackgroundController extends InitController
             $Pic = "images/cover.jpg";
         };
         
+        $Pic = $url.$t[0].'_sm.'.$t[1];
+
+        //取场布产品信息
+        /*$product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));*/
         /*print_r($product);die;*/
         $this->render("edit_host_video",array(
                 'pic' => $Pic,
                 'resources' => $resources,
                 'case' => $case,
+                /*'case_data' => $product,
+                'tap' => $tap,*/
             ));
     }
 
@@ -1047,11 +1151,29 @@ class BackgroundController extends InitController
             $Pic = "images/cover.jpg";
         };
 
+        //取场布产品信息
+        /*$product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && supplier_type_id=:supplier_type_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0,
+                        ':supplier_type_id' => 20, 
+
+                    )
+            ));
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id']
+                    )
+            ));*/
         /*print_r($product);die;*/
         $this->render("edit_host_img",array(
                 'pic' => $Pic,
                 'resources' => $resources,
                 'case' => $case,
+                /*'case_data' => $product,
+                'tap' => $tap,*/
             ));
     }
 
@@ -1069,6 +1191,12 @@ class BackgroundController extends InitController
         }else{
             $Pic = "images/cover.jpg";
         };
+        $t= explode('.', $case['CI_Pic']);
+        $Pic="";
+        if(isset($t[0]) && isset($t[1])){
+            $Pic = $url.$t[0].'_sm.'.$t[1];
+        };
+
         $staff = Staff::model()->findByPk($case['CT_ID']);
         /*print_r($product);die;*/
         $this->render("edit_host_self_info",array(
@@ -1133,16 +1261,20 @@ class BackgroundController extends InitController
         $service_product_id = $data->attributes['id'];
 
         //给所有公司新增一个supplier_product
-        $supplier_id = yii::app()->db->createCommand("select supplier.id as supplier_id from case_info left join staff on CT_ID=staff.id left join supplier on staff.id=supplier.staff_id where case_info.CI_ID=".$_POST['CI_ID']);
-        $supplier_id = $supplier_id->queryAll();
+        
 
         $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
 
         $company = StaffCompany::model()->findAll();
         foreach ($company as $key => $value) {
+            
+            $supplier_id = yii::app()->db->createCommand("select supplier.id as supplier_id from supplier left join service_person on supplier.staff_id=service_person.staff_id where supplier.account_id=".$value['id']." and service_person.id=".$_POST['service_person_id']);
+            $supplier_id = $supplier_id->queryAll();
+
             $data = new SupplierProduct;
             $data ->account_id = $value['id'];
-            $data ->supplier_id = $supplier_id;
+            $data ->supplier_id = $supplier_id[0]['supplier_id'];
+            $data ->service_product_id = $service_product_id;
             $data ->supplier_type_id = $_POST['service_type'];
             $data ->decoration_tap = 0;
             $data ->standard_type = 0;
@@ -1166,10 +1298,13 @@ class BackgroundController extends InitController
         if(!isset($_GET['type'])){
             $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=20");
             $supplier = $result->queryAll();
-        }else{
+        }else if($_GET['type'] == "lss"){
             $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.`name`,supplier_type.`name` as supplier_type_name from supplier left join staff on staff_id=staff.id left join supplier_type on supplier.type_id=supplier_type.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id in (8,9,23)");
             $supplier = $result->queryAll();
-        };
+        }else if($_GET['type'] == "dish"){
+            $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.`name`,supplier_type.`name` as supplier_type_name from supplier left join staff on staff_id=staff.id left join supplier_type on supplier.type_id=supplier_type.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=2");
+            $supplier = $result->queryAll();
+        }
         $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
                 'params' => array(
@@ -1198,5 +1333,105 @@ class BackgroundController extends InitController
                 'decoration_tap' => $decoration_tap,
                 'supplier_type' => $supplier_type,
             ));
+    }
+
+    public function actionDel_case()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Show'=>0));
+        if($_POST['CI_Type'] == 5 || $_POST['CI_Type'] == 9 || $_POST['CI_Type'] == 11 || $_POST['CI_Type'] == 12){
+            $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
+            Wedding_set::model()->updateByPk($case['CT_ID'],array('set_show'=>0));
+        };
+    }
+
+    public function actionDel_product()
+    {
+        SupplierProduct::model()->updateByPk($_POST['product_id'],array('product_show'=>0));
+    }
+
+    public function actionUpload_dish()
+    {
+        $dish_type = DishType::model()->findAll();
+        $result = yii::app()->db->createCommand("select supplier.id,supplier.type_id,staff.`name`,supplier_type.`name` as supplier_type_name from supplier left join staff on staff_id=staff.id left join supplier_type on supplier.type_id=supplier_type.id where supplier.account_id=".$_COOKIE['account_id']." and supplier.type_id=2");
+        $supplier = $result->queryAll();
+        $this->render("upload_dish",array(
+                'dish_type' => $dish_type,
+                'supplier' => $supplier,
+            ));
+    }
+
+    public function actionUpload_menu1()
+    {
+        $account_id = $_COOKIE['account_id'];
+
+        $dish_type = DishType::model()->findAll();
+        $supplier_product = SupplierProduct::model()->findAll(array(
+            'condition' => 'account_id=:account_id && standard_type=:standard_type',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                        ':standard_type' => 0
+                    )));
+        $dish=array();
+        foreach ($supplier_product as $key => $value) {
+            $t=explode('.', $value['ref_pic_url']);
+            if(isset($t[0]) && isset($t[1])){
+                $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
+            };
+            if($value['supplier_type_id']==2){
+                $dish[]=$value;
+            }
+        };
+        //print_r($dish);die;
+        $this -> render("upload_menu1",array(
+            'dish_type' => $dish_type,
+            'supplier_product' => $supplier_product,
+            ));
+    }
+
+    public function actionUpload_menu2()
+    {
+        $hotel = StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_COOKIE['account_id'],
+                    ),
+            ));
+        $this->render("upload_menu2",array(
+                'hotel' => $hotel,
+            ));
+    } 
+
+    public function actionEdit_host_product()
+    {
+        ServiceProduct::model()->updateByPk($_POST['id'],array(
+                'product_name' => $_POST['product_name'],
+                'price' => $_POST['price'],
+                'unit' => $_POST['unit'],
+                'description' => $_POST['description'],
+            ));
+
+        $company = StaffCompany::model()->findAll();
+        foreach ($company as $key => $value) {
+            SupplierProduct::model()->updateAll(array(
+                    'name' => $_POST['product_name'],
+                    'unit_price' => $_POST['price'],
+                    'unit' => $_POST['unit'],
+                    'description' => $_POST['description'],
+                ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+        };
+    }
+
+    public function actionDel_service_product()
+    {
+        ServiceProduct::model()->updateByPk($_POST['id'],array(
+                'product_show' => 0,
+            ));
+
+        $company = StaffCompany::model()->findAll();
+        foreach ($company as $key => $value) {
+            SupplierProduct::model()->updateAll(array(
+                    'product_show' => 0,
+                ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+        };
     }
 }
