@@ -77,6 +77,7 @@
                 </div>
                 <i class="mar_l10 t_green"></i>
             </li> -->
+        <?php if($_GET['category'] == 3 || $_GET['category'] == 4){?>
             <li class="ulist_item flex" id="number">
                 桌数
                 <div class="flex1">
@@ -84,22 +85,17 @@
                            placeholder="请输入数量"/>
                 </div>
             </li>
-            <!-- <li class="ulist_item flex">
-                单位成本
-                <div class="flex1">
-                    <input class="align_r t_green" id="cost" type="text" placeholder="输入单位成本" value="<?php /*echo $productData['unit_cost'];*/?>"/>
-                </div>
-            </li>
             <li class="ulist_item flex" id='fuwufei'>
                 服务费
                 <div class="flex1">
-                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="<?php  /*echo $productData['service_charge_ratio'];*/?>" id="fee"/>
+                    <input class="align_r t_green" id="fuwufei_input" type="text" value="" placeholder="请输入服务费" id="fee"/>
                 </div>
-            </li> -->
+            </li>
+        <?php }?>
             <li class="ulist_item">备注</li> 
             <li class="remark">
                 <div class="text_bar">
-                    <textarea maxlength="70" placeholder="" id="remark"></textarea>
+                    <textarea maxlength="70" placeholder="请输入备注" id="remark"></textarea>
                 </div>
             </li>
         </ul>
@@ -232,7 +228,7 @@
             var time = year + "-" + month + "-" + date + " " + hours + "-" + minutes + "-" + seconds;
             var order_date = $("#appDate").val()+" "+$("#appTime").val()+":00";
             var end_time = $("#appDate").val()+" "+$("#appTime1").val()+":00";
-            if("<?php echo $_GET['from']?>" == "set"){
+            /*if("<?php echo $_GET['from']?>" == "set"){
                 $("#price").remove();
                 new_order_info = {
                     order_date: order_date,
@@ -250,32 +246,33 @@
                     linkman_phone : $("#linkman_phone").val(),
                     set_id : "<?php echo $_GET['product_id'];?>",
                 };
-            }else{
-                new_order_info = {
-                    order_date: order_date,
-                    end_time: end_time, 
-                    update_time : time,
-                    /*price : $("#price").val(),*/
-                    amount : $("#amount").val(),
-                    /*cost : $("#cost").val(),*/
-                    /*service_charge_ratio : $("#fuwufei_input").val(),*/
-                    groom_name: $("#groom_name").val(),
-                    groom_phone: $("#groom_phone").val(),
-                    groom_wechat: $("#groom_wechat").val(),
-                    groom_qq: $("#groom_qq").val(),
-                    bride_name: $("#bride_name").val(),
-                    bride_phone: $("#bride_phone").val(),
-                    bride_wechat: $("#bride_wechat").val(),
-                    bride_qq: $("#bride_qq").val(),
-                    linkman_name : $("#linkman_name").val(),
-                    linkman_phone : $("#linkman_phone").val(),
-                    product_id : "<?php echo $_GET['product_id'];?>",
-                    remark : $("#remark").val(),
-                };
-            }
+            }else{*/
+            new_order_info = {
+                order_date: order_date,
+                end_time: end_time, 
+                update_time : time,
+                /*price : $("#price").val(),*/
+            <?php if($_GET['category'] == 3 || $_GET['category'] == 4){?>
+                amount : $("#amount").val(),
+                /*cost : $("#cost").val(),*/
+                service_charge_ratio : $("#fuwufei_input").val(),
+            <?php }?>
+                groom_name: $("#groom_name").val(),
+                groom_phone: $("#groom_phone").val(),
+                groom_wechat: $("#groom_wechat").val(),
+                groom_qq: $("#groom_qq").val(),
+                bride_name: $("#bride_name").val(),
+                bride_phone: $("#bride_phone").val(),
+                bride_wechat: $("#bride_wechat").val(),
+                bride_qq: $("#bride_qq").val(),
+                linkman_name : $("#linkman_name").val(),
+                linkman_phone : $("#linkman_phone").val(),
+                set_id : "<?php echo $_GET['product_id'];?>",
+                remark : $("#remark").val(),
+            };
             console.log(new_order_info);
             $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
-                //console.log(retval);
+                console.log(retval);
                 location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });

@@ -304,6 +304,7 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
+                //console.log(data);
                 $.post("<?php echo $this->createUrl("background/set_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 

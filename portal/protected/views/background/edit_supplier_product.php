@@ -415,9 +415,11 @@
                     $.cookie('img1', null); 
                     <?php if(!isset($_GET['type'])){?>
                     location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=7";
+                    <?php }else if($_GET['type'] == "dish"){?>
+                    location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=9";
                     <?php }else{?>
                     location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=8";
-                    <?php }?>   
+                    <?php }?>
                 });
             };
         });

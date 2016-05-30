@@ -263,9 +263,9 @@
             });
             product_list = product_list.substring(0,product_list.length-1);
         <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
+            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" + $("#feast_discount").val();
         <?php }else if($_GET['type'] == "menu"){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&type=menu&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
+            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&type=menu&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" + $("#feast_discount").val();
         <?php }?>
         })
 

@@ -264,7 +264,7 @@
     </div>
     <!--弹层1-->
     <div class="msgbox msgbox_class">
-        <div class="msgbox_c">
+        <div class="msgbox_c" style="top:20%">
             <div class="tit_box clearfix">
                 <h2 class="left">新增<场地布置｜产品类别></h2>
                 <img class="right close" src="images/close.jpg" alt="">
@@ -294,7 +294,7 @@
     </div>
     <!--弹层2-->
     <div class="msgbox msgbox_supplier">
-        <div class="msgbox_c">
+        <div class="msgbox_c" style="top:20%">
             <div class="tit_box clearfix">
                 <h2 class="left">新增<场地布置>供应商</h2>
                 <img class="right close" src="images/close.jpg" alt="">

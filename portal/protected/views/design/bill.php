@@ -650,20 +650,20 @@ $arr_locate = array(
         if(!empty($arr_order_total)){
     ?>
             <div class="bottom_fixed_bar">
-                <p class="total_right">总价：<i class="t_green">&yen;<?php echo $arr_order_total['total_price'] ?></i></p>
+                <p class="total_right">折后总价：<i class="t_green">&yen;<?php echo $arr_order_total['total_price'] ?></i></p>
                 <div class="total_left">
-                    <i><p>利润：&yen;<?php echo $arr_order_total['gross_profit'] ?></i>
-                    <i><p>毛利率：&yen;<?php echo sprintf("%01.2f", $arr_order_total['gross_profit_rate']*100).'%'?></i>
+                    <i><p>折后利润：&yen;<?php echo $arr_order_total['gross_profit'] ?></i>
+                    <i><p>折后毛利率：&yen;<?php echo sprintf("%01.2f", $arr_order_total['gross_profit_rate']*100).'%'?></i>
                 </div>
             </div>
     <?php
         }else{
     ?>
             <div class="bottom_fixed_bar">
-                <p class="total_right">总价：<i class="t_green">&yen;0</i></p>
+                <p class="total_right">折后总价：<i class="t_green">&yen;0</i></p>
                 <div class="total_left">
-                    <i><p>利润：&yen;0</i>
-                    <i><p>毛利率：&yen;0</i>
+                    <i><p>折后利润：&yen;0</i>
+                    <i><p>折后毛利率：&yen;0</i>
                 </div>
             </div>
     <?php

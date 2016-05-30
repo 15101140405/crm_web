@@ -446,6 +446,9 @@ class ProductController extends InitController
 
     public function actionNeworder()
     {
+        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+
+
         //存order表
         $payment= new Order;  
 
@@ -456,6 +459,8 @@ class ProductController extends InitController
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
         $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
         $payment->order_type =2;
+        $payment->feast_discount = $wedding_set['feast_discount']*10;
+        $payment->other_discount = $wedding_set['other_discount']*10;
         $payment->order_date =$_POST['order_date'];
         $payment->end_time =$_POST['end_time'];
         $payment->order_status =1;
@@ -522,6 +527,15 @@ class ProductController extends InitController
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
         $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
+
+        $table_num = 1;
+        $fuwufei = 0;
+
+        if(isset($_POST['amount']) && isset($_POST['service_charge_ratio'])){
+            $table_num = (int)$_POST['amount'];
+            $fuwufei = $_POST['service_charge_ratio'];
+        };
+
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
             $t1 = explode("/",$wedding_set['product_list']);
@@ -533,28 +547,15 @@ class ProductController extends InitController
                 $admin->order_id=$order['id'];
                 $admin->product_id=$product[0]; 
                 $admin->actual_price=$product[1]; 
-                $admin->unit=$product[2]; 
+                $admin->unit=$product[2]*$table_num; 
                 $admin->actual_unit_cost=$product[3]; 
+                $admin->actual_service_ratio=$fuwufei; 
+                $admin->remark=$_POST['remark']; 
                 $admin->update_time=date('y-m-d h:i:s',time());
                 $admin->save();
-            }
-
+            };
             //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
-
-        }else{
-            $supplier_product = SupplierProduct::model()->findByPk($_POST['product_id']);
-            $admin=new OrderProduct;         
-            $admin->account_id=$_SESSION['account_id']; 
-            $admin->order_id=$order['id'];
-            $admin->product_id=$_POST['product_id']; 
-            $admin->actual_price=$supplier_product['unit_price']; 
-            $admin->unit=$_POST['amount']; 
-            $admin->actual_unit_cost=$supplier_product['unit_cost']; 
-            $admin->actual_service_ratio=$supplier_product['service_charge_ratio']; 
-            $admin->remark=$_POST['remark']; 
-            $admin->update_time=date('y-m-d h:i:s',time());
-            $admin->save();
-        }
+        };
 
         echo $order['id'];
     }
@@ -563,14 +564,29 @@ class ProductController extends InitController
     {
         $table_num = 1;
         $fuwufei = 0;
+
+        /*$_POST['table_num'] = 20;
+        $_POST['fuwufei'] = 5;
+        $_POST['remark'] = "asfdkj";
+        $_POST['set_id'] = 33;
+        $_POST['order_id'] = 708;*/
+        
         if(isset($_POST['table_num']) && isset($_POST['fuwufei'])){
-            $table_num = $_POST['table_num'];
+            $table_num = (int)$_POST['table_num'];
             $fuwufei = $_POST['fuwufei'];
-        }
+        };
         $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+        if($wedding_set['category'] == 3 || $wedding_set['category'] == 4){
+            Order::model()->updateByPk($_POST['order_id'],array('feast_discount' => $wedding_set['feast_discount']*10));    
+        }else{
+            Order::model()->updateByPk($_POST['order_id'],array('other_discount' => $wedding_set['other_discount']*10));    
+        };
+
+        /*print_r($wedding_set);die;*/
         $productdata_list = explode(",",$wedding_set['product_list']);
         foreach ($productdata_list as $key => $value) {
             $product = explode("|", $value);
+            // print_r($product); echo "||";
             $admin=new OrderProduct;         
             $admin->account_id=$_SESSION['account_id']; 
             $admin->order_id=$_POST['order_id'];
@@ -580,6 +596,7 @@ class ProductController extends InitController
             $admin->actual_unit_cost=$product[3]; 
             $admin->actual_service_ratio=$fuwufei; 
             $admin->remark=$_POST['remark']; 
+            $admin->update_time=date('y-m-d h:i:s',time());
             $admin->save();
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
         }

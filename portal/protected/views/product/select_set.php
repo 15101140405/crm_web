@@ -57,16 +57,17 @@
             var data = {
         <?php if($_GET['category'] == 3 || $_GET['category'] == 4){?>
                 'table_num' : $("#amount").val(),
-                'fuwufei' : $("#fuwufei").val(),
+                'fuwufei' : $("#fuwufei_input").val(),
         <?php }?>
                 'remark' : $("#remark").val(),
                 'set_id' : '<?php echo $_GET['set_id']?>',
                 'order_id' : '<?php echo $_GET['order_id']?>',
                 'order_type' : '<?php echo $_GET['order_type']?>',
             };
+            console.log(data);
             $.post("<?php echo $this->createUrl("product/insert_order_set")?>",data,function(){
                 alert("添加套系成功！");
-                location.href = "<?php echo $this->createUrl('product/store')."&account_id=".$_SESSION['account_id']."&staff_hotel_id=".$_SESSION['staff_hotel_id'];?>";
+                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         })
     })

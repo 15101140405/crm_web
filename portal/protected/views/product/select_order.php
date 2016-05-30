@@ -117,7 +117,7 @@ $(function  () {
 
     //新增订单
     $(".add_btn").on("click",function(){
-            location.href = "<?php echo $this->createUrl("product/createorder", array());?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
+        location.href = "<?php echo $this->createUrl("product/createorder", array());?>&category=<?php echo $_GET['category']?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>";
     });
 })
 </script>

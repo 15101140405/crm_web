@@ -83,7 +83,7 @@ class ResourceController extends InitController
         $url ="http://file.cike360.com";
         $staff_id = $_GET['token'];
         //type 1 公司 2 分店 3 个人
-        $result = yii::app()->db->createCommand("select * from case_info where ".
+        $result = yii::app()->db->createCommand("select * from case_info where "./*
 
             "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
                 "(select account_id from staff where id=".$staff_id.") ) ".
@@ -93,9 +93,9 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
 
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  ".
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  and ".*/
 
-            " and CI_Show=1 and CI_Type in (1,2,3) order by CI_Sort Desc");
+            " CI_Show=1 and CI_Type in (1,2,3) order by CI_Sort Desc");
         $list = $result->queryAll();
 
         /*$list = findAllBySql("select * from case_info where ".
@@ -459,7 +459,7 @@ class ResourceController extends InitController
                 if($rval["id"]!=null){
                     $t=explode(".", $rval["ref_pic_url"]);
                     if(isset($t[0]) && isset($t[1])){
-                        $ref_pic_url = $t[0]."_sm.".$t[1];    
+                        $ref_pic_url = $t[0].".".$t[1];    
                     }else{
                         $ref_pic_url = $rval['ref_pic_url'];
                     };
@@ -495,7 +495,7 @@ class ResourceController extends InitController
                 /*print_r($t);die;*/
                 $t1=explode(".", $supplier_product["ref_pic_url"]);
                 if(isset($t1[0]) && isset($t1[1])){
-                    $ref_pic_url = $t1[0]."_sm.".$t1[1];    
+                    $ref_pic_url = $t1[0].".".$t1[1];    
                 }else{
                     $ref_pic_url = $supplier_product['ref_pic_url'];
                 };
@@ -522,7 +522,7 @@ class ResourceController extends InitController
         $i2 = 100000;
         $staff = Staff::model()->findByPk($_GET['token']);
         $dish_type = DishType::model()->findAll();
-        $result = yii::app()->db->createCommand("select supplier_product.id as CR_ID,supplier_product.name as CR_Name,ref_pic_url as CR_Path,description as CR_Remarks,dish_type.id as CI_ID,unit_price,unit from supplier_product left join dish_type on dish_type=dish_type.id where account_id=".$staff['account_id']);
+        $result = yii::app()->db->createCommand("select supplier_product.id as CR_ID,supplier_product.name as CR_Name,ref_pic_url as CR_Path,description as CR_Remarks,dish_type.id as CI_ID,unit_price,unit from supplier_product left join dish_type on dish_type=dish_type.id where product_show=1 and account_id=".$staff['account_id']);
         $supplier_product = $result->queryAll();
         foreach ($dish_type as $key_type => $value_type) {
             $item = array();
@@ -532,7 +532,7 @@ class ResourceController extends InitController
 
             $t = explode(".", $value_type['pic']);
             if(isset($t[0]) && isset($t[1])){
-                $pic = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                $pic = "http://file.cike360.com".$t[0].".".$t[1];
             }else{
                 $pic = "";
             };
@@ -552,7 +552,7 @@ class ResourceController extends InitController
 
                     $t = explode(".", $value_pro['CR_Path']);
                     if(isset($t[0]) && isset($t[1])){
-                        $pic = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                        $pic = "http://file.cike360.com".$t[0].".".$t[1];
                     }else{
                         $pic = "";
                     };

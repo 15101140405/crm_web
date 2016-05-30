@@ -180,7 +180,12 @@ class DesignController extends InitController
                 $arr_wed_feast['total_cost'] += $value['actual_unit_cost']*$value['unit'];
                 $arr_wed_feast['gross_profit'] += ($value['actual_price']-$value['actual_unit_cost'])*$value['unit']+$value['actual_price']*$value['unit']*$value['actual_service_ratio']*0.01;
                 // $arr_wed_feast['gross_profit_rate'] += (($value['actual_price']-$value['actual_unit_cost'])*$value['unit']+$value['actual_price']*$value['unit']*$value['actual_service_ratio']*0.01)/($value['actual_price']*$value['unit']*(1+$value['actual_service_ratio']*0.01));
-                $arr_wed_feast['gross_profit_rate'] += $arr_wed_feast['gross_profit']/$arr_wed_feast['total_price'];
+                if($arr_wed_feast['total_price']!=0){
+                    $arr_wed_feast['gross_profit_rate'] += $arr_wed_feast['gross_profit']/$arr_wed_feast['total_price'];    
+                }else{
+                    $arr_wed_feast['gross_profit_rate'] = 0;
+                }
+                
             }
         };
         /*print_r($arr_wed_feast);*/

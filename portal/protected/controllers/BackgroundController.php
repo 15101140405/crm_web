@@ -533,10 +533,11 @@ class BackgroundController extends InitController
         };
             
         $supplier_product = SupplierProduct::model()->findAll(array(
-            'condition' => 'account_id=:account_id && standard_type=:standard_type',
+            'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
                 'params' => array(
                         ':account_id' => $_COOKIE['account_id'],
-                        ':standard_type' => 0
+                        ':standard_type' => 0,
+                        ':product_show' => 1,
                     )));
         foreach ($supplier_product as $key => $value) {
             $t=explode('.', $value['ref_pic_url']);
@@ -1302,10 +1303,11 @@ class BackgroundController extends InitController
 
         $dish_type = DishType::model()->findAll();
         $supplier_product = SupplierProduct::model()->findAll(array(
-            'condition' => 'account_id=:account_id && standard_type=:standard_type',
+            'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
                 'params' => array(
                         ':account_id' => $_COOKIE['account_id'],
-                        ':standard_type' => 0
+                        ':standard_type' => 0,
+                        ':product_show' => 1,
                     )));
         $dish=array();
         foreach ($supplier_product as $key => $value) {
