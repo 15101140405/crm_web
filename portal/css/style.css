@@ -619,6 +619,7 @@
 }
 
 .menu_list .selected:after,
+.int_ulist .selected:after,
 .charge_list .selected:after {
     display: block;
     position: absolute;

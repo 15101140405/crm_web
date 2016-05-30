@@ -119,7 +119,7 @@ $(function  () {
                 location.href = "<?php echo $this->createUrl('product/store')."&account_id=".$_SESSION['account_id']."&staff_hotel_id=".$_SESSION['staff_hotel_id'];?>";
             });
         } else{
-            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
+            location.href = "<?php echo $this->createUrl('design/tpDetail');?>&product_id=<?php echo $_GET['product_id']?>&type=new&tab=<?php echo $_GET['tab']?>&from=selectorder<?php echo $_GET['from']?>&order_id=" + $(this).attr("order-id");
         };
 
     });

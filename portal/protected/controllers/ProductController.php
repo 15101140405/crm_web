@@ -194,8 +194,9 @@ class ProductController extends InitController
         Yii::app()->session['account_id']=$_GET['account_id'];
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
         
-        if(isset($_COOKIE['userid'])){
-            Yii::app()->session['userid']=$_COOKIE['userid'];
+        // if(isset($_COOKIE['userid'])){本机调试有问题，上线时回复这两行
+        //     Yii::app()->session['userid']=$_COOKIE['userid'];
+            Yii::app()->session['userid']=2222222;//本机调试有问题，上线时删去
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $str =  rtrim($staff['department_list'], "]"); 
             $str =  ltrim($str, "[");
@@ -212,9 +213,9 @@ class ProductController extends InitController
                     'hotel_name' => $hotel['name'],
                     'user_type' => $user_type
                 ));
-        }else{
-            $this->render('login');
-        };
+        // }else{本机调试有问题，上线时回复这三行
+        //     $this->render('login');
+        // };
     }
 
     public function actionSetuserid()
@@ -378,7 +379,6 @@ class ProductController extends InitController
                     ),
                 'order' => 'order_date DESC'
             ));
-        /*print_r($order);die;*/
         $order_data = array();
         foreach ($order as $key => $value) {
             $item = array();

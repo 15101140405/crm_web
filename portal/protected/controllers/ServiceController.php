@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 include_once('../library/WPRequest.php');
 
@@ -199,12 +199,14 @@ class ServiceController extends InitController
     public function actionList()
     {
         $type=$_GET['type_id'];
-        $service = ServicePerson::model()->findAll(array(
-                'condition' => 'service_type=:service_type',
-                'params' => array(
-                        ':service_type' => $type
-                    )
-            ));
+        $sql = yii::app()->db->createCommand("select service_person.id,team_id,service_person.`name`,avatar,gender,supplier.id as supplier_id from service_person left join supplier on service_person.staff_id=supplier.staff_id where supplier.account_id=".$_SESSION['account_id']." and service_type=".$type);
+        $service = $sql->queryAll();
+        // $service = ServicePerson::model()->findAll(array(
+        //         'condition' => 'service_type=:service_type',
+        //         'params' => array(
+        //                 ':service_type' => $type
+        //             )
+        //     ));
 
         $service_id=array();
         foreach ($service as $key => $value) {
@@ -243,6 +245,7 @@ class ServiceController extends InitController
             }else{
                 $item['starting_price'] =0;
             }
+            $item['supplier_id'] = $value['supplier_id'];
             
             $service_data[] = $item; 
         };
@@ -597,6 +600,14 @@ class ServiceController extends InitController
 
     public function actionService_product_list()
     {
+        if (!empty($_GET['order_id'])) {
+            $selected = OrderProduct::model()->findAll(array(
+                "condition" => "order_id = :order_id",
+                "params" => array(":order_id" => $_GET['order_id'],),
+                ));
+        }
+        // $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as supplier_product_id,actual_price,order_product.unit,supplier.id as supplier_id from order_product left join supplier_product on order_product.product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
+        // $select = $result->queryAll();
         // $supplier = Supplier::model()->find(array(
         //         'condition' => 'staff_id=:staff_id',
         //         'params' => array(
@@ -610,7 +621,8 @@ class ServiceController extends InitController
                     )
             ));
         $this->render('service_product_list',array(
-                'supplier_product' => $supplier_product,
+                'supplier_product'  => $supplier_product,
+                'selected'          => $selected,
             ));
     }
 

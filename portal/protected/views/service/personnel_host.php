@@ -106,7 +106,7 @@ $(function() {
   $(".day_order_module").remove();
 
   $("#sure").on("click",function(){
-      location.href = "<?php echo $this->createUrl('service/service_product_list');?>&tab=" + $.util.param("tab") + "&staff_id=<?php echo $service_person['staff_id']?>&order_id=";
+      location.href = "<?php echo $this->createUrl('service/service_product_list');?>&tab=" + $.util.param("tab") + "&staff_id=<?php echo $service_person['staff_id']?>&order_id=&supplier_id=" + $.util.param("supplier_id");
   });
 
   //页面初始化

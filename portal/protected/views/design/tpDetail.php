@@ -27,7 +27,7 @@
                     <input class="align_r t_green" type="text" id="price" 
                            value="<?php echo $orderproduct['actual_price']; ?>"/>
                 </div>
-                <i class="mar_l10 t_green"><?php echo $productData['unit'];?></i>
+                <i class="mar_l10 t_green">元/<?php echo $productData['unit'];?></i>
             </li>
             <li class="ulist_item flex" id="number">
                 数量
@@ -63,7 +63,7 @@
                     <input class="align_r t_green" type="text" id="price" value=""
                            placeholder="标准价格：<?php echo $productData['unit_price']; ?>"/>
                 </div>
-                <i class="mar_l10 t_green"><?php echo $productData['unit'];?></i>
+                <i class="mar_l10 t_green">元/<?php echo $productData['unit'];?></i>
             </li>
             <li class="ulist_item flex" id="number">
                 数量
@@ -342,35 +342,37 @@
                 };*/
 
                 //填写内容判断
-                if (get_info.actual_price == "" || get_info.amount == "" || get_info.unti == "" || get_info.price == "" ) {
-                    alert("请补全信息");
-                    return false;
-                }
-                else if (isNaN(get_info.actual_price)) {
-                    alert("请输入正确的价格信息！");
-                    return false;
-                }
-                ;
-            
-
+            if (get_info.actual_price == "" || get_info.amount == "" || get_info.unti == "" || get_info.price == "" ) {
+                alert("请补全信息");
+                return false;
+            }
+            else if (isNaN(get_info.actual_price)) {
+                alert("请输入正确的价格信息！");
+                return false;
+            };
+            $("#insert").remove();
             $.post("<?php echo $this->createUrl('design/savetp');?>",get_info,function(data){  //bacground data
                 alert("提交成功!");
-                if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
-                    location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
-                    location.href = "<?php echo $this->createUrl("design/lightingScreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                } else if ($.util.param("tab") == "made") {
-                    location.href = "<?php echo $this->createUrl("design/lightingMadeDetail", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                } else if ($.util.param("tab") == "graphic" || $.util.param("tab") == "film") {
-                    location.href = "<?php echo $this->createUrl("design/graphicFilm", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                } else if ($.util.param("tab") == "dress" || $.util.param("tab") == "appliance") {
-                    location.href = "<?php echo $this->createUrl("design/dressAppliance", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                } else if ($.util.param("tab") == "drinks" || $.util.param("tab") == "car") {
-                    location.href = "<?php echo $this->createUrl("design/drinksCar", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                }else if ($.util.param("tab") == "feast") {
-                    location.href = "<?php echo $this->createUrl("design/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
-                }else{
-                    location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id="+ account_id +"&staff_hotel_id=" + staff_hotel_id;
+                if ($.util.param("from") == "selectorder") {
+                    location.href = "<?php echo $this->createUrl('product/store');?>&account_id="+ account_id +"&staff_hotel_id=" + staff_hotel_id;
+                } else{
+                    if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
+                        location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
+                        location.href = "<?php echo $this->createUrl("design/lightingScreen", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    } else if ($.util.param("tab") == "made") {
+                        location.href = "<?php echo $this->createUrl("design/lightingMadeDetail", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    } else if ($.util.param("tab") == "graphic" || $.util.param("tab") == "film") {
+                        location.href = "<?php echo $this->createUrl("design/graphicFilm", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    } else if ($.util.param("tab") == "dress" || $.util.param("tab") == "appliance") {
+                        location.href = "<?php echo $this->createUrl("design/dressAppliance", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    } else if ($.util.param("tab") == "drinks" || $.util.param("tab") == "car") {
+                        location.href = "<?php echo $this->createUrl("design/drinksCar", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    }else if ($.util.param("tab") == "feast") {
+                        location.href = "<?php echo $this->createUrl("design/feast", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
+                    }else{
+                        location.href = "<?php echo $this->createUrl('product/store');?>&account_id="+ account_id +"&staff_hotel_id=" + staff_hotel_id;
+                    };
                 };
             });
         });
@@ -512,6 +514,8 @@
             $.post("<?php echo $this->createUrl('design/updatetp');?>",get_info,function(data){  //bacground data
                 
                     alert("提交成功!");
+                    $("#update").remove();
+                    $("#del").remove();
                     if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
                         location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                     } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
@@ -613,6 +617,8 @@
             $.post("<?php echo $this->createUrl('design/deltp');?>",get_info,function(data){
                 //  if(retval.success){
                 alert('删除成功');
+                $("#update").remove();
+                $("#del").remove();
                 if ($.util.param("tab") == "host" || $.util.param("tab") == "video" || $.util.param("tab") == "camera" || $.util.param("tab") == "makeup" || $.util.param("tab") == "other") {
                     location.href = "<?php echo $this->createUrl("design/servicePersonnel", array());?>&tab=" + $.util.param("tab") + "&from=" + $.util.param("from") + "&order_id=<?php echo $_GET['order_id']?>";
                 } else if ($.util.param("tab") == "lighting" || $.util.param("tab") == "screen") {
