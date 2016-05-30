@@ -11,14 +11,14 @@
  * @property string $update_time
  * @property string $avatar
  */
-class Wedding_set extends InitActiveRecord
+class DishType extends InitActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'wedding_set';
+		return 'dish_type';
 	}
 
 	/**
@@ -32,14 +32,8 @@ class Wedding_set extends InitActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('staff_hotel_id',$this->staff_hotel_id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('final_price',$this->final_price,true);
-		$criteria->compare('feast_discount',$this->feast_discount,true);
-		$criteria->compare('other_discount',$this->avatar,true);
-		$criteria->compare('product_list',$this->product_list,true);
-		$criteria->compare('category',$this->category,true);
-		$criteria->compare('set_show',$this->show,true);
+		$criteria->compare('name',$this->name);
+		$criteria->compare('pic',$this->pic);
 		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(

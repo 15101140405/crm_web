@@ -81,7 +81,8 @@
         <div class="right_area right" style="background:#fff;">
             <div>
                 <div class="tit_box clearfix" style="width:230px;background:#fff;border-bottom: 1px solid #e6e6e6;">
-                    <h2 class="left">加入本套系的产品</h2>
+                    <h2 class="left">折扣：</h2>
+                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入折扣，如0.8">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:230px;" id="shopping_car">
@@ -202,11 +203,18 @@
                 product_list += $(this).attr('product-id') +"|"+ $(this).find(".product_price").val() +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html();
+        <?php if(!isset($_GET['type'])){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
+        <?php }else if($_GET['type']=="meeting_set"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=meeting_set&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
+        <?php }?>
         })
 
         //改变数量、单价时，刷新总价
         $('.product_price').live('change', function() {
+            total_price(); 
+        });
+        $('#feast_discount').live('change', function() {
             total_price(); 
         });
         $(".del_product").live("click",function(){
@@ -221,6 +229,11 @@
             $("#shopping_car li").each(function(){
                 total_price += $(this).find(".amount").val() * $(this).find(".product_price").val();
             });
+            var feast_discount = $("#feast_discount").val();
+            if(feast_discount != ""){
+                total_price = total_price*feast_discount;
+                total_price = total_price.toFixed(2)
+            };
             $("#total_price").html(total_price);
         };
     })

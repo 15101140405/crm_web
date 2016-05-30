@@ -22,33 +22,15 @@
     <div class="nav_area">
         <div class="upload_wapper">
             <ul class="nav_list upload_wapper clearfix">
-                <li ><a href="#" id="top">场地布置</a>
+                <li ><a href="#">菜品分类</a>
                     <ul class="sub_nav_list" id="decoration">
                         <li tap-id="0"><a href="#">全部</a>
                         </li>
-                <?php foreach ($decoration_tap as $key => $value) {?>
+                <?php foreach ($dish_type as $key => $value) {?>
                         <li tap-id="<?php echo $value['id']?>"><a href="#"><?php echo $value['name']?></a>
                         </li>
                 <?php }?>
                     </ul>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="host"><a href="#">主持</a>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="video"><a href="#">摄像</a>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="camera"><a href="#">摄影</a>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="makeup"><a href="#">化妆</a>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="other"><a href="#">其他人员</a>
-                </li>
-                <li class="shuxian">|</li>
-                <li id="lss"><a href="#">灯光／音响／视频</a>
                 </li>
             </ul>
         </div>
@@ -58,28 +40,9 @@
         <!--左侧内容区域-->
         <div class="left_area left">
             <ul class="goods_list clearfix" id="product">
-        <?php if(!isset($_GET['type'])){?>
-        <?php foreach ($supplier_product as $key => $value) {
-            if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
-                <li style="height: 200px;" tap="<?php echo $value['decoration_tap']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
-                    <div class="img_box" style="height:60%">
-                        <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
-                        <!-- <span>已售233件</span> -->
-                    </div>
-                    <div class="info_box" style="height:40%">
-                        <p class="name"><?php echo $value['name']?></p>
-                        <p class="price">&yen;<strong><?php echo $value['unit_price']?></strong>
-                        </p>
-                        <!-- <p class="original_price">&yen;<del>400.00</del>
-                        </p> -->
-                        <button class="add_product">加入套系</button>
-                    </div>
-                </li>
-        <?php }}?>
-        <?php }else if($_GET["type"] == 'menu'){?>
         <?php foreach ($supplier_product as $key => $value) {
             if($value['supplier_type_id'] == 2){?>
-                <li style="height: 200px;" tap="<?php echo $value['dish_type']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
+                <li style="height: 200px;" dish-type="<?php echo $value['dish_type']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
                     <div class="img_box" style="height:60%">
                         <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
                         <!-- <span>已售233件</span> -->
@@ -90,37 +53,21 @@
                         </p>
                         <!-- <p class="original_price">&yen;<del>400.00</del>
                         </p> -->
-                        <button class="add_product">加入套系</button>
+                        <button class="add_product">加入套餐</button>
                     </div>
                 </li>
         <?php }}?>
-        <?php }?>
             </ul>
         </div>
         <!--右侧内容区域-->
-        <div class="right_area right" style="background:#fff;width:247px;">
+        <div class="right_area right" style="background:#fff;">
             <div>
-                <div class="tit_box clearfix" style="width:253px;background:#fff;border-bottom: 1px solid #e6e6e6;">
+                <div class="tit_box clearfix" style="width:230px;background:#fff;border-bottom: 1px solid #e6e6e6;">
                     <h2 class="left">折扣：</h2>
-                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="<?php echo $wedding_set['feast_discount']?>" placeholder="请输入折扣，如0.8">
+                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入折扣，如0.8">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:230px;" id="shopping_car">
-            <?php foreach ($product_list as $key => $value) {?>
-                    <li class="clearfix hid new_hid" product-id="<?php echo $value['product_id']?>" unit-cost="<?php echo $value['cost']?>" style="display: list-item;">
-                        <img class="left product_pic" src="http://file.cike360.com/upload/2r20160516111246.jpg" alt="">
-                        <div class="con left">
-                            <h3 class="product_name"></h3>
-                            <div class="counter_box clearfix">
-                                <span class="minus_btn btn disabled left">-</span>
-                                <input class="count left amount" type="text" readonly="true" value="<?php echo $value['amount']?>">
-                                <span class="add_btn btn left">+</span>
-                            </div>
-                        </div>
-                        <img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px">
-                        <p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥<input class="product_price" type="text" value="<?php echo $value['price']?>"></p>
-                    </li>
-            <?php }?>
                 </ul>
                  
             </div>
@@ -153,28 +100,8 @@
 <script type="text/javascript" src="js/upload_set.js"></script>
 <script>
     $(function(){
-
         //初始渲染
-        <?php if(!isset($_GET['type'])){?>
-            $("#product li").addClass("hid");
-            $("[supplier-type-id='20']").removeClass("hid");
-        <?php }else if($_GET['type'] == "menu"){?>
-            $("#host").remove();
-            $("#video").remove();
-            $("#camera").remove();
-            $("#makeup").remove();
-            $("#other").remove();
-            $("#lss").remove();
-            $(".shuxian").remove();
-            $("#top").html("婚宴／会议餐")
-        <?php }?>
-
-        $("#shopping_car li").each(function(){
-            var product = $("#product [product-id='"+$(this).attr('product-id')+"']");
-            $(this).find(".product_id").html(product.find(".name").html());
-            $(this).find(".product_pic").attr("src",product.find("img").attr("src"));
-            total_price(); 
-        });
+        
 
         //点击加入套系
         $(".add_product").on("click",function(){
@@ -204,11 +131,7 @@
             $("#product li").removeClass("hid");
             $("#product li").addClass("hid");
             var tap = $(this).attr("tap-id");
-        <?php if(!isset($_GET['type'])){?>
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='20']").removeClass("hid");};
-        <?php }else if($_GET['type'] == "menu"){?>
-            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='2']").removeClass("hid");};
-        <?php }?>    
             $(".sub_nav_list").hide();
         });
 
@@ -254,7 +177,6 @@
             $("[supplier-type-id='23']").removeClass("hid");
         });
 
-
         //点击创建套系
         $("#create").on("click",function(){
             var product_list = "";
@@ -263,9 +185,9 @@
             });
             product_list = product_list.substring(0,product_list.length-1);
         <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
-        <?php }else if($_GET['type'] == "menu"){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&type=menu&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" +$("#feast_discount").val();
+            location.href = "<?php echo $this->createUrl("background/upload_menu2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&other_discount=&feast_discount=" +$("#feast_discount").val();
+        <?php }else if($_GET['type']=="meeting_menu"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_menu2");?>&type=meeting_menu&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&other_discount=&feast_discount=" +$("#feast_discount").val();
         <?php }?>
         })
 
@@ -273,26 +195,20 @@
         $('.product_price').live('change', function() {
             total_price(); 
         });
+        $('#feast_discount').live('change', function() {
+            total_price(); 
+        });
         $(".del_product").live("click",function(){
             $(this).parent().remove();
             total_price(); 
         });
-        $('#feast_discount').live('change', function() {
-            total_price(); 
-        });
         $(".shopping_car").find(".counter_box").count({limitnum:5});
-        $(".add_btn").live("click",function(){
-            total_price(); 
-        });
-        $(".minus_btn").live("click",function(){
-            total_price(); 
-        });
         
         //总价计算，并刷新
         function total_price(){
             var total_price = 0;
             $("#shopping_car li").each(function(){
-                total_price += $(this).find(".count").val() * $(this).find(".product_price").val();
+                total_price += $(this).find(".amount").val() * $(this).find(".product_price").val();
             });
             var feast_discount = $("#feast_discount").val();
             if(feast_discount != ""){

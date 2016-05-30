@@ -43,7 +43,7 @@
             </div>
             <ul class="module_con store_set_list flexbox">
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=2&from=wedding_feast">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=3&from=wedding_feast">
                         <img class="icon" src="images/set01.png" alt="">
                         <div class="info flex1">
                             <p> 婚  宴</p>
@@ -52,7 +52,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=1&from=meeting_feast">
+                    <a class="flexbox v_center" style="height:3.8rem;" href="<?php echo $this->createUrl("product/set_list");?>&supplier_type_id=2&category=4&from=meeting_feast">
                         <img class="icon" src="images/set02.png" alt="">
                         <div class="info flex1">
                             <p> 会议餐</p>
@@ -108,7 +108,7 @@
         </section>
 
         <!--婚礼定制-->
-        <section class="store_module">
+        <!-- <section class="store_module">
             <div class="flexbox v_center h2_box"  style="height:2rem;">
                 <span></span>
                 <h2>婚礼定制</h2>
@@ -125,7 +125,7 @@
                     </a>
                 </li>
             </ul>
-        </section>
+        </section> -->
     </article>
 
     <script type="text/javascript" src='js/zepto.min.js'></script>

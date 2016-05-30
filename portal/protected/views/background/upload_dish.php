@@ -91,7 +91,7 @@
                 file_dialog_start_handler: fileDialogStart,
             };
             swfu2 = new SWFUpload(settings2);
-            /*swfu3 = new SWFUpload(settings3);*/
+            swfu3 = new SWFUpload(settings3);
         }
         function queueComplete() {
             //location.href="";
@@ -124,6 +124,22 @@
                 </li>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
+                        <label for="">类别：</label>
+                        <span class="must">*</span>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="tap">
+                            <option value="">请选择</option>
+                    <?php foreach ($dish_type as $key => $value) {?>
+                            <option value="<?php echo $value['name']?>" tap-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php }?>
+                        </select>
+                    </div>
+                    <span class="left add add_class">新增类别</span>
+                    <span class="left tip hid" id="tap_t">请选择供应商</span>
+                </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
                         <label for="">供应商：</label>
                         <span class="must">*</span>
                     </div>
@@ -131,11 +147,11 @@
                         <select name="" id="supplier">
                             <option value="">请选择</option>
                     <?php foreach ($supplier as $key => $value) {?>
-                            <option value="<?php echo $value['name']?>[<?php echo $value['supplier_type_name']?>]" supplier-id="<?php echo $value['id']?>" supplier-type-id="<?php echo $value['type_id']?>"><?php echo $value['name']?>[<?php echo $value['supplier_type_name']?>]</option>
+                            <option value="<?php echo $value['name']?>" supplier-id="<?php echo $value['id']?>" supplier-type-id="<?php echo $value['type_id']?>"><?php echo $value['name']?></option>
                     <?php }?>
                         </select>
                     </div>
-                    <span class="left add add_supplier">新增<灯光／音响／视频>供应商</span>
+                    <span class="left add add_supplier">新增<场地布置>供应商</span>
                     <span class="left tip hid" id="supplier_t">请选择供应商</span>
                 </li>
                 <li class="desc_item clearfix">
@@ -146,10 +162,8 @@
                     <div class="select_c left">
                         <select name="" id="unit">
                             <option value="个">个</option>
-                            <option value="只">只</option>
-                            <option value="组">组</option>
-                            <option value="天">天</option>
-                            <option value="米">米</option>
+                            <option value="盘">盘</option>
+                            <option value="位">位</option>
                         </select>
                     </div>
                     <span class="left tip hid" id="unit_t">请选择单位</span>
@@ -195,10 +209,85 @@
             </div>
         </div>
 
+        <!--产品图片-->
+        <!-- <div class="upload_wapper">
+            <div class="video_desc clearfix">
+                <ul class="left desc_box">
+                    <li class="desc_item clearfix">
+                        <div class="tit_box left">
+                            <label for="">产品图片:</label>
+                            <span class="must">*</span>
+                        </div>
+                        <div id="demo" class="demo" style="display:inline-block;">
+                            <form id="uploadForm" action="/upload/UploadAction" method="post" enctype="multipart/form-data">
+                                <div class="upload_box">
+                                    <div class="upload_main">
+                                        <div class="upload_choose">
+                                            <div class="convent_choice">
+                                                <div class="andArea">
+                                                    <div class="filePicker">点击选择文件</div>
+                                                    <input id="fileImage" type="file" size="30" name="fileselect[]" multiple=""> </div>
+                                            </div>
+                                        </div>
+                                        <div class="status_bar">
+                                            <div id="status_info" class="info"></div>
+                                            <div class="btns">
+                                                <div class="webuploader_pick">继续选择</div>
+                                                <div class="upload_btn1">开始上传</div>
+                                            </div>
+                                        </div>
+                                        <div id="preview" class="upload_preview">
+
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="upload_submit">
+                                        <button type="button" id="fileSubmit" class="upload_submit_btn">确认上传文件</button>
+                                    </div>
+                                    <div id="uploadInf" class="upload_inf"></div>
+                                </div>
+                            </form>
+                        </div>
+                        <span class="tip hid" style="float:right;" id="file_t">请上传产品图片</span>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
 
         <div class="upload_btn_box">
             <button href="javascript:;" class="btn active" id="sure">添加产品</button>
             <button href="javascript:;" class="btn" id="b">返回</button>
+            <!-- <a href="javascript:;" class="btn" id="back">返回</a> -->
+        </div>
+    </div>
+    <!--弹层1-->
+    <div class="msgbox msgbox_class">
+        <div class="msgbox_c">
+            <div class="tit_box clearfix">
+                <h2 class="left">新增<场地布置｜产品类别></h2>
+                <img class="right close" src="images/close.jpg" alt="">
+            </div>
+            <div class="con clearfix">
+                <div class="video_cover" style="margin-right:0px;">
+                    <label for="">类别封面：</label>
+                    <div class="cover_box" style="margin-left:105px;">
+                        <img src="images/cover.jpg" id="poster_img1">
+                    </div>
+                    <button id="uploadsingle1">上传产品示意图</button>
+                    <!--  -->
+                    <span class="tip tip2 hid" id="tap_poster_t">请上传类别封面</span>
+                </div>
+                <div class="clearfix">
+                    <label for="">类别名称：</label><input id="tap_name" class="inputItem" type="text">
+                    <span class="tip tip2 hid" id="tap_name_t">请输入类别名称</span>
+                </div>
+                <div class="btn_box right">
+                    <button id="insert_tap">保存</button>
+                    <!-- <button>不保存</button> -->
+                    <button class="close">取消</button>
+                </div>
+            </div>
+            
         </div>
     </div>
     <!--弹层2-->
@@ -215,16 +304,17 @@
                 <div class="clearfix">
                     <label for="">手机号：</label><input id="telephone" class="inputItem" type="text">
                 </div>
-                <div class="clearfix">
+                <!-- <div class="clearfix">
                     <label for="">供应商类别：</label>
-                    <div class="select_c left" id="supplier_type">
-                        <select name="" id="unit">
-                            <option value="灯光" supplier-type="8">灯光</option>
-                            <option value="音响" supplier-type="23">音响</option>
-                            <option value="视频" supplier-type="9">视频</option>
+                    <div class="select_c left">
+                        <select name="" id="supplier_type" style="height: 30px;width: 235px;margin-top: 5px;">
+                            <option value="">请选择</option>
+                    <?php /*foreach ($supplier_type as $key => $value)*/ {?>
+                            <option value="" supplier-type-id=""></option>
+                    <?php }?>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="btn_box right">
                     <button id="insert_supplier">保存</button>
                 </div>
@@ -269,7 +359,7 @@
                 supplier_id : $("#supplier option:selected").attr("supplier-id"),
                 supplier_type_id : $("#supplier option:selected").attr("supplier-type-id"),
                 decoration_tap : "",
-                dish_type : 0,
+                dish_type : $("#tap option:selected").attr("tap-id"),
                 standard_type : 0,
                 category : 2,
                 unit : $("#unit option:selected").val(),
@@ -297,7 +387,7 @@
                 $.post("<?php echo $this->createUrl("background/product_upload");?>",data,function(){
                     $.cookie('img', null); 
                     $.cookie('img1', null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=7";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=9";
                 });
             };
         });
@@ -309,12 +399,12 @@
             var data = {
                 name : $("#supplier_name").val(),
                 telephone : $("#telephone").val(),
-                supplier_type : $("#supplier_type option:selected").attr("supplier-type"),
+                supplier_type : 20,
                 update_time : time
             };
             /*if(data.)*/
             $.post("<?php echo $this->createUrl("background/supplier_add");?>",data,function(){
-                location.href="<?php echo $this->createUrl("background/upload_product_lss");?>";
+                location.href="<?php echo $this->createUrl("background/upload_product");?>";
             });
         });
 
@@ -338,7 +428,7 @@
             }else{
                 $.post("<?php echo $this->createUrl("background/tap_add");?>",data,function(){
                     $.cookie('img1', null); 
-                    location.href = "<?php echo $this->createUrl("background/upload_product_lss");?>";
+                    location.href = "<?php echo $this->createUrl("background/upload_product");?>";
                 });
             };
         });

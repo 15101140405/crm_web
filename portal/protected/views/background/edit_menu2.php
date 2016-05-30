@@ -7,7 +7,7 @@
     <title>上传</title>
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
-    <script type="text/javascript" src="js/swfupload.js"></script>
+    <script type="text/javascript" src="http://file.cike360.com/swfupload/swfupload.js"></script>
     <script type="text/javascript" src="js/handlers.js"></script>
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -112,7 +112,7 @@
     <!--视频描述-->
     <div class="upload_wapper">
         <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px;">
-            <!-- <ul class="left desc_box">
+            <ul class="left desc_box">
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
@@ -129,19 +129,33 @@
                     </div>
                     <div class="select_c left">
                         <select name="" id="CI_Show">
+                            <!-- <option value="">请选择</option> -->
                             <option value="1">显示</option>
                             <option value="0">隐藏</option>
                         </select>
                     </div>
                 </li>
-            </ul> -->
-            <!-- <div class="right video_cover">
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择门店</label>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="hotel">
+                            <!-- <option value="">请选择</option> -->
+                    <?php foreach ($hotel as $key => $value) {?>
+                            <option value="<?php echo $value['name']?>" staff-hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php }?>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+            <div class="right video_cover">
                 <div class="cover_box">
-                    <img src="" alt="" id="poster_img" style="width: 120px;">
+                    <img src="<?php echo $pic?>" alt="" id="poster_img" style="width: 120px;">
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>
-            </div> -->
+            </div>
         </div>
         <!-- 已上传资源 -->
         <div class="index_con_box" style="margin-bottom:20px;">
@@ -203,36 +217,98 @@
             <p>京公网安备11010502022785号 京公网安备11010502022785号</p>
             <p>京公网安备11010502022785号</p>
         </div>
+    <!--弹层1-->
+    <div class="msgbox msgbox_class">
+        <div class="msgbox_c" style="width:860px;left:15%;top:10%;height:520px; overflow:scroll">
+            <div class="tit_box clearfix">
+                <h2 class="left">绑定产品</h2>
+                <img class="right close" src="images/close.jpg" alt="">
+            </div>
+            <div class="index_con_box">
+                <div class="con" style="padding-top:0px;">
+                    <div class="top clearfix">
+                        <div class="left clearfix">
+                            <div class="select_box left" id="shaixuan1">
+                                <div class="my_select clearfix">
+                                    <span class="select_con">请选择</span>
+                                    <span class="down"></span>
+                                </div>
+                                <select class="select_list" name="" id="select_type">
+                                    <option value="请选择" type-id="0">请选择</option>
+                                <?php foreach ($tap as $key => $value) {?>
+                                    <option value="<?php echo $value['name']?>" type-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                                <?php }?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                <ul class="upload_list" id="product_item">
+            <?php foreach ($case_data as $key => $value) { ?>
+                    <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="<?php echo $value['ref_pic_url']?>" alt="">
+                                <!-- <span>私密视频</span> -->
+                            </div>
+                            <div class="video_info left">
+                                <h3><?php echo $value['name']?></h3>
+                                <div class="state_box clearfix">
+                                    <img class="left" src="images/up06.jpg" alt="">
+                                    <span class="left"><?php echo $value['description']?></span>
+                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
+                                </div>
+                                <!-- <p class="tag">标签:<span>分销</span>
+                                </p> -->
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <span class="left state">¥<?php echo $value['unit_price']?>元／<?php echo $value['unit']?></span>
+                            <a class="edit_btn left sure_bind" href="javascript:;">确定</a>
+                        </div>
+                    </li>
+            <?php }?>
+                </ul>
+            </div>
+        </div>
+    </div>
 <script>
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $case['CI_Pic']?>");
         $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#hotel").val($("#hotel [staff-hotel-id='<?php echo $Wedding_set['staff_hotel_id']?>']").val());
         //保存
         $("#save").on("click",function(){
             var data = {
                 CI_ID : <?php echo $_GET['ci_id']?>,
+                CT_ID : <?php echo $_GET['ct_id']?>,
+                CI_Name : $("#case_name").val(),
+                CI_Show : $("#CI_Show option:selected").val(),
+                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
+                CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
-                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
+                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort"),
+                product_list : "<?php echo $_GET['product_list']?>",
+                final_price : <?php echo $_GET['final_price']?>,
             };
-            //alert($("#resources_list").has("li").length);
-            if($("#resources_list").has("li").length == 0){data.CR_Sort = 0};
+            if($("#resources_list").find("li").length == 0){data.CR_Sort = 0;};
+            console.log($("#resources_list").find("li").length);
             console.log(data);
-            /*$(".tip").removeClass("hid");
+            $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
             if(data.CI_Name == ""){$("#name_t").removeClass("hid")};
             if(data.CI_Pic == "null" || data.CI_Pic == null){$("#poster_t").removeClass("hid")};
             if(data.case_resource == "null" || data.case_resource == null){$("#resources_t").removeClass("hid")};
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
-            }else{*/
-                $.post("<?php echo $this->createUrl("background/host_video_edit");?>",data,function(){
+            }else{
+                $.post("<?php echo $this->createUrl("background/set_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
                 });
-            /*}; */ 
+            };  
         });
         //删除资源
         $(".del_resource").on("click",function(){
@@ -240,31 +316,6 @@
                 location.reload();
             })
         })
-
-        //点确认绑定
-        $(".sure_bind").on("click",function(){
-            data = {
-                CR_ID : $.cookie('temp_resource_id'),
-                supplier_product_id : $(this).parent().parent().attr("product-id"),
-            }
-            $.post("<?php echo $this->createUrl("background/bind_product");?>",data,function(){
-                $.cookie('temp_resource_id',null);
-                location.reload();
-            })
-        })
-        //按分类筛选产品
-        $('#select_type').change(function(){
-            $("#product_item li").removeClass("hid");
-            $("#product_item li").addClass("hid");
-            var tap = $(this).children('option:selected').attr("type-id");
-            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
-        });
-        //删除绑定
-        $(".del_product").on("click",function(){
-            $.post("<?php echo $this->createUrl("background/del_bind");?>",{bind_id:$(this).parent().attr("product-id")},function(){
-                location.reload();
-            });
-        });
     })
 </script>
 </body>

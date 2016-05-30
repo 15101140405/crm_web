@@ -386,6 +386,199 @@ class ResourceController extends InitController
             $list[]=$value;
         };
 
+        
+
+
+
+
+        //取婚宴套餐
+        $menu = yii::app()->db->createCommand("select * from case_info where ".
+
+            "(( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
+                "(select account_id from staff where id=".$staff_id.") ) ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
+            "(select hotel_list from staff where id=".$staff_id.") ) ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 ))  ".
+
+            " and CI_Show=1 and CI_Type=9 order by CI_Sort Desc");
+        $menu = $menu->queryAll();
+        /*print_r($set);die;*/
+        foreach($menu as  $key3 => $val){
+            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                /*$t=explode(".", $val["CI_Pic"]);
+                $CI_Pic = "";
+                if(isset($t[0]) && isset($t[1])){
+                    $CI_Pic = $t[0]."_sm.".$t[1];    
+                }else{
+                    $CI_Pic = $val['CI_Pic'];
+                };*/
+                $menu[$key3]["CI_Pic"]=$url.$val['CI_Pic'];
+            };
+            //$val["size"]=$this->getUrlFileSize($val["CI_Pic"]);
+            /*$resources = CaseResources::model()->findAll(array(
+                    'condition' => 'CI_ID=:CI_ID',
+                    'params' => array(
+                            ':CI_ID' => $val["CI_ID"]
+                        )
+                )); */
+  
+            $result1 = yii::app()->db->createCommand("select case_resources.CR_ID,case_resources.CR_Type,case_resources.CR_Sort,case_resources.CR_Name,case_resources.CR_Path,CR_Show,CR_Remarks,supplier_product.id,supplier_product.name,supplier_product.unit_price,supplier_product.unit,supplier_product.ref_pic_url,supplier_product.description from case_resources left join case_resources_product on case_resources_product.CR_ID=case_resources.CR_ID left join supplier_product on case_resources_product.supplier_product_id=supplier_product.id where CI_ID =".$val["CI_ID"]." order by case_resources.CR_Sort");
+            
+            $resources = $result1->queryAll();
+            $jsonresources = array();
+            $cur_resourceobj=null;
+            $cur_crid = 0;
+            //$cur_product = null;
+            //$i = 0;
+            $cur_product = array();
+            foreach ($resources as $rkey => $rval) {
+                $resourceobj =array(
+                    "CR_ID"=>$rval["CR_ID"],
+                    "CR_Name"=>$rval["CR_Name"],
+                    "CR_Path"=>$rval["CR_Path"],
+                    "CR_Sort"=>$rval["CR_Sort"],
+                    "CR_Show"=>$rval["CR_Show"],
+                    "CR_Remarks"=>$rval["CR_Remarks"],
+                    "CR_Type"=>$rval["CR_Type"]
+                    );
+                if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
+                    $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
+                }
+                
+                if($cur_crid!=$rval["CR_ID"]&&$cur_crid!=0){
+                    $jsonresources[]=$cur_resourceobj;
+                    //$cur_resourceobj=null;
+                    $cur_product=array();
+                }
+                $cur_crid = $rval["CR_ID"];
+                $cur_resourceobj=$resourceobj;
+                if($rval["id"]!=null){
+                    $t=explode(".", $rval["ref_pic_url"]);
+                    if(isset($t[0]) && isset($t[1])){
+                        $ref_pic_url = $t[0]."_sm.".$t[1];    
+                    }else{
+                        $ref_pic_url = $rval['ref_pic_url'];
+                    };
+                    $productobj=array(
+                        "id"=>$rval["id"],
+                        "name"=>$rval["name"],
+                        "unit_price"=>$rval["unit_price"],
+                        "unit"=>$rval["unit"],
+                        "description"=>$rval["description"],
+                        "ref_pic_url"=>"http://file.cike360.com".$ref_pic_url
+                        );
+                    $cur_product[]=$productobj;
+                    $cur_resourceobj["product"]=$cur_product;
+                }
+                else{
+                    $cur_resourceobj["product"]=array();
+                }
+            }
+            $menu[$key3]["resources"]= $jsonresources;
+
+            $wedding_set = Wedding_set::model()->findByPk($val['CT_ID']);
+
+            $temp = explode(',', $wedding_set['product_list']);
+
+            $product = array();
+
+            foreach ($temp as $key_tem => $temp_val) {
+                $item = array();
+
+                $t = explode('|', $temp_val);
+
+                $supplier_product = SupplierProduct::model()->findByPk($t[0]);
+                /*print_r($t);die;*/
+                $t1=explode(".", $supplier_product["ref_pic_url"]);
+                if(isset($t1[0]) && isset($t1[1])){
+                    $ref_pic_url = $t1[0]."_sm.".$t1[1];    
+                }else{
+                    $ref_pic_url = $supplier_product['ref_pic_url'];
+                };
+                $item['id'] = $supplier_product['id'];
+                $item['name'] = $supplier_product['name'];
+                $item['unit_price'] = $supplier_product['unit_price'];
+                $item['unit'] = $t[2];
+                $item['description'] = $supplier_product['description'];
+                $item['ref_pic_url'] = "http://file.cike360.com".$ref_pic_url;
+                $product[] = $item;
+            };
+            $menu[$key3]['product'] = $product;
+        };
+        /*echo json_encode($set);die;*/
+        foreach ($menu as $key4 => $value) {
+            $list[]=$value;
+        };
+
+
+
+
+
+        //取餐饮零点
+        $i2 = 100000;
+        $staff = Staff::model()->findByPk($_GET['token']);
+        $dish_type = DishType::model()->findAll();
+        $result = yii::app()->db->createCommand("select supplier_product.id as CR_ID,supplier_product.name as CR_Name,ref_pic_url as CR_Path,description as CR_Remarks,dish_type.id as CI_ID,unit_price,unit from supplier_product left join dish_type on dish_type=dish_type.id where account_id=".$staff['account_id']);
+        $supplier_product = $result->queryAll();
+        foreach ($dish_type as $key_type => $value_type) {
+            $item = array();
+            $item['CI_ID'] = $i2+$value_type['id'];
+            $item['CI_Name'] = $value_type['name'];
+            $item['CI_Place'] = "";
+
+            $t = explode(".", $value_type['pic']);
+            if(isset($t[0]) && isset($t[1])){
+                $pic = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+            }else{
+                $pic = "";
+            };
+            $item['CI_Pic'] = $pic;
+            $item['CI_Time'] = "";
+            $item['CI_CreateTime'] = "";
+            $item['CI_Sort'] = "1";
+            $item['CI_Show'] = "1";
+            $item['CI_Type'] = 10;
+            $item['CT_ID'] = 0;
+            $item['resources'] = array();
+            foreach ($supplier_product as $key_pro => $value_pro) {
+                $tem = array();
+                if($value_pro['CI_ID'] == $value_type['id']){
+                    $tem['CR_ID'] = $i2*2+$value_pro['CR_ID'];
+                    $tem['CR_Name'] = $value_pro['CR_Name'];
+
+                    $t = explode(".", $value_pro['CR_Path']);
+                    if(isset($t[0]) && isset($t[1])){
+                        $pic = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                    }else{
+                        $pic = "";
+                    };
+                    $tem['CR_Path'] = $pic;
+                    $tem['CR_Sort'] = 1;
+                    $tem['CR_Show'] = 1;
+                    $tem['CR_Remarks'] = $value_pro['CR_Remarks'];
+                    $tem['CR_Type'] = 1;
+                    $tem['product'] = array();
+                    $tem_p = array();
+                    $tem_p['id'] = $value_pro['CR_ID'];
+                    $tem_p['name'] = $value_pro['CR_Name'];
+                    $tem_p['unit_price'] = $value_pro['unit_price'];
+                    $tem_p['unit'] = $value_pro['unit'];
+                    $tem_p['description'] = $value_pro['CR_Remarks'];
+                    $tem_p['ref_pic_url'] = $pic;
+                    $tem['product'][] = $tem_p;
+
+                    $item['resources'][] = $tem;
+                };
+            };
+            $item['product'] = array();
+            $list[] = $item;
+        }
+
+
 
         echo json_encode($list);
 

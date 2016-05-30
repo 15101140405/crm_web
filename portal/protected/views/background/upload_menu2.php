@@ -7,13 +7,11 @@
     <title>上传</title>
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
-    <script type="text/javascript" src="js/swfupload.js"></script>
+    <script type="text/javascript" src="http://file.cike360.com/swfupload/swfupload.js"></script>
     <script type="text/javascript" src="js/handlers.js"></script>
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="js/upload.js"></script>
     <script type="text/javascript" src="js/input.js"></script>
-    <script type="text/javascript" src="js/select.js"></script>
     <script type="text/javascript">
         var swfu;
         var swfu2;
@@ -111,15 +109,15 @@
     </div>
     <!--视频描述-->
     <div class="upload_wapper">
-        <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px;">
-            <!-- <ul class="left desc_box">
+        <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px">
+            <ul class="left desc_box">
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
                         <span class="must">*</span>
                     </div>
                     <div class="input_box left">
-                        <input class="input_in" id="case_name" type="text" value="<?php echo $case['CI_Name']?>" placeholder="请输入案例名称">
+                        <input class="input_in" id="case_name" type="text" value="" placeholder="请输入案例名称">
                     </div>
                     <span class="tip tip2 hid" id="name_t">请上传示意图</span>
                 </li>
@@ -129,56 +127,141 @@
                     </div>
                     <div class="select_c left">
                         <select name="" id="CI_Show">
+                            <!-- <option value="">请选择</option> -->
                             <option value="1">显示</option>
                             <option value="0">隐藏</option>
                         </select>
                     </div>
                 </li>
-            </ul> -->
-            <!-- <div class="right video_cover">
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择门店</label>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="hotel">
+                            <!-- <option value="">请选择</option> -->
+                    <?php foreach ($hotel as $key => $value) {?>
+                            <option value="<?php echo $value['name']?>" staff-hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                    <?php }?>
+                        </select>
+                    </div>
+                </li>
+                    
+                <!-- <li class="desc_item">
+                    <div class="tit_box left">
+                        <label for="">描述</label>
+                        <span class="must">*</span>
+                    </div>
+                    <div class="input_box left">
+                        <textarea class="input_in" name="" id="" cols="30" rows="10">请输入视频描述</textarea>
+                    </div>
+                </li> -->
+                <!-- <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择类别：</label>
+                    </div>
+                    <div class="input_box left">
+                        <input class="input_in" type="text" value="请输入标题">
+                    </div>
+                </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">选择供应商：</label>
+                    </div>
+                    <div class="input_box left">
+                        <input class="input_in" type="text" value="请输入标题">
+                    </div>
+                </li> -->
+            </ul>
+            <div class="right video_cover">
                 <div class="cover_box">
-                    <img src="" alt="" id="poster_img" style="width: 120px;">
+                    <img src="images/cover.jpg" alt="" id="poster_img">
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>
-            </div> -->
-        </div>
-        <!-- 已上传资源 -->
-        <div class="index_con_box" style="margin-bottom:20px;">
-            <div class="con">
-                <ul class="upload_list" id="resources_list">
-            <?php foreach ($resources as $key => $value) {?>
-                    <li class="clearfix" tap='' CR-Sort="<?php echo $value['CR_Sort']?>" CR-ID="<?php echo $value['CR_ID']?>">
-                        <div class="upload_con_box left clearfix">
-                            <div class="video_img left">
-                                <img src="<?php echo $value['CR_Path']?>" alt="">
-                                <!-- <span>私密视频</span> -->
-                            </div>
-                            <div class="video_info left">
-                        <?php foreach ($value['product'] as $key1 => $value1) {?>
-                                <div class="state_box clearfix" product-id="<?php echo $value1['bind_id']?>">
-                                    <img class="left" src="images/up06.jpg" alt="">
-                                    <span class="left"><?php echo $value1['name']?></span>
-                                    <span class="from left"><?php echo $value1['unit_price']?>元／<?php echo $value1['unit']?></span>
-                                    <img class="right del_product" src="images/close.png" alt="" style="margin-left:30px;width:10px;height:10px;margin-top:2px;border: 1px solid black;" >
-                                </div>
-
-                        <?php }?>
-                                <!-- cover_box -->
-                            </div>
-                        </div>
-                        <div class="edit_btn_box right clearfix" style="width:40%">
-                            <!-- <span class="left state">转码中</span> -->
-                            <!-- <a class="edit_btn left add_class bind" href="javascript:;">绑定产品</a> -->
-                            <a class="edit_btn left del_resource" href="javascript:;">删除</a>
-                        </div>
-                    </li>
-            <?php }?>
-                </ul>
             </div>
         </div>
+<!--
+        <ul class="regist_ulist">
+            <li>
+                <label>手机：</label>
+                <input class="inputItem" type="text" placeholder="默认" />
+            </li>
+            <li>
+                <label>密码：</label>
+                <input class="inputItem" type="password" placeholder="默认" />
+            </li>
+            <li>
+                <label>短信验证码：</label>
+                <input class="left inputItem short" type="text" placeholder="默认" />
+                <span class="get_code">获取短信验证码</span>
+            </li>
+            <li class="agree_txt clearfix">
+                <input class="left" type="checkbox">
+                <p class="left">同意<span>《xx注册协议》</span>
+                </p>
+            </li>
+            <li>
+                <button class="registbtn">立即注册</button>
+            </li>
+        </ul>
+-->
         <!--上传进度条-->
         <ul class="upload_pro_list" id="upload_pro_list">
+            <!-- <li>
+                <div class="upload_name">当前上传: <span>dddkkk</span>
+                </div>
+                <div class="progress_box clearfix">
+                    <p class="info">上传中</p>
+                    <div class="progress_bar left">
+                        <div class="progress" style="width:50%">
+                            <span class="num">50% <i></i></span>
+                        </div>
+                    </div>
+                    <span class="left calcel">取消本次上传</span>
+                    <div class="upload_state clearfix">
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="upload_name">当前上传: <span>dddkkk</span>
+                </div>
+                <div class="progress_box clearfix">
+                    <p class="info">上传中</p>
+                    <div class="progress_bar left">
+                        <div class="progress" style="width:50%">
+                            <span class="num">50% <i></i></span>
+                        </div>
+                    </div>
+                    <span class="left calcel">取消本次上传</span>
+                    <div class="upload_state clearfix">
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="upload_name">当前上传: <span>dddkkk</span>
+                </div>
+                <div class="progress_box clearfix">
+                    <p class="info">上传中</p>
+                    <div class="progress_bar left">
+                        <div class="progress" style="width:50%">
+                            <span class="num">50% <i></i></span>
+                        </div>
+                    </div>
+                    <span class="left calcel">取消本次上传</span>
+                    <div class="upload_state clearfix">
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                        <p class="left">当前上传速度：783.99kb/s</p>
+                    </div>
+                </div>
+            </li> -->
         </ul>
         <span class="tip tip2 hid" id="resources_t">请上传示意图</span>
         <div class="upload_btn_box" style="margin-bottom: 150px;">
@@ -205,67 +288,44 @@
         </div>
 <script>
     $(function(){
-        //初始渲染
-        $.cookie('img',"<?php echo $case['CI_Pic']?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
-        //保存
         $("#save").on("click",function(){
             var data = {
-                CI_ID : <?php echo $_GET['ci_id']?>,
+                CI_Name : $("#case_name").val(),
+                CI_Show : $("#CI_Show option:selected").val(),
+                CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
-                CR_Sort : $("#resources_list li:last-child").attr("CR-Sort")
+                product_list : "<?php echo $_GET['product_list']?>",
+                final_price : "<?php echo $_GET['final_price']?>",
+                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
+                feast_discount : <?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>,
+                other_discount : <?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>,
+            <?php if(!isset($_GET['type'])){?>
+                CI_Type : 9,
+                category : 3,
+            <?php }else if($_GET['type']=='meeting_menu'){?>
+                CI_Type : 11,
+                category : 4,
+            <?php }?>
             };
-            //alert($("#resources_list").has("li").length);
-            if($("#resources_list").has("li").length == 0){data.CR_Sort = 0};
             console.log(data);
-            /*$(".tip").removeClass("hid");
+            $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
             if(data.CI_Name == ""){$("#name_t").removeClass("hid")};
             if(data.CI_Pic == "null" || data.CI_Pic == null){$("#poster_t").removeClass("hid")};
             if(data.case_resource == "null" || data.case_resource == null){$("#resources_t").removeClass("hid")};
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
-            }else{*/
-                $.post("<?php echo $this->createUrl("background/host_video_edit");?>",data,function(){
+            }else{
+                $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=9";
                 });
-            /*}; */ 
-        });
-        //删除资源
-        $(".del_resource").on("click",function(){
-            $.post("<?php echo $this->createUrl("background/del_resource");?>",{CR_ID : $(this).parent().parent().attr("cr-id")},function(){
-                location.reload();
-            })
-        })
-
-        //点确认绑定
-        $(".sure_bind").on("click",function(){
-            data = {
-                CR_ID : $.cookie('temp_resource_id'),
-                supplier_product_id : $(this).parent().parent().attr("product-id"),
-            }
-            $.post("<?php echo $this->createUrl("background/bind_product");?>",data,function(){
-                $.cookie('temp_resource_id',null);
-                location.reload();
-            })
-        })
-        //按分类筛选产品
-        $('#select_type').change(function(){
-            $("#product_item li").removeClass("hid");
-            $("#product_item li").addClass("hid");
-            var tap = $(this).children('option:selected').attr("type-id");
-            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
-        });
-        //删除绑定
-        $(".del_product").on("click",function(){
-            $.post("<?php echo $this->createUrl("background/del_bind");?>",{bind_id:$(this).parent().attr("product-id")},function(){
-                location.reload();
-            });
+            };  
         });
     })
 </script>
 </body>
+
 </html>

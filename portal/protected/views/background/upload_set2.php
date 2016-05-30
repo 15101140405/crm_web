@@ -298,6 +298,15 @@
                 product_list : "<?php echo $_GET['product_list']?>",
                 final_price : "<?php echo $_GET['final_price']?>",
                 staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
+                feast_discount : <?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>,
+                other_discount : <?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>,
+            <?php if(!isset($_GET['type'])){?>
+                category : 2,
+                CI_Type : 5,
+            <?php }else if($_GET['type'] == 'meeting_set'){?>
+                category : 1,
+                CI_Type : 12,
+            <?php }?>
             };
             console.log(data);
             $(".tip").removeClass("hid");

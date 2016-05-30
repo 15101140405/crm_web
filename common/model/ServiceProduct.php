@@ -102,6 +102,7 @@ class ServiceProduct extends InitActiveRecord
 		$criteria->compare('unit',$this->unit);
 		$criteria->compare('update_time',$this->update_time,true);
 		$criteria->compare('description',$this->description,true);
+		$criteria->compare('product_show',$this->product_show,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

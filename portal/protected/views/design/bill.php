@@ -151,20 +151,44 @@ $arr_locate = array(
         if (!empty($arr_wed_feast)) {
     ?>
             <ul class="ulist menu_list">
+            <?php foreach ($wed_feast as $key => $value) {?>
                 <li class="ulist_item">
                     <div class="dishes">
-                        <p class="name"><?php echo $arr_wed_feast['name']; ?></p>
+                        <p class="name"><?php echo $value['name']; ?></p>
                         <p class="desc">
                         </p>
                     </div>
                     <div>
-                        <p class="price">&yen;<?php echo $arr_wed_feast['unit_price'] . $arr_wed_feast['unit']; ?></p>
-                        <p class="fee">服务费：<?php echo $arr_wed_feast['service_charge_ratio']; ?>%</p>
-                        <p class="fee">备注：<?php echo $arr_wed_feast['remark']; ?></p>
+                        <p class="price" style="width:150px;">&yen;<?php echo $value['actual_price'] . $value['unit']; ?></p>
                     </div>
-                    <span class="account">X <?php echo $arr_wed_feast['table_num']; ?></span>
+                    <span class="account">X <?php echo $value['unit']; ?></span>
                 </li>
+            <?php }?>
             </ul>
+            <div class="table_module" style="border-top: 1px solid #eee;">
+                <table class="mar_b10">
+                    <tbody>
+                    <tr>
+                        <td>桌数</td>
+                        <td><?php echo $arr_wed_feast['table_num']; ?> 桌</td>
+                        <td><?php /*echo $arr_order_data['first']['order_date'];*/ ?></td>
+                    </tr>
+                    <tr>
+                        <td>服务费</td>
+                        <td><?php echo $arr_wed_feast['service_charge_ratio']; ?>%</td>
+                        <td><?php /*echo $arr_order_data['second']['order_date'];*/ ?></td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td><?php echo $arr_wed_feast['remark']; ?></td>
+                        <td><?php /*echo $arr_order_data['third']['order_date'];*/ ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <p class="fee">服务费：</p>
+            <p class="fee">备注：</p>
+            <p class="fee">桌数：</p> -->
     <?php
         }
     ?>
@@ -175,7 +199,7 @@ $arr_locate = array(
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_wed_feast['total_price']; ?></p>
                 <i class="profits">毛利：&yen;<?php echo $arr_wed_feast['gross_profit']; ?></i>
-                <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_wed_feast['gross_profit_rate']*100).'%'; ?></i>
+                <i class="profits">毛利率：<?php echo sprintf("%01.2f", ($arr_wed_feast['gross_profit']/$arr_wed_feast['total_price'])*100).'%'; ?></i>
             </div>
     <?php 
         }else{

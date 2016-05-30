@@ -23,12 +23,12 @@
     <div class="fixed_bot_btn flexbox v_center">
         <div class="flex1 fixed_content" style="width: 40%;float: left;">
             <p class="now_price">&yen;<strong><?php
-            if ($_GET['from'] == "set") {
+            /*if ($_GET['from'] == "set") {*/
                 echo $supplier_product['final_price']; 
-            } else {
+            /*} else {
                 echo $supplier_product['unit_price'];
             }
-            ?></strong>
+            */?></strong>
             </p>
         </div>
         <button id="insert" style="float: right;">加入订单</button>

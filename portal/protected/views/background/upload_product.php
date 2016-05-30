@@ -361,6 +361,7 @@
                 supplier_id : $("#supplier option:selected").attr("supplier-id"),
                 supplier_type_id : $("#supplier option:selected").attr("supplier-type-id"),
                 decoration_tap : $("#tap option:selected").attr("tap-id"),
+                dish_type : 0,
                 standard_type : 0,
                 category : 2,
                 unit : $("#unit option:selected").val(),
