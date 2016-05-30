@@ -34,11 +34,13 @@
 <script>
     $(function () {
         <?php
-        foreach ($selected as $key => $value) {
+        if (!empty($selected)) {
+            foreach ($selected as $key => $value) {
         ?>
             $("[product-id='<?php echo $value['product_id']?>']").removeClass("list_more");
             $("[product-id='<?php echo $value['product_id']?>']").addClass("selected");
         <?php 
+            }
         }
         ?>
         $("li.list_more").on("click", function () {
