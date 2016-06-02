@@ -24,6 +24,9 @@
             </ul>
             <ul class="nav_list clearfix" style="margin-right:20px;">
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=6" id="host">我的主持</li>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=13" id="video">我的摄像</li>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=14" id="camera">我的摄影</li>
+                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=15" id="makeup">我的化妆</li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
                 <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" id="feast">餐饮</a>
@@ -316,6 +319,9 @@
         if(<?php echo $_GET['CI_Type']?> == 2){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 6){$("#host").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 13){$("#video").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 14){$("#camera").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 15){$("#makeup").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7){$("#decration").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 8){$("#lss").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#feast").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};

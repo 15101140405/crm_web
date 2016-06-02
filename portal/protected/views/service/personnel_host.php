@@ -85,7 +85,7 @@
 
   <div class="fixed_bar">
     <a class="r_btn" id="sure">立即预订</a>
-    <p class="price">主持价格 &yen;5000</p>
+    <!-- <p class="price">主持价格 &yen;5000</p> -->
   </div>
 
 <script src="js/zepto.min.js"></script>
@@ -104,9 +104,17 @@ $(function() {
 
 
   $(".day_order_module").remove();
-
+<?php if($_GET['type_id'] == 3){?>
+  var tab = 'host';
+<?php }else if($_GET['type_id'] == 4){?>
+  var tab = "video";
+<?php }else if($_GET['type_id'] == 5){?>
+  var tab = "camera";
+<?php }else if($_GET['type_id'] == 6){?>
+  var tab = "makeup";
+<?php }?>
   $("#sure").on("click",function(){
-      location.href = "<?php echo $this->createUrl('service/service_product_list');?>&tab=" + $.util.param("tab") + "&staff_id=<?php echo $service_person['staff_id']?>&order_id=&supplier_id=" + $.util.param("supplier_id");
+      location.href = "<?php echo $this->createUrl('service/service_product_list');?>&tab=" + tab + "&staff_id=<?php echo $service_person['staff_id']?>&order_id=&supplier_id=" + $.util.param("supplier_id");
   });
 
   //页面初始化

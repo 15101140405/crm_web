@@ -1736,8 +1736,9 @@ $html .='</body>
         echo $_POST['email'];
 
         //發件人 
-        $replyto = '2837745713@qq.com'; 
-        //$replyto = 'zhangsiheng0820@126.com'; 
+        //$replyto = '2837745713@qq.com'; 
+        //$replyto = 'hunlicehuashi2016@126.com'; 
+        $replyto = 'zhangsiheng0820@126.com'; 
 
         //內容 
         $message = ""; 
@@ -2358,7 +2359,8 @@ $html .='</body>
         echo $_POST['email'];
 
         //發件人 
-        $replyto = '2837745713@qq.com'; 
+        //$replyto = '2837745713@qq.com'; 
+        $replyto = 'zhangsiheng0820@126.com'; 
 
         //內容 
         $message = ""; 

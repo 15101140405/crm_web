@@ -50,7 +50,10 @@ $(function(){
                     var t=0;
                     var j=0;
                     for (i=0;i<list.length;i++) {
-                        if(list[j] == 11){t++;j++;};
+                        if(list[j] == 11){t=11;j++;};
+                        if(list[j] == 12){t=12;j++;};
+                        if(list[j] == 13){t=13;j++;};
+                        if(list[j] == 14){t=14;j++;};
                     };
                     console.log(department_list);
                     console.log(list);
@@ -58,9 +61,15 @@ $(function(){
                     console.log(j);
                     if(t==0){
                         location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
-                    }else{
+                    }else if(t==11){
                         location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
-                    };  
+                    }else if(t==12){
+                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=13";
+                    }else if(t==13){
+                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=14";
+                    }else if(t==14){
+                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=15";
+                    }
                 }else if(retval == "not exist"){
                     alert("您输入的手机号不存在！");
                 }else if(retval == "password error"){

@@ -2464,11 +2464,11 @@ class ReportController extends InitController
         foreach ($order_basic as $key => $value) {
             $t1 = explode(" ", $value['order_date']);
             $t2 = explode("-", $t1[0]);
-            if( $t2[0] == $year && $value['order_status'] != 0 && $value['order_type'] == 1 ){
+            if( $t2[0] == $year && $value['order_status'] != 0 && $value['order_status'] != 1 && $value['order_type'] == 1 ){
                 if($value['planner_id']==$staff_id || $value['designer_id']==$staff_id){
                     $data['meeting']++;
                 };
-            }else if($t2[0] == $year && $value['order_status'] != 0 && $value['order_type'] == 2){
+            }else if($t2[0] == $year && $value['order_status'] != 0 && $value['order_status'] != 1 && $value['order_type'] == 2){
                 if($value['planner_id']==$staff_id || $value['designer_id']==$staff_id){
                     $data['wedding']++; 
                 };

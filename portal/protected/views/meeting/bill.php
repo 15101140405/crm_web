@@ -135,39 +135,64 @@
         </table>
     </div>
     <!-- 餐饮 -->
-    <div class="bill_item_module">
-        <h4 class="module_title list_more" id="feast">会议餐</h4>
+    <div class="bill_item_module" id="feast">
+        <h4 class="module_title list_more">会议餐</h4>
         <div class="ulist_module">
     <?php
         if (!empty($arr_wed_feast)) {
     ?>
             <ul class="ulist menu_list">
+            <?php foreach ($wed_feast as $key => $value) {?>
                 <li class="ulist_item">
                     <div class="dishes">
-                        <p class="name"><?php echo $arr_wed_feast['name']; ?></p>
+                        <p class="name"><?php echo $value['name']; ?></p>
                         <p class="desc">
                         </p>
                     </div>
                     <div>
-                        <p class="price">&yen;<?php echo $arr_wed_feast['unit_price'] . $arr_wed_feast['unit']; ?></p>
-                        <p class="fee"><?php echo $arr_wed_feast['service_charge_ratio'].'%'; ?>服务费</p>
+                        <p class="price" style="width:150px;">&yen;<?php echo $value['actual_price'] . $value['unit']; ?></p>
                     </div>
-                    <span class="account">X <?php echo $arr_wed_feast['table_num']; ?></span>
+                    <span class="account">X <?php echo $value['unit']; ?></span>
                 </li>
+            <?php }?>
             </ul>
+            <div class="table_module" style="border-top: 1px solid #eee;">
+                <table class="mar_b10">
+                    <tbody>
+                    <tr>
+                        <td>桌数</td>
+                        <td><?php echo $arr_wed_feast['table_num']; ?> 桌</td>
+                        <td><?php /*echo $arr_order_data['first']['order_date'];*/ ?></td>
+                    </tr>
+                    <tr>
+                        <td>服务费</td>
+                        <td><?php echo $arr_wed_feast['service_charge_ratio']; ?>%</td>
+                        <td><?php /*echo $arr_order_data['second']['order_date'];*/ ?></td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td><?php echo $arr_wed_feast['remark']; ?></td>
+                        <td><?php /*echo $arr_order_data['third']['order_date'];*/ ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <p class="fee">服务费：</p>
+            <p class="fee">备注：</p>
+            <p class="fee">桌数：</p> -->
     <?php
         }
     ?>
             <!-- <p class="remark"><i class="t_green">[备注]</i> </p> -->
-    <?php
-        if(!empty($arr_wed_feast) && $arr_wed_feast['total_price'] != 0){
+    <?php 
+        if(!empty($arr_wed_feast)){
     ?>
             <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_wed_feast['total_price']; ?></p>
                 <i class="profits">毛利：&yen;<?php echo $arr_wed_feast['gross_profit']; ?></i>
-                <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_wed_feast['gross_profit_rate']*100).'%'; ?></i>
+                <i class="profits">毛利率：<?php echo sprintf("%01.2f", ($arr_wed_feast['gross_profit']/$arr_wed_feast['total_price'])*100).'%'; ?></i>
             </div>
-    <?php
+    <?php 
         }else{
     ?>
             <div class="subtotal">
@@ -184,13 +209,13 @@
 
         <!-- 场地费 -->
     
-    <div class="bill_item_module">
+    <!-- <div class="bill_item_module">
         <h4 class="module_title list_more" id="changdifei">场地费</h4>
-        <div class="ulist_module">
+        <div class="ulist_module"> -->
 <?php
     if (!empty($arr_changdi_fee)) {
 ?>
-            <ul class="ulist menu_list">
+            <!-- <ul class="ulist menu_list">
                 <li class="ulist_item">
                     <div class="dishes">
                         <p class="name"><?php echo $arr_changdi_fee['name']; ?></p>
@@ -202,31 +227,31 @@
                     </div>
                     <span class="account">X <?php echo $arr_changdi_fee['amount']; ?></span>
                 </li>
-            </ul>
+            </ul> -->
     <?php
         };
     ?>
     <?php
         if(!empty($arr_changdi_fee) && $arr_changdi_fee['total_price'] != 0){
     ?>
-            <div class="subtotal">
+           <!--  <div class="subtotal">
                 <p>小计：&yen;<?php echo $arr_changdi_fee['total_price']; ?></p>
                 <i class="profits">毛利：&yen;<?php echo $arr_changdi_fee['gross_profit']; ?></i>
                 <i class="profits">毛利率：<?php echo sprintf("%01.2f", $arr_changdi_fee['gross_profit_rate']*100).'%'; ?></i>
-            </div>
+            </div> -->
     <?php
         }else{
     ?>
-            <div class="subtotal">
+            <!-- <div class="subtotal">
                 <p>小计：&yen;0</p>
                 <i class="profits">毛利：&yen;0</i>
                 <i class="profits">毛利率：0%</i>
-            </div>
+            </div> -->
     <?php
         }
     ?>
-        </div>
-    </div>
+        <!-- </div>
+    </div> -->
     
     <!--灯光-->
     

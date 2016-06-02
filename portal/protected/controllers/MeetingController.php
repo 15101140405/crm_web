@@ -302,7 +302,7 @@ class MeetingController extends InitController
             $criteria1 = new CDbCriteria; 
             $criteria1->addInCondition("supplier_id",$supplier_id);
             $criteria1->addCondition("category=:category");
-            $criteria1->params[':category']=1; 
+            $criteria1->params[':category']=2; 
             $supplier_product = SupplierProduct::model()->findAll($criteria1);
             /*print_r($supplier_product);*/
             foreach ($supplier_product as $value) {
@@ -310,7 +310,7 @@ class MeetingController extends InitController
                 $supplier_product_id[] = $item;
             };
             /*print_r($supplier_product_id);*/
-        }
+        };
         
         if(!empty($supplier_product_id)){
             $criteria2 = new CDbCriteria; 
@@ -319,13 +319,19 @@ class MeetingController extends InitController
             $criteria2->params[':order_id']=$orderId; 
             $supplier_product = OrderProduct::model()->findAll($criteria2);
             foreach ($supplier_product as $value) {
+                $criteria3 = new CDbCriteria; 
+                $criteria3->addCondition("id=:id");
+                $criteria3->params[':id']=$value['product_id']; 
+                $supplier_product2 = SupplierProduct::model()->find($criteria3);
                 $item = array();
                 $item['id'] = $value->id;
+                $item['name'] = $supplier_product2['name'];
                 $item['product_id'] = $value->product_id;
                 $item['actual_price'] = $value->actual_price;
                 $item['unit'] = $value->unit;
                 $item['actual_unit_cost'] = $value->actual_unit_cost;
                 $item['actual_service_ratio'] = $value->actual_service_ratio;
+                $item['remark'] = $value->remark;
                 $wed_feast[] = $item;
             };
             /*print_r($wed_feast);*/
@@ -333,24 +339,34 @@ class MeetingController extends InitController
         /*print_r($wed_feast);*/
         
         if(!empty($wed_feast)){
-            $criteria3 = new CDbCriteria; 
-            $criteria3->addCondition("id=:id");
-            $criteria3->params[':id']=$wed_feast[0]['product_id']; 
-            $supplier_product2 = SupplierProduct::model()->find($criteria3);
+            
             /*print_r($supplier_product2);*/
             $arr_wed_feast = array(
-                'name' => $supplier_product2['name'],
+                /*'name' => $supplier_product2['name'],
                 'unit_price' => $wed_feast[0]['actual_price'],
-                'unit' => $supplier_product2['unit'],
+                'unit' => $supplier_product2['unit'],*/
                 'table_num' => $wed_feast[0]['unit'],
                 'service_charge_ratio' => $wed_feast[0]['actual_service_ratio'],
-                'total_price' => $wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100),
-                'total_cost' => $wed_feast[0]['actual_unit_cost']*$wed_feast[0]['unit'],
-                'gross_profit' => ($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100,
-                'gross_profit_rate' => (($wed_feast[0]['actual_price']-$wed_feast[0]['actual_unit_cost'])*$wed_feast[0]['unit']+$wed_feast[0]['actual_price']*$wed_feast[0]['unit']*$wed_feast[0]['actual_service_ratio']/100)/($wed_feast[0]['actual_price']*$wed_feast[0]['unit']*(1+$wed_feast[0]['actual_service_ratio']/100)),
+                'remark' => $wed_feast[0]['remark'],
+                'total_price' => 0,
+                'total_cost' => 0,
+                'gross_profit' => 0,
+                'gross_profit_rate' => 0,
                 /*'remark' => $wed_feast['']*/
             );
-        }
+            foreach ($wed_feast as $key => $value) {
+                $arr_wed_feast['total_price'] += $value['actual_price']*$value['unit']*(1+$value['actual_service_ratio']*0.01);
+                $arr_wed_feast['total_cost'] += $value['actual_unit_cost']*$value['unit'];
+                $arr_wed_feast['gross_profit'] += ($value['actual_price']-$value['actual_unit_cost'])*$value['unit']+$value['actual_price']*$value['unit']*$value['actual_service_ratio']*0.01;
+                // $arr_wed_feast['gross_profit_rate'] += (($value['actual_price']-$value['actual_unit_cost'])*$value['unit']+$value['actual_price']*$value['unit']*$value['actual_service_ratio']*0.01)/($value['actual_price']*$value['unit']*(1+$value['actual_service_ratio']*0.01));
+                if($arr_wed_feast['total_price']!=0){
+                    $arr_wed_feast['gross_profit_rate'] += $arr_wed_feast['gross_profit']/$arr_wed_feast['total_price'];    
+                }else{
+                    $arr_wed_feast['gross_profit_rate'] = 0;
+                }
+                
+            }
+        };
         /*print_r($arr_wed_feast);*/
 
 
@@ -763,6 +779,7 @@ class MeetingController extends InitController
         /*向 VIEW 传数据*/
         /*********************************************************************************************************************/
         $this->render("bill",array(
+            'wed_feast' => $wed_feast,
             "arr_wed_feast"     => $arr_wed_feast,
             "arr_changdi_fee"   => $arr_changdi_fee,
             "arr_video"         => $arr_video,
@@ -800,8 +817,24 @@ class MeetingController extends InitController
         $supplierproductForm = new SupplierProductForm();
         $order_id = $_GET['order_id'];
         /*print_r($order_id);die;*/
-        $feast_data = $this -> actionGetOrderProduct(2,$order_id);
-        /*print_r($feast_data);die;*/
+        $OrderHost = SupplierProduct::model()->findAll(array(
+            "select" => "id",
+            "condition" => "supplier_type_id=:supplier_type_id",
+            "params" => array( ":supplier_type_id" => 2),
+
+        ));
+
+        $supplier_id = array();
+        foreach ($OrderHost as $key => $value) {
+            $supplier_id[] = $value['id'];
+        }
+        /*print_r($host_id);die;*/
+        $criteria1 = new CDbCriteria; 
+        $criteria1->addInCondition("product_id",$supplier_id);
+        $criteria1->addCondition("order_id=:order_id");
+        $criteria1->params[':order_id']=$order_id; 
+        $feast_data = OrderProduct::model()->findAll($criteria1);
+        // print_r($feast_data);die;
         $feast_total = 0 ;
         if(!empty($feast_data)){
             foreach ($feast_data as $key => $value) {
@@ -814,7 +847,7 @@ class MeetingController extends InitController
             'total' => $feast_total,
         );      
         /*print_r($feast_data);die;*/
-        $supplierproducts = $supplierproductForm->SupplierProductIndex1($accountId);
+        $supplierproducts = $supplierproducts = $supplierproductForm->SupplierProductIndex3($accountId);
         //var_dump($supplierproducts);die;
         $this->render("feast",array(
             "arr_feast" => $supplierproducts,

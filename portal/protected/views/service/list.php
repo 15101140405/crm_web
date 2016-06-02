@@ -44,7 +44,7 @@
             <li class="flexbox v_center" starting-price="<?php echo $value['starting_price']?>" gender="<?php echo $value['gender']?>" service-person-id="<?php echo $value['id']?>" supplier-id="<?php echo $value['supplier_id']?>">
                 <img class="compere_img" src="<?php echo $value['avatar']?>" />
                 <div class="flex1 info_box">
-                    <h3 class="tit"><?php echo $value['name']?><!-- <span><?php/* echo $value['team_name']*/?></span> --></h3>
+                    <h3 class="tit"><?php echo $value['name']?><!-- <span></span> --></h3>
                     <div class="flexbox info">
                         <p>接单数：<span><?php echo $value['order_num']?></span></p>
                         <p>起价：<span>&yen;<?php echo $value['starting_price']?></span></p>

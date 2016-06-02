@@ -524,6 +524,7 @@ class BackgroundController extends InitController
             };
         };
         /*print_r($decoration_tap);die;*/
+        // print_r($supplier_product);die;
         $this -> render("upload_set1",array(
             'decoration_tap' => $decoration_tap,
             'supplier_product' => $supplier_product,
@@ -730,7 +731,7 @@ class BackgroundController extends InitController
                         ':product_show' => 1,
                     ),
             ));
-        /*print_r($product);die;*/
+        // print_r($product);die;
         $this->render('edit_product',array(
                 'product' => $product,
             ));
@@ -1257,6 +1258,7 @@ class BackgroundController extends InitController
         $data ->unit = $_POST['unit'];
         $data ->update_time = date('y-m-d h:i:s',time());
         $data ->description = $_POST['description'];
+        $data ->product_show = 1;
         $data ->save();
 
         $service_product_id = $data->attributes['id'];
@@ -1290,7 +1292,6 @@ class BackgroundController extends InitController
             $data ->update_time = date('y-m-d h:i:s',time());
             $data ->save();
         };
-
     }
 
     public function actionEdit_supplier_product()

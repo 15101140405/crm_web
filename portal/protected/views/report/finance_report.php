@@ -147,6 +147,7 @@ $(function () {
         }
 
     })
+    $('.filter_item').click();
     $mask.click(function () {
         $(".filter_exit .all").find('img').removeClass('up');
         $filter_list.slideUp();

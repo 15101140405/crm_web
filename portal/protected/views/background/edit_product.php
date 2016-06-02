@@ -44,9 +44,9 @@
                                 </p> -->
                             </div>
                         </div>
-                        <div class="edit_btn_box right clearfix" style="width:40%">
+                        <div class="edit_btn_box right clearfix" style="width:50%">
                             <span class="left state" style="float: left;margin-right: 0;">报价：<?php echo $value['price']?>元／<?php echo $value['unit']?></span>
-                            <div class="edit_btn left del_resource del" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">删除</div>
+                            <div class="edit_btn left del_resource del" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;background-color:red;" href="javascript:;">删除</div>
                             <div class="edit_btn left del_resource edit" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">编辑</div>
                         </div>
                     </li>

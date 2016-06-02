@@ -194,9 +194,9 @@ class ProductController extends InitController
         Yii::app()->session['account_id']=$_GET['account_id'];
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
         
-        // if(isset($_COOKIE['userid'])){本机调试有问题，上线时回复这两行
-        //     Yii::app()->session['userid']=$_COOKIE['userid'];
-            Yii::app()->session['userid']=2222222;//本机调试有问题，上线时删去
+        if(isset($_COOKIE['userid'])){ //本机调试有问题，上线时回复这两行
+            Yii::app()->session['userid']=$_COOKIE['userid'];
+            // Yii::app()->session['userid']=2222222;//本机调试有问题，上线时删去
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $str =  rtrim($staff['department_list'], "]"); 
             $str =  ltrim($str, "[");
@@ -213,9 +213,9 @@ class ProductController extends InitController
                     'hotel_name' => $hotel['name'],
                     'user_type' => $user_type
                 ));
-        // }else{本机调试有问题，上线时回复这三行
-        //     $this->render('login');
-        // };
+        }else{ //本机调试有问题，上线时回复这三行
+            $this->render('login');
+        };
     }
 
     public function actionSetuserid()
@@ -406,7 +406,7 @@ class ProductController extends InitController
     {
         $category = 2;
         if($_GET['category'] == 1 ||$_GET['category'] == 4){
-            $category == 1;
+            $category = 1;
         };
 
         /*Yii::app()->session['userid']=100;*/
@@ -433,7 +433,7 @@ class ProductController extends InitController
                 $order_data[] = $item;
             };
         };
-
+        // echo $category;die;
         $this->render("select_order",array(
                 'order_data' => $order_data
             ));
@@ -446,9 +446,6 @@ class ProductController extends InitController
 
     public function actionNeworder()
     {
-        $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-
-
         //存order表
         $payment= new Order;  
 
@@ -459,8 +456,15 @@ class ProductController extends InitController
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
         $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
         $payment->order_type =2;
-        $payment->feast_discount = $wedding_set['feast_discount']*10;
-        $payment->other_discount = $wedding_set['other_discount']*10;
+        if(isset($_POST['set_id'])){
+            $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
+            $payment->feast_discount = $wedding_set['feast_discount']*10;
+            $payment->other_discount = $wedding_set['other_discount']*10;
+        }else{
+            $payment->feast_discount = 10;
+            $payment->other_discount = 10;
+        };
+       
         $payment->order_date =$_POST['order_date'];
         $payment->end_time =$_POST['end_time'];
         $payment->order_status =1;
@@ -525,7 +529,7 @@ class ProductController extends InitController
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);
 
         $table_num = 1;
@@ -555,6 +559,21 @@ class ProductController extends InitController
             };
             //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
         };
+        if(isset($_POST['product_id'])){
+            $supplier_product = SupplierProduct::model()->findByPk($_POST['product_id']);
+
+            $admin=new OrderProduct;         
+            $admin->account_id=$_SESSION['account_id']; 
+            $admin->order_id=$order['id'];
+            $admin->product_id=$_POST['product_id']; 
+            $admin->actual_price=$supplier_product['unit_price']; 
+            $admin->unit=$_POST['amount']; 
+            $admin->actual_unit_cost=$supplier_product['unit_cost']; 
+            $admin->actual_service_ratio=$supplier_product['service_charge_ratio']; 
+            $admin->remark=$_POST['remark']; 
+            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->save();
+        }
 
         // echo $order['id'];
         print_r($_POST);

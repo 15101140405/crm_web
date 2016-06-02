@@ -44,7 +44,7 @@ class SupplierType extends InitActiveRecord
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('role',$this->role,true);
 		$criteria->compare('update_time',$this->update_time,true);
-		$criteria->compare('avatar',$this->avatar,true);
+		$criteria->compare('img',$this->img,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
