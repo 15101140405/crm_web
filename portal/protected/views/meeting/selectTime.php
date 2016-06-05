@@ -144,7 +144,7 @@
 
         
         //确定按钮
-        if("<?php echo $_GET['from']?>" == "selecttype"){
+        if("<?php echo $_GET['from']?>" == "selecttype" || "<?php echo $_GET['from']?>" == "meeting_feast" || "<?php echo $_GET['from']?>" == "set"){
             $(".r_btn").on("click", function () {
                 //传给后台参数
                 var mydate = new Date();
@@ -168,10 +168,12 @@
                     end_time: end_time, 
                     update_time : time,
                     hotel_id : $(".round_select_selected").attr("hotel-id"),
+                    set_id : <?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>,
+                    product_id : <?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>,
                 };
                 $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
                         /*if(retval.success){*/
-                            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&from=selecttime&company_id=&order_id="+retval;
+                            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&from=selecttime&company_id=&order_id="+retval;
                         /*}else{*/
                     //  alert("BI偷了个懒！");
                     // }

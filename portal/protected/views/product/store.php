@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="css/order.css">
     <link rel="stylesheet" type="text/css" href="css/store.css">
 </head>
-
 <body>
     <!--导航-->
     <nav class="fixed_nav" id="main_nav">

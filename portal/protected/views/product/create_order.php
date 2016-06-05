@@ -192,6 +192,9 @@
     //不同页面：初始化、返回、保存（获取、验证数据）、删除
 
     $(function () {
+        if(<?php echo $_GET['category']?> == 1 || <?php echo $_GET['category']?> == 4){//会议，删去新人信息部分
+            $(".int_ulist_module").remove();
+        };
         //选择日期插件
         var currYear = (new Date()).getFullYear();  
         var opt={};
@@ -259,6 +262,13 @@
                 order_date: order_date,
                 end_time: end_time, 
                 update_time : time,
+                order_type : <?php 
+                             if($_GET['category'] == 1 || $_GET['category'] == 4){
+                                echo 1;
+                            } else {
+                                echo 2;
+                            } 
+                            ?>,
             <?php if($_GET['category'] == 3 || $_GET['category'] == 4){?>
                 amount : $("#amount").val(),
                 service_charge_ratio : $("#fuwufei_input").val(),
@@ -307,11 +317,16 @@
             //         remark : $("#remark").val(),
             //     };
             // }
-            console.log(new_order_info);
-            $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
-                console.log(retval);
-                location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
-            });
+            // console.log(new_order_info);
+            if ($("#amount").val() =="" || $("#amount").val() ==0) {
+                alert("请输入桌数");
+            } else{
+                $.post("<?php echo $this->createUrl("product/neworder");?>",new_order_info,function(retval){
+                    console.log(retval);
+                    location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
+                });
+            };
+            
         });
     
     })
