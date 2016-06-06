@@ -23,21 +23,27 @@
                 <li><a href="<?php echo $this->createUrl("background/login");?>">退出</li>
             </ul>
             <ul class="nav_list clearfix" style="margin-right:20px;">
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=6" id="host">我的主持</li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=13" id="video">我的摄像</li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=14" id="camera">我的摄影</li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=15" id="makeup">我的化妆</li>
+                <li id="host"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=6" >我的主持</a></li>
+                <li id="video"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=13" >我的摄像</a></li>
+                <li id="camera"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=14" >我的摄影</a></li>
+                <li id="makeup"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=15" >我的化妆</a></li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" id="feast">餐饮</a>
+                <li id="feast"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" >餐饮</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=5" id="set">套系</a>
+                <li id="set"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=5" >套系</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=7" id="decration">场地布置</a>
+                <li id="decration"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=7" >场地布置</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=8" id="lss">灯光／音响／视频</a>
+                <li id="lss"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=8" >灯光／音响／视频</a>
                 </li>
-                <li><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" id="case">案例</a>
+                <li id="introduction"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=16" >门店介绍</a>
+                </li>
+                <li id="case"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" >案例</a>
+                </li>
+                <li id="theme"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=4">主题婚礼</a>
+                </li>
+                <li id="classic"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=1">经典婚礼</a>
                 </li>
                 <!-- <li><a href="javascript:;">ABOUT US</a>
                 </li> -->
@@ -73,7 +79,7 @@
                     <button class="right upload_new_btn" id="upload_wedding_menu" style="float:left;float: left;border: 1px solid #6B9913;background: #fff;color: #6B9913;border-radius: 0;">＋婚宴</button>
                 </div>
                 <ul class="upload_list" id="product_item">
-            <?php if($_GET['CI_Type'] == 2 ){
+            <?php if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 16 || $_GET['CI_Type'] == 1 || $_GET['CI_Type'] == 4){
                     foreach ($case_data as $key => $value) {
                     if($value['CI_Type'] == $_GET['CI_Type']){?>
                     <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>" CT-ID="<?php echo $value['CT_ID']?>">
@@ -150,7 +156,7 @@
                             <a class="edit_btn left edit" href="javascript:;">编辑</a>
                         </div>
                     </li>
-            <?php }}else if($_GET['CI_Type']== 6){?>
+            <?php }}else if($_GET['CI_Type']== 6 || $_GET['CI_Type']== 13 || $_GET['CI_Type']== 14 || $_GET['CI_Type']== 15){?>
                     <li class="clearfix" ci-id="<?php echo $case['CI_ID']?>">
                         <div class="upload_con_box left clearfix">
                             <div class="video_img left">
@@ -284,7 +290,7 @@
         </div>
         <!--con end-->
         <div class="index_foot">
-            FOOT AREA
+            2016 @ 北京浩瀚一方互联网科技有限责任公司
         </div>
     </div>
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
@@ -297,46 +303,82 @@
         department_list = department_list.substring(1);
         var list = new Array();
         list = department_list.split(',');
-        var t = 0;
-        var t1 = 0;
+        var t = 0;      /*＊＊＊＊策划师＊＊＊＊*/ 
+        var t1 = 0;     //主持人
+        var t2 = 0;     //摄像师
+        var t3 = 0;     //摄影师
+        var t4 = 0;     //化妆师
+        var t5 = 0;      /*＊＊＊＊内容管理员＊＊＊＊*/ 
+
         for (i=0;i<list.length;i++) {
             if(list[i] == 2 || list[i] == 3 || list[i] == 5 || list[i] == 6){t++};
             if(list[i] == 11){t1++};
+            if(list[i] == 12){t2++};
+            if(list[i] == 13){t3++};
+            if(list[i] == 14){t4++};
+            if(list[i] == 0){t5++};
         };
         console.log(list);
         console.log(t);
-        if(t==0){
+        console.log(t1);
+        console.log(t2);
+        console.log(t3);
+        console.log(t4);
+        if(t==0){ //不是策划师
             $("#case").remove();
             $("#set").remove();
             $("#decration").remove();
             $("#lss").remove();
             $("#feast").remove();
-        }else if(t1==0){
+        };
+        if(t1==0){  //不是主持人
             $("#host").remove();
-        }  
+        };
+        if(t2==0){  //不是摄像师
+            $("#video").remove();
+        };
+        if(t3==0){  //不是摄影师
+            $("#camera").remove();
+        };
+        if(t4==0){  //不是化妆师
+            $("#makeup").remove();
+        };  
+        if(t5==0){  //不是内容管理员
+            $("#theme").remove();
+            $("#classic").remove();
+        };  
 
         //导航
-        if(<?php echo $_GET['CI_Type']?> == 2){$("#case").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 5){$("#set").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 6){$("#host").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 13){$("#video").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 14){$("#camera").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 15){$("#makeup").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 7){$("#decration").addClass("active")};
-        if(<?php echo $_GET['CI_Type']?> == 8){$("#lss").addClass("active")};
-        if(<?php echo $_GET['CI_Type']?> == 9){$("#feast").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 1){$("#classic a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 4){$("#theme a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 2){$("#case a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 16){$("#introduction a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 5){$("#set a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 6){$("#host a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 13){$("#video a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 14){$("#camera a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 15){$("#makeup a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 7){$("#decration a").addClass("active")};
+        if(<?php echo $_GET['CI_Type']?> == 8){$("#lss a").addClass("active")};
+        if(<?php echo $_GET['CI_Type']?> == 9){$("#feast a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
 
         //上传按钮－样式渲染
+        if(<?php echo $_GET['CI_Type']?> == 1){$("#upload").html("新增经典婚礼");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 4){$("#upload").html("新增主题婚礼");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> == 2){$("#upload").html("新增案例");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 16){$("#upload").html("新增门店");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").html("+会议套系");$("#upload_wedding_menu").html("+婚礼套系");};
-        if(<?php echo $_GET['CI_Type']?> == 6){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 6 || <?php echo $_GET['CI_Type']?> == 13 || <?php echo $_GET['CI_Type']?> == 14 || <?php echo $_GET['CI_Type']?> == 15){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7 || <?php echo $_GET['CI_Type']?> == 8){$("#upload").html("新增产品");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> != 9){$("#upload_dishes").remove()};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#upload").remove();};
 
         //上传按钮－点击事件
         $("#upload").on("click",function(){
+            if(<?php echo $_GET['CI_Type']?> == 1){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=1"};
+            if(<?php echo $_GET['CI_Type']?> == 4){location.href="<?php echo $this->createUrl("background/upload_set1");?>&type=theme"};
             if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_case");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 16){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=16"};
             if(<?php echo $_GET['CI_Type']?> == 7){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
             if(<?php echo $_GET['CI_Type']?> == 8){location.href="<?php echo $this->createUrl("background/upload_product_lss");?>"};
         });
@@ -375,6 +417,12 @@
             if("<?php echo $_GET['CI_Type']?>" == 2){
                 location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
             };
+            if("<?php echo $_GET['CI_Type']?>" == 4){
+                location.href = location.href = "<?php echo $this->createUrl("background/edit_set1");?>&type=theme&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
+            };
+            if("<?php echo $_GET['CI_Type']?>" == 16){
+                location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            };
             if("<?php echo $_GET['CI_Type']?>" == 5){
                 location.href = "<?php echo $this->createUrl("background/edit_set1");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
             };
@@ -392,23 +440,23 @@
             location.href = location.href = "<?php echo $this->createUrl("background/edit_set1");?>&type=menu&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
         })
 
-        //我的视频
+        //四大金刚，编辑个人信息
         $("#self_info").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_host_self_info");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            location.href = "<?php echo $this->createUrl("background/edit_host_self_info");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&CI_Type=<?php echo $_GET['CI_Type']?>";
         });
         $("#video").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_host_video");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            location.href = "<?php echo $this->createUrl("background/edit_host_video");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&CI_Type=<?php echo $_GET['CI_Type']?>";
         });
         $("#img").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_host_img");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            location.href = "<?php echo $this->createUrl("background/edit_host_img");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&CI_Type=<?php echo $_GET['CI_Type']?>";
         });
         $("#product").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_product");?>&service_person_id=" + $(this).parent().parent().attr('service-person-id') + "&ci_id=" + $(this).parent().parent().attr('CI-ID');
+            location.href = "<?php echo $this->createUrl("background/edit_product");?>&service_person_id=" + $(this).parent().parent().attr('service-person-id') + "&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&CI_Type=<?php echo $_GET['CI_Type']?>";
         });
 
         //删除
         $(".del").on("click",function(){
-            if('<?php echo $_GET['CI_Type']?>' == 2 || '<?php echo $_GET['CI_Type']?>' == 5){
+            if('<?php echo $_GET['CI_Type']?>' == 1 || '<?php echo $_GET['CI_Type']?>' == 2 || '<?php echo $_GET['CI_Type']?>' == 4 || '<?php echo $_GET['CI_Type']?>' == 5 || '<?php echo $_GET['CI_Type']?>' == 16){
                 var data = {
                     CI_ID : $(this).parent().parent().attr("CI-ID"),
                     CI_Type : "<?php echo $_GET['CI_Type']?>",
@@ -425,7 +473,7 @@
                 $.post("<?php echo $this->createUrl("background/del_product");?>",data,function(){
                     location.reload();
                 });
-            }
+            };
         });
         $(".del_menu").on("click",function(){
             var data = {

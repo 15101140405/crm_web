@@ -198,7 +198,7 @@
                 $.post("<?php echo $this->createUrl("background/host_self_info_edit");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=<?php echo $_GET['CI_Type']?>";
                 });
             /*};*/  
         });

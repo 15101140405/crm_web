@@ -97,7 +97,7 @@
         $("#b").on("click",function(){
             $.cookie('img', null); 
             $.cookie('img1', null); 
-            location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=6";
+            location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=<?php echo $_GET['CI_Type']?>";
         });
 
         //编辑

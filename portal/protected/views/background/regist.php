@@ -44,6 +44,10 @@
                         <li><img id="video" department="12" src="images/cjtubiao_17.png" alt=""><p class="name">摄像师</p></li>
                         <li><img id="camera" department="13" src="images/cjtubiao_15.png" alt=""><p class="name">摄影师</p></li>
                         <li><img id="makeup" department="14" src="images/cjtubiao_13.png" alt=""><p class="name">化妆师</p></li>
+                        <li><img id="decoration" department="20" src="images/cjtubiao_13.png" alt=""><p class="name">场地布置</p></li>
+                        <li><img id="lighting" department="8" src="images/cjtubiao_13.png" alt=""><p class="name">灯光</p></li>
+                        <li><img id="sound" department="23" src="images/cjtubiao_13.png" alt=""><p class="name">音响</p></li>
+                        <li><img id="shipin" department="9" src="images/cjtubiao_13.png" alt=""><p class="name">视频</p></li>
                     </ul>
                     
                 </div>
@@ -99,7 +103,7 @@
             $(".registbtn_next").on('click',function(){
                 if($("#designer").hasClass("active")){
                     $(".disigner").css('display','inline-block').siblings().hide();    
-                }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active")){
+                }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active") ||$("#decoration").hasClass("active") ||$("#lighting").hasClass("active") ||$("#sound").hasClass("active") ||$("#shipin").hasClass("active")){
                     $(".service").css('display','inline-block').siblings().hide();
                 };
                 $("#progress").attr("src","images/cjtubiao_06.png")
@@ -118,6 +122,7 @@
 
             //获取验证码
             $("#designer_get_code").on("click",function(){
+                console.log($("#disigner_telephone").val());
                 if($("#disigner_telephone").val() == ""){
                     alert("请输入手机号！");
                 }else if($("#disigner_telephone").val().length != 11 || !myreg.test($("#disigner_telephone").val())){

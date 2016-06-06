@@ -599,11 +599,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLightM1($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id && account_id = :account_id  && product_show=:product_show",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 9,
                     ":account_id" => $accountId,
-                    ':product_show' => 1,
                 ),
             ));
 
@@ -664,11 +663,10 @@ class SupplierProductForm extends InitForm
         public function getSupplierProductLight($accountId)
         {
             $Supplier = Supplier::model()->findAll(array(
-                "condition" => "type_id=:type_id && account_id = :account_id && product_show=:product_show",
+                "condition" => "type_id=:type_id && account_id = :account_id",
                 "params" => array(
                     ":type_id" => 8,
                     ":account_id" => $accountId,
-                    ':product_show' => 1,
                 ),
             ));
            $supplier_id = array();
@@ -854,7 +852,7 @@ class SupplierProductForm extends InitForm
             $criteria1->addInCondition("supplier_id",$supplier_id);
             $criteria1->addCondition("account_id = :account_id && product_show=:product_show");    
             $criteria1->params[':account_id']=$accountId;  
-            $criteria1->params[':product_show']=$product_show;  
+            $criteria1->params[':product_show']=1;  
             $result = array();
             $SupplierProducts = SupplierProduct::model()->findAll($criteria1);
             // var_dump($SupplierProducts);

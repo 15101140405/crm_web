@@ -306,6 +306,9 @@
             <?php }else if($_GET['type'] == 'meeting_set'){?>
                 category : 1,
                 CI_Type : 12,
+            <?php }else if($_GET['type'] == 'theme'){?>
+                category : 5,
+                CI_Type : 4,
             <?php }?>
             };
             console.log(data);
@@ -320,7 +323,13 @@
                 $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
+                <?php if(!isset($_GET['type'])){?>
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
+                <?php }else if($_GET['type'] == 'meeting_set'){?>
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
+                <?php }else if($_GET['type'] == 'theme'){?>
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=4";
+                <?php }?> 
                 });
             };  
         });
