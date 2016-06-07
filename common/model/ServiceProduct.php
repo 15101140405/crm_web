@@ -99,8 +99,10 @@ class ServiceProduct extends InitActiveRecord
 		$criteria->compare('service_type',$this->service_type,true);
 		$criteria->compare('product_name',$this->product_name,true);
 		$criteria->compare('price',$this->price,true);
+		$criteria->compare('cost',$this->cost,true);
 		$criteria->compare('unit',$this->unit);
 		$criteria->compare('update_time',$this->update_time,true);
+		$criteria->compare('ref_pic_url',$this->ref_pic_url,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('product_show',$this->product_show,true);
 

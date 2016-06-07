@@ -442,6 +442,32 @@ class BackgroundController extends InitController
                     'supplier_product' => $supplier_product,
                     'menu' => $menu,
                 ));
+        }else if($_GET['CI_Type']== 17 || $_GET['CI_Type']== 18 || $_GET['CI_Type']== 19 || $_GET['CI_Type']== 20){
+            /*$tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id']
+                        )
+                ));*/
+            $case = CaseInfo::model()->find(array(
+                    'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                    'params' => array(
+                            ':CI_Type' => $_GET['CI_Type'],
+                            ':CT_ID' => $_COOKIE['userid']
+                        )
+                ));
+            $service_person = ServicePerson::model()->find(array(
+                    'condition' => 'staff_id=:staff_id',
+                    'params' => array(
+                            ':staff_id' => $case['CT_ID'],
+                        ),
+                ));
+            // print_r($case);die;
+            $this->render('index',array(
+                    /*'tap'=>$tap,*/
+                    'case' => $case,
+                    'service_person' => $service_person,
+                ));
         };   
     }
 

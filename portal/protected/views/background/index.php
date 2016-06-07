@@ -27,6 +27,10 @@
                 <li id="video"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=13" >我的摄像</a></li>
                 <li id="camera"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=14" >我的摄影</a></li>
                 <li id="makeup"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=15" >我的化妆</a></li>
+                <li id="decoration"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=17" >我的场布</a></li>
+                <li id="lighting"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=18" >我的灯光</a></li>
+                <li id="sound"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=19" >我的音响</a></li>
+                <li id="shipin"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=20" >我的视频</a></li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
                 <li id="feast"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" >餐饮</a>
@@ -209,6 +213,33 @@
                             <a class="edit_btn left" id="product" href="javascript:;">管理报价</a>
                         </div>
                     </li>
+            <?php }else if($_GET['CI_Type'] == 17 || $_GET['CI_Type'] == 18 || $_GET['CI_Type'] == 19 || $_GET['CI_Type'] == 20){?>
+                    <li class="clearfix" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/self_info.png" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3>个人信息</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="self_info" href="javascript:;">管理个人信息</a>
+                        </div>
+                    </li>
+                    <li class="clearfix" service-person-id="<?php echo $service_person['id']?>" ci-id="<?php echo $case['CI_ID']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="images/host_price.jpeg" alt="">
+                            </div>
+                            <div class="video_info left">
+                                <h3 id="my_product">我的报价</h3>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <a class="edit_btn left" id="product" href="javascript:;">管理报价</a>
+                        </div>
+                    </li>
             <?php }else if($_GET['CI_Type'] == 8){
                     foreach ($supplier_product as $key => $value) {?>
                     <li class="clearfix" type-id='<?php echo $value['supplier_type_id']?>' product-id ="<?php echo $value['id'];?>">
@@ -309,6 +340,10 @@
         var t3 = 0;     //摄影师
         var t4 = 0;     //化妆师
         var t5 = 0;      /*＊＊＊＊内容管理员＊＊＊＊*/ 
+        var t6 = 0;     //场布供应商
+        var t7 = 0;     //灯光供应商
+        var t8 = 0;     //音响供应商
+        var t9 = 0;     //视频供应商
 
         for (i=0;i<list.length;i++) {
             if(list[i] == 2 || list[i] == 3 || list[i] == 5 || list[i] == 6){t++};
@@ -317,6 +352,10 @@
             if(list[i] == 13){t3++};
             if(list[i] == 14){t4++};
             if(list[i] == 0){t5++};
+            if(list[i] == 15){t6++};
+            if(list[i] == 16){t7++};
+            if(list[i] == 17){t8++};
+            if(list[i] == 18){t9++};
         };
         console.log(list);
         console.log(t);
@@ -347,6 +386,18 @@
             $("#theme").remove();
             $("#classic").remove();
         };  
+        if(t6==0){  //不是场布供应商
+            $("#decoration").remove();
+        }; 
+        if(t7==0){  //不是灯光供应商
+            $("#lighting").remove();
+        }; 
+        if(t8==0){  //不是音响供应商
+            $("#sound").remove();
+        }; 
+        if(t9==0){  //不是视频供应商
+            $("#shipin").remove();
+        }; 
 
         //导航
         if(<?php echo $_GET['CI_Type']?> == 1){$("#classic a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
@@ -361,6 +412,11 @@
         if(<?php echo $_GET['CI_Type']?> == 7){$("#decration a").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 8){$("#lss a").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#feast a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 17){$("#decoration a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 18){$("#lighting a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 19){$("#sound a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 20){$("#shipin a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+
 
         //上传按钮－样式渲染
         if(<?php echo $_GET['CI_Type']?> == 1){$("#upload").html("新增经典婚礼");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
@@ -372,6 +428,8 @@
         if(<?php echo $_GET['CI_Type']?> == 7 || <?php echo $_GET['CI_Type']?> == 8){$("#upload").html("新增产品");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> != 9){$("#upload_dishes").remove()};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#upload").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 17 || <?php echo $_GET['CI_Type']?> == 18 || <?php echo $_GET['CI_Type']?> == 19 || <?php echo $_GET['CI_Type']?> == 20){$("#my_product").html('我的产品');$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+
 
         //上传按钮－点击事件
         $("#upload").on("click",function(){
