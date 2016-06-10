@@ -6,12 +6,63 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/base1.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="css/zepto.aslider.css">
     <link rel="stylesheet" type="text/css" href="css/mobiscroll.css">
     <link rel="stylesheet" type="text/css" href="css/mobiscroll_002.css">
     <link rel="stylesheet" type="text/css" href="css/mobiscroll_003.css">
     <link rel="stylesheet" type="text/css" href="css/order.css">
-
+    <link rel="stylesheet" href="css/framework7.ios.min.css">
+    <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+    <!-- <link rel="stylesheet" href="css/framework7.material.min.css"> -->
+    <link rel="stylesheet" href="css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="css/upscroller.css">
+    <link rel="stylesheet" href="css/my-app.css">
+    <link rel="stylesheet" href="css/lc_switch.css">
+<style type="text/css">
+body * {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+h1 {
+  margin-bottom: 10px;
+  padding-left: 35px;
+}
+a {
+  color: #888;
+  text-decoration: none;
+}
+small {
+  font-size: 13px;
+  font-weight: normal;
+  padding-left: 10px;
+}
+#first_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 50px auto 0;
+  color: #444;
+}
+#second_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 50px auto 0;
+  background: #f3f3f3;
+  border: 6px solid #eaeaea;
+  padding: 20px 40px 40px;
+  text-align: center;
+  border-radius: 2px;
+}
+#third_div {
+  width: 90%;
+  max-width: 600px;
+  min-width: 340px;
+  margin: 10px auto 0;
+}
+</style>
 </head>
 
 <body class="store_container">  
@@ -61,7 +112,8 @@
     </section> -->
     <!--订单列表-->
         <ul class="order_list" style="">
-    <?php foreach ($order_data as $key => $value) {?>
+    <?php foreach ($order_data as $key => $value) {
+            if($value['order_status'] != 0 && $value['order_status'] != 1){?>
             <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>">
                 <h3><?php echo $value['order_name']?></h3>
                 <div class="info flexbox flexcenter_v">
@@ -79,7 +131,24 @@
                     </div>
                 </div>
             </li>
-    <?php }?>
+    <?php }else {?>
+            <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>">
+                <h3><?php echo $value['order_name']?></h3>
+                <div class="info flexbox flexcenter_v">
+                    <div  style="margin-right: 10px;" >
+                        <input order-status="<?php echo $value['order_status']?>" order-id="<?php echo $value['id']?>"  type="checkbox" name="check-1" value="4" class="lcs_check switch" autocomplete="off"/>
+                    </div>
+                    <div class="con flex1">
+                        <p class="flexbox"><img src="images/man_icon.png" alt="">负责人</p>
+                        <p><?php echo $value['planner_name']?></p>
+                    </div>
+                    <div class="con flex1">
+                        <p class="flexbox"><img src="images/time_s_icon.png" alt="">订单日期</p>
+                        <p><?php echo $value['order_date']?></p>
+                    </div>
+                </div>
+            </li>
+    <?php }}?>
         </ul>
         <!--悬浮按钮-->
         <div class="add_btn"></div>
@@ -115,6 +184,13 @@
     <script type="text/javascript" src='js/nav.js'></script>
     <script type="text/javascript" src='js/order.js'></script>
 
+    <script src="js/lc_switch.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <script type="text/javascript" src="js/upscroller.js"></script>
+    <script type="text/javascript" src="js/my-app.js"></script>
+
 
     
 <script>
@@ -128,9 +204,9 @@ $(function  () {
     $("[order-status = '6']").find('span').addClass("gray").html("已完成");
 
     // li点击跳转
-    $(".order_list li").on("click",function(){
-        order_type = $(this).attr("order-type");
-        order_id = $(this).attr("order-id");
+    $(".order_list li").find('.con').on("click",function(){
+        order_type = $(this).parent().parent().attr("order-type");
+        order_id = $(this).parent().parent().attr("order-id");
         if(order_type == 2){
             location.href = "<?php echo $this->createUrl("design/bill");?>&order_id=" + order_id + "&from=my_order";
         }else if(order_type == 1){
@@ -163,6 +239,33 @@ $(function  () {
         console.log($(this).find('img:first').attr('id','zoom'+i));
         console.log($(this).find('img:first').next().attr('id','add'+i));
     })
+
+    //改变订单状态按钮
+    buttonclick_xuanran();
+    function buttonclick_xuanran(){
+        $('.switch').lc_switch();
+        // triggered each time a field changes status
+        $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+        var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+        console.log('field changed status: '+ status );
+        });
+
+        // triggered each time a field is checked
+        $('body').delegate('.lcs_check', 'lcs-on', function() {
+            console.log('field is checked');
+            $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:1},function(){
+                
+            });
+        });
+
+        // triggered each time a is unchecked
+        $('body').delegate('.lcs_check', 'lcs-off', function(){
+            console.log('field is unchecked');
+            $.post('<?php echo $this->createUrl("order/ChangeOrderStatus");?>',{order_id:$(this).attr("order-id"),order_status:0},function(){
+                
+            });
+        });     
+    }
 })
 </script>
 </body>
