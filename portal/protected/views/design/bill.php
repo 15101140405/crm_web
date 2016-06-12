@@ -335,10 +335,10 @@ $arr_locate = array(
                             ?>
                             <li class="ulist_item">
                                 <div class="dishes">
-                                    <p class="name2"><i class="t_gray">[主持] </i>｜<?php echo $host['name']; ?></p>
+                                    <p class="name2" style="width:94%"><i class="t_gray">[主持] </i>｜<?php echo $host['name']; ?></p>
                                 </div>
                                 <div>
-                                    <p class="price">&yen;<?php echo $host['unit_price'] . $host['unit']; ?></p>
+                                    <p class="price" style="margin-left:160px;width:90px;">&yen;<?php echo $host['unit_price'] . $host['unit']; ?></p>
                                 </div>
                                 <span class="account">X <?php echo $host['amount']; ?></span>
                             </li>
@@ -356,10 +356,10 @@ $arr_locate = array(
                             ?>
                             <li class="ulist_item">
                                 <div class="dishes">
-                                    <p class="name2"><i class="t_gray">[摄像] </i>｜<?php echo $camera['name']; ?></p>
+                                    <p class="name2" style="width:94%"><i class="t_gray">[摄像] </i>｜<?php echo $camera['name']; ?></p>
                                 </div>
                                 <div>
-                                    <p class="price">&yen;<?php echo $camera['unit_price'] . $camera['unit']; ?></p>
+                                    <p class="price" style="margin-left:160px;width:90px;">&yen;<?php echo $camera['unit_price'] . $camera['unit']; ?></p>
                                 </div>
                                 <span class="account">X <?php echo $camera['amount']; ?></span>
                             </li>
@@ -377,10 +377,10 @@ $arr_locate = array(
                             ?>
                             <li class="ulist_item">
                                 <div class="dishes">
-                                    <p class="name2"><i class="t_gray">[摄影] </i>｜<?php echo $photo['name']; ?></p>
+                                    <p class="name2" style="width:94%"><i class="t_gray">[摄影] </i>｜<?php echo $photo['name']; ?></p>
                                 </div>
                                 <div>
-                                    <p class="price">&yen;<?php echo $photo['unit_price'] . $photo['unit']; ?></p>
+                                    <p class="price" style="margin-left:160px;width:90px;">&yen;<?php echo $photo['unit_price'] . $photo['unit']; ?></p>
                                 </div>
                                 <span class="account">X <?php echo $photo['amount']; ?></span>
                             </li>
@@ -398,10 +398,10 @@ $arr_locate = array(
                             ?>
                             <li class="ulist_item">
                                 <div class="dishes">
-                                    <p class="name2"><i class="t_gray">[化妆] </i>｜<?php echo $makeup['name']; ?></p>
+                                    <p class="name2" style="width:94%"><i class="t_gray">[化妆] </i>｜<?php echo $makeup['name']; ?></p>
                                 </div>
                                 <div>
-                                    <p class="price">&yen;<?php echo $makeup['unit_price'] . $makeup['unit']; ?></p>
+                                    <p class="price" style="margin-left:160px;width:90px;">&yen;<?php echo $makeup['unit_price'] . $makeup['unit']; ?></p>
                                 </div>
                                 <span class="account">X <?php echo $makeup['amount']; ?></span>
                             </li>
@@ -419,10 +419,10 @@ $arr_locate = array(
                             ?>
                             <li class="ulist_item">
                                 <div class="dishes">
-                                    <p class="name2"><i class="t_gray">[其他] </i>｜<?php echo $other['name']; ?></p>
+                                    <p class="name2" style="width:94%"><i class="t_gray">[其他] </i>｜<?php echo $other['name']; ?></p>
                                 </div>
                                 <div>
-                                    <p class="price">&yen;<?php echo $other['unit_price'] . $other['unit']; ?></p>
+                                    <p class="price" style="margin-left:160px;width:80px;">&yen;<?php echo $other['unit_price'] . $other['unit']; ?></p>
                                 </div>
                                 <span class="account">X <?php echo $other['amount']; ?></span>
                             </li>
@@ -609,10 +609,10 @@ $arr_locate = array(
                         ?>
                     <li class="ulist_item">
                         <div class="dishes">
-                            <p class="name"><?php echo $d['name']; ?></p>
+                            <p class="name" style="width:94%;"><?php echo $d['name']; ?></p>
                         </div>
                         <div>
-                            <p class="price">&yen;<?php echo $d['unit_price'] . $d['unit']; ?></p>
+                            <p class="price" style="width:60px;margin-left:160px;">&yen;<?php echo $d['unit_price'] . $d['unit']; ?></p>
                         </div>
                         <span class="account">X <?php echo $d['amount']; ?></span>
                     </li>

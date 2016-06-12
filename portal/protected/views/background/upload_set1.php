@@ -19,9 +19,10 @@
         </div>
     </div>
     <!--导航-->
+<?php if(!isset($_GET['type'])){?>
     <div class="nav_area">
         <div class="upload_wapper">
-            <ul class="nav_list upload_wapper clearfix">
+            <ul class="nav_list upload_wapper clearfix" style="width: 80%;margin: 0;display: inline-block;margin-top: 8px;">
                 <li ><a href="#">场地布置</a>
                     <ul class="sub_nav_list" id="decoration">
                         <li tap-id="0"><a href="#">全部</a>
@@ -51,6 +52,7 @@
                 <li id="lss"><a href="#">灯光／音响／视频</a>
                 </li>
             </ul>
+            <button class="right upload_new_btn" style="margin-right:0;margin-top:10px;margin-bottom:10px;background-color:#BF0E16;" id="upload" >上传单品</button>
         </div>
     </div>
 
@@ -77,6 +79,59 @@
         <?php }}?>
             </ul>
         </div>
+<?php }else if($_GET['type'] == "theme"){?>
+    <div class="nav_area">
+        <div class="upload_wapper">
+            <ul class="nav_list upload_wapper clearfix" style="width: 80%;margin: 0;display: inline-block;margin-top: 8px;">
+                <li id="decoration"><a href="#">场地布置</a>
+                </li>
+                <li>|</li>
+                <li id="host"><a href="#">主持</a>
+                </li>
+                <li>|</li>
+                <li id="video"><a href="#">摄像</a>
+                </li>
+                <li>|</li>
+                <li id="camera"><a href="#">摄影</a>
+                </li>
+                <li>|</li>
+                <li id="makeup"><a href="#">化妆</a>
+                </li>
+                <li>|</li>
+                <li id="other"><a href="#">其他人员</a>
+                </li>
+                <li>|</li>
+                <li id="lss"><a href="#">灯光／音响／视频</a>
+                </li>
+            </ul>
+            <!-- <button class="right upload_new_btn" style="margin-right:0;margin-top:10px;margin-bottom:10px;background-color:#BF0E16;" id="upload" >上传单品</button> -->
+        </div>
+    </div>
+
+    <div class="upload_set_c upload_wapper clearfix">
+        <!--左侧内容区域-->
+        <div class="left_area left">
+            <ul class="goods_list clearfix" id="product">
+        <?php foreach ($supplier_product as $key => $value) {
+            if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
+                <li style="height: 200px;"  supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
+                    <div class="img_box" style="height:60%">
+                        <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
+                        <!-- <span>已售233件</span> -->
+                    </div>
+                    <div class="info_box" style="height:40%">
+                        <p class="name"><?php echo $value['name']?></p>
+                        <p class="price">&yen;<strong><?php echo $value['unit_price']?></strong>
+                        </p>
+                        <!-- <p class="original_price">&yen;<del>400.00</del>
+                        </p> -->
+                        <button class="add_product">加入套系</button>
+                    </div>
+                </li>
+        <?php }}?>
+            </ul>
+        </div>
+<?php }?>
         <!--右侧内容区域-->
         <div class="right_area right" style="background:#fff;">
             <div>
@@ -146,6 +201,7 @@
         });
 
         //场地布置筛选
+<?php if(!isset($_GET['type'])){?>
         $("#decoration li").on("click",function(){
             $("#product li").removeClass("hid");
             $("#product li").addClass("hid");
@@ -153,6 +209,13 @@
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='20']").removeClass("hid");};
             $(".sub_nav_list").hide();
         });
+<?php }else if($_GET['type'] == "theme"){?>
+        $("#decoration").on("click",function(){
+            $("#product li").removeClass("hid");
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='20']").removeClass("hid");
+        });
+<?php }?>
 
         //主持
         $("#host").on("click",function(){
@@ -205,10 +268,10 @@
             product_list = product_list.substring(0,product_list.length-1);
         <?php if(!isset($_GET['type'])){?>
             location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
-        <?php }else if($_GET['type']=="meeting_set"){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=meeting_set&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
+        <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
         <?php }?>
-        })
+        });
 
         //改变数量、单价时，刷新总价
         $('.product_price').live('change', function() {

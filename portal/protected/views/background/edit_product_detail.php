@@ -15,6 +15,89 @@
     <script type="text/javascript" src="js/upload.js"></script>
     <!-- 引用控制层插件样式 -->
     <!-- <link rel="stylesheet" href="css/zyUpload.css" type="text/css"> -->
+    <script type="text/javascript">
+        var swfu;
+        var swfu2;
+        var uploadsite = "http://file.cike360.com";
+        window.onload = function () {
+            $.cookie("imgs", "");
+            var settings2= {
+                flash_url: uploadsite + "/swfupload/swfupload.swf",
+                upload_url: uploadsite + "/upload.ashx",
+                post_params: {},
+                file_size_limit: "4100MB",
+                file_types: "*.jpg;*.gif;*.png;*.bmp;",
+                file_types_description: "图片文件",
+                file_upload_limit: 100,
+                file_queue_limit: 100,
+                custom_settings: {
+                    progressTarget: "fsUploadProgress",
+                    cancelButtonId: "btnCancel"
+                },
+                debug: false,
+                button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                //button_action: SWFUpload.BUTTON_ACTION.SELECT_FILES,
+                // Button Settings
+                button_placeholder_id: "uploadsingle",
+                button_image_url: "images/btn.png",
+                button_width: 120,
+                button_height: 35,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND, 
+                swfupload_preload_handler: preLoad,
+                swfupload_load_failed_handler: loadFailed,
+                file_queued_handler: fileQueued,
+                file_queue_error_handler: fileQueueError,
+                file_dialog_complete_handler: fileDialogComplete,
+                upload_progress_handler: uploadProgress,
+                upload_error_handler: uploadError,
+                upload_success_handler: uploadSuccess2,
+                upload_complete_handler: uploadComplete,
+                file_dialog_start_handler: fileDialogStart,
+            };
+            
+            var settings3= {
+                flash_url: uploadsite + "/swfupload/swfupload.swf",
+                upload_url: uploadsite + "/upload.ashx",
+                post_params: {},
+                file_size_limit: "4100MB",
+                file_types: "*.jpg;*.gif;*.png;*.bmp;",
+                file_types_description: "图片文件",
+                file_upload_limit: 100,
+                file_queue_limit: 100,
+                custom_settings: {
+                    progressTarget: "fsUploadProgress",
+                    cancelButtonId: "btnCancel"
+                },
+                debug: false,
+                button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                //button_action: SWFUpload.BUTTON_ACTION.SELECT_FILES,
+                // Button Settings
+                button_placeholder_id: "uploadsingle1",
+                button_image_url: "images/btn.png",
+                button_width: 120,
+                button_height: 35,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND, 
+                swfupload_preload_handler: preLoad,
+                swfupload_load_failed_handler: loadFailed,
+                file_queued_handler: fileQueued,
+                file_queue_error_handler: fileQueueError,
+                file_dialog_complete_handler: fileDialogComplete,
+                upload_progress_handler: uploadProgress,
+                upload_error_handler: uploadError,
+                upload_success_handler: uploadSuccess3,
+                upload_complete_handler: uploadComplete,
+                file_dialog_start_handler: fileDialogStart,
+            };
+            swfu2 = new SWFUpload(settings2);
+            swfu3 = new SWFUpload(settings3);
+        }
+        function queueComplete() {
+            //location.href="";
+        }
+
+    </script>
 </head>
 
 <body style="background:#fff;">
@@ -49,6 +132,16 @@
                         <input class="input_in" type="text" value="<?php echo $product['price']?>" placeholder="请输入产品名称" id="price">
                     </div>
                     <span class="left tip hid" id="name_t">请输入产品价格</span>
+                </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">底价:</label>
+                        <span class="must">*</span>
+                    </div>
+                    <div class="input_box left clearfix">
+                        <input class="input_in" type="text" value="<?php echo $product['cost']?>" placeholder="请输入产品名称" id="cost">
+                    </div>
+                    <span class="left tip hid" id="name_t">请输入产品底价</span>
                 </li>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
@@ -93,6 +186,16 @@
                 </li>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
+                        <label for="">底价:</label>
+                        <span class="must">*</span>
+                    </div>
+                    <div class="input_box left clearfix">
+                        <input class="input_in" type="text"  placeholder="请输入产品名称" id="cost">
+                    </div>
+                    <span class="left tip hid" id="name_t">请输入产品底价</span>
+                </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
                         <label for="">单位:</label>
                         <span class="must">*</span>
                     </div>
@@ -113,6 +216,14 @@
                 </li>
         <?php }?>
             </ul>
+            <div class="right video_cover" style="position: absolute;right: 120px;">
+                <div class="cover_box">
+                    <img src="images/cover.jpg" id="poster_img" style="width:120px;">
+                </div>
+                <button id="uploadsingle">上传产品示意图</button>
+                <!--  -->
+                <span class="tip tip2 hid" id="ref_pic_t">请上传示意图</span>
+            </div>
         </div>
 
 

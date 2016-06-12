@@ -698,7 +698,7 @@ class ReportController extends InitController
                         )
                 ));
             foreach ($hotel as $key1 => $value1) {
-                $touser="100|101";
+                $touser="@all";
                 $content="中文怎么解决";
                 $title="今日经营日报（".$value1['name'].")";
                 $agentid=0;

@@ -44,6 +44,10 @@
                         <li><img id="video" department="12" src="images/cjtubiao_17.png" alt=""><p class="name">摄像师</p></li>
                         <li><img id="camera" department="13" src="images/cjtubiao_15.png" alt=""><p class="name">摄影师</p></li>
                         <li><img id="makeup" department="14" src="images/cjtubiao_13.png" alt=""><p class="name">化妆师</p></li>
+                        <li><img id="decoration" department="20" src="images/cjtubiao_13.png" alt=""><p class="name">场地布置</p></li>
+                        <li><img id="lighting" department="8" src="images/cjtubiao_13.png" alt=""><p class="name">灯光</p></li>
+                        <li><img id="sound" department="23" src="images/cjtubiao_13.png" alt=""><p class="name">音响</p></li>
+                        <li><img id="shipin" department="9" src="images/cjtubiao_13.png" alt=""><p class="name">视频</p></li>
                     </ul>
                     
                 </div>
@@ -100,6 +104,8 @@
                 if($("#designer").hasClass("active")){
                     $(".designer").css('display','inline-block').siblings().hide();    
                 }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active")){
+                    $(".disigner").css('display','inline-block').siblings().hide();    
+                }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active") ||$("#decoration").hasClass("active") ||$("#lighting").hasClass("active") ||$("#sound").hasClass("active") ||$("#shipin").hasClass("active")){
                     $(".service").css('display','inline-block').siblings().hide();
                 };
                 $("#progress").attr("src","images/cjtubiao_06.png")

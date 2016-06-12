@@ -29,7 +29,7 @@
   <!-- </div> -->
   <section class="base_info">
         <div class="profile_bar">
-            <img src="images/lazy_profile.png" data-lazyload="<?php echo $service_person['avatar']?>" />
+            <img src="images/lazy_profile.png" data-lazyload="<?php echo $service_person['avatar']?>" style="height:100%" />
         </div>
         <p class="name"><?php echo $service_person['name']?></p>
         <!-- <p class="desc"><span>专业<i>5.0</i></span><span>态度<i>5.0</i></span><span>守时<i>5.0</i></span> -->
@@ -135,7 +135,7 @@ $(function() {
       var info ={
         'year': year ,
         'month' : month+1 ,
-        'service_person_id' : <?php echo $service_person['id']?>,
+        'service_person_id' : <?php echo $_GET['service_person_id']?>,
       };
       console.log(info);
 

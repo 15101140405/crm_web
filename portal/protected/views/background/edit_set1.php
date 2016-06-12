@@ -76,10 +76,28 @@
                     </div>
                 </li>
         <?php }}?>
-        <?php }else if($_GET["type"] == 'menu'){?>
+        <?php }else if($_GET["type"] == 'menu' ){?>
         <?php foreach ($supplier_product as $key => $value) {
             if($value['supplier_type_id'] == 2){?>
                 <li style="height: 200px;" tap="<?php echo $value['dish_type']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
+                    <div class="img_box" style="height:60%">
+                        <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
+                        <!-- <span>已售233件</span> -->
+                    </div>
+                    <div class="info_box" style="height:40%">
+                        <p class="name"><?php echo $value['name']?></p>
+                        <p class="price">&yen;<strong><?php echo $value['unit_price']?></strong>
+                        </p>
+                        <!-- <p class="original_price">&yen;<del>400.00</del>
+                        </p> -->
+                        <button class="add_product">加入套系</button>
+                    </div>
+                </li>
+        <?php }}?>
+        <?php }else if($_GET["type"] == 'theme'){?>
+        <?php foreach ($supplier_product as $key => $value) {
+            if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
+                <li style="height: 200px;" tap="<?php echo $value['decoration_tap']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
                     <div class="img_box" style="height:60%">
                         <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
                         <!-- <span>已售233件</span> -->
@@ -167,7 +185,10 @@
             $("#lss").remove();
             $(".shuxian").remove();
             $("#top").html("婚宴／会议餐")
-        <?php }?>
+        <?php }else if($_GET['type'] == "theme"){?>
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='20']").removeClass("hid");
+        <?php } ?>
 
         $("#shopping_car li").each(function(){
             var product = $("#product [product-id='"+$(this).attr('product-id')+"']");
@@ -204,7 +225,7 @@
             $("#product li").removeClass("hid");
             $("#product li").addClass("hid");
             var tap = $(this).attr("tap-id");
-        <?php if(!isset($_GET['type'])){?>
+        <?php if(!isset($_GET['type']) || $_GET['type'] == "theme"){?>
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='20']").removeClass("hid");};
         <?php }else if($_GET['type'] == "menu"){?>
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product li").removeClass("hid");$("#product li").addClass("hid");$("[supplier-type-id='2']").removeClass("hid");};
@@ -264,8 +285,8 @@
             product_list = product_list.substring(0,product_list.length-1);
         <?php if(!isset($_GET['type'])){?>
             location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" + $("#feast_discount").val();
-        <?php }else if($_GET['type'] == "menu"){?>
-            location.href = "<?php echo $this->createUrl("background/edit_set2");?>&type=menu&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" + $("#feast_discount").val();
+        <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
         <?php }?>
         })
 

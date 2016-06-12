@@ -282,6 +282,9 @@
                 CI_Pic : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
                 account_id : $.cookie('account_id'),
+            <?php if(isset($_GET['ci_type'])){?>
+                CI_Type : <?php echo $_GET['ci_type']?>,
+            <?php }?>    
             };
             console.log(data);
             $(".tip").removeClass("hid");
@@ -295,7 +298,11 @@
                 $.post("<?php echo $this->createUrl("background/case_upload");?>",data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
+                <?php if(!isset($_GET['ci_type'])){?>
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
+                <?php }else{?>
+                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=<?php echo $_GET['ci_type']?>";
+                <?php }?>
                 });
             };  
         });

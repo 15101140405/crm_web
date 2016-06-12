@@ -216,13 +216,27 @@ class ServiceController extends InitController
         $criteria->addInCondition('service_person_id', $service_id);
         $service_order = ServiceOrder::model()->findAll($criteria);
 
+        $CI_Type = "";
+        if($_GET['type_id'] == 3){
+            $CI_Type = 6;
+        };
+        if($_GET['type_id'] == 4){
+            $CI_Type = 13;
+        };
+        if($_GET['type_id'] == 5){
+            $CI_Type = 14;
+        };
+        if($_GET['type_id'] == 6){
+            $CI_Type = 15;
+        };
+
         $service_data = array();
         foreach ($service as $key => $value) {
             $team=ServiceTeam::model()->findByPk($value['team_id']);
             $case=CaseInfo::model()->find(array(
                     'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
                     'params' => array(
-                            ':CI_Type' => 6,
+                            ':CI_Type' => $CI_Type,
                             ':CT_ID' => $value['staff_id']
                         )
                 ));
@@ -264,7 +278,7 @@ class ServiceController extends InitController
 
         $service_team = ServiceTeam::model()->findAll();
         //print_r($service_data);
-
+        // print_r($service_data);die;
         $this->render('list',array(
                 'service_data' => $service_data,
                 'service_team' => $service_team,
@@ -503,8 +517,21 @@ class ServiceController extends InitController
                 if($_GET['type_id']==6){$CI_Type = 15;};
 
 
-                $result = yii::app()->db->createCommand("select service_person.staff_id,service_person.id,service_person.name as name,case_info.CI_Pic as avatar, case_info.CI_Pic as poster,case_resources.CR_Path as sample_video from service_person left join case_info on service_person.staff_id=case_info.CT_ID left join case_resources on case_info.CI_ID=case_resources.CI_ID where service_person.id=".$_GET['service_person_id']." and case_info.CI_Type=".$CI_Type." and case_resources.CR_Type=2");
+                $result = yii::app()->db->createCommand("select service_person.staff_id,service_person.id,service_person.name as name,case_info.CI_Pic as avatar, case_info.CI_Pic as poster,case_resources.CR_Path as sample_video ".
+                                                        "from service_person left join case_info on service_person.staff_id=case_info.CT_ID ".
+                                                        "left join case_resources on case_info.CI_ID=case_resources.CI_ID ".
+                                                        "where service_person.id=".$_GET['service_person_id']." and ".
+                                                        "case_info.CI_Type=".$CI_Type." and ".
+                                                        "case_resources.CR_Type=2");
                 $temp = $result->queryAll();
+                if(empty($temp)){
+                    $result = yii::app()->db->createCommand("select service_person.staff_id,service_person.id,service_person.name as name,case_info.CI_Pic as avatar, case_info.CI_Pic as poster,case_resources.CR_Path as sample_video ".
+                                                            "from service_person left join case_info on service_person.staff_id=case_info.CT_ID ".
+                                                            "left join case_resources on case_info.CI_ID=case_resources.CI_ID ".
+                                                            "where service_person.id=".$_GET['service_person_id']." and ".
+                                                            "case_info.CI_Type=".$CI_Type);
+                    $temp = $result->queryAll();    
+                }
                 $service_person = array(
                         'id' => "",
                         'staff_id' => "",
@@ -532,7 +559,7 @@ class ServiceController extends InitController
                 $y = date("Y");
                 $m = date("m");
                 $d = date("d");
-                /*print_r($service_person);die;*/
+                // print_r($temp);die;
                 $this->render("personnel_host",array(
                     'service_person' => $service_person,
                     'first_show_year' => $y,
