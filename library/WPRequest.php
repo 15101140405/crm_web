@@ -494,10 +494,38 @@ class WPRequest
 
     }
 
+    public static function idlist()
+    {
+        $yyylist = array(
+            'FSUID_67A4868F7CFAE4AF788AC32E71FCE339',
+            'FSUID_CB0A0E5AB1F711A228DBCCE3F989627F',
+            'FSUID_6BA4A68106FF34311E82CFB4F89D2DF5',
+            'FSUID_6AB95EFAF8216BB96A54AE431FC8A9A1',
+            'FSUID_3975B7B1576E414E2041669FCC1CB273',
+            'FSUID_DA7DCD271D388F8A8915E35F2BBB82AE',
+            'FSUID_DC287F2734E8C8C184117FDDA29BDA7C',
+            'FSUID_F0338535F23337012CB6074D180D7DE7',
+            'FSUID_34FC4144BC25B1912C5AD7F22B6C6EA0',
+            'FSUID_734647ECC6CAAEC4893438300C725B63',
+            'FSUID_16F92F490425ED02F4C0C03DE59567EC',
+            'FSUID_D23F7395A0A5E1B99EE842C70B3C5FAC',
+            'FSUID_93BC033C128C50D0929118676670E40E',
+            'FSUID_5808D6A98832F41F5CBE887508A50B4C',
+            'FSUID_01472FEE07EB30448009B2FEBE40C089',
+            'FSUID_459E85AA5C2C23316709285CBED22B91',
+            // 'FSUID_E1CF441FB0630D803E3FD27C99E05922',//张斯恒，排除出去方便检测效果
+            );
+        $testlist = array(
+            'FSUID_459E85AA5C2C23316709285CBED22B91',
+            'FSUID_E1CF441FB0630D803E3FD27C99E05922',
+            );
+        return $testlist;
+    }
+    
     //给全体发送消息
     //若要做单独接口，用末端的几行就行
-
-    public static function fxiaokesendMessage($appId,$appSecret,$permanentCode,$content)
+    //为避免重复调用获取密钥接口，重新整合在这里，做好密钥本地存储更新后重做本部分
+    public static function fxiaokesendMessage($appId,$appSecret,$permanentCode,$content,$openUserId)
     {
         $url = "https://open.fxiaoke.com/cgi/department/list";
         $corp = self::getCorp($appId,$appSecret,$permanentCode);
@@ -507,28 +535,36 @@ class WPRequest
             ));
         $rtnobj = self::post($url, $obj);
         $departmentlist = json_decode($rtnobj) -> departments;
-        $openUserId = array();
-        foreach ($departmentlist as $key1 => $value1) {
-            $departmentId = $value1 -> id;
-            $url = "https://open.fxiaoke.com/cgi/user/simpleList";
-            $obj = json_encode(array(
-                "corpAccessToken"   => $corp['corpAccessToken'],
-                "corpId"            => $corp['corpId'],
-                "departmentId"      => $departmentId,
-                "fetchChild"        => true,
-                ));
-            $rtnobj = self::post($url, $obj);
-            $userlist = json_decode($rtnobj) -> userList;//网站上示例是userlist，实际为userList
-            // print_r($userlist);die;
-            foreach ($userlist as $key2 => $value2) {
-                $openUserId[] = $value2 -> openUserId;
+        if (empty($openUserId)) {
+            $openUserId = array();
+            foreach ($departmentlist as $key1 => $value1) {
+                $departmentId = $value1 -> id;
+                $url = "https://open.fxiaoke.com/cgi/user/simpleList";
+                $obj = json_encode(array(
+                    "corpAccessToken"   => $corp['corpAccessToken'],
+                    "corpId"            => $corp['corpId'],
+                    "departmentId"      => $departmentId,
+                    "fetchChild"        => true,
+                    ));
+                $rtnobj = self::post($url, $obj);
+                $userlist = json_decode($rtnobj) -> userList;//网站上示例是userlist，实际为userList
+                // print_r($userlist);die;
+                foreach ($userlist as $key2 => $value2) {
+                    $openUserId[] = $value2 -> openUserId;
+                    // $openUserId[] = array(
+                    //     'name'          => $value2 -> name,
+                    //     'openUserId'    => $value2 -> openUserId
+                    //     );
+                }
             }
+            $openUserId = self::idlist();
         }
+        // print_r($openUserId);die;
         $url = "https://open.fxiaoke.com/cgi/message/send";
         $obj = json_encode(array(
             "corpAccessToken"   => $corp['corpAccessToken'],
             "corpId"            => $corp['corpId'],
-            "toUser"            => array('FSUID_6C1FF482960507E189C0D14CB19D7FF6'),
+            "toUser"            => self::idlist(),
             "msgType"           => "text",
             "text"              => $content,
             ));
