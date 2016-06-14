@@ -1,65 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="2016-5-23">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_03.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_06.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_09.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_11.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_13.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_15.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/cjtubiao_17.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/logo_black.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/regist_tab_pic.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/user_pic.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/model/DishType.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_dish.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_menu1.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_menu2.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/regist——pro.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/product/select_set.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/design/select_supplier.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/design/select_supplier_add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_dish.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_menu1.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_menu2.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/images/logo.jpg" afterPath="$PROJECT_DIR$/portal/images/logo.jpg" />
+    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="2016-5-30">
+      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\portal\protected\views\background\regist_host.php" afterPath="" />
+      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\portal\protected\views\background\regist——pro.php" afterPath="" />
+      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\test" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/PrintController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/PrintController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/OrderMeetingCompany.php" afterPath="$PROJECT_DIR$/common/model/OrderMeetingCompany.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ResourceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ResourceController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/ServiceProduct.php" afterPath="$PROJECT_DIR$/common/model/ServiceProduct.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/SupplierProduct.php" afterPath="$PROJECT_DIR$/common/model/SupplierProduct.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/Wedding_set.php" afterPath="$PROJECT_DIR$/common/model/Wedding_set.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/base_background.css" afterPath="$PROJECT_DIR$/portal/css/base_background.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/form/SupplierProductForm.php" afterPath="$PROJECT_DIR$/common/form/SupplierProductForm.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/WPRequest.php" afterPath="$PROJECT_DIR$/library/WPRequest.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/bill.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/bill.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/billtable.html" afterPath="$PROJECT_DIR$/portal/billtable.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/create_order.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/create_order.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/crm.portal.wf_development.log" afterPath="$PROJECT_DIR$/log/crm.portal.wf_development.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/decorationDetail.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/decorationDetail.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_img.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_img.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_self_info.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_self_info.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_video.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_video.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_product.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_product.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_product_detail.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_product_detail.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_set1.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_set1.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_set2.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_set2.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_supplier_product.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_supplier_product.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/index.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/layout.css" afterPath="$PROJECT_DIR$/portal/css/layout.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/service/list.php" afterPath="$PROJECT_DIR$/portal/protected/views/service/list.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/login.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/orderprint.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/orderprint.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" afterPath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/regist.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/regist.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/select_order.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/select_order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/set_detail.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/set_detail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/set_list.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/set_list.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/store.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/store.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/tpDetail.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/tpDetail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_product.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_product.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_product_lss.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_product_lss.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/style.css" afterPath="$PROJECT_DIR$/portal/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/test.php" afterPath="$PROJECT_DIR$/library/test.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_case.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_case.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_set1.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_set1.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_set2.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_set2.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -134,31 +101,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BackgroundController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BackgroundController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8064516">
-              <caret line="87" column="50" selection-start-line="87" selection-start-column="50" selection-end-line="87" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
               <folding>
-                <marker date="1464575779282" expanded="true" signature="10507:11043" placeholder="select * fro..case_info..." />
-                <marker date="1464575779282" expanded="true" signature="10571:10706" placeholder="select CI_ID..case_bind..." />
-                <marker date="1464575779282" expanded="true" signature="10654:10692" placeholder="select accou..staff..." />
-                <marker date="1464575779282" expanded="true" signature="10745:10876" placeholder="select CI_ID..case_bind..." />
-                <marker date="1464575779282" expanded="true" signature="10824:10862" placeholder="select hotel..staff..." />
-                <marker date="1464575779282" expanded="true" signature="10914:10969" placeholder="select CI_ID..case_bind..." />
-                <marker date="1464575779282" expanded="true" signature="16382:16735" placeholder="select weddi..." />
-                <marker date="1464575779282" expanded="true" signature="17920:18118" placeholder="select case_..case_resources_product..." />
-                <marker date="1464575779282" expanded="true" signature="24639:24837" placeholder="select case_..case_resources_product..." />
-                <marker date="1464575779282" expanded="true" signature="26816:26990" placeholder="select suppl..supplier..." />
-                <marker date="1464575779282" expanded="true" signature="27922:28211" placeholder="select suppl..." />
-                <marker date="1464575779282" expanded="true" signature="42006:42204" placeholder="select case_..case_resources_product..." />
-                <marker date="1464575779282" expanded="true" signature="44715:44913" placeholder="select case_..case_resources_product..." />
-                <marker date="1464575779282" expanded="true" signature="50199:50382" placeholder="select suppl..supplier..." />
-                <marker date="1464575779282" expanded="true" signature="51491:51665" placeholder="select suppl..supplier..." />
-                <marker date="1464575779282" expanded="true" signature="51809:52098" placeholder="select suppl..." />
-                <marker date="1464575779282" expanded="true" signature="52243:52522" placeholder="select suppl..." />
-                <marker date="1464575779282" expanded="true" signature="54476:54755" placeholder="select suppl..." />
+                <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
+                <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
+                <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
+                <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
+                <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
+                <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
+                <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
+                <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
+                <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
+                <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
+                <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
+                <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
+                <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
+                <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
+                <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
+                <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
+                <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
+                <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
+                <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
+                <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
+                <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="regist.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/portal/protected/views/background/regist.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -175,6 +155,7 @@
         <option value="$PROJECT_DIR$/portal/protected/views/background/edit_product.php" />
         <option value="$PROJECT_DIR$/portal/protected/views/background/regist_host.php" />
         <option value="$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php" />
+        <option value="$PROJECT_DIR$/portal/protected/views/background/regist.php" />
       </list>
     </option>
   </component>
@@ -190,10 +171,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1932" />
-    <option name="height" value="1176" />
+    <option name="x" value="-7" />
+    <option name="width" value="1930" />
+    <option name="height" value="1167" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -224,8 +204,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -294,60 +272,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm_web_new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="portal" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="protected" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="background" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm_web_new" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="portal" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="protected" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="controllers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -522,7 +454,31 @@
       <option name="project" value="LOCAL" />
       <updated>1464574266514</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="2016-5-30">
+      <created>1464593565619</created>
+      <option name="number" value="00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1464593565619</updated>
+    </task>
+    <task id="LOCAL-00023" summary="手机端产品库人员">
+      <created>1464600720442</created>
+      <option name="number" value="00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1464600720442</updated>
+    </task>
+    <task id="LOCAL-00024" summary="手机会议部分">
+      <created>1465122110109</created>
+      <option name="number" value="00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1465122110109</updated>
+    </task>
+    <task id="LOCAL-00025" summary="注册页拼错属性名">
+      <created>1465267867897</created>
+      <option name="number" value="00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1465267867897</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -535,16 +491,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1932" height="1176" extended-state="0" />
-    <editor active="true" />
+    <frame x="-7" y="0" width="1930" height="1167" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19050105" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1907001" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295129" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23579545" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23686723" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="消息" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="消息" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3295129" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -591,13 +547,48 @@
     <MESSAGE value="2016-5-23" />
     <MESSAGE value="zsh修改" />
     <MESSAGE value="160530" />
-    <option name="LAST_COMMIT_MESSAGE" value="160530" />
+    <MESSAGE value="2016-5-30" />
+    <MESSAGE value="手机端产品库人员" />
+    <MESSAGE value="手机会议部分" />
+    <MESSAGE value="注册页拼错属性名" />
+    <MESSAGE value="纷享销客；" />
+    <option name="LAST_COMMIT_MESSAGE" value="纷享销客；" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+          <folding>
+            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
+            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
+            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -627,24 +618,27 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1464575779282" expanded="true" signature="10507:11043" placeholder="select * fro..case_info..." />
-            <marker date="1464575779282" expanded="true" signature="10571:10706" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="10654:10692" placeholder="select accou..staff..." />
-            <marker date="1464575779282" expanded="true" signature="10745:10876" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="10824:10862" placeholder="select hotel..staff..." />
-            <marker date="1464575779282" expanded="true" signature="10914:10969" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="16382:16735" placeholder="select weddi..." />
-            <marker date="1464575779282" expanded="true" signature="17920:18118" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="24639:24837" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="26816:26990" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="27922:28211" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="42006:42204" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="44715:44913" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="50199:50382" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="51491:51665" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="51809:52098" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="52243:52522" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="54476:54755" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
+            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
+            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
           </folding>
         </state>
       </provider>
@@ -997,44 +991,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/portal/protected/views/background/regist.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2804878">
-          <caret line="105" column="22" selection-start-line="105" selection-start-column="22" selection-end-line="105" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/portal/protected/views/background/regist_host.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3089431">
-          <caret line="87" column="44" selection-start-line="87" selection-start-column="44" selection-end-line="87" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8064516">
-          <caret line="87" column="50" selection-start-line="87" selection-start-column="50" selection-end-line="87" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
           <folding>
-            <marker date="1464575779282" expanded="true" signature="10507:11043" placeholder="select * fro..case_info..." />
-            <marker date="1464575779282" expanded="true" signature="10571:10706" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="10654:10692" placeholder="select accou..staff..." />
-            <marker date="1464575779282" expanded="true" signature="10745:10876" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="10824:10862" placeholder="select hotel..staff..." />
-            <marker date="1464575779282" expanded="true" signature="10914:10969" placeholder="select CI_ID..case_bind..." />
-            <marker date="1464575779282" expanded="true" signature="16382:16735" placeholder="select weddi..." />
-            <marker date="1464575779282" expanded="true" signature="17920:18118" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="24639:24837" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="26816:26990" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="27922:28211" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="42006:42204" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="44715:44913" placeholder="select case_..case_resources_product..." />
-            <marker date="1464575779282" expanded="true" signature="50199:50382" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="51491:51665" placeholder="select suppl..supplier..." />
-            <marker date="1464575779282" expanded="true" signature="51809:52098" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="52243:52522" placeholder="select suppl..." />
-            <marker date="1464575779282" expanded="true" signature="54476:54755" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
+            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
+            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
+            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
+            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
+            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
+            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
+            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
+            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/portal/protected/views/background/regist.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -236,7 +236,7 @@ class BackgroundController extends InitController
                 };
             }else{ // 如果手机号还未注册
                 echo "您的手机未注册，验证码已发送到您的手机！";
-                $data = array('telephone' => $telephone, );
+                $data = array('telephone' => $_POST['telephone'], );
                 $result = WPRequest::post($url, $data);
                 Yii::app()->session['code'] = $result;
                 //echo $_SESSION['code'];

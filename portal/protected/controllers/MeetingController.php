@@ -1012,16 +1012,9 @@ class MeetingController extends InitController
         $payment->update_time =$_POST['update_time'];
         $payment->save();
 
-        $order = Order::model()->find(array(
-            'condition' => 'order_date=:order_date && order_time=:order_time && update_time=:update_time',
-            'params' => array(
-                ':order_date' =>$_POST['order_date'],
-                ':order_time' =>$_POST['order_time'],
-                ':update_time' =>$_POST['update_time'],
-            )
-        ));
+        $id = $payment->attributes['id'];
 
-        echo $order['id'];
+        echo $id;       
     }
 
     public function actionMeetingDetailInsert()

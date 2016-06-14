@@ -83,6 +83,7 @@ class OrderMeetingCompany extends InitActiveRecord
 		$criteria->compare('account_id',$this->account_id);
 		$criteria->compare('company_name',$this->company_name,true);
 		$criteria->compare('update_time',$this->update_time,true);
+		$criteria->compare('hotel_id',$this->hotel_id,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

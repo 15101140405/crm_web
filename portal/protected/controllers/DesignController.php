@@ -130,7 +130,7 @@ class DesignController extends InitController
                 $item = $value->id;
                 $supplier_product_id[] = $item;
             };
-            /*print_r($supplier_product_id);*/
+            // print_r($supplier_product_id);
         };
         
         if(!empty($supplier_product_id)){
@@ -155,7 +155,7 @@ class DesignController extends InitController
                 $item['remark'] = $value->remark;
                 $wed_feast[] = $item;
             };
-            /*print_r($wed_feast);*/
+            // print_r($wed_feast);
         }
         /*print_r($wed_feast);*/
         
@@ -188,7 +188,8 @@ class DesignController extends InitController
                 
             }
         };
-        /*print_r($arr_wed_feast);*/
+        // echo "ppppppppppp";
+        // print_r($arr_wed_feast);
 
         /*********************************************************************************************************************/
         /*取灯光数据*/
@@ -3819,7 +3820,7 @@ class DesignController extends InitController
 
 
 
-        //发微信提醒
+        //发微信提醒&发纷享销客
     // try {
         $order = Order::model()->findByPk($order_id);
         //$order = Order::model()->findByPk($_GET['order_id']);
@@ -3851,27 +3852,31 @@ class DesignController extends InitController
 开单人：".$staff["name"];
         };
         
-        /*print_r($html);die;*/
-        $touser="@all";//你要发的人
-        $toparty="";
-        $totag="";
-        $title="新客人进店了！";//标题
-        $agentid=0;//应用
-        $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
-        $author="";
-        $content_source_url="";
+        // /*print_r($html);die;*/
+        // $touser="@all";//你要发的人
+        // $toparty="";
+        // $totag="";
+        // $title="新客人进店了！";//标题
+        // $agentid=0;//应用
+        // $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
+        // $author="";
+        // $content_source_url="";
         $content = $html;
-        $digest="描述";
-        $show_cover_pic="";
-        $safe="";
+        // $digest="描述";
+        // $show_cover_pic="";
+        // $safe="";
 
-        $company = StaffCompany::model()->findByPk($staff['account_id']);  
-        $corpid=$company['corpid'];
-        $corpsecret=$company['corpsecret'];
+        // $company = StaffCompany::model()->findByPk($staff['account_id']);  
+        // $corpid=$company['corpid'];
+        // $corpsecret=$company['corpsecret'];
         //echo $corpid."|".$corpsecret;
         
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+
+        //分享销客接口
+        
+        $result=WPRequest::sfxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
         //print_r($result);
         //echo $corpsecret;
     // } catch (Exception $e) {

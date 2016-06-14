@@ -52,7 +52,7 @@
                 </div>
                 <button class="registbtn registbtn_next">下一步</button>
             </div>
-            <ul class="regist_ulist disigner regist_step_item">
+            <ul class="regist_ulist designer regist_step_item">
                 <li>
                     <label>手机：</label>
                     <input class="inputItem" type="text" id="designer_telephone" placeholder="请输入手机号" />
@@ -101,7 +101,7 @@
         $(function(){
             $(".registbtn_next").on('click',function(){
                 if($("#designer").hasClass("active")){
-                    $(".disigner").css('display','inline-block').siblings().hide();    
+                    $(".designer").css('display','inline-block').siblings().hide();    
                 }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active") ||$("#decoration").hasClass("active") ||$("#lighting").hasClass("active") ||$("#sound").hasClass("active") ||$("#shipin").hasClass("active")){
                     $(".service").css('display','inline-block').siblings().hide();
                 };
@@ -121,13 +121,12 @@
 
             //获取验证码
             $("#designer_get_code").on("click",function(){
-                console.log($("#disigner_telephone").val());
-                if($("#disigner_telephone").val() == ""){
+                if($("#designer_telephone").val() == ""){
                     alert("请输入手机号！");
-                }else if($("#disigner_telephone").val().length != 11 || !myreg.test($("#disigner_telephone").val())){
+                }else if($("#designer_telephone").val().length != 11 || !myreg.test($("#designer_telephone").val())){
                     alert("请输入有效的手机号码！");
                 }else {
-                    $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#disigner_telephone").val()},function(data){
+                    $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#designer_telephone").val()},function(data){
                         if(data == "not exist"){
                             alert("您输入的手机号不存在！请与工作人员联系：15101140405");
                         };
@@ -151,20 +150,20 @@
 
             //点击立即注册
             $("#designer_regist").on("click",function(){
-                if($("#disigner_telephone").val() == ""){
+                if($("#designer_telephone").val() == ""){
                     alert("请输入手机号！");
                 }else if($("#designer_yzm").val() == ""){
                     alert("请输入短信验证码");
                 }else if($("#designer_password").val() == ""){
                     alert("请输入密码！");
-                }else if($("#disigner_telephone").val().length != 11 || !myreg.test($("#disigner_telephone").val())){
+                }else if($("#designer_telephone").val().length != 11 || !myreg.test($("#designer_telephone").val())){
                     alert("请输入有效的手机号！");
                 }else {
-                    $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#disigner_telephone").val() , password : $("#designer_password").val() , yzm : $("#designer_yzm").val()},function(data){
+                    $.post("<?php echo $this->createUrl("background/register_pro");?>",{telephone : $("#designer_telephone").val() , password : $("#designer_password").val() , yzm : $("#designer_yzm").val()},function(data){
                         if(data == "errow"){alert("您输入的验证码有误，请重新输入！");}
                         if(data == "success"){
                             data = {
-                                telephone : $("#disigner_telephone").val(),
+                                telephone : $("#designer_telephone").val(),
                                 password : $("#designer_password").val(),
                             };
                             $.post("<?php echo $this->createUrl("background/login_pro");?>",data,function(retval){

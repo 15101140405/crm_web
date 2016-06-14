@@ -43,6 +43,7 @@
     $(function () {
         //点击新增
         $('#insert').on("click",function(){
+            // alert($("#phone").val());
             $.post('<?php echo $this->createUrl("product/setuserid");?>',{phone:$("#phone").val()},function(data){
                 alert(data);
                 if(data=="success"){

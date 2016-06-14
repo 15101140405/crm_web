@@ -193,10 +193,11 @@ class ProductController extends InitController
         /*};*/
         Yii::app()->session['account_id']=$_GET['account_id'];
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
-        
-        if(isset($_COOKIE['userid'])){ //本机调试有问题，上线时回复这两行
-            Yii::app()->session['userid']=$_COOKIE['userid'];
-            // Yii::app()->session['userid']=2222222;//本机调试有问题，上线时删去
+        $cookie = Yii::app()->request->getCookies();
+
+        if(isset($cookie['userid']->value)) {                           //本机调试有问题，上线时回复这两行
+            Yii::app()->session['userid']= $cookie['userid']->value;    /////////////////////////////////
+            // Yii::app()->session['userid']=2222222;                   //本机调试有问题，上线时删去
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $str =  rtrim($staff['department_list'], "]"); 
             $str =  ltrim($str, "[");
@@ -213,9 +214,9 @@ class ProductController extends InitController
                     'hotel_name' => $hotel['name'],
                     'user_type' => $user_type
                 ));
-        }else{ //本机调试有问题，上线时回复这三行
-            $this->render('login');
-        };
+        }else{                        //本机调试有问题，上线时回复这三行
+            $this->render('login');   /////////////////////////////////
+        };                            /////////////////////////////////
     }
 
     public function actionSetuserid()
@@ -226,12 +227,15 @@ class ProductController extends InitController
                         'telephone' => $_POST['phone']
                     )
             ));
-        // $cookie = new CHttpCookie('userid',$staff['id']);
-        // $cookie->expire = time()+60*60*24*30*12*100;  //有限期100年
-        // Yii::app()->request->cookies['userid']=$staff['id'];
-        $_COOKIE['userid'] = $staff['id'];
+        $cookie = new CHttpCookie('userid',$staff['id']);
+        $cookie->expire = time()+60*60*24*30*12;  //有限期1年
+        Yii::app()->request->cookies['userid']=$cookie;
+        // $_COOKIE['userid'] = $staff['id'];
 
-        if(isset($_COOKIE['userid'])){
+        // $cookie = Yii::app()->request->getCookies();
+        // echo $cookie['userid']->value;
+
+        if(!empty($staff)){
             echo 'success';
         }else{
             echo 'failed';
@@ -466,8 +470,14 @@ class ProductController extends InitController
         $payment->planner_id =$_SESSION['userid'];
         $payment->adder_id =$_SESSION['userid'];
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
-        $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
-        $payment->order_type =2;
+        $payment->order_type = $_POST['order_type'];
+        if ($_POST['order_type'] == 1) {
+            $payment->order_name = "新会议订单";
+        } else {
+            $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
+        }
+        
+        
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
             $payment->feast_discount = $wedding_set['feast_discount']*10;
@@ -483,48 +493,45 @@ class ProductController extends InitController
         $payment->update_time =$_POST['update_time'];
         $payment->save();
 
-        $order = Order::model()->find(array(
-            'condition' => 'planner_id=:planner_id && update_time=:update_time',
-            'params' => array(
-                ':planner_id' =>$_SESSION['userid'],
-                ':update_time' =>$_POST['update_time'],
-            )
-        ));
+        $id = $payment->attributes['id'];
+        $order_type = $payment->attributes['order_type'];
 
-        //存order_wedding表
-        $payment= new OrderWedding;  
+        if ($_POST['order_type'] == 2) {//存order_wedding表
+            $payment= new OrderWedding;  
 
-        $payment->account_id =$_SESSION['account_id'];
-        $payment->order_id =$order['id'];
-        $payment->update_time =$_POST['update_time'];
-        $payment->groom_name =$_POST['groom_name'];
-        $payment->groom_phone =$_POST['groom_phone'];
-        $payment->groom_wechat =$_POST['groom_wechat'];
-        $payment->groom_qq =$_POST['groom_qq'];
-        $payment->bride_name =$_POST['bride_name'];
-        $payment->bride_phone =$_POST['bride_phone'];
-        $payment->bride_wechat =$_POST['bride_wechat'];
-        $payment->bride_qq =$_POST['bride_qq'];
-        $payment->contact_name =$_POST['linkman_name'];
-        $payment->contact_phone =$_POST['linkman_phone'];
+            $payment->account_id =$_SESSION['account_id'];
+            $payment->order_id =$id;
+            $payment->update_time =$_POST['update_time'];
+            $payment->groom_name =$_POST['groom_name'];
+            $payment->groom_phone =$_POST['groom_phone'];
+            $payment->groom_wechat =$_POST['groom_wechat'];
+            $payment->groom_qq =$_POST['groom_qq'];
+            $payment->bride_name =$_POST['bride_name'];
+            $payment->bride_phone =$_POST['bride_phone'];
+            $payment->bride_wechat =$_POST['bride_wechat'];
+            $payment->bride_qq =$_POST['bride_qq'];
+            $payment->contact_name =$_POST['linkman_name'];
+            $payment->contact_phone =$_POST['linkman_phone'];
 
-        $payment->save();
+            $payment->save();
+         }
+          
+        
 
 
         $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
 
         $staff = Staff::model()->findByPk($_SESSION['userid']);
 
-        $date = explode(" ",$order['order_date']);
-        $html = "";
-        if($order['order_type'] == 2){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."婚礼"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
-        }else if($order['order_type'] == 1){
-            $html = "新客人进店了[".$hotel['name']."] "."订单类型："."会议"."    "."日期：".$date[0]."       "."开单人（".$staff["name"].")";
+        $date = explode(" ",$_POST['order_date']);
+        if ($_POST['order_type'] == 2) {
+            $type = "婚礼";
+        } else {
+            $type = "会议";
         };
-        
-
-        $touser="@all";//你要发的人
+  
+        // $touser="@all";//你要发的人，上线时恢复
+        $touser = 2222222;//测试，上线时去掉
         $toparty="";
         $totag="";
         $title="新客人进店了！";//标题
@@ -532,7 +539,10 @@ class ProductController extends InitController
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $author="";
         $content_source_url="";
-        $content = $html;
+        $content = "新客人进店了[".$hotel['name']."]
+订单类型：".$type."
+日期：".$date[0]."
+开单人：".$staff["name"];
         $digest="描述";
         $show_cover_pic="";
         $safe="";
@@ -553,40 +563,42 @@ class ProductController extends InitController
         };
 
         if(isset($_POST['set_id'])){
-            $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
-            $product_list = explode(",",$wedding_set['product_list']);
-            foreach ($product_list as $key => $value) {
-                $product = explode("|", $value);
+            if (!empty($_POST['set_id'])) {
+                $product_list = explode(",",$wedding_set['product_list']);
+                foreach ($product_list as $key => $value) {
+                    $product = explode("|", $value);
+                    $admin=new OrderProduct;         
+                    $admin->account_id=$_SESSION['account_id']; 
+                    $admin->order_id=$id;
+                    $admin->product_id=$product[0]; 
+                    $admin->actual_price=$product[1]; 
+                    $admin->unit=$product[2]*$table_num; 
+                    $admin->actual_unit_cost=$product[3]; 
+                    $admin->actual_service_ratio=$fuwufei; 
+                    $admin->remark=$_POST['remark']; 
+                    $admin->update_time=date('y-m-d h:i:s',time());
+                    $admin->save();
+                }
+            }
+            //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
+        }
+        if(isset($_POST['product_id'])){
+            if (!empty($_POST['product_id'])) {
+                $supplier_product = SupplierProduct::model()->findByPk($_POST['product_id']);
+
                 $admin=new OrderProduct;         
                 $admin->account_id=$_SESSION['account_id']; 
-                $admin->order_id=$order['id'];
-                $admin->product_id=$product[0]; 
-                $admin->actual_price=$product[1]; 
-                $admin->unit=$product[2]*$table_num; 
-                $admin->actual_unit_cost=$product[3]; 
-                $admin->actual_service_ratio=$fuwufei; 
+                $admin->order_id=$id;
+                $admin->product_id=$_POST['product_id']; 
+                $admin->actual_price=$supplier_product['unit_price']; 
+                $admin->unit=$_POST['amount']; 
+                $admin->actual_unit_cost=$supplier_product['unit_cost']; 
+                $admin->actual_service_ratio=$supplier_product['service_charge_ratio']; 
                 $admin->remark=$_POST['remark']; 
                 $admin->update_time=date('y-m-d h:i:s',time());
                 $admin->save();
-            };
-            //Order::model()->updateByPk($order['id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
-        };
-        if(isset($_POST['product_id'])){
-            $supplier_product = SupplierProduct::model()->findByPk($_POST['product_id']);
-
-            $admin=new OrderProduct;         
-            $admin->account_id=$_SESSION['account_id']; 
-            $admin->order_id=$order['id'];
-            $admin->product_id=$_POST['product_id']; 
-            $admin->actual_price=$supplier_product['unit_price']; 
-            $admin->unit=$_POST['amount']; 
-            $admin->actual_unit_cost=$supplier_product['unit_cost']; 
-            $admin->actual_service_ratio=$supplier_product['service_charge_ratio']; 
-            $admin->remark=$_POST['remark']; 
-            $admin->update_time=date('y-m-d h:i:s',time());
-            $admin->save();
+            }
         }
-
         // echo $order['id'];
         print_r($_POST);
     }
