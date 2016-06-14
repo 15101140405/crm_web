@@ -441,7 +441,19 @@ class ProductController extends InitController
 
     public function actionCreateorder()
     {
-        $this->render('create_order');
+        $order_meeting_company['company_name'] = "请选择客户公司";
+        $order_meeting_company_linkman['name'] = "请选择联系人";
+
+        if(isset($_GET['company_id'])){
+            $order_meeting_company = OrderMeetingCompany::model()->findByPk($_GET['company_id']);
+        };
+        if(isset($_GET['linkman_id'])){
+            $order_meeting_company_linkman = OrderMeetingCompanyLinkman::model()->findByPk($_GET['linkman_id']);
+        };
+        $this->render('create_order',array(
+                'order_meeting_company' => $order_meeting_company['company_name'],
+                'order_meeting_company_linkman' => $order_meeting_company_linkman['name']
+            ));
     }
 
     public function actionNeworder()

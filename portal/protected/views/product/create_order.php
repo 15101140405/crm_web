@@ -108,7 +108,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top: 10px;">
+    <div class="int_ulist_module" style="margin-top: 10px;" id="groom">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">新郎姓名</span>
@@ -136,7 +136,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;">
+    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;" id="bride">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">新娘姓名</span>
@@ -164,7 +164,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;">
+    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;" id="wed_link">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">联系人姓名</span>
@@ -178,6 +178,12 @@
                     <input class="align_r" type="text" placeholder="手机号" id="linkman_phone"/>
                 </div>
             </li>
+        </ul>
+    </div>
+    <div class="select_ulist_module" style="margin-top:12px;" id="meeting_data">
+        <ul class="select_ulist">
+            <li class="select_ulist_item list_more" id="meeting_company">客户公司<span style="float:right;font-size:15px;" class="t_gray" id="meeting_company_name"></span></li>
+            <li class="select_ulist_item list_more" id="meeting_link">联系人<span style="float:right;font-size:15px;" class="t_gray" id="meeting_linkman_name"></span></li>
         </ul>
     </div>
     <!-- 页面元素太多时,上面元素要加class pad_b50, 否则会有遮罩部分看不到-->
@@ -222,6 +228,19 @@
         if("<?php echo $_GET['from']?>" == "set"){
             $("#price").remove();
         };
+        if("<?php echo $_GET['category']?>" == 1 || "<?php echo $_GET['category']?>" == 4){
+            $("#groom").remove();
+            $("#bride").remove();
+            $("#wed_link").remove();
+        }else if("<?php echo $_GET['category']?>" == 2 || "<?php echo $_GET['category']?>" == 3){
+            $("#meeting_data").remove();
+        };
+
+        <?php if(isset($_GET['company_id'])){?>
+            $("#meeting_company_name").html("<?php echo $order_meeting_company?>");
+            $("#order_meeting_company_linkman").html("<?php echo $order_meeting_company_linkman?>");
+        <?php }?>
+
 
         $("#insert").on("click",function(){
             var mydate = new Date();
@@ -313,7 +332,11 @@
                 location.href = "<?php echo $this->createUrl('product/store');?>&code=&account_id=<?php echo $_SESSION['account_id']?>&staff_hotel_id=<?php echo $_SESSION['staff_hotel_id']?>";
             });
         });
-    
+
+        //选择会议客户
+        $("#meeting_company").on("click",function(){
+            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&from=product_store&set_id=<?php echo $_GET['set_id']?>&product_id=<?php echo $_GET['product_id']?>&category=<?php echo $_GET['category']?>";
+        });
     })
 </script>
 </body>

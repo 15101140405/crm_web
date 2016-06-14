@@ -47,18 +47,26 @@ class MeetingController extends InitController
     {
         /*$this->render("selectCustomer");*/
         $accountId = $_SESSION['account_id'];
-        $order_id = $_GET['order_id'];
+        $order_id = "";
+        if(isset($_GET['order_id'])){
+            $order_id = $_GET['order_id'];    
+        };
+        
         // var_dump($order_id);
         $companyForm = new CompanyForm();
         $companys = $companyForm->getcompanyList($accountId,$order_id);
         // var_dump($companys);
-        $ordermeeting = OrderMeeting::model()->find(array(
-                'condition' => 'order_id=:order_id && account_id=:account_id',
-                'params' => array(
-                        ':order_id' => $_GET['order_id'],
-                        ':account_id' => $_SESSION['account_id']
-                    )
-            ));
+        $ordermeeting['company_id'] = "";
+        if(isset($_GET['order_id'])){
+           $ordermeeting = OrderMeeting::model()->find(array(
+                    'condition' => 'order_id=:order_id && account_id=:account_id',
+                    'params' => array(
+                            ':order_id' => $_GET['order_id'],
+                            ':account_id' => $_SESSION['account_id']
+                        )
+                )); 
+        };
+            
         $this->render("selectCustomer",array(
                 "arr_old_customer" => $companys,
                 "selected_company" => $ordermeeting['company_id']

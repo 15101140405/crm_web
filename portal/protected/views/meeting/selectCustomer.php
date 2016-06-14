@@ -14,9 +14,9 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <div class="l_btn" id="back" data-icon="&#xe679;"></div>
         <h2 class="page_title">选择客户</h2>
-        <div class="r_btn" data-icon="&#xe6a3;"></div>
+        <div class="r_btn" id="next" data-icon="&#xe6a3;"></div>
     </div>
 
     <!-- 搜索
@@ -66,6 +66,9 @@
         ?>
         </ul>
     </div>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="r_btn" id="select_customer">确定</div>
+    </div>
 </article>
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.cookie.js"></script>
@@ -74,9 +77,8 @@
 <script src="js/common.js"></script>
 <script>
   $(function () {
-
     //初始化
-    var selected_id = "<?php echo $_GET['company_id']?>";
+    var selected_id = "<?php if(isset($_GET['company_id'])){echo $_GET['company_id'];}?>";
     var selected_company = "<?php echo $selected_company?>";
     $("li").removeClass("select_selected");
     $("[data-id='"+selected_company+"']").addClass("select_selected");
@@ -84,6 +86,14 @@
       $(".l_btn").remove();
       $(".r_btn").html("确定");
       $(".r_btn").attr("data-icon","");
+    };
+    // alert("<?php echo $_GET['from']?>");
+    if("<?php echo $_GET['from']?>" == "product_store"){
+      // alert(1);
+      $("#back").remove();
+      $("#next").remove();
+    }else{
+      $("#bottom").remove();
     };
 
 
@@ -109,12 +119,11 @@
     });
 
     //确定按钮
-    
     if("<?php echo $_GET['from']?>" == "selecttime"){
       $(".r_btn").on("click", function () {
         var choose_obj = $(".select_ulist .select_selected");
         if($('.select_ulist_item').hasClass("select_selected")){
-          location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=selectcustomer&linkman_id=&order_id=<?php echo $_GET['order_id']?>&company_id="+choose_obj.attr("data-id");
+          location.href = "<?php echo $this->createUrl("meeting/selectLinkman");?>&from=selectcustomer&linkman_id=&order_id=<?php  if(isset($_GET['order_id'])){echo $_GET['order_id'];}?>&company_id="+choose_obj.attr("data-id");
         }else{
           alert("请先选择客户！");
         }
@@ -122,18 +131,23 @@
     }else if("<?php echo $_GET['from']?>" == "detailinfo"){
       $(".r_btn").on("click", function () {
         var choose_obj = $(".select_ulist .select_selected");
-        console.log({order_id:"<?php echo $_GET['order_id']?>",company_id:choose_obj.attr("data-id")});
-        $.post("<?php echo $this->createUrl("meeting/updatecompanyid");?>",{order_id:"<?php echo $_GET['order_id']?>",company_id:choose_obj.attr("data-id")},function(){
-          location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php echo $_GET['order_id']?>";
+        console.log({order_id:"<?php if(isset($_GET['order_id'])){echo $_GET['order_id'];}?>",company_id:choose_obj.attr("data-id")});
+        $.post("<?php echo $this->createUrl("meeting/updatecompanyid");?>",{order_id:"<?php if(isset($_GET['order_id'])){echo $_GET['order_id'];}?>",company_id:choose_obj.attr("data-id")},function(){
+          location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php if(isset($_GET['order_id'])){echo $_GET['order_id'];}?>";
         });
       });
     }
-      
 
     //新增按钮
     $(".btn").on("click", function () {
       var choose_obj = $(".select_ulist .select_selected");
-      location.href = '<?php echo $this->createUrl("meeting/addCustomer"); ?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id='+choose_obj.attr("data-id");
+      location.href = '<?php echo $this->createUrl("meeting/addCustomer"); ?>&from=<?php echo $_GET['from']?>&order_id=<?php if(isset($_GET['order_id'])){echo $_GET['order_id'];}?>&company_id='+choose_obj.attr("data-id");
+    });
+
+    //确定，返回产品库新增订单
+    $("#select_customer").on("click",function(){
+      var choose_obj = $(".select_ulist .select_selected");
+      location.href = "<?php echo $this->createUrl("product/createorder");?>&set_id=<?php echo $_GET['set_id']?>&product_id=<?php echo $_GET['product_id']?>&from=<?php echo $_GET['from']?>&category=<?php echo $_GET['category']?>&company_id="+choose_obj.attr("data-id");
     });
 
   });
