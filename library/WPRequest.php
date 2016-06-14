@@ -25,11 +25,15 @@ class WPRequest
 
     public static function post($url, $post_data = '', $timeout = 5)
     {
+        $header = array(                                      //为适应“纷享销客”做的设置
+            'Content-Type: application/json',
+        );
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);        //为适应“纷享销客”做的设置
         if ($post_data != '') {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         }
@@ -42,12 +46,11 @@ class WPRequest
     }
 
     //微信接口
-
     public static function getAccessToken($corpid,$corpsecret)
     {
         $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" . $corpid . "&corpsecret=" . $corpsecret;
         //echo $url;
-        $data = self::get($url);
+        $data = self::post($url);
         try {
             $obj = json_decode($data);
             return $obj->access_token;
@@ -55,7 +58,6 @@ class WPRequest
             return "";
         }
     }
-
     /*创建用户*/
     //department 格式 [1] 或 [1,2]
     public static function createUser($userid, $name, $department, $position, $mobile)
@@ -420,4 +422,118 @@ class WPRequest
         return self::create_post($obj,$corpid,$corpsecret);
     }
 
+    //纷享销客接口
+
+    //获取AppAccessToken
+    public static function getAppAccessToken($appId,$appSecret)
+    {
+        $url = "https://open.fxiaoke.com/cgi/appAccessToken/get";
+        $obj = json_encode(array(
+            "appId" => $appId,
+            "appSecret" => $appSecret,
+        ));
+        $rtnobj = self::post($url, $obj);
+        return json_decode($rtnobj) -> appAccessToken;
+    }
+    //获取CorpAccessToken和corpId
+    public static function getCorp($appId,$appSecret,$permanentCode)
+    {
+        $appAccessToken = self::getAppAccessToken($appId,$appSecret);
+        $url = "https://open.fxiaoke.com/cgi/corpAccessToken/get";
+        $obj = json_encode(array(
+            "appAccessToken" => $appAccessToken,
+            "permanentCode" => $permanentCode,
+            ));
+        $rtnobj = self::post($url, $obj);
+        return array(
+            'corpAccessToken'   => json_decode($rtnobj) -> corpAccessToken,
+            'corpId'            => json_decode($rtnobj) -> corpId);
+    }
+    //获取部门列表
+    public static function getdepartmentlist($appId,$appSecret,$permanentCode)
+    {
+        $corp = self::getCorp($appId,$appSecret,$permanentCode);
+        $url = "https://open.fxiaoke.com/cgi/department/list";
+        $obj = json_encode(array(
+            "corpAccessToken" => $corp['corpAccessToken'],
+            "corpId" => $corp['corpId'],
+            ));
+        $rtnobj = self::post($url, $obj);
+        return json_decode($rtnobj) -> departments;
+    }
+    //获取部门下成员信息(简略)
+    public static function getuserlist($appId,$appSecret,$permanentCode,$departmentId,$fetchChild)
+    {
+        $corp = self::getCorp($appId,$appSecret,$permanentCode,$fetchChild);
+        $url = "https://open.fxiaoke.com/cgi/user/simpleList";
+        $obj = json_encode(array(
+            "corpAccessToken"   => $corp['corpAccessToken'],
+            "corpId"            => $corp['corpId'],
+            "departmentId"      => $departmentId,
+            "fetchChild"        => $fetchChild,
+            ));
+        $rtnobj = self::post($url, $obj);
+        return json_decode($rtnobj) -> userList;//网站上示例是userlist，实际为userList
+    }
+    //获取所有部门下成员信息(简略)
+    public static function getalluserlist($appId,$appSecret,$permanentCode,$fetchChild)
+    {
+        $corp = self::getCorp($appId,$appSecret,$permanentCode,$fetchChild);
+        $url = "https://open.fxiaoke.com/cgi/user/simpleList";
+        $departmentlist = self::getdepartmentlist($appId,$appSecret,$permanentCode);
+        $openUserId = array();
+        foreach ($departmentlist as $key1 => $value1) {
+            $departmentId = $value1 -> id;
+            $userlist = self::getuserlist($appId,$appSecret,$permanentCode,$departmentId,$fetchChild);
+            foreach ($userlist as $key2 => $value2) {
+
+                $openUserId[] = $value2 -> openUserId;
+            }
+        }
+        print_r($openUserId);
+
+    }
+
+    //给全体发送消息
+    //若要做单独接口，用末端的几行就行
+
+    public static function fxiaokesendMessage($appId,$appSecret,$permanentCode,$content)
+    {
+        $url = "https://open.fxiaoke.com/cgi/department/list";
+        $corp = self::getCorp($appId,$appSecret,$permanentCode);
+        $obj = json_encode(array(
+            "corpAccessToken" => $corp['corpAccessToken'],
+            "corpId" => $corp['corpId'],
+            ));
+        $rtnobj = self::post($url, $obj);
+        $departmentlist = json_decode($rtnobj) -> departments;
+        $openUserId = array();
+        foreach ($departmentlist as $key1 => $value1) {
+            $departmentId = $value1 -> id;
+            $url = "https://open.fxiaoke.com/cgi/user/simpleList";
+            $obj = json_encode(array(
+                "corpAccessToken"   => $corp['corpAccessToken'],
+                "corpId"            => $corp['corpId'],
+                "departmentId"      => $departmentId,
+                "fetchChild"        => true,
+                ));
+            $rtnobj = self::post($url, $obj);
+            $userlist = json_decode($rtnobj) -> userList;//网站上示例是userlist，实际为userList
+            // print_r($userlist);die;
+            foreach ($userlist as $key2 => $value2) {
+                $openUserId[] = $value2 -> openUserId;
+            }
+        }
+        $url = "https://open.fxiaoke.com/cgi/message/send";
+        $obj = json_encode(array(
+            "corpAccessToken"   => $corp['corpAccessToken'],
+            "corpId"            => $corp['corpId'],
+            "toUser"            => array('FSUID_6C1FF482960507E189C0D14CB19D7FF6'),
+            "msgType"           => "text",
+            "text"              => $content,
+            ));
+        // print_r($obj);die;
+        $rtnobj = self::post($url, $obj);
+        return $rtnobj;
+    }
 }

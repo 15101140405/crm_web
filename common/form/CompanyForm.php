@@ -22,8 +22,9 @@ class CompanyForm extends InitForm
         ));*/
 
         $criteria3 = new CDbCriteria; 
-        $criteria3->addCondition("account_id = :account_id");    
-        $criteria3->params[':account_id']=$_SESSION['account_id'];  
+        $criteria3->addCondition("account_id = :account_id && hotel_id = :hotel_id");    
+        $criteria3->params[':account_id']=$_SESSION['account_id'];
+        $criteria3->params[':hotel_id']=$_SESSION['staff_hotel_id'];
         $criteria3->order = 'update_time DESC'; 
         $Company = OrderMeetingCompany::model()->findAll($criteria3);  
 

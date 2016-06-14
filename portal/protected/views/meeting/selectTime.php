@@ -168,8 +168,8 @@
                     end_time: end_time, 
                     update_time : time,
                     hotel_id : $(".round_select_selected").attr("hotel-id"),
-                    set_id : <?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>,
-                    product_id : <?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>,
+                    set_id : "<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>",
+                    product_id : "<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>",
                 };
                 $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
                         /*if(retval.success){*/

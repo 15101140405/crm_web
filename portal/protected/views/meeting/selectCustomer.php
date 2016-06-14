@@ -15,7 +15,7 @@
 <article>
     <div class="tool_bar">
         <div class="l_btn" data-icon="&#xe679;"></div>
-        <h2 class="page_title">选择客户</h2>
+        <h2 class="page_title">选择客户公司</h2>
         <div class="r_btn" data-icon="&#xe6a3;"></div>
     </div>
 
@@ -49,10 +49,10 @@
        </div>
        搜索 end -->
 
-    <div class="btn add_customer">+ 新增客户</div>
+    <div class="btn add_customer">+ 新增客户公司</div>
 
     <div class="select_ulist_module">
-        <h4 class="module_title">选择客户</h4>
+        <h4 class="module_title">选择客户公司</h4>
         <ul class="select_ulist">
         <?php
         foreach ($arr_old_customer as $key => $value) {

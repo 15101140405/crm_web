@@ -24,6 +24,7 @@ $arr_locate = array(
     <link rel="stylesheet" href="css/swiper.min.css">
 </head>
 <body>
+    
 <article style='position: relative;top: -45px;'>
     <div class="tool_bar" style="line-height: 3rem;">
         <!-- <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div> -->
@@ -159,7 +160,7 @@ $arr_locate = array(
                         </p>
                     </div>
                     <div>
-                        <p class="price" style="width:150px;">&yen;<?php echo $value['actual_price'] . $value['unit']; ?></p>
+                        <p class="price" style="width:150px;">&yen;<?php echo $value['actual_price']; ?></p>
                     </div>
                     <span class="account">X <?php echo $value['unit']; ?></span>
                 </li>

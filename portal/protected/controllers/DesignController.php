@@ -130,7 +130,7 @@ class DesignController extends InitController
                 $item = $value->id;
                 $supplier_product_id[] = $item;
             };
-            /*print_r($supplier_product_id);*/
+            // print_r($supplier_product_id);
         };
         
         if(!empty($supplier_product_id)){
@@ -155,7 +155,7 @@ class DesignController extends InitController
                 $item['remark'] = $value->remark;
                 $wed_feast[] = $item;
             };
-            /*print_r($wed_feast);*/
+            // print_r($wed_feast);
         }
         /*print_r($wed_feast);*/
         
@@ -188,7 +188,8 @@ class DesignController extends InitController
                 
             }
         };
-        /*print_r($arr_wed_feast);*/
+        // echo "ppppppppppp";
+        // print_r($arr_wed_feast);
 
         /*********************************************************************************************************************/
         /*取灯光数据*/

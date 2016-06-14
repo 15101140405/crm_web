@@ -195,9 +195,9 @@ class ProductController extends InitController
         Yii::app()->session['staff_hotel_id']=$_GET['staff_hotel_id'];
         $cookie = Yii::app()->request->getCookies();
 
-        if(isset($cookie['userid']->value)) {                    //本机调试有问题，上线时回复这两行
+        if(isset($cookie['userid']->value)) {                           //本机调试有问题，上线时回复这两行
             Yii::app()->session['userid']= $cookie['userid']->value;    /////////////////////////////////
-            // Yii::app()->session['userid']=2222222;            //本机调试有问题，上线时删去
+            // Yii::app()->session['userid']=2222222;                   //本机调试有问题，上线时删去
             $staff = Staff::model()->findByPk($_SESSION['userid']);
             $str =  rtrim($staff['department_list'], "]"); 
             $str =  ltrim($str, "[");
@@ -552,7 +552,6 @@ class ProductController extends InitController
 
         if(isset($_POST['set_id'])){
             if (!empty($_POST['set_id'])) {
-                $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
                 $product_list = explode(",",$wedding_set['product_list']);
                 foreach ($product_list as $key => $value) {
                     $product = explode("|", $value);

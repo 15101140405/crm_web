@@ -103,8 +103,6 @@
             $(".registbtn_next").on('click',function(){
                 if($("#designer").hasClass("active")){
                     $(".designer").css('display','inline-block').siblings().hide();    
-                }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active")){
-                    $(".disigner").css('display','inline-block').siblings().hide();    
                 }else if($("#host").hasClass("active") || $("#video").hasClass("active") || $("#camera").hasClass("active") ||$("#makeup").hasClass("active") ||$("#decoration").hasClass("active") ||$("#lighting").hasClass("active") ||$("#sound").hasClass("active") ||$("#shipin").hasClass("active")){
                     $(".service").css('display','inline-block').siblings().hide();
                 };
