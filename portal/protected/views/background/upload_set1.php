@@ -267,7 +267,7 @@
             });
             product_list = product_list.substring(0,product_list.length-1);
         <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
         <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
             location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
         <?php }?>

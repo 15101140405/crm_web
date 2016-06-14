@@ -180,7 +180,7 @@
             </li>
         </ul>
     </div>
-    <div class="select_ulist_module" style="margin-top:12px;" id="meeting_data">
+    <div class="select_ulist_module" style="margin-top:12px;margin-bottom:70px;" id="meeting_data">
         <ul class="select_ulist">
             <li class="select_ulist_item list_more" id="meeting_company">客户公司<span style="float:right;font-size:15px;" class="t_gray" id="meeting_company_name"></span></li>
             <li class="select_ulist_item list_more" id="meeting_link">联系人<span style="float:right;font-size:15px;" class="t_gray" id="meeting_linkman_name"></span></li>
@@ -311,6 +311,10 @@
                 linkman_phone : $("#linkman_phone").val(),
             <?php if($_GET['from'] != "service"){?>
                 set_id : "<?php echo $_GET['set_id'];?>",
+            <?php }?>
+            <?php if(isset($_GET['company_id'])){?>
+                company_id : $_GET['company_id'],
+                linkman_id : $_GET['linkman_id'],
             <?php }?>
             };
             // }else{

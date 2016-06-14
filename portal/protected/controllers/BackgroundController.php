@@ -633,6 +633,7 @@ class BackgroundController extends InitController
         $case = array();
         $resources = array();
         $pic="";
+        
         if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){
             $case = CaseInfo::model()->findByPk($_GET['ci_id']);
             if(!empty($case)){
@@ -652,7 +653,7 @@ class BackgroundController extends InitController
                 $t=explode('.', $value['CR_Path']);
                 $resources[$key]['CR_Path'] = "http://file.cike360.com" .$t[0]. "_sm." .$t[1];
             }
-        };
+        }
 
 
         $hotel = StaffHotel::model()->findAll(array(

@@ -275,7 +275,7 @@
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $case['CI_Pic']?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#CI_Show").val(<?php if(isset($case['CI_Show'])){ echo $case['CI_Show'];}?>);
         $("#hotel").val($("#hotel [staff-hotel-id='<?php echo $Wedding_set['staff_hotel_id']?>']").val());
         //保存
         $("#save").on("click",function(){

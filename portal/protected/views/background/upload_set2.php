@@ -111,7 +111,7 @@
     <div class="upload_wapper">
         <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px">
             <ul class="left desc_box">
-        <?php if(!isset($_GET['type'])){?>
+        <?php if($_GET['type'] == ""){?>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
@@ -202,6 +202,8 @@
         <?php if(isset($_GET['type'])){
                 if($_GET['type'] == 'theme'){?>
                     <img src="<?php echo $case['CI_Pic']?>" style="width:120px;" alt="" id="poster_img">
+        <?php }else{ ?>
+                    <img src="images/cover.jpg" alt="" id="poster_img">
         <?php }}else{?>
                     <img src="images/cover.jpg" alt="" id="poster_img">
         <?php }?>
@@ -339,7 +341,7 @@
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $pic ?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#CI_Show").val(<?php if(isset($case['CI_Show'])){echo $case['CI_Show'];}?>);
 
         //保存
         $("#save").on("click",function(){
