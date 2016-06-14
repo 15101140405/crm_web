@@ -111,6 +111,7 @@
     <div class="upload_wapper">
         <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px">
             <ul class="left desc_box">
+        <?php if(!isset($_GET['type'])){?>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
@@ -146,7 +147,30 @@
                         </select>
                     </div>
                 </li>
-                    
+        <?php }else if($_GET['type'] == "theme"){?>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">案例名称</label>
+                        <span class="must">*</span>
+                    </div>
+                    <div class="input_box left">
+                        <input class="input_in" id="case_name" type="text" value="<?php echo $case['CI_Name']?>" placeholder="请输入案例名称">
+                    </div>
+                    <span class="tip tip2 hid" id="name_t">请输入案例名称</span>
+                </li>
+                <li class="desc_item clearfix">
+                    <div class="tit_box left">
+                        <label for="">显示／隐藏</label>
+                    </div>
+                    <div class="select_c left">
+                        <select name="" id="CI_Show">
+                            <!-- <option value="">请选择</option> -->
+                            <option value="1">显示</option>
+                            <option value="0">隐藏</option>
+                        </select>
+                    </div>
+                </li>
+        <?php }?>
                 <!-- <li class="desc_item">
                     <div class="tit_box left">
                         <label for="">描述</label>
@@ -175,7 +199,12 @@
             </ul>
             <div class="right video_cover">
                 <div class="cover_box">
+        <?php if(isset($_GET['type'])){
+                if($_GET['type'] == 'theme'){?>
+                    <img src="<?php echo $case['CI_Pic']?>" style="width:120px;" alt="" id="poster_img">
+        <?php }}else{?>
                     <img src="images/cover.jpg" alt="" id="poster_img">
+        <?php }?>
                 </div>
                 <button id="uploadsingle">上传视频封面</button>
                 <span class="tip tip2 hid" id="poster_t">请上传示意图</span>
@@ -263,6 +292,26 @@
                 </div>
             </li> -->
         </ul>
+        <div class="index_con_box" style="margin-bottom:20px;">
+            <div class="con">
+                <ul class="upload_list" id="resources_list">
+            <?php foreach ($resources as $key => $value) {?>
+                    <li class="clearfix" tap="" cr-sort="1" cr-id="754">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <img src="<?php echo $value['CR_Path']?>" alt="">
+                            </div>
+                            <div class="video_info left">
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix" style="width:40%">
+                            <a class="edit_btn left del_resource" href="javascript:;">删除</a>
+                        </div>
+                    </li>
+            <?php }?>
+                </ul>
+            </div>
+        </div>
         <span class="tip tip2 hid" id="resources_t">请上传示意图</span>
         <div class="upload_btn_box" style="margin-bottom: 150px;">
             <a href="javascript:;" class="btn active" id="btnupload">添加资源</button>
@@ -288,6 +337,11 @@
         </div>
 <script>
     $(function(){
+        //初始渲染
+        $.cookie('img',"<?php echo $pic ?>");
+        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+
+        //保存
         $("#save").on("click",function(){
             var data = {
                 CI_Name : $("#case_name").val(),
@@ -306,9 +360,14 @@
             <?php }else if($_GET['type'] == 'meeting_set'){?>
                 category : 1,
                 CI_Type : 12,
-            <?php }else if($_GET['type'] == 'theme'){?>
+            <?php }else if($_GET['type'] == 'theme' && !isset($_GET['ci_id'])){?>
                 category : 5,
                 CI_Type : 4,
+            <?php }else if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){?>  //当有ci_id时，代表编辑
+                category : 5,
+                CI_Type : 4,
+                CI_ID : <?php echo $_GET['ci_id']?>,
+                CT_ID : <?php echo $_GET['ct_id']?>,
             <?php }?>
             };
             console.log(data);
@@ -320,7 +379,17 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
-                $.post("<?php echo $this->createUrl("background/set_upload");?>",data,function(){
+            <?php if(isset($_GET['type'])){?>
+                <?php if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){?>
+                var url = "<?php echo $this->createUrl("background/theme_edit");?>";
+                <?php }else{?>
+                var url = "<?php echo $this->createUrl("background/set_upload");?>";
+                <?php }?>
+            <?php }else{?>
+                var url = "<?php echo $this->createUrl("background/set_upload");?>";
+            <?php }?>
+                console.log(url);
+                $.post(url,data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
                 <?php if(!isset($_GET['type'])){?>

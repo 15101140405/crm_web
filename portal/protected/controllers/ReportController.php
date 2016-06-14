@@ -61,6 +61,235 @@ class ReportController extends InitController
 
     }
 
+    public function actionDaily_management()
+    {
+        //取当日进店数据
+        $time = time();
+        $date = date("y-m-d");
+
+        $criteria = new CDbCriteria; 
+        $criteria->addSearchCondition('update_time', $date);
+        $criteria->addCondition('account_id=:account_id');
+        $criteria->addCondition('staff_hotel_id=:staff_hotel_id');
+        $criteria->params[':account_id']=$_GET['account_id'];  
+        $criteria->params[':staff_hotel_id']=$_GET['staff_hotel_id'];  
+        $order1 = Order::model()->findAll($criteria);
+
+        $indoor = count($order1); 
+
+
+        //取当日开单数据
+        $result = yii::app()->db->createCommand("select `order`.id,order_payment.update_time from `order` right join order_payment on `order`.id = order_payment.order_id where type=0 and account_id=".$_GET['account_id']." and staff_hotel_id=".$_GET['staff_hotel_id']);
+        $result = $result->queryAll();
+        $open_order = array();
+
+        // print_r($result);die;
+        foreach ($result as $key => $value) {
+            $t=0;
+            foreach ($open_order as $key1 => $value1) {
+                if($value['id'] == $value1){
+                    $t++;
+                };
+            };
+            $time = explode(' ', $value['update_time']);
+            // print_r(date('Y-m-d',time()));die;
+            if($t==0 && $time[0] == date('Y-m-d',time())){$open_order[] = $value['id'];};
+        };
+
+
+        //取累计订单
+        $order_total = Order::model()->findAll(array(
+                'condition' => 'staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':staff_hotel_id' => $_GET['staff_hotel_id']
+                    )
+            ));
+        $wedding_all = 0;
+        $meeting_all = 0;
+        $wedding_doing = 0;
+        $meeting_doing = 0;
+        $sure_order_id = "(";
+
+        foreach ($order_total as $key => $value) {
+            $t = explode(' ', $value['order_date']);
+            $t1 = explode('-', $t[0]);
+            // print_r(date('M'));die;
+            if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4 || $value['order_status'] == 5 || $value['order_status'] == 6){
+                if($t1[0] == date('Y')){$sure_order_id .= $value['id'].",";};
+                if($t1[0] >= date('Y')){
+                    if($value['order_type'] == 1){$meeting_all++;}else if($value['order_type'] == 2){$wedding_all++;};
+                    if($t1[1] >= date('m') && $t1[2] >= date('')){
+                        if($value['order_type'] == 1){$meeting_doing++;}else if($value['order_type'] == 2){$wedding_doing++;};
+                    };  
+                };
+            };
+        };
+        $sure_order_id = substr($sure_order_id,0,strlen($sure_order_id)-1);
+        $sure_order_id .= ")";
+
+        
+
+        //取门店销售目标
+        $hotel = StaffHotel::model()->findByPk($_GET['staff_hotel_id']);
+
+
+        //取销售额  ()
+        $order_product_designOrder = yii::app()->db->createCommand("".
+            "select actual_price,order_product.unit,actual_service_ratio,designer_id,planner_id,other_discount,feast_discount,discount_range,supplier_type_id,s1.`name` as designer_name,s2.`name` as planner_name ".
+            "from order_product left join `order` on order_id = `order`.id ".
+            "left join supplier_product on product_id = supplier_product.id ".
+            "left join staff s1 on designer_id = s1.id ".
+            "left join staff s2 on planner_id = s2.id".
+            " where order_id in " .$sure_order_id. "order by designer_id");
+        $order_product_designOrder = $order_product_designOrder->queryAll(); 
+
+        $hotel_total_sales = 0;
+
+        $design_person_sales = array();
+        $tem_id = $order_product_designOrder[0]['designer_id'];
+        $t_total_sales = 0;//存储个人策划总价
+        $tem_person_data = array();//存储个人信息
+
+        foreach ($order_product_designOrder as $key => $value){
+            if($value['designer_id'] != $tem_id){
+                $t_total_sales = 0;
+            };
+            if($value['supplier_type_id'] == 2){
+                $hotel_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1)*(1+$value['actual_service_ratio']*0.01);
+            }else{
+                $t=explode(',', $value['discount_range']);
+                $tem = 0;
+                foreach ($t as $key1 => $value1) {
+                    if($value1 == $value['supplier_type_id']){$tem++;};
+                };
+                if($tem == 0){//不在折扣范围内
+                    $hotel_total_sales += $value['actual_price']*$value['unit'];
+                    $t_total_sales += $value['actual_price']*$value['unit'];
+                }else{//在折扣范围内
+                    $hotel_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1);
+                    $t_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1);
+                };
+            };
+
+            if($value['designer_id'] == $tem_id){
+                $tem_person_data = array(
+                        'designer_id' => $value['designer_id'],
+                        'name' => $value['designer_name'],
+                        'total' => $t_total_sales
+                    ); 
+            }else{
+                $design_person_sales[] = $tem_person_data;
+                $tem_person_data = array(
+                        'designer_id' => $value['designer_id'],
+                        'name' => $value['designer_name'],
+                        'total' => $t_total_sales
+                    );
+            };
+            // echo $tem_id."|";
+            $tem_id = $value['designer_id'];
+        };
+        // print_r($design_person_sales);die;
+
+        $arr_order = yii::app()->db->createCommand("select turnover from `order` where id in ".$sure_order_id);
+        $arr_order = $arr_order->queryAll(); 
+        foreach ($arr_order as $key => $value) {
+            if($value['turnover'] != 0 && $value['turnover'] != "" && $value['turnover'] != null){
+                $hotel_total_sales -= $value['turnover'];
+            };
+        };
+
+
+
+        //取汇款总额
+        $order_payment = yii::app()->db->createCommand("select * from order_payment where order_id in " .$sure_order_id);
+        $order_payment = $order_payment->queryAll(); 
+        $order_total_payment = 0;
+        foreach ($order_payment as $key => $value) {
+            $order_total_payment += $value['money'];
+        };
+
+
+
+        //计算个人业绩
+        $order_product_planGroup = yii::app()->db->createCommand("". //个人餐饮业绩
+            "select planner_id,s2.name,sum(actual_price*unit*feast_discount*0.1*(1+actual_service_ratio*0.01)) as total ".
+            "from order_product left join `order` on order_id = `order`.id ".
+            "left join staff s2 on planner_id = s2.id".
+            " where order_id in " .$sure_order_id. "group by planner_id");
+        $order_product_planGroup = $order_product_planGroup->queryAll(); 
+
+        $arr_staff_sales = array();//存全部员工销售额;
+        $staff_sales = array();//存个人销售额；
+
+        foreach ($order_product_planGroup as $key_p => $value_p) {
+            $staff_sales['id'] = $value_p['planner_id'];
+            $staff_sales['name'] = $value_p['name'];
+            $staff_sales['sales'] = $value_p['total'];
+            foreach ($design_person_sales as $key_d => $value_d) {
+                if($value_p['planner_id'] == $value_d['designer_id']){
+                    $staff_sales['sales'] += $value_d['total'];
+                };/*else{
+                    $t=array(
+                            'id' => $value_d['designer_id'],
+                            'name' => $value_d['name'],
+                            'sales' => $value_d['total'],
+                        );
+                    foreach ($order_product_planGroup as $kp => $vp) {
+                        
+                    }
+                };*/
+            };
+            $arr_staff_sales[] = $staff_sales;
+        };
+
+        foreach ($design_person_sales as $key => $value) {
+            $staff_sales['id'] = $value['designer_id'];
+            $staff_sales['name'] = $value['name'];
+            $staff_sales['sales'] = $value['total'];
+            $t=0;
+            foreach ($arr_staff_sales as $k_arr => $val_arr) {
+                if($val_arr['id'] != $value_d['designer_id']){
+                    $t++;
+                };
+            };
+            if($t == 0){
+                $arr_staff_sales[] = $staff_sales;
+            };
+        };
+
+        $sales = array(
+                'xAxis' => '',
+                'series' => '',
+            );
+        foreach ($arr_staff_sales as $key => $value) {
+            $sales['xAxis'] .= $value['name'].",";
+            $sales['series'] .= $value['sales'].",";
+        }
+
+        $sales['xAxis'] = substr($sales['xAxis'],0,strlen($sales['xAxis'])-1);
+        $sales['series'] = substr($sales['series'],0,strlen($sales['series'])-1);
+
+
+
+        // print_r($arr_staff_sales);die;
+
+
+
+        $this->render('daily_management',array(
+                'indoor' => $indoor,
+                'open_order' => count($open_order),
+                'wedding_all' => $wedding_all,
+                'wedding_doing' => $wedding_doing,
+                'meeting_all' => $meeting_all,
+                'meeting_doing' => $meeting_doing,
+                'hotel_total_sales' => $hotel_total_sales,
+                'hotel_target' => $hotel['target'],
+                'hotel_name' => $hotel['name'],
+                'order_total_payment' => $order_total_payment,
+                'sales' => $sales
+            ));
+    }
+
     public function actionHotel_finance_report()
     {
         $order = Order::model()->findAll(array(

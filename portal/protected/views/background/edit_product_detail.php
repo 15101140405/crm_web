@@ -133,7 +133,7 @@
                     </div>
                     <span class="left tip hid" id="name_t">请输入产品价格</span>
                 </li>
-                <li class="desc_item clearfix">
+                <li class="desc_item clearfix" id="cost_li">
                     <div class="tit_box left">
                         <label for="">底价:</label>
                         <span class="must">*</span>
@@ -184,7 +184,7 @@
                     </div>
                     <span class="left tip hid" id="name_t">请输入产品价格</span>
                 </li>
-                <li class="desc_item clearfix">
+                <li class="desc_item clearfix" id="cost_li">
                     <div class="tit_box left">
                         <label for="">底价:</label>
                         <span class="must">*</span>
@@ -216,9 +216,13 @@
                 </li>
         <?php }?>
             </ul>
-            <div class="right video_cover" style="position: absolute;right: 120px;">
+            <div class="right video_cover" style="position: absolute;right: 120px;" id="img_div">
                 <div class="cover_box">
+        <?php if(!empty($product)){?>
+                    <img src="<?php echo $product['ref_pic_url']?>" id="poster_img" style="width:120px;">
+        <?php }else{ ?>
                     <img src="images/cover.jpg" id="poster_img" style="width:120px;">
+        <?php }?>
                 </div>
                 <button id="uploadsingle">上传产品示意图</button>
                 <!--  -->
@@ -264,6 +268,12 @@
 <!-- <script type="text/javascript" src="js/demo.js"></script> -->
 <script>
     $(function(){
+        //如果不是：场布、灯光、音响、视频，则隐藏底价、上传图片
+        if(<?php echo $_GET['service_type']?> != 20 && <?php echo $_GET['service_type']?> != 8 && <?php echo $_GET['service_type']?> != 9 && <?php echo $_GET['service_type']?> != 23){
+            $("#cost_li").remove();
+            $("#img_div").remove();
+        };
+
         //新增产品
         $("#insert").on("click",function(){
             var data = {
@@ -277,14 +287,18 @@
                 CI_ID : <?php echo $_GET['ci_id']?>,
                 service_person_id : <?php echo $_GET['service_person_id']?>,
                 service_type : <?php echo $_GET['service_type']?>,
+        <?php if($_GET['service_type'] == 20 || $_GET['service_type'] == 8 || $_GET['service_type'] == 9 || $_GET['service_type'] == 23){?>
+                cost : $("#cost").val(),
+                ref_pic_url : $.cookie('img'),
+        <?php }?>
             };
         <?php if(!isset($_GET['service_product_id'])){?>
             $.post("<?php echo $this->createUrl("background/host_product_edit");?>",data,function(){
-                location.href = "<?php echo $this->createUrl("background/edit_product");?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
+                location.href = "<?php echo $this->createUrl("background/edit_product");?>&CI_Type=<?php echo $_GET['CI_Type']?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
             });
         <?php }else{?>
             $.post("<?php echo $this->createUrl("background/edit_host_product");?>",data,function(){
-                location.href = "<?php echo $this->createUrl("background/edit_product");?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
+                location.href = "<?php echo $this->createUrl("background/edit_product");?>&CI_Type=<?php echo $_GET['CI_Type']?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
             });
         <?php }?>
         });
@@ -293,7 +307,7 @@
         $("#b").on("click",function(){
             $.cookie('img', null); 
             $.cookie('img1', null); 
-            location.href="<?php echo $this->createUrl("background/edit_product");?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
+            location.href="<?php echo $this->createUrl("background/edit_product");?>&CI_Type=<?php echo $_GET['CI_Type']?>&ci_id=<?php echo $_GET['ci_id']?>&service_person_id=<?php echo $_GET['service_person_id']?>";
         });
     })
 </script>

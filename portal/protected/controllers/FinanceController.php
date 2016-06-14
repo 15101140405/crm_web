@@ -417,6 +417,7 @@ class FinanceController extends InitController
         $payment->remarks=$_POST['remarks'];
         $payment->way=$_POST['payment_way'];
         $payment->type=$_POST['payment_type'];
+        $payment->update_time=date('Y-m-d h:i:s',time());
         $payment->save();
 
         if($_POST['payment_type'] == 0){

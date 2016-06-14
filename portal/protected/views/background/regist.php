@@ -44,12 +44,11 @@
                         <li><img id="video" department="12" src="images/cjtubiao_17.png" alt=""><p class="name">摄像师</p></li>
                         <li><img id="camera" department="13" src="images/cjtubiao_15.png" alt=""><p class="name">摄影师</p></li>
                         <li><img id="makeup" department="14" src="images/cjtubiao_13.png" alt=""><p class="name">化妆师</p></li>
-                        <li><img id="decoration" department="20" src="images/cjtubiao_13.png" alt=""><p class="name">场地布置</p></li>
-                        <li><img id="lighting" department="8" src="images/cjtubiao_13.png" alt=""><p class="name">灯光</p></li>
-                        <li><img id="sound" department="23" src="images/cjtubiao_13.png" alt=""><p class="name">音响</p></li>
-                        <li><img id="shipin" department="9" src="images/cjtubiao_13.png" alt=""><p class="name">视频</p></li>
+                        <li><img id="decoration" department="15" src="images/cjtubiao_13.png" alt=""><p class="name">场地布置</p></li>
+                        <li><img id="lighting" department="16" src="images/cjtubiao_13.png" alt=""><p class="name">灯光</p></li>
+                        <li><img id="sound" department="17" src="images/cjtubiao_13.png" alt=""><p class="name">音响</p></li>
+                        <li><img id="shipin" department="18" src="images/cjtubiao_13.png" alt=""><p class="name">视频</p></li>
                     </ul>
-                    
                 </div>
                 <button class="registbtn registbtn_next">下一步</button>
             </div>
@@ -217,13 +216,37 @@
                                     list = department_list.split(',');
                                     var t=0;
                                     for (i=0;i<list.length;i++) {
-                                        if(list[i] == 11){t++};
+                                        if(list[j] == 0){t=0;j++;};
+                                        if(list[j] == 11){t=11;j++;};
+                                        if(list[j] == 12){t=12;j++;};
+                                        if(list[j] == 13){t=13;j++;};
+                                        if(list[j] == 14){t=14;j++;};
+                                        if(list[j] == 15){t=15;j++;};
+                                        if(list[j] == 16){t=16;j++;};
+                                        if(list[j] == 17){t=17;j++;};
+                                        if(list[j] == 18){t=18;j++;};
                                     };
-                                    if(t=0){
+                                    if(t==1){
                                         location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=2";
-                                    }else{
+                                    }else if(t==11){
                                         location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=6";
-                                    };     
+                                    }else if(t==12){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=13";
+                                    }else if(t==13){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=14";
+                                    }else if(t==14){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=15";
+                                    }else if(t==0){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=1";
+                                    }else if(t==15){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=17";
+                                    }else if(t==16){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=18";
+                                    }else if(t==17){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=19";
+                                    }else if(t==18){
+                                        location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=20";
+                                    };    
                                 };
                             });
                         };
