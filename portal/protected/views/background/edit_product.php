@@ -88,9 +88,22 @@
 <!-- <script type="text/javascript" src="js/demo.js"></script> -->
 <script>
     $(function(){
+        //初始渲染
+        <?php if($_GET['CI_Type'] == 17 || $_GET['CI_Type'] == 18 || $_GET['CI_Type'] == 19 || $_GET['CI_Type'] == 20){?>
+                $("#insert").html("新增产品");
+        <?php }?>
+
+
         //新增产品
+        var CI_Type = <?php echo $_GET['CI_Type']?>;
+        var service_type = 0;
+        if(CI_Type == 6){service_type = 3};
+        if(CI_Type == 17){service_type = 20};
+        if(CI_Type == 18){service_type = 8};
+        if(CI_Type == 19){service_type = 23};
+        if(CI_Type == 20){service_type = 9};
         $("#insert").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type=3&ci_id=<?php echo $_GET['ci_id']?>";
+            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>";
         });
 
         //返回
@@ -102,7 +115,7 @@
 
         //编辑
         $(".edit").on("click",function(){
-            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type=3&ci_id=<?php echo $_GET['ci_id']?>&service_product_id="+$(this).attr("service-product-id");
+            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>&service_product_id="+$(this).attr("service-product-id");
         });
 
         //删除

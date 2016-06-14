@@ -114,6 +114,22 @@ class BackgroundController extends InitController
             $person_data['CI_Type'] = 15;
             $person_data['service_type'] = 6;
         };
+        if($_POST['department'] == 15){
+            $person_data['CI_Type'] = 7;
+            $person_data['service_type'] = 20;
+        };
+        if($_POST['department'] == 16){
+            $person_data['CI_Type'] = 18;
+            $person_data['service_type'] = 8;
+        };
+        if($_POST['department'] == 17){
+            $person_data['CI_Type'] = 19;
+            $person_data['service_type'] = 23;
+        };
+        if($_POST['department'] == 18){
+            $person_data['CI_Type'] = 20;
+            $person_data['service_type'] = 9;
+        };
 
         if (isset($_POST['password'])) { //注册
             if ($_POST['yzm'] == $_SESSION['code']) {
@@ -565,10 +581,11 @@ class BackgroundController extends InitController
                     ":account_id" => $account_id,
                     )));
             $supplier_product = SupplierProduct::model()->findAll(array(
-                'condition' => 'account_id=:account_id && standard_type=:standard_type',
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
                     'params' => array(
                             ':account_id' => $_COOKIE['account_id'],
-                            ':standard_type' => 0
+                            ':standard_type' => 0,
+                            ':product_show' => 1,
                         )));
             foreach ($supplier_product as $key => $value) {
                 $t=explode('.', $value['ref_pic_url']);
@@ -583,7 +600,7 @@ class BackgroundController extends InitController
                 'supplier_product' => $supplier_product,
             ));
         }else if($_GET['type'] == 'theme'){
-            $result = yii::app()->db->createCommand("select product_name,price,unit,service_product.id as product_id,service_product.service_type as service_type,cost,case_info.CI_Pic,ref_pic_url from service_product left join service_person on service_person_id=service_person.id left join case_info on service_person.staff_id=case_info.CT_ID where CI_Type in (6,13,14,15)");
+            $result = yii::app()->db->createCommand("select product_name,price,unit,service_product.id as product_id,service_product.service_type as service_type,cost,case_info.CI_Pic,ref_pic_url from service_product left join service_person on service_person_id=service_person.id left join case_info on service_person.staff_id=case_info.CT_ID where service_product.product_show=1 and CI_Type in (6,13,14,15)");
             $service_person = $result->queryAll();
             $data = array();
             foreach ($service_person as $key => $value) {
@@ -613,14 +630,45 @@ class BackgroundController extends InitController
 
     public function actionUpload_set2()
     {
+        $case = array();
+        $resources = array();
+        $pic="";
+        if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){
+            $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+            if(!empty($case)){
+                $t=explode('.', $case['CI_Pic']);
+                $pic = $case['CI_Pic'];
+                $case['CI_Pic'] = "http://file.cike360.com" .$t[0]. "_sm." .$t[1];
+            };
+            $resources = CaseResources::model()->findAll(array(
+                    'condition' => 'CI_ID=:CI_ID && CR_Type=:CR_Type',
+                    'params' => array(
+                            ':CI_ID' => $_GET['ci_id'],
+                            ':CR_Type' => 1
+                        )
+                ));
+            // var_dump($resources);die;
+            foreach ($resources as $key => $value) {
+                $t=explode('.', $value['CR_Path']);
+                $resources[$key]['CR_Path'] = "http://file.cike360.com" .$t[0]. "_sm." .$t[1];
+            }
+        };
+
+
         $hotel = StaffHotel::model()->findAll(array(
                 'condition' => 'account_id=:account_id',
                 'params' => array(
                         ':account_id' => $_COOKIE['account_id'],
                     ),
             ));
+        // foreach ($resources as $key => $value) {
+        //     echo $value['CR_Path'];die;
+        // };
         $this->render("upload_set2",array(
                 'hotel' => $hotel,
+                'case' => $case,
+                'resources' => $resources,
+                'pic' => $pic
             ));
     }
 
@@ -638,33 +686,99 @@ class BackgroundController extends InitController
             $decoration_tap = DishType::model()->findAll();
         };
             
-        $supplier_product = SupplierProduct::model()->findAll(array(
-            'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
-                'params' => array(
-                        ':account_id' => $_COOKIE['account_id'],
-                        ':standard_type' => 0,
-                        ':product_show' => 1,
-                    )));
-        foreach ($supplier_product as $key => $value) {
-            $t=explode('.', $value['ref_pic_url']);
-            if(isset($t[0]) && isset($t[1])){
-                $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
-            };
-        };
+        // $supplier_product = SupplierProduct::model()->findAll(array(
+        //     'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
+        //         'params' => array(
+        //                 ':account_id' => $_COOKIE['account_id'],
+        //                 ':standard_type' => 0,
+        //                 ':product_show' => 1,
+        //             )));
+        // foreach ($supplier_product as $key => $value) {
+        //     $t=explode('.', $value['ref_pic_url']);
+        //     if(isset($t[0]) && isset($t[1])){
+        //         $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
+        //     };
+        // };
+        $decoration_tap = array();
+        $supplier_product = array();
         $product_list = array();
-        $Wedding_set = Wedding_set::model()->findByPk($_GET['ct_id']);
-        if($Wedding_set['product_list']!=""){
-            $t = explode(",", $Wedding_set['product_list']);
-            foreach ($t as $key => $value) {
-                $item = array();
-                $t1 = explode("|", $value);
-                $item['product_id'] = $t1[0];
-                $item['price'] = $t1[1];
-                $item['amount'] = $t1[2];
-                $item['cost'] = $t1[3];
-                $product_list[]=$item;
+        $Wedding_set = array();
+        if(!isset($_GET['type']) || $_GET['type'] == 'menu'){
+            $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
+                "condition" => "account_id = :account_id",
+                "params"    => array(
+                    ":account_id" => $account_id,
+                    )));
+            $supplier_product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':standard_type' => 0,
+                            ':product_show' => 1,
+                        )));
+            foreach ($supplier_product as $key => $value) {
+                $t=explode('.', $value['ref_pic_url']);
+                if(isset($t[0]) && isset($t[1])){
+                    $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
+                };
+            };
+
+            $Wedding_set = Wedding_set::model()->findByPk($_GET['ct_id']);
+            if($Wedding_set['product_list']!=""){
+                $t = explode(",", $Wedding_set['product_list']);
+                foreach ($t as $key => $value) {
+                    $item = array();
+                    $t1 = explode("|", $value);
+                    $item['product_id'] = $t1[0];
+                    $item['price'] = $t1[1];
+                    $item['amount'] = $t1[2];
+                    $item['cost'] = $t1[3];
+                    $product_list[]=$item;
+                };
+            };
+            // print_r($decoration_tap);die;
+            // print_r($supplier_product);die;
+        }else if($_GET['type'] == 'theme'){
+            $result = yii::app()->db->createCommand("select product_name,price,unit,service_product.id as product_id,service_product.service_type as service_type,cost,case_info.CI_Pic,ref_pic_url from service_product left join service_person on service_person_id=service_person.id left join case_info on service_person.staff_id=case_info.CT_ID where service_product.product_show=1 and CI_Type in (6,13,14,15)");
+            $service_person = $result->queryAll();
+            $data = array();
+            foreach ($service_person as $key => $value) {
+                $pic = "";
+                if($value['service_type'] == 3 || $value['service_type'] == 4 || $value['service_type'] == 5 || $value['service_type'] == 6){
+                    $pic = $value['CI_Pic'];
+                }else{
+                    $pic = $value['ref_pic_url'];
+                };
+
+                $item = array(
+                    'name' => $value['product_name'],
+                    'unit_price' => $value['price'],
+                    'unit' => $value['unit'],
+                    'id' => $value['product_id'],
+                    'supplier_type_id' => $value['service_type'],
+                    'unit_cost' => $value['cost'],
+                    'ref_pic_url' => $pic,
+                );
+                $data[] = $item;
+            };
+            $supplier_product = $data;
+
+            $Wedding_set = Wedding_set_theme::model()->findByPk($_GET['ct_id']);
+            if($Wedding_set['service_product_list']!=""){
+                $t = explode(",", $Wedding_set['service_product_list']);
+                foreach ($t as $key => $value) {
+                    $item = array();
+                    $t1 = explode("|", $value);
+                    $item['product_id'] = $t1[0];
+                    $item['price'] = $t1[1];
+                    $item['amount'] = $t1[2];
+                    $item['cost'] = $t1[3];
+                    $product_list[]=$item;
+                };
             };
         };
+
+        
         // print_r($decoration_tap);die;
         $this->render("edit_set1",array(
             'wedding_set' => $Wedding_set,
@@ -740,7 +854,7 @@ class BackgroundController extends InitController
                         ':account_id' => $_COOKIE['account_id']
                     )
             ));
-
+        // print_r($case);die;
         $this->render("edit_set2",array(
                 'hotel' => $hotel,
                 'Wedding_set' => $Wedding_set,
@@ -824,6 +938,11 @@ class BackgroundController extends InitController
             $this->render('edit_product_detail');
         }else{
             $service_product = ServiceProduct::model()->findByPk($_GET['service_product_id']);
+            if(isset($service_product['ref_pic_url'])){
+                $t=explode(".",$service_product['ref_pic_url']);
+                //print_r($service_product['ref_pic_url']);die;
+                $service_product['ref_pic_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+            };
             $this->render('edit_product_detail',array(
                     'product' => $service_product
                 ));
@@ -1041,16 +1160,71 @@ class BackgroundController extends InitController
 
     public function actionSet_upload()
     {
-        $data = new Wedding_set;
-        $data ->staff_hotel_id = $_POST['staff_hotel_id'];
-        $data ->name = $_POST['CI_Name'];
-        $data ->category = $_POST['category'];
-        $data ->final_price = $_POST['final_price'];
-        $data ->feast_discount = $_POST['feast_discount'];
-        $data ->other_discount = $_POST['other_discount'];
-        $data ->product_list = $_POST['product_list'];
-        $data->save();
-        $id = $data->attributes['id'];
+        $id = "";
+        if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){
+            $data = new Wedding_set;
+            $data ->staff_hotel_id = $_POST['staff_hotel_id'];
+            $data ->name = $_POST['CI_Name'];
+            $data ->category = $_POST['category'];
+            $data ->final_price = $_POST['final_price'];
+            $data ->feast_discount = $_POST['feast_discount'];
+            $data ->other_discount = $_POST['other_discount'];
+            $data ->product_list = $_POST['product_list'];
+            $data ->set_show = 1;
+            $data ->update_time = date('y-m-d h:i:s',time());
+            $data->save();
+            $id = $data->attributes['id'];
+        }else{
+            $data = new Wedding_set_theme;
+            $data ->staff_hotel_id = $_POST['staff_hotel_id'];
+            $data ->name = $_POST['CI_Name'];
+            $data ->category = $_POST['category'];
+            $data ->final_price = $_POST['final_price'];
+            $data ->feast_discount = $_POST['feast_discount'];
+            $data ->other_discount = $_POST['other_discount'];
+            $data ->service_product_list = $_POST['product_list'];
+            $data ->set_show = 1;
+            $data ->update_time = date('y-m-d h:i:s',time());
+            $data->save();
+            $id = $data->attributes['id'];
+
+            $staff_hotel = StaffHotel::model()->findAll(array(
+                    'condition' => 'account_id = :account_id',
+                    'params' => array(
+                            ':account_id' => $_POST['account_id']
+                        )
+                ));
+            $t = explode(',', $_POST['product_list']);
+            $service_product_list = "";
+            foreach ($t as $key => $value) {
+                $tem = explode('|', $value);
+                $supplier_product = SupplierProduct::model()->findAll(array(
+                        'condition' => 'account_id=:account_id && service_product_id=:service_product_id',
+                        'params' => array(
+                                ':account_id' => $_POST['account_id'],
+                                ':service_product_id' => $tem[0]
+                            )
+                    ));
+                $service_product_list .= $supplier_product[0]['id']."|".$tem[1]."|".$tem[2]."|".$tem[3].",";
+            };
+
+            $service_product_list = substr($service_product_list,0,strlen($service_product_list)-1);
+
+            foreach ($staff_hotel as $key => $value) {
+                $data = new Wedding_set;
+                $data ->staff_hotel_id = $value['id'];
+                $data ->name = $_POST['CI_Name'];
+                $data ->category = $_POST['category'];
+                $data ->final_price = $_POST['final_price'];
+                $data ->feast_discount = $_POST['feast_discount'];
+                $data ->other_discount = $_POST['other_discount'];
+                $data ->product_list = $service_product_list;
+                $data ->set_show = 1;
+                $data ->theme_id = $id;
+                $data ->update_time = date('y-m-d h:i:s',time());
+                $data->save();
+            };
+        };
 
         $data = new CaseInfo;
         $data ->CI_Name = $_POST['CI_Name'];
@@ -1064,7 +1238,7 @@ class BackgroundController extends InitController
         $data = new CaseBind;
         if($_POST['CI_Type'] != 4){
             $data ->CB_Type = 1;
-            $data ->TypeID = $_COOKIE['account_id'];    
+            $data ->TypeID = $_POST['account_id'];    
         }else{
             $data ->CB_Type = 4;
             $data ->TypeID = 0;  
@@ -1104,6 +1278,40 @@ class BackgroundController extends InitController
     {
         CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
         Wedding_set::model()->updateByPk($_POST['CT_ID'],array('staff_hotel_id'=>$_POST['staff_hotel_id'],'name'=>$_POST['CI_Name'],'final_price'=>$_POST['final_price'],'feast_discount'=>$_POST['feast_discount'],'product_list'=>$_POST['product_list']));
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+            $i = $_POST['CR_Sort']+1;
+            foreach ($resources as $key => $value) {
+                $data = new CaseResources;
+                $data ->CI_ID = $_POST['CI_ID'];
+                $data ->CR_Show = 1;
+                $data ->CR_Type = $value['Cr_Type'];
+                $data ->CR_Name = "";
+                $data ->CR_Path = $value['Cr_Path'];
+                $data ->CR_Remarks = "";
+                $data ->CR_Sort = $i++;
+                $data->save();
+            };
+        };
+    }
+
+    public function actionTheme_edit()
+    {
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Name'=>$_POST['CI_Name'],'CI_Show'=>$_POST['CI_Show'],'CI_Pic'=>$_POST['CI_Pic']));
+        Wedding_set_theme::model()->updateByPk($_POST['CT_ID'],array('name'=>$_POST['CI_Name'],'final_price'=>$_POST['final_price'],'feast_discount'=>$_POST['feast_discount'],'product_list'=>$_POST['product_list']));
         if($_POST['case_resource'] != ""){
             $t = explode(",",$_POST['case_resource']);
             $resources = array();
@@ -1355,15 +1563,16 @@ class BackgroundController extends InitController
         $data ->update_time = date('y-m-d h:i:s',time());
         $data ->description = $_POST['description'];
         $data ->product_show = 1;
+        if(isset($_POST['cost']) && isset($_POST['ref_pic_url'])){
+            $data ->cost = $_POST['cost'];
+            $data ->ref_pic_url = $_POST['ref_pic_url'];
+        };
         $data ->save();
 
         $service_product_id = $data->attributes['id'];
 
         //给所有公司新增一个supplier_product
-        
-
         $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
-
         $company = StaffCompany::model()->findAll();
         foreach ($company as $key => $value) {
             
@@ -1380,10 +1589,15 @@ class BackgroundController extends InitController
             $data ->name = $_POST['product_name'];
             $data ->category = 2;
             $data ->unit_price = $_POST['price']*2;
-            $data ->unit_cost = $_POST['price'];
+            if(!isset($_POST['cost']) && !isset($_POST['ref_pic_url'])){
+                $data ->unit_cost = $_POST['price'];    
+                $data ->ref_pic_url = $case['CI_Pic'];
+            }else{
+                $data ->unit_cost = $_POST['cost'];    
+                $data ->ref_pic_url = $_POST['ref_pic_url'];
+            };
             $data ->unit = $_POST['unit'];
             $data ->service_charge_ratio = 0;
-            $data ->ref_pic_url = $case['CI_Pic'];
             $data ->description = $_POST['description'];
             $data ->update_time = date('y-m-d h:i:s',time());
             $data ->save();
@@ -1439,6 +1653,11 @@ class BackgroundController extends InitController
         if($_POST['CI_Type'] == 5 || $_POST['CI_Type'] == 9 || $_POST['CI_Type'] == 11 || $_POST['CI_Type'] == 12){
             $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
             Wedding_set::model()->updateByPk($case['CT_ID'],array('set_show'=>0));
+        };
+        if($_POST['CI_Type'] == 4){
+            $case = CaseInfo::model()->findByPk($_POST['CI_ID']);
+            Wedding_set_theme::model()->updateByPk($case['CT_ID'],array('set_show'=>0));
+            Wedding_set::model()->updateAll(array('set_show'=>0),'theme_id=:theme_id',array(':theme_id'=>$case['CT_ID']));
         };
     }
 
@@ -1502,21 +1721,44 @@ class BackgroundController extends InitController
 
     public function actionEdit_host_product()
     {
-        ServiceProduct::model()->updateByPk($_POST['id'],array(
-                'product_name' => $_POST['product_name'],
-                'price' => $_POST['price'],
-                'unit' => $_POST['unit'],
-                'description' => $_POST['description'],
-            ));
+        if(isset($_POST['cost']) && isset($_POST['ref_pic_url'])){
+            ServiceProduct::model()->updateByPk($_POST['id'],array(
+                    'product_name' => $_POST['product_name'],
+                    'price' => $_POST['price'],
+                    'cost' => $_POST['cost'],
+                    'ref_pic_url' => $_POST['ref_pic_url'],
+                    'unit' => $_POST['unit'],
+                    'description' => $_POST['description'],
+                ));
+        }else{
+            ServiceProduct::model()->updateByPk($_POST['id'],array(
+                    'product_name' => $_POST['product_name'],
+                    'price' => $_POST['price'],
+                    'unit' => $_POST['unit'],
+                    'description' => $_POST['description'],
+                ));
+        };
 
         $company = StaffCompany::model()->findAll();
         foreach ($company as $key => $value) {
-            SupplierProduct::model()->updateAll(array(
-                    'name' => $_POST['product_name'],
-                    'unit_price' => $_POST['price'],
-                    'unit' => $_POST['unit'],
-                    'description' => $_POST['description'],
-                ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+            if(isset($_POST['cost']) && isset($_POST['ref_pic_url'])){
+                SupplierProduct::model()->updateAll(array(
+                        'name' => $_POST['product_name'],
+                        'unit_price' => $_POST['price'],
+                        'unit_cost' => $_POST['cost'],
+                        'ref_pic_url' => $_POST['ref_pic_url'],
+                        'unit' => $_POST['unit'],
+                        'description' => $_POST['description'],
+                    ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+            }else{
+                SupplierProduct::model()->updateAll(array(
+                        'name' => $_POST['product_name'],
+                        'unit_price' => $_POST['price'],
+                        'unit' => $_POST['unit'],
+                        'description' => $_POST['description'],
+                    ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+            };
+                
         };
     }
 

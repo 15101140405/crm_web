@@ -23,6 +23,7 @@
         <div class="upload_wapper">
             <ul class="nav_list upload_wapper clearfix">
                 <li ><a href="#" id="top">场地布置</a>
+                <?php if(!empty($decoration_tap)){?>
                     <ul class="sub_nav_list" id="decoration">
                         <li tap-id="0"><a href="#">全部</a>
                         </li>
@@ -31,6 +32,7 @@
                         </li>
                 <?php }?>
                     </ul>
+                <?php }?>
                 </li>
                 <li class="shuxian">|</li>
                 <li id="host"><a href="#">主持</a>
@@ -97,7 +99,7 @@
         <?php }else if($_GET["type"] == 'theme'){?>
         <?php foreach ($supplier_product as $key => $value) {
             if($value['supplier_type_id'] == 20 || $value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7 || $value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){?>
-                <li style="height: 200px;" tap="<?php echo $value['decoration_tap']?>" supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
+                <li style="height: 200px;"  supplier-type-id="<?php echo $value['supplier_type_id']?>" product-id="<?php echo $value['id']?>" unit-cost="<?php echo $value['unit_cost']?>">
                     <div class="img_box" style="height:60%">
                         <img src="<?php echo "http://file.cike360.com".$value['ref_pic_url']?>" alt="">
                         <!-- <span>已售233件</span> -->
@@ -120,7 +122,7 @@
             <div>
                 <div class="tit_box clearfix" style="width:253px;background:#fff;border-bottom: 1px solid #e6e6e6;">
                     <h2 class="left">折扣：</h2>
-                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="<?php echo $wedding_set['feast_discount']?>" placeholder="请输入折扣，如0.8">
+                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入折扣，如0.8">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:230px;" id="shopping_car">
@@ -283,12 +285,12 @@
                 product_list += $(this).attr('product-id') +"|"+ $(this).find(".product_price").val() +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-        <?php if(!isset($_GET['type'])){?>
+        <?php if(!isset($_GET['type']) || $_GET['type'] == 'menu'){?>
             location.href = "<?php echo $this->createUrl("background/edit_set2");?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=" + $("#feast_discount").val();
         <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&ci_id=<?php echo $_GET['ci_id']?>&ct_id=<?php echo $_GET['ct_id']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
         <?php }?>
-        })
+        });
 
         //改变数量、单价时，刷新总价
         $('.product_price').live('change', function() {

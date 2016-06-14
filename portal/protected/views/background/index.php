@@ -233,11 +233,11 @@
                                 <img src="images/host_price.jpeg" alt="">
                             </div>
                             <div class="video_info left">
-                                <h3 id="my_product">我的报价</h3>
+                                <h3 id="my_product">我的产品</h3>
                             </div>
                         </div>
                         <div class="edit_btn_box right clearfix">
-                            <a class="edit_btn left" id="product" href="javascript:;">管理报价</a>
+                            <a class="edit_btn left" id="product" href="javascript:;">管理产品</a>
                         </div>
                     </li>
             <?php }else if($_GET['CI_Type'] == 8){
@@ -363,6 +363,11 @@
         console.log(t2);
         console.log(t3);
         console.log(t4);
+        console.log(t5);
+        console.log(t6);
+        console.log(t7);
+        console.log(t8);
+        console.log(t9);
         if(t==0){ //不是策划师
             $("#case").remove();
             $("#set").remove();
@@ -428,7 +433,7 @@
         if(<?php echo $_GET['CI_Type']?> == 7 || <?php echo $_GET['CI_Type']?> == 8){$("#upload").html("新增产品");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> != 9){$("#upload_dishes").remove()};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#upload").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 17 || <?php echo $_GET['CI_Type']?> == 18 || <?php echo $_GET['CI_Type']?> == 19 || <?php echo $_GET['CI_Type']?> == 20){$("#my_product").html('我的产品');$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 17 || <?php echo $_GET['CI_Type']?> == 18 || <?php echo $_GET['CI_Type']?> == 19 || <?php echo $_GET['CI_Type']?> == 20){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
 
 
         //上传按钮－点击事件

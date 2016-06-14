@@ -90,6 +90,7 @@ class OrderPayment extends InitActiveRecord
 		$criteria->compare('remarks',$this->remarks);
 		$criteria->compare('way',$this->way);
 		$criteria->compare('type',$this->type);
+		$criteria->compare('update_time',$this->update_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
