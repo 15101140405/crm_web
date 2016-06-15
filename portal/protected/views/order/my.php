@@ -339,6 +339,10 @@ small {
 
     $(function () {
 
+        $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+            var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+        });
+
         //删除订单
         $(".del").on("click",function(){
             $("li").unbind("click");

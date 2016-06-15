@@ -179,16 +179,16 @@
             <li>员工姓名</li>
             <li>业绩</li>
         </ul>
-        <ul class="term_list">
+        <ul class="term_list" id="staff_sales">
     <?php $i = 1; foreach ($arr_staff_sales as $key => $value) {?>
             <li class="term_item">
                 <a class="flexbox v_center" href="javascript:;">
                     <div class="item_box flex1">
-                        <div class="flexbox v_center"><?php echo $i++;?><img class="me_icon" src="images/set01.png" alt=""></div>
+                        <div class="flexbox v_center"><?php echo $i++;?><img class="me_icon" src="images/last_img.png" alt=""></div>
                         <div><?php echo $value['name']?></div>
                         <div><?php echo $value['sales']?></div>
                     </div>
-                    <img class="arrow" src="images/arrow_right.png" alt="">
+                    <!-- <img class="arrow" src="images/arrow_right.png" alt=""> -->
                 </a>
             </li>
     <?php }?>
@@ -196,16 +196,21 @@
     </section>
 
     <script src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <script src="js/zepto.min.js"></script>
 <script src="js/common.js"></script>
 <script>
 $(function() {
+    //导航
     $("#today_management").on("click",function(){
         location.href = "<?php echo $this->createUrl('report/daily_management');?>&account_id=<?php echo $_GET['account_id']?>&staff_hotel_id=<?php echo $_GET['staff_hotel_id']?>";
     });
     $("#order_list").on("click",function(){
         location.href = "<?php echo $this->createUrl('report/order_list');?>&account_id=<?php echo $_GET['account_id']?>&staff_hotel_id=<?php echo $_GET['staff_hotel_id']?>";
     });
+
+    //末尾标示
+    $("#staff_sales li:not(':last-child')").find(".me_icon").css('visibility','hidden');
 })
 </script>
 </body>

@@ -54,7 +54,7 @@
             }
             //存入数据库且存入本地存储，返回存入客户的ID
             // $.postJSON('#',{linkman_name:$("#linkman_name input").val(), linkman_phone:$("#linkman_phone input").val()},function(retval){
-            $.post('<?php echo $this->createUrl('meeting/insertLinkman');?>',{order_id:<?php echo $_GET['order_id']?>, linkman_name:$("#linkman_name input").val(), linkman_phone:$("#linkman_phone input").val(), company_id:"<?php echo $_GET['company_id'];?>"},function(retval){
+            $.post('<?php echo $this->createUrl('meeting/insertLinkman');?>',{order_id:'<?php echo $_GET['order_id']?>', linkman_name:$("#linkman_name input").val(), linkman_phone:$("#linkman_phone input").val(), company_id:"<?php echo $_GET['company_id'];?>"},function(retval){
                 // alert(retval);
             //  if(retval.success){
             //存入本地存储，能显示在列表最上方

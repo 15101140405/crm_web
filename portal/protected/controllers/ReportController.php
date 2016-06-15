@@ -260,10 +260,7 @@ class ReportController extends InitController
                         ':account_id' => $_GET['account_id']
                     )
             ));
-        $wedding_all = 0;
-        $meeting_all = 0;
-        $wedding_doing = 0;
-        $meeting_doing = 0;
+
         $sure_order_id = "(";
 
         foreach ($order_total as $key => $value) {
@@ -272,12 +269,6 @@ class ReportController extends InitController
             // print_r(date('M'));die;
             if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4 || $value['order_status'] == 5 || $value['order_status'] == 6){
                 if($t1[0] == date('Y')){$sure_order_id .= $value['id'].",";};
-                if($t1[0] >= date('Y')){
-                    if($value['order_type'] == 1){$meeting_all++;}else if($value['order_type'] == 2){$wedding_all++;};
-                    if($t1[1] >= date('m') && $t1[2] >= date('')){
-                        if($value['order_type'] == 1){$meeting_doing++;}else if($value['order_type'] == 2){$wedding_doing++;};
-                    };  
-                };
             };
         };
         $sure_order_id = substr($sure_order_id,0,strlen($sure_order_id)-1);
@@ -308,7 +299,7 @@ class ReportController extends InitController
 
         // print_r(json_encode($order_product_designOrder));die;
 
-        $hotel_total_sales = 0;
+
 
         $design_person_sales = array();
         $tem_id = $order_product_designOrder[0]['designer_id'];
@@ -319,19 +310,15 @@ class ReportController extends InitController
             if($value['designer_id'] != $tem_id){
                 $t_total_sales = 0;
             };
-            if($value['supplier_type_id'] == 2){
-                $hotel_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1)*(1+$value['actual_service_ratio']*0.01);
-            }else{
+            if($value['supplier_type_id'] != 2){
                 $t=explode(',', $value['discount_range']);
                 $tem = 0;
                 foreach ($t as $key1 => $value1) {
                     if($value1 == $value['supplier_type_id']){$tem++;};
                 };
                 if($tem == 0){//不在折扣范围内
-                    $hotel_total_sales += $value['actual_price']*$value['unit'];
                     $t_total_sales += $value['actual_price']*$value['unit'];
                 }else{//在折扣范围内
-                    $hotel_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1);
                     $t_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1);
                 };
             };
