@@ -23,7 +23,7 @@
         <li id="order_list">
             <a href="javascript:;">
                 <img src="images/order_list.png" alt="">
-                <p>订单汇总</p>
+                <p>待执行订单</p>
             </a>
         </li>
     </ul>
@@ -39,7 +39,7 @@
             <li class="term_item">
                 <a class="flexbox v_center" href="javascript:;">
                     <div class="item_box flex1">
-                        <div class="flexbox v_center"><?php echo $value['order_date']?><img class="me_icon" src="images/set01.png" alt=""></div>
+                        <div class="flexbox v_center"><?php echo $value['order_date']?><img class="me_icon" src="images/<?php if($value['order_type']==1){echo "meeting.png";}else if($value['order_type']==2){echo "wedding.png";}?>" alt=""></div>
                         <div><?php echo $value['pd']?></div>
                         <div><?php echo $value['tuidan']?></div>
                     </div>
