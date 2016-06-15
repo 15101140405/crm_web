@@ -173,7 +173,7 @@
                 };
                 $.post('<?php echo $this->createUrl("meeting/meetinginsert");?>',new_order_info,function(retval){
                         /*if(retval.success){*/
-                            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&from=selecttime&company_id=&order_id="+retval;
+                            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&category=&set_id=<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>&product_id=<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>&from=selecttime&company_id=&order_id="+retval;
                         /*}else{*/
                     //  alert("BI偷了个懒！");
                     // }
@@ -188,7 +188,7 @@
                 };
                 $.post('<?php echo $this->createUrl("meeting/updatetime");?>',data,function(retval){
                         /*if(retval.success){*/
-                            location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&order_id=<?php echo $_GET['order_id']?>";
+                            location.href = "<?php echo $this->createUrl("meeting/detailinfo");?>&category=&order_id=<?php echo $_GET['order_id']?>";
                         /*}else{*/
                     //  alert("BI偷了个懒！");
                     // }

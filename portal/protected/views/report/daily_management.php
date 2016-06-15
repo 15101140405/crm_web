@@ -14,47 +14,29 @@
     <h1 class="title"><?php echo $hotel_name?>［<?php echo date("Y-m-d",time())?>］</h1>
     <!--导航-->
     <ul class="navlist flexbox">
-        <li>
+        <li id="today_management">
             <a href="javascript:;">
-                <img src="images/set01.png" alt="">
+                <img src="images/today_management.png" alt="">
                 <p>今日简报</p>
             </a>
         </li>
-        <li>
+        <li id="order_list">
             <a href="javascript:;">
-                <img src="images/set01.png" alt="">
+                <img src="images/order_list.png" alt="">
                 <p>订单汇总</p>
             </a>
         </li>
-        <!-- <li>
-            <a href="javascript:;">
-                <img src="images/set01.png" alt="">
-                <p>标题</p>
-            </a>
-        </li>
-        <li>
-            <a href="javascript:;">
-                <img src="images/set01.png" alt="">
-                <p>标题</p>
-            </a>
-        </li>
-        <li>
-            <a href="javascript:;">
-                <img src="images/set01.png" alt="">
-                <p>标题</p>
-            </a>
-        </li> -->
     </ul>
     <!--内容区1-->
     <section class="daily_container">
         <div class="flexbox v_center title_box">
-            <img src="images/set01.png" alt="">
+            <img src="images/today_gl.png" alt="">
             <h2 class="green">今日经营概览</h2>
         </div>
         <ul class="daily_list">
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/today_gl.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $indoor;?></em>个</p>
@@ -63,7 +45,7 @@
             </li>
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/today_gl.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $open_order?></em>个</p>
@@ -75,13 +57,13 @@
     <!--内容区1-->
     <section class="daily_container">
         <div class="flexbox v_center title_box">
-            <img src="images/set01.png" alt="">
+            <img src="images/total_jb.png" alt="">
             <h2 class="green">累计订单简报［<?php echo date('Y')?>～］</h2>
         </div>
         <ul class="daily_list">
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/total_jb.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $wedding_all?></em>个</p>
@@ -90,7 +72,7 @@
             </li>
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/total_jb.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $meeting_all?></em>个</p>
@@ -99,7 +81,7 @@
             </li>
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/total_jb.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $wedding_doing?></em>个</p>
@@ -108,7 +90,7 @@
             </li>
             <li class="flexbox">
                 <div class="imgbox">
-                    <img src="images/man_icon.png" alt="">
+                    <img src="images/total_jb.png" alt="">
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $meeting_doing?></em>个</p>
@@ -120,7 +102,7 @@
     <!--内容区2-->
     <section class="daily_container">
         <div class="flexbox v_center title_box">
-            <img src="images/set01.png" alt="">
+            <img src="images/sales_detail.png" alt="">
             <h2 class="blue flex1">销售详情（<?php echo date('Y')?>）</h2>
             <img src="images/set01.png" alt="">
         </div>
@@ -128,7 +110,7 @@
             <ul class="target_list">
                 <li class="flexbox">
                     <div class="img_box">
-                        <img src="images/man_icon.png" alt="">
+                        <img src="images/sales_detail.png" alt="">
                     </div>
                     <div class="info_box">
                         <p>目标</p>
@@ -137,7 +119,7 @@
                 </li>
                 <li class="flexbox">
                     <div class="img_box">
-                        <img src="images/man_icon.png" alt="">
+                        <img src="images/sales_detail.png" alt="">
                     </div>
                     <div class="info_box">
                         <p>销售额</p>
@@ -146,7 +128,7 @@
                 </li>
                 <li class="flexbox">
                     <div class="img_box">
-                        <img src="images/man_icon.png" alt="">
+                        <img src="images/sales_detail.png" alt="">
                     </div>
                     <div class="info_box">
                         <p>回款</p>
@@ -163,6 +145,18 @@
     </section>
 
     <script src="js/echarts.js"></script>
+    <script src="js/zepto.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+$(function() {
+    $("#today_management").on("click",function(){
+        location.href = "<?php echo $this->createUrl('report/daily_management');?>&account_id=<?php echo $_GET['account_id']?>&staff_hotel_id=<?php echo $_GET['staff_hotel_id']?>";
+    });
+    $("#order_list").on("click",function(){
+        location.href = "<?php echo $this->createUrl('report/order_list');?>&account_id=<?php echo $_GET['account_id']?>&staff_hotel_id=<?php echo $_GET['staff_hotel_id']?>";
+    });
+})
+</script>
     <script type="text/javascript">
         require.config({
             paths: {

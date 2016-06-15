@@ -463,6 +463,15 @@ class ProductController extends InitController
     public function actionNeworder()
     {
         //存order表
+        $company = array();
+        $linkman = array();
+        if(isset($_POST['company_id'])){
+            $company = OrderMeetingCompany::model()->findByPk($_POST['company_id']);            
+        };
+        if(isset($_POST['linkman_id'])){
+            $linkman = OrderMeetingCompanyLinkman::model()->findByPk($_POST['linkman_id']);            
+        };
+
         $payment= new Order;  
 
         $payment->account_id =$_SESSION['account_id'];
@@ -472,12 +481,12 @@ class ProductController extends InitController
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
         $payment->order_type = $_POST['order_type'];
         if ($_POST['order_type'] == 1) {
-            $payment->order_name = "新会议订单";
+            $payment->order_name = $company['company_name'];
         } else {
             $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
         }
         
-        
+        $wedding_set=array();
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
             $payment->feast_discount = $wedding_set['feast_discount']*10;
@@ -514,7 +523,16 @@ class ProductController extends InitController
             $payment->contact_phone =$_POST['linkman_phone'];
 
             $payment->save();
-         }
+         }else{
+            $payment= new OrderMeeting;  
+            $payment->account_id =$_SESSION['account_id'];
+            $payment->order_id =$id;
+            $payment->company_id =$_POST['company_id'];
+            $payment->company_linkman_id =$_POST['linkman_id'];
+            $payment->update_time =$_POST['update_time'];
+
+            $payment->save();
+         };
           
         
 
@@ -530,8 +548,8 @@ class ProductController extends InitController
             $type = "会议";
         };
   
-        // $touser="@all";//你要发的人，上线时恢复
-        $touser = 2222222;//测试，上线时去掉
+        $touser="@all";//你要发的人，上线时恢复
+        // $touser = 100;//测试，上线时去掉
         $toparty="";
         $totag="";
         $title="新客人进店了！";//标题

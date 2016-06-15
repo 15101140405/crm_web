@@ -61,6 +61,45 @@ class ReportController extends InitController
 
     }
 
+    public function actionOrder_list()
+    {
+
+        //取订单数据
+        $result = yii::app()->db->createCommand("select o1.id as order_id,order_type,order_date,s1.name as planner_name,s2.name as designer_name from `order` o1 left join staff s1 on o1.planner_id = s1.id left join staff s2 on o1.designer_id = s2.id where order_status in (2,3,4,5,6) and o1.account_id=".$_GET['account_id']." and o1.staff_hotel_id=".$_GET['staff_hotel_id']." order by order_date");
+        $result = $result->queryAll();
+        // print_r(json_encode($result));die;
+
+        $order_list = array();
+
+        foreach ($result as $key => $value) {//取推单渠道
+            $item = array();
+            $t = explode(' ', $value['order_date']);
+            $t1 = explode('-', $t[0]);
+            if($t1[0] >= date("Y") && $t1[1] >= date("m") && $t1[2] >= date("d")){
+                $item['order_date'] = $t[0];
+                $item['order_type'] = $value['order_type'];
+                $item['pd'] = $value['planner_name']."/".$value['designer_name'];
+                $result = yii::app()->db->createCommand("select s.name from order_product o left join supplier_product s on o.product_id = s.id where o.order_id=".$value['order_id']." and s.supplier_type_id=16");
+                $result = $result->queryAll();
+                // print_r($result);
+                if(empty($result)){
+                    $item['tuidan'] = '无';
+                }else{
+                    $item['tuidan'] = $result[0]['name'];
+                };
+                $order_list[] = $item;
+            };
+        };
+
+        //取门店名称
+        $hotel = StaffHotel::model()->findByPk($_GET['staff_hotel_id']);
+
+        $this->render('order_list',array(
+                'order_list' => $order_list,
+                'hotel' => $hotel
+            ));
+    }
+
     public function actionDaily_management()
     {
         //取当日进店数据

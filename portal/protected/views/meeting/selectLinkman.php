@@ -14,9 +14,9 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" data-icon="&#xe679;"></div>
+        <div class="l_btn" id="back" data-icon="&#xe679;"></div>
         <h2 class="page_title">选择联系人</h2>
-        <div class="r_btn" data-icon="&#xe6a3;"></div>
+        <div class="r_btn" id="next" data-icon="&#xe6a3;"></div>
     </div>
 
     <!-- 搜索
@@ -48,7 +48,7 @@
       </div>
        搜索 end -->
 
-    <a  class="btn add_customer">+ 新增联系人</a>
+    <a  class="btn add_customer" id="insert_linkman">+ 新增联系人</a>
 
     <div class="select_ulist_module">
         <h4 class="module_title">选择联系人</h4>
@@ -64,6 +64,9 @@
         }
         ?>
         </ul>
+    </div>
+    <div class="bottom_fixed_bar" id='bottom'>
+        <div class="btn" style="width: 100px;float: right;" id="select_linkman">确定</div>
     </div>
 </article>
 <script src="js/zepto.min.js"></script>
@@ -81,6 +84,13 @@
         $(".l_btn").remove();
         $(".r_btn").html("确定");
         $(".r_btn").attr("data-icon","");
+      };
+      if("<?php echo $_GET['from']?>" == "product_store"){
+        // alert(1);
+        $("#back").remove();
+        $("#next").remove();
+      }else{
+        $("#bottom").remove();
       };
 
       //客户选择勾选
@@ -114,7 +124,7 @@
 
             var meeting_info = {
                   account_id : <?php echo $_SESSION['account_id']?>,
-                  order_id : <?php echo $_GET['order_id'];?>,
+                  order_id : '<?php echo $_GET['order_id'];?>',
                   company_id : <?php echo $_GET['company_id'];?>,
                   company_linkman_id : parseInt(choose_obj.attr("data-id")),
                   layout_id : 1,
@@ -147,9 +157,21 @@
         
 
       //新增按钮
-      $(".btn").on("click", function () {
+      $("#insert_linkman").on("click", function () {
           location.href="<?php echo $this->createUrl("meeting/addLinkman");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php echo $_GET['company_id']?>"
       });
+
+      //确定，返回产品库新增订单
+      $("#select_linkman").on("click",function(){
+        var choose_obj = $(".select_ulist .select_selected");
+        if($('.select_ulist_item').hasClass("select_selected")){
+          location.href = "<?php echo $this->createUrl("product/createorder");?>&set_id=<?php if(isset($_GET['set_id'])){ echo $_GET['set_id'];}?>&product_id=<?php if(isset($_GET['product_id'])){ echo $_GET['product_id'];}?>&from=<?php if(isset($_GET['from'])){echo $_GET['from'];}?>&category=<?php if(isset($_GET['category'])){ echo $_GET['category'];}?>&company_id=<?php if(isset($_GET['company_id'])){ echo $_GET['company_id'];}?>&linkman_id="+choose_obj.attr("data-id");
+        }else{
+          alert("请先选择联系人！");
+        };
+      });
+
+      
 
     });
 </script>

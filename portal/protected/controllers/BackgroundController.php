@@ -633,7 +633,7 @@ class BackgroundController extends InitController
         $case = array();
         $resources = array();
         $pic="";
-        
+
         if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){
             $case = CaseInfo::model()->findByPk($_GET['ci_id']);
             if(!empty($case)){
@@ -1162,7 +1162,72 @@ class BackgroundController extends InitController
     public function actionSet_upload()
     {
         $id = "";
-        if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){
+        if(!isset($_POST['category'])){
+            if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){
+                $data = new Wedding_set;
+                $data ->staff_hotel_id = $_POST['staff_hotel_id'];
+                $data ->name = $_POST['CI_Name'];
+                $data ->category = $_POST['category'];
+                $data ->final_price = $_POST['final_price'];
+                $data ->feast_discount = $_POST['feast_discount'];
+                $data ->other_discount = $_POST['other_discount'];
+                $data ->product_list = $_POST['product_list'];
+                $data ->set_show = 1;
+                $data ->update_time = date('y-m-d h:i:s',time());
+                $data->save();
+                $id = $data->attributes['id'];
+            }else{
+                $data = new Wedding_set_theme;
+                $data ->staff_hotel_id = $_POST['staff_hotel_id'];
+                $data ->name = $_POST['CI_Name'];
+                $data ->category = $_POST['category'];
+                $data ->final_price = $_POST['final_price'];
+                $data ->feast_discount = $_POST['feast_discount'];
+                $data ->other_discount = $_POST['other_discount'];
+                $data ->service_product_list = $_POST['product_list'];
+                $data ->set_show = 1;
+                $data ->update_time = date('y-m-d h:i:s',time());
+                $data->save();
+                $id = $data->attributes['id'];
+
+                $staff_hotel = StaffHotel::model()->findAll(array(
+                        'condition' => 'account_id = :account_id',
+                        'params' => array(
+                                ':account_id' => $_POST['account_id']
+                            )
+                    ));
+                $t = explode(',', $_POST['product_list']);
+                $service_product_list = "";
+                foreach ($t as $key => $value) {
+                    $tem = explode('|', $value);
+                    $supplier_product = SupplierProduct::model()->findAll(array(
+                            'condition' => 'account_id=:account_id && service_product_id=:service_product_id',
+                            'params' => array(
+                                    ':account_id' => $_POST['account_id'],
+                                    ':service_product_id' => $tem[0]
+                                )
+                        ));
+                    $service_product_list .= $supplier_product[0]['id']."|".$tem[1]."|".$tem[2]."|".$tem[3].",";
+                };
+
+                $service_product_list = substr($service_product_list,0,strlen($service_product_list)-1);
+
+                foreach ($staff_hotel as $key => $value) {
+                    $data = new Wedding_set;
+                    $data ->staff_hotel_id = $value['id'];
+                    $data ->name = $_POST['CI_Name'];
+                    $data ->category = $_POST['category'];
+                    $data ->final_price = $_POST['final_price'];
+                    $data ->feast_discount = $_POST['feast_discount'];
+                    $data ->other_discount = $_POST['other_discount'];
+                    $data ->product_list = $service_product_list;
+                    $data ->set_show = 1;
+                    $data ->theme_id = $id;
+                    $data ->update_time = date('y-m-d h:i:s',time());
+                    $data->save();
+                };
+            };
+        }else{
             $data = new Wedding_set;
             $data ->staff_hotel_id = $_POST['staff_hotel_id'];
             $data ->name = $_POST['CI_Name'];
@@ -1175,56 +1240,6 @@ class BackgroundController extends InitController
             $data ->update_time = date('y-m-d h:i:s',time());
             $data->save();
             $id = $data->attributes['id'];
-        }else{
-            $data = new Wedding_set_theme;
-            $data ->staff_hotel_id = $_POST['staff_hotel_id'];
-            $data ->name = $_POST['CI_Name'];
-            $data ->category = $_POST['category'];
-            $data ->final_price = $_POST['final_price'];
-            $data ->feast_discount = $_POST['feast_discount'];
-            $data ->other_discount = $_POST['other_discount'];
-            $data ->service_product_list = $_POST['product_list'];
-            $data ->set_show = 1;
-            $data ->update_time = date('y-m-d h:i:s',time());
-            $data->save();
-            $id = $data->attributes['id'];
-
-            $staff_hotel = StaffHotel::model()->findAll(array(
-                    'condition' => 'account_id = :account_id',
-                    'params' => array(
-                            ':account_id' => $_POST['account_id']
-                        )
-                ));
-            $t = explode(',', $_POST['product_list']);
-            $service_product_list = "";
-            foreach ($t as $key => $value) {
-                $tem = explode('|', $value);
-                $supplier_product = SupplierProduct::model()->findAll(array(
-                        'condition' => 'account_id=:account_id && service_product_id=:service_product_id',
-                        'params' => array(
-                                ':account_id' => $_POST['account_id'],
-                                ':service_product_id' => $tem[0]
-                            )
-                    ));
-                $service_product_list .= $supplier_product[0]['id']."|".$tem[1]."|".$tem[2]."|".$tem[3].",";
-            };
-
-            $service_product_list = substr($service_product_list,0,strlen($service_product_list)-1);
-
-            foreach ($staff_hotel as $key => $value) {
-                $data = new Wedding_set;
-                $data ->staff_hotel_id = $value['id'];
-                $data ->name = $_POST['CI_Name'];
-                $data ->category = $_POST['category'];
-                $data ->final_price = $_POST['final_price'];
-                $data ->feast_discount = $_POST['feast_discount'];
-                $data ->other_discount = $_POST['other_discount'];
-                $data ->product_list = $service_product_list;
-                $data ->set_show = 1;
-                $data ->theme_id = $id;
-                $data ->update_time = date('y-m-d h:i:s',time());
-                $data->save();
-            };
         };
 
         $data = new CaseInfo;

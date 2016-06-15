@@ -1,5 +1,6 @@
 /*经营日报css*/
-.title{
+
+.title {
     height: 5rem;
     line-height: 5rem;
     color: #fff;
@@ -7,85 +8,179 @@
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
 }
-.navlist{
+
+.navlist {
     padding: 0 1rem;
     margin-bottom: 1.5rem;
 }
-.navlist li{
-    -webkit-box-flex: 1;-moz-box-flex: 1;-webkit-flex: 1;flex: 1;
+
+.navlist li {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
     text-align: center;
 }
-.navlist li a{
+
+.navlist li a {
     color: #bababb;
 }
-.navlist li img{
+
+.navlist li img {
     display: inline-block;
-    width:4rem; 
+    width: 4rem;
     margin-bottom: .5rem;
 }
-.daily_container{
+
+.daily_container {
     margin: 0 1rem 1.5rem 1rem;
     background: #fff;
     border-radius: 1rem;
     padding: 1.5rem;
 }
-.daily_container .title_box{
+
+.daily_container .title_box {
     font-size: 1.6rem;
     margin-bottom: 2.5rem;
 }
-.daily_container .title_box img{
-    width:3rem;
+
+.daily_container .title_box img {
+    width: 3rem;
     margin-right: 1rem;
 }
-.green{
+
+.green {
     color: #9fd0a2;
 }
-.blue{
+
+.blue {
     color: #8fbef0;
 }
-.daily_list{
+
+.daily_list {
     overflow: hidden;
 }
-.daily_list li{
+
+.daily_list li {
     float: left;
     width: 50%;
     box-sizing: border-box;
     margin-bottom: 1rem;
 }
-.daily_list li .imgbox{
+
+.daily_list li .imgbox {
     width: 2rem;
     height: 2.2rem;
     margin-right: 1rem;
-    padding:.2rem 1rem .2rem 0;
+    padding: .2rem 1rem .2rem 0;
     border-right: 1px solid #e6e6e6;
-    justify-content:flex-start;
+    justify-content: flex-start;
 }
-.daily_list .info_box p:last-child{
+
+.daily_list .info_box p:last-child {
     color: #666;
     font-size: 1.4rem;
 }
 
-.daily_list .info_box p:first-child{
+.daily_list .info_box p:first-child {
     margin-bottom: .2rem;
     color: #999;
 }
-.daily_list .info_box em,.target_list .info_box em{
+
+.daily_list .info_box em,
+.target_list .info_box em {
     font-size: 2.5rem;
 }
-.target_list{
+
+.target_list {
     color: #666;
     font-size: 1.4rem;
     margin-right: 1rem;
 }
-.target_list li{
+
+.target_list li {
     margin-bottom: 1.5rem;
 }
-.target_list .info_box p:last-child{
+
+.target_list .info_box p:last-child {
     color: #999;
 }
-.target_list .img_box{
+
+.target_list .img_box {
     width: 1rem;
     margin-right: .5rem;
     padding-top: .3rem;
-     justify-content:flex-start;
+    justify-content: flex-start;
+}
+
+
+/*daity_list css*/
+
+.daily_list_c {
+    padding: 1rem 0;
+}
+
+.tab_nav {
+    height: 4rem;
+    line-height: 4rem;
+    border-bottom: 1px solid #d2d2d2;
+    color: #999;
+    font-size: 1.4rem;
+    padding: 0 1.7rem 0 1rem;
+}
+
+.tab_nav li {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: center;
+}
+
+.term_list {
+    padding-left: 1rem;
+}
+
+.term_list .term_item a {
+    min-height: 3.4rem;
+    padding: .5rem 1rem .5rem 0;
+    color: #666;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.term_list .term_item .arrow {
+    width: .7rem;
+    height: 1.2rem;
+}
+
+.term_list .term_item .item_box {
+    display: box;
+    display: -webkit-box;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+}
+
+.term_list .term_item .item_box .me_icon {
+    width: 2rem;
+    height: 2rem;
+    margin-left: .5rem;
+}
+
+.term_list .term_item .item_box>div {
+    -wekit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: center;
+    box-pack: center;
+    -webkit-box-pack: center;
+    -webkit-flex-pack: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    box-align: center;
+    -webkit-box-align: center;
+    -webkit-flex-align: center;
+    align-items: center;
+    -webkit-align-items: center;
 }
