@@ -1167,8 +1167,8 @@ class BackgroundController extends InitController
             $data ->name = $_POST['CI_Name'];
             $data ->category = $_POST['category'];
             $data ->final_price = $_POST['final_price'];
-            $data ->feast_discount = $_POST['feast_discount'];
-            $data ->other_discount = $_POST['other_discount'];
+            // $data ->feast_discount = $_POST['feast_discount'];
+            // $data ->other_discount = $_POST['other_discount'];
             $data ->product_list = $_POST['product_list'];
             $data ->set_show = 1;
             $data ->update_time = date('y-m-d h:i:s',time());

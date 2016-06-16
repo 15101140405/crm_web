@@ -129,7 +129,6 @@
       });
     }
       
-
     //新增按钮
     $(".btn").on("click", function () {
       var choose_obj = $(".select_ulist .select_selected");

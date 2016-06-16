@@ -2705,6 +2705,7 @@ class ReportController extends InitController
         };
         return $data;
     }
+    
 
     public function order_num()
     {

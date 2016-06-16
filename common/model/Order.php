@@ -106,7 +106,7 @@ class Order extends InitActiveRecord
 		$criteria->compare('order_time',$this->order_time,true);
 		$criteria->compare('end_time',$this->end_time,true);
 		$criteria->compare('order_status',$this->order_status);
-		$criteria->compare('update_time',$this->update_time,true);
+		$criteria->compare('update_time',$this->update_time);
 		$criteria->compare('other_discount',$this->other_discount,true);
 		$criteria->compare('feast_discount',$this->feast_discount,true);
 		$criteria->compare('except_table',$this->except_table,true);

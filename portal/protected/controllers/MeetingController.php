@@ -50,6 +50,7 @@ class MeetingController extends InitController
         $order_id = $_GET['order_id'];
         // var_dump($order_id);
         $companyForm = new CompanyForm();
+        $staff_hotel_id = $_SESSION['staff_hotel_id'];
         $companys = $companyForm->getcompanyList($accountId,$order_id);
         // var_dump($companys);
         $ordermeeting = OrderMeeting::model()->find(array(

@@ -84,6 +84,9 @@ class StaffHotel extends InitActiveRecord
 		$criteria->compare('name',$this->name);
 		$criteria->compare('department_id',$this->department_id);
 		$criteria->compare('update_time',$this->update_time);
+		$criteria->compare('fxiaoke_AppID',$this->fxiaoke_AppID);
+		$criteria->compare('fxiaoke_APPSecret',$this->fxiaoke_APPSecret);
+		$criteria->compare('permanentCode',$this->permanentCode);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
