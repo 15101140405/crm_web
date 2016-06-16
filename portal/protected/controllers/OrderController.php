@@ -1139,8 +1139,10 @@ class OrderController extends InitController
         foreach ($result as $key => $value) {
             $total_cost += $value['actual_unit_cost']*$value['unit'];
         };
-        if($total_cost == 0){
-            echo "zero_error";
+        $order = yii::app()->db->createCommand("select s1.name as designer_name,s2.name as planner_name ");
+        $order = $order->queryAll();
+        if($total_cost == 0 && empty($result)){
+            echo "策划师还没录入商品，请您联系本单策划师：".;
         }else{
             $temp = $_POST['money']/$total_cost;
             foreach ($result as $key => $value) {
