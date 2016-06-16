@@ -643,6 +643,16 @@ class ProductController extends InitController
             Order::model()->updateByPk($_POST['order_id'],array('other_discount' => $wedding_set['other_discount']*10));    
         };
 
+        $data = new OrderSet;
+        $data ->order_id=$_POST['order_id'];
+        $data ->wedding_set_id=$_POST['set_id'];
+        $data ->order_product_list=$wedding_set['product_list'];
+        $data ->final_price=$wedding_set['final_price'];
+        $data ->update_time=date('Y-m-d h:i:s',time());
+        $data ->save();
+        $order_set_id = $data->attributes['id'];
+
+
         /*print_r($wedding_set);die;*/
         $productdata_list = explode(",",$wedding_set['product_list']);
         $ces = 0;
@@ -653,12 +663,13 @@ class ProductController extends InitController
             $admin->account_id=$_SESSION['account_id']; 
             $admin->order_id=$_POST['order_id'];
             $admin->product_id=$product[0]; 
+            $admin->order_set_id=$order_set_id; 
             $admin->actual_price=$product[1]; 
             $admin->unit=$product[2]*$table_num; 
             $admin->actual_unit_cost=$product[3]; 
             $admin->actual_service_ratio=$fuwufei; 
             $admin->remark=$_POST['remark']; 
-            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->update_time=date('Y-m-d h:i:s',time());
             $admin->save();
             $ces ++;
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 
