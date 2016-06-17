@@ -111,7 +111,7 @@
     <div class="upload_wapper">
         <div class="video_desc clearfix" style="margin-bottom:30px;margin-top:80px">
             <ul class="left desc_box">
-        <?php if(!isset($_GET['type'])){?>
+        <?php if($_GET['type'] == ""){?>
                 <li class="desc_item clearfix">
                     <div class="tit_box left">
                         <label for="">案例名称</label>
@@ -202,6 +202,8 @@
         <?php if(isset($_GET['type'])){
                 if($_GET['type'] == 'theme'){?>
                     <img src="<?php echo $case['CI_Pic']?>" style="width:120px;" alt="" id="poster_img">
+        <?php }else{ ?>
+                    <img src="images/cover.jpg" alt="" id="poster_img">
         <?php }}else{?>
                     <img src="images/cover.jpg" alt="" id="poster_img">
         <?php }?>
@@ -339,39 +341,24 @@
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $pic ?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#CI_Show").val(<?php if(isset($case['CI_Show'])){echo $case['CI_Show'];}?>);
 
         //保存
         $("#save").on("click",function(){
-            var data = {
-                CI_Name : $("#case_name").val(),
-                CI_Show : $("#CI_Show option:selected").val(),
-                CI_Pic : $.cookie('img'),
-                case_resource : $.cookie('imgs'),
-                account_id : $.cookie('account_id'),
-                product_list : "<?php echo $_GET['product_list']?>",
-                total_price : "<?php echo $_GET['product_list']?>",
-                final_price : "<?php echo $_GET['final_price']?>",
-                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
-                // feast_discount : <?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>,
-                // other_discount : <?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>,
-            <?php if(!isset($_GET['type'])){?>
-                category : 2,
-                CI_Type : 5,
-            <?php }else if($_GET['type'] == 'meeting_set'){?>
-                category : 1,
-                CI_Type : 12,
-            <?php }else if($_GET['type'] == 'theme' && !isset($_GET['ci_id'])){?>
-                category : 5,
-                CI_Type : 4,
-            <?php }else if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){?>  //当有ci_id时，代表编辑
-                category : 5,
-                CI_Type : 4,
-                CI_ID : <?php echo $_GET['ci_id']?>,
-                CT_ID : <?php echo $_GET['ct_id']?>,
-            <?php }?>
-            };
-            console.log(data);
+            var data;
+            data = {
+                CI_Name: $("#case_name").val(),
+                CI_Show: $("#CI_Show option:selected").val(),
+                CI_Pic: $.cookie('img'),
+                case_resource: $.cookie('imgs'),
+                account_id: $.cookie('account_id'),
+                product_list: "<?php echo $_GET['product_list']?>",
+                total_price: "<?php echo $_GET['product_list']?>",
+                final_price: "<?php echo $_GET['final_price']?>",
+                feast_discount: "",
+                other_discount: "",
+                staff_hotel_id: $("#hotel option:selected").attr("staff-hotel-id"),
+            }
             $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
             if(data.CI_Name == ""){$("#name_t").removeClass("hid")};
@@ -380,7 +367,7 @@
             if($("#case_name").val() == "" || $.cookie("img") == null || $.cookie("img") == "null" || $.cookie("imgs") == null || $.cookie("imgs") == "null"){
                 alert("请补全信息");
             }else{
-            <?php if(isset($_GET['type'])){?>
+            <?php if($_GET['type'] != ""){?>
                 <?php if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){?>
                 var url = "<?php echo $this->createUrl("background/theme_edit");?>";
                 <?php }else{?>
@@ -389,11 +376,11 @@
             <?php }else{?>
                 var url = "<?php echo $this->createUrl("background/set_upload");?>";
             <?php }?>
-                console.log(url);
+                console.log(data);
                 $.post(url,data,function(){
                     $.cookie('img',null); 
                     $.cookie('imgs',null); 
-                <?php if(!isset($_GET['type'])){?>
+                <?php if($_GET['type']==""){?>
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";
                 <?php }else if($_GET['type'] == 'meeting_set'){?>
                     location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=5";

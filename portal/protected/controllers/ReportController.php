@@ -61,6 +61,45 @@ class ReportController extends InitController
 
     }
 
+    public function actionOrder_list()
+    {
+
+        //取订单数据
+        $result = yii::app()->db->createCommand("select o1.id as order_id,order_type,order_date,s1.name as planner_name,s2.name as designer_name from `order` o1 left join staff s1 on o1.planner_id = s1.id left join staff s2 on o1.designer_id = s2.id where order_status in (2,3,4,5,6) and o1.account_id=".$_GET['account_id']." and o1.staff_hotel_id=".$_GET['staff_hotel_id']." order by order_date");
+        $result = $result->queryAll();
+        // print_r(json_encode($result));die;
+
+        $order_list = array();
+
+        foreach ($result as $key => $value) {//取推单渠道
+            $item = array();
+            $t = explode(' ', $value['order_date']);
+            $t1 = explode('-', $t[0]);
+            if($t1[0] >= date("Y") && $t1[1] >= date("m") && $t1[2] >= date("d")){
+                $item['order_date'] = $t[0];
+                $item['order_type'] = $value['order_type'];
+                $item['pd'] = $value['planner_name']."/".$value['designer_name'];
+                $result = yii::app()->db->createCommand("select s.name from order_product o left join supplier_product s on o.product_id = s.id where o.order_id=".$value['order_id']." and s.supplier_type_id=16");
+                $result = $result->queryAll();
+                // print_r($result);
+                if(empty($result)){
+                    $item['tuidan'] = '无';
+                }else{
+                    $item['tuidan'] = $result[0]['name'];
+                };
+                $order_list[] = $item;
+            };
+        };
+
+        //取门店名称
+        $hotel = StaffHotel::model()->findByPk($_GET['staff_hotel_id']);
+
+        $this->render('order_list',array(
+                'order_list' => $order_list,
+                'hotel' => $hotel
+            ));
+    }
+
     public function actionDaily_management()
     {
         //取当日进店数据
@@ -126,6 +165,8 @@ class ReportController extends InitController
         };
         $sure_order_id = substr($sure_order_id,0,strlen($sure_order_id)-1);
         $sure_order_id .= ")";
+        
+        // print_r($sure_order_id);die;
 
         
 
@@ -142,6 +183,8 @@ class ReportController extends InitController
             "left join staff s2 on planner_id = s2.id".
             " where order_id in " .$sure_order_id. "order by designer_id");
         $order_product_designOrder = $order_product_designOrder->queryAll(); 
+
+        // print_r(json_encode($order_product_designOrder));die;
 
         $hotel_total_sales = 0;
 
@@ -211,6 +254,30 @@ class ReportController extends InitController
 
 
         //计算个人业绩
+        $order_total = Order::model()->findAll(array( //取门店累计订单
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $_GET['account_id']
+                    )
+            ));
+
+        $sure_order_id = "(";
+
+        foreach ($order_total as $key => $value) {
+            $t = explode(' ', $value['order_date']);
+            $t1 = explode('-', $t[0]);
+            // print_r(date('M'));die;
+            if($value['order_status'] == 2 || $value['order_status'] == 3 || $value['order_status'] == 4 || $value['order_status'] == 5 || $value['order_status'] == 6){
+                if($t1[0] == date('Y')){$sure_order_id .= $value['id'].",";};
+            };
+        };
+        $sure_order_id = substr($sure_order_id,0,strlen($sure_order_id)-1);
+        $sure_order_id .= ")";
+
+
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+
         $order_product_planGroup = yii::app()->db->createCommand("". //个人餐饮业绩
             "select planner_id,s2.name,sum(actual_price*unit*feast_discount*0.1*(1+actual_service_ratio*0.01)) as total ".
             "from order_product left join `order` on order_id = `order`.id ".
@@ -218,8 +285,69 @@ class ReportController extends InitController
             " where order_id in " .$sure_order_id. "group by planner_id");
         $order_product_planGroup = $order_product_planGroup->queryAll(); 
 
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+
+        $order_product_designOrder = yii::app()->db->createCommand("".  //个人策划业绩
+            "select actual_price,order_product.unit,actual_service_ratio,designer_id,planner_id,other_discount,feast_discount,discount_range,supplier_type_id,s1.`name` as designer_name,s2.`name` as planner_name ".
+            "from order_product left join `order` on order_id = `order`.id ".
+            "left join supplier_product on product_id = supplier_product.id ".
+            "left join staff s1 on designer_id = s1.id ".
+            "left join staff s2 on planner_id = s2.id".
+            " where order_id in " .$sure_order_id. "order by designer_id");
+        $order_product_designOrder = $order_product_designOrder->queryAll(); 
+
+        // print_r(json_encode($order_product_designOrder));die;
+
+
+
+        $design_person_sales = array();
+        $tem_id = $order_product_designOrder[0]['designer_id'];
+        $t_total_sales = 0;//存储个人策划总价
+        $tem_person_data = array();//存储个人信息
+
+        foreach ($order_product_designOrder as $key => $value){
+            if($value['designer_id'] != $tem_id){
+                $t_total_sales = 0;
+            };
+            if($value['supplier_type_id'] != 2){
+                $t=explode(',', $value['discount_range']);
+                $tem = 0;
+                foreach ($t as $key1 => $value1) {
+                    if($value1 == $value['supplier_type_id']){$tem++;};
+                };
+                if($tem == 0){//不在折扣范围内
+                    $t_total_sales += $value['actual_price']*$value['unit'];
+                }else{//在折扣范围内
+                    $t_total_sales += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1);
+                };
+            };
+
+            if($value['designer_id'] == $tem_id){
+                $tem_person_data = array(
+                        'designer_id' => $value['designer_id'],
+                        'name' => $value['designer_name'],
+                        'total' => $t_total_sales
+                    ); 
+            }else{
+                $design_person_sales[] = $tem_person_data;
+                $tem_person_data = array(
+                        'designer_id' => $value['designer_id'],
+                        'name' => $value['designer_name'],
+                        'total' => $t_total_sales
+                    );
+            };
+            // echo $tem_id."|";
+            $tem_id = $value['designer_id'];
+        };
+
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+
         $arr_staff_sales = array();//存全部员工销售额;
         $staff_sales = array();//存个人销售额；
+
+        // print_r($design_person_sales);die;
 
         foreach ($order_product_planGroup as $key_p => $value_p) {
             $staff_sales['id'] = $value_p['planner_id'];
@@ -241,14 +369,14 @@ class ReportController extends InitController
             };
             $arr_staff_sales[] = $staff_sales;
         };
-
+        // print_r($arr_staff_sales);die;
         foreach ($design_person_sales as $key => $value) {
             $staff_sales['id'] = $value['designer_id'];
             $staff_sales['name'] = $value['name'];
             $staff_sales['sales'] = $value['total'];
             $t=0;
             foreach ($arr_staff_sales as $k_arr => $val_arr) {
-                if($val_arr['id'] != $value_d['designer_id']){
+                if($val_arr['id'] == $value['designer_id']){
                     $t++;
                 };
             };
@@ -256,20 +384,23 @@ class ReportController extends InitController
                 $arr_staff_sales[] = $staff_sales;
             };
         };
+        
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
 
-        $sales = array(
-                'xAxis' => '',
-                'series' => '',
-            );
         foreach ($arr_staff_sales as $key => $value) {
-            $sales['xAxis'] .= $value['name'].",";
-            $sales['series'] .= $value['sales'].",";
+            $arr_staff_sales[$key]['sales'] = round($value['sales']);        
+        };
+
+
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
+        $sales = array();
+        foreach ($arr_staff_sales as $user) {
+            $sales[] = $user['sales'];
         }
-
-        $sales['xAxis'] = substr($sales['xAxis'],0,strlen($sales['xAxis'])-1);
-        $sales['series'] = substr($sales['series'],0,strlen($sales['series'])-1);
-
-
+         
+        array_multisort($sales, SORT_DESC, $arr_staff_sales);
 
         // print_r($arr_staff_sales);die;
 
@@ -286,7 +417,7 @@ class ReportController extends InitController
                 'hotel_target' => $hotel['target'],
                 'hotel_name' => $hotel['name'],
                 'order_total_payment' => $order_total_payment,
-                'sales' => $sales
+                'arr_staff_sales' => $arr_staff_sales
             ));
     }
 

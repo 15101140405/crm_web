@@ -132,7 +132,7 @@ small {
                 </div>
             </li>
     <?php }else {?>
-            <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>">
+            <li order-type="<?php echo $value['order_type']?>" order-id="<?php echo $value['id']?>" order-status="<?php echo $value['order_status']?>">
                 <h3><?php echo $value['order_name']?></h3>
                 <div class="info flexbox flexcenter_v">
                     <div  style="margin-right: 10px;" >
@@ -203,6 +203,7 @@ $(function  () {
     $("[order-status = '5']").find('span').addClass("yellow").html("结算中");
     $("[order-status = '6']").find('span').addClass("gray").html("已完成");
 
+
     // li点击跳转
     $(".order_list li").find('.con').on("click",function(){
         order_type = $(this).parent().parent().attr("order-type");
@@ -242,6 +243,7 @@ $(function  () {
 
     //改变订单状态按钮
     buttonclick_xuanran();
+    $("[order-status = '1']").next().removeClass("lcs_off").addClass("lcs_on");
     function buttonclick_xuanran(){
         $('.switch').lc_switch();
         // triggered each time a field changes status

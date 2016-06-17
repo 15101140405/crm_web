@@ -263,15 +263,23 @@
         $("#create").on("click",function(){
             var product_list = "";
             $("#shopping_car li").each(function(){
-                var price = $(this).find(".product_price").val()*$("#final_price").val()/total_price;
+                var price = $(this).find(".product_price").val()*$("#final_price").val()/$("#total_price").html();
                 product_list += $(this).attr('product-id') +"|"+ price.toFixed(2) +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-        <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&product_list=" +product_list+ "&total_price=" +total_price+"&final_price=" +$("#final_price").val();
-        <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +total_price+"&final_price=" +$("#final_price").val();
-        <?php }?>
+            if ($("#final_price").val() == "") {
+                var final_price = $("#total_price").html();
+            } else{
+                var final_price = $("#final_price").val();
+            };
+            <?php if(!isset($_GET['type'])){?>
+                var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
+                if (r==true){
+                    location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
+                }
+            <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
+            <?php }?>
         });
 
         //改变数量、单价时，刷新总价

@@ -1354,7 +1354,7 @@ class DesignController extends InitController
         // *********************************************************************************************************************
         $staff_user = Staff::model()->findByPk($_SESSION['userid']);
         $user_department_list= $staff_user['department_list'];
-        /*print_r($in_door);die;*/
+        // print_r($arr_order_total);die;
         $this->render("bill",array(
             'wed_feast' => $wed_feast,
             "arr_wed_feast" => $arr_wed_feast,

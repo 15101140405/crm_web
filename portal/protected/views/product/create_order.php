@@ -52,6 +52,12 @@
         <!-- <div class="l_btn" data-icon="&#xe679;"></div> -->
         <h2 class="page_title">订单填写</h2>
     </div>
+    <div class="select_ulist_module" style="margin-top:12px;margin-bottom:12px;" id="meeting_data">
+        <ul class="select_ulist">
+            <li class="select_ulist_item list_more" id="meeting_company">客户公司<span style="float:right;font-size:15px;margin-right:40px;" class="t_gray" id="meeting_company_name"></span></li>
+            <li class="select_ulist_item list_more" id="meeting_link">联系人<span style="float:right;font-size:15px;margin-right:40px;" class="t_gray" id="order_meeting_company_linkman"></span></li>
+        </ul>
+    </div>
     <div class="content" id="time">
         <div class="demos">
             <label for="appDate">日期</label>
@@ -108,7 +114,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top: 10px;">
+    <div class="int_ulist_module" style="margin-top: 10px;" id="groom">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">新郎姓名</span>
@@ -136,7 +142,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;">
+    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;" id="bride">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">新娘姓名</span>
@@ -164,7 +170,7 @@
             </li>
         </ul>
     </div>
-    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;">
+    <div class="int_ulist_module" style="margin-top:10px;margin-bottom:70px;" id="wed_link">
         <ul class="int_ulist">
             <li class="int_ulist_item">
                 <span class="label">联系人姓名</span>
@@ -180,6 +186,7 @@
             </li>
         </ul>
     </div>
+    
     <!-- 页面元素太多时,上面元素要加class pad_b50, 否则会有遮罩部分看不到-->
     <div class="bottom_fixed_bar" id='bottom'>
         <div class="r_btn" id="insert">提交订单</div>
@@ -225,6 +232,19 @@
         if("<?php echo $_GET['from']?>" == "set"){
             $("#price").remove();
         };
+        if("<?php echo $_GET['category']?>" == 1 || "<?php echo $_GET['category']?>" == 4){
+            $("#groom").remove();
+            $("#bride").remove();
+            $("#wed_link").remove();
+        }else if("<?php echo $_GET['category']?>" == 2 || "<?php echo $_GET['category']?>" == 3){
+            $("#meeting_data").remove();
+        };
+
+        <?php if(isset($_GET['company_id'])){?>
+            $("#meeting_company_name").html("<?php echo $order_meeting_company?>");
+            $("#order_meeting_company_linkman").html("<?php echo $order_meeting_company_linkman?>");
+        <?php }?>
+
 
         $("#insert").on("click",function(){
             var mydate = new Date();
@@ -293,6 +313,12 @@
             <?php if($_GET['from'] != "service"){?>
                 set_id : "<?php echo $_GET['set_id'];?>",
             <?php }?>
+            <?php if(isset($_GET['company_id'])){?>
+                company_id : <?php echo $_GET['company_id']?>,
+            <?php }?>
+            <?php if(isset($_GET['linkman_id'])){?>
+                linkman_id : <?php echo $_GET['linkman_id']?>,
+            <?php }?>
             };
             // }else{
             //     new_order_info = {
@@ -328,7 +354,19 @@
             };
             
         });
-    
+
+        //选择会议客户
+        $("#meeting_company").on("click",function(){
+            location.href = "<?php echo $this->createUrl("meeting/selectcustomer");?>&from=product_store&set_id=<?php echo $_GET['set_id']?>&product_id=<?php echo $_GET['product_id']?>&category=<?php echo $_GET['category']?>";
+        });
+        //选择会议联系人
+        $("#meeting_link").on("click",function(){
+            <?php if(!isset($_GET['company_id'])){?>
+                alert('请先选择“客户公司”！');
+            <?php }else{?>
+                location.href = "<?php echo $this->createUrl("meeting/selectlinkman");?>&from=product_store&set_id=<?php echo $_GET['set_id']?>&product_id=<?php echo $_GET['product_id']?>&category=<?php echo $_GET['category']?>&company_id=<?php if(isset($_GET['company_id'])){echo $_GET['company_id'];}?>&order_id=&linkman_id=";
+            <?php }?>
+        });
     })
 </script>
 </body>

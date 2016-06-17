@@ -275,7 +275,7 @@
     $(function(){
         //初始渲染
         $.cookie('img',"<?php echo $case['CI_Pic']?>");
-        $("#CI_Show").val(<?php echo $case['CI_Show']?>);
+        $("#CI_Show").val(<?php if(isset($case['CI_Show'])){ echo $case['CI_Show'];}?>);
         $("#hotel").val($("#hotel [staff-hotel-id='<?php echo $Wedding_set['staff_hotel_id']?>']").val());
         //保存
         $("#save").on("click",function(){
@@ -290,8 +290,11 @@
                 account_id : $.cookie('account_id'),
                 CR_Sort : $("#resources_list li:last-child").attr("CR-Sort"),
                 product_list : "<?php echo $_GET['product_list']?>",
-                final_price : <?php echo $_GET['final_price']?>,
-                feast_discount : <?php echo $_GET['feast_discount']?>,
+                final_price : "<?php echo $_GET['final_price']?>",
+                feast_discount : '<?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>',
+            <?php if(isset($_GET['other_discount'])){?>
+                other_discount : '<?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>',
+            <?php }?>
             };
             if($("#resources_list").find("li").length == 0){data.CR_Sort = 0;};
             console.log($("#resources_list").find("li").length);

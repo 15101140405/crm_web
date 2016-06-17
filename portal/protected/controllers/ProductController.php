@@ -445,12 +445,33 @@ class ProductController extends InitController
 
     public function actionCreateorder()
     {
-        $this->render('create_order');
+        $order_meeting_company['company_name'] = "请选择客户公司";
+        $order_meeting_company_linkman['name'] = "请选择联系人";
+
+        if(isset($_GET['company_id'])){
+            $order_meeting_company = OrderMeetingCompany::model()->findByPk($_GET['company_id']);
+        };
+        if(isset($_GET['linkman_id'])){
+            $order_meeting_company_linkman = OrderMeetingCompanyLinkman::model()->findByPk($_GET['linkman_id']);
+        };
+        $this->render('create_order',array(
+                'order_meeting_company' => $order_meeting_company['company_name'],
+                'order_meeting_company_linkman' => $order_meeting_company_linkman['name']
+            ));
     }
 
     public function actionNeworder()
     {
         //存order表
+        $company = array();
+        $linkman = array();
+        if(isset($_POST['company_id'])){
+            $company = OrderMeetingCompany::model()->findByPk($_POST['company_id']);            
+        };
+        if(isset($_POST['linkman_id'])){
+            $linkman = OrderMeetingCompanyLinkman::model()->findByPk($_POST['linkman_id']);            
+        };
+
         $payment= new Order;  
 
         $payment->account_id =$_SESSION['account_id'];
@@ -460,12 +481,12 @@ class ProductController extends InitController
         $payment->staff_hotel_id =$_SESSION['staff_hotel_id'];
         $payment->order_type = $_POST['order_type'];
         if ($_POST['order_type'] == 1) {
-            $payment->order_name = "新会议订单";
+            $payment->order_name = $company['company_name'];
         } else {
             $payment->order_name =$_POST['groom_name']."&".$_POST['bride_name'];
         }
         
-        
+        $wedding_set=array();
         if(isset($_POST['set_id'])){
             $wedding_set = Wedding_set::model()->findByPk($_POST['set_id']);
             $payment->feast_discount = $wedding_set['feast_discount']*10;
@@ -502,7 +523,16 @@ class ProductController extends InitController
             $payment->contact_phone =$_POST['linkman_phone'];
 
             $payment->save();
-         }
+         }else{
+            $payment= new OrderMeeting;  
+            $payment->account_id =$_SESSION['account_id'];
+            $payment->order_id =$id;
+            $payment->company_id =$_POST['company_id'];
+            $payment->company_linkman_id =$_POST['linkman_id'];
+            $payment->update_time =$_POST['update_time'];
+
+            $payment->save();
+         };
           
         
 
@@ -518,8 +548,8 @@ class ProductController extends InitController
             $type = "会议";
         };
   
-        // $touser="@all";//你要发的人，上线时恢复
-        $touser = 2222222;//测试，上线时去掉
+        $touser="@all";//你要发的人，上线时恢复
+        // $touser = 100;//测试，上线时去掉
         $toparty="";
         $totag="";
         $title="新客人进店了！";//标题
@@ -619,6 +649,16 @@ class ProductController extends InitController
             Order::model()->updateByPk($_POST['order_id'],array('other_discount' => $wedding_set['other_discount']*10));    
         };
 
+        $data = new OrderSet;
+        $data ->order_id=$_POST['order_id'];
+        $data ->wedding_set_id=$_POST['set_id'];
+        $data ->order_product_list=$wedding_set['product_list'];
+        $data ->final_price=$wedding_set['final_price'];
+        $data ->update_time=date('Y-m-d h:i:s',time());
+        $data ->save();
+        $order_set_id = $data->attributes['id'];
+
+
         /*print_r($wedding_set);die;*/
         $productdata_list = explode(",",$wedding_set['product_list']);
         $ces = 0;
@@ -629,12 +669,13 @@ class ProductController extends InitController
             $admin->account_id=$_SESSION['account_id']; 
             $admin->order_id=$_POST['order_id'];
             $admin->product_id=$product[0]; 
+            $admin->order_set_id=$order_set_id; 
             $admin->actual_price=$product[1]; 
             $admin->unit=$product[2]*$table_num; 
             $admin->actual_unit_cost=$product[3]; 
             $admin->actual_service_ratio=$fuwufei; 
             $admin->remark=$_POST['remark']; 
-            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->update_time=date('Y-m-d h:i:s',time());
             $admin->save();
             $ces ++;
         // Order::model()->updateByPk($_POST['order_id'],array('discount_range'=>$t1[2],'other_discount'=>$t1[1])); 

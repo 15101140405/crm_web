@@ -1116,6 +1116,39 @@ class OrderController extends InitController
         $this->sendMessage($content,$account['corpid'],$account['corpsecret']);
     }
 
+    public function actionOrdercost()
+    {
+        $this->render('ordercost');
+    }
+
+    public function actionSavecost()
+    {
+        // $_POST['order_id']=55;
+        // $_POST['type']='meeting';
+        // $_POST['money']=10000;
+        $result = array();
+        if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
+            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id=2 ");
+            $result = $result->queryAll();
+        }else if($_POST['type'] == 'wedding' || $_POST['type'] == 'meeting'){
+            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id<>2 ");
+            $result = $result->queryAll();
+        };
+        // print_r($result);die;
+        $total_cost = 0;
+        foreach ($result as $key => $value) {
+            $total_cost += $value['actual_unit_cost']*$value['unit'];
+        };
+        if($total_cost == 0){
+            echo "zero_error";
+        }else{
+            $temp = $_POST['money']/$total_cost;
+            foreach ($result as $key => $value) {
+                OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$value['actual_unit_cost']*$temp));
+            };
+        };
+    }
+
     public function sendMessage($html,$corpid,$corpsecret)
     {
         $touser="@all";//你要发的人

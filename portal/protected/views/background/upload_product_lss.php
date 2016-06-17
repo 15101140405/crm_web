@@ -150,6 +150,8 @@
                             <option value="组">组</option>
                             <option value="天">天</option>
                             <option value="米">米</option>
+                            <option value="米">平米</option>
+                            <option value="米">套</option>
                         </select>
                     </div>
                     <span class="left tip hid" id="unit_t">请选择单位</span>

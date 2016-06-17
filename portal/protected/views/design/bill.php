@@ -5,6 +5,18 @@ $arr_locate = array(
             );
 
 ?>
+
+<?php 
+    $newstr = rtrim($user_department_list, "]");
+    $newstr = ltrim($newstr, "[");
+    $arr_type = explode(",",$newstr);
+    $t = 0;
+    foreach ($arr_type as $key => $value) {
+        if($value == 5){
+            $t++;
+        }
+    };
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -144,7 +156,7 @@ $arr_locate = array(
         </table>
     </div>
     <!-- 餐饮 -->
-
+<?php if($t == 0){?>
     <div class="bill_item_module" id="feast">
         <h4 class="module_title list_more">婚宴</h4>
         <div class="ulist_module">
@@ -643,6 +655,24 @@ $arr_locate = array(
     ?>
         </div>
     </div>
+<?php }else{?>
+    <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="feast_cost">
+                <span class="label">餐饮总支出：</span>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0;} ?>元</div>
+            </li>
+        </ul>
+    </div>
+    <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="wedding_cost">
+                <span class="label">婚礼总支出：</span>
+                <div class="align_r1 dep_content" id="wedding_cost_data"><?php if(isset($arr_order_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_order_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_order_total['total_cost']);};}?>元</div>
+            </li>
+        </ul>
+    </div>
+<?php }?>
            
 
     
@@ -803,18 +833,7 @@ $arr_locate = array(
 
         //order_status = 5 && 访问者为 财务 时 , 出现：同意／拒绝 按钮
         var order_status = <?php echo $arr_order_data['order_status'];?>;
-<?php 
-    $newstr = rtrim($user_department_list, "]");
-    $newstr = ltrim($newstr, "[");
-    $arr_type = explode(",",$newstr);
-    $t = 0;
-    foreach ($arr_type as $key => $value) {
-        if($value == 5){
-            $t++;
-        }
-    };
-    if($t == 0){//访问者不在财务部门
-?>
+<?php if($t == 0){//访问者不在财务部门 ?>
         $("#bottom").remove();
 <?php
     }else{//访问者在财务部门
@@ -889,6 +908,27 @@ $arr_locate = array(
                 location.href = "<?php echo $this->createUrl('order/order');?>"; 
             });
         });
+
+        //输入总成本
+        $("#feast_cost").on("click",function(){
+    <?php if(isset($arr_wed_feast['total_cost'])){ if($arr_wed_feast['total_cost'] != 0){?>
+            location.href="<?php echo $this->createUrl('order/ordercost');?>&from=wedding_feast&order_id=<?php echo $_GET['order_id']?>&money="+$("#feast_cost_data").html();
+    <?php }else{?>
+            alert("婚宴成本为零，不能录入！");
+    <?php }}else{?>
+            alert("没有婚宴产品，不能录入！");
+    <?php }?>
+        });
+        $("#wedding_cost").on("click",function(){
+    <?php if(isset($arr_order_total['total_cost'])){ if($arr_order_total['total_cost'] != 0){?>
+            location.href="<?php echo $this->createUrl('order/ordercost');?>&from=wedding&order_id=<?php echo $_GET['order_id']?>&money="+$("#wedding_cost_data").html();
+    <?php }else{?>
+            alert('婚礼成本为零，不能录入！');    
+    <?php }}else{?>
+            alert("没有婚礼产品，不能录入！");
+    <?php }?>
+        });
+
     });
 
 </script>
