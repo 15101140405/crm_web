@@ -124,7 +124,7 @@
     <!-- 回款信息 -->
     <!-- 回款信息 -->
     <div class="table_module">
-        <h4 class="module_title list_more" id="payment">回款纪录</h4>
+        <h4 class="module_title list_more" id="payment">收款记录</h4>
         <table class="mar_b10">
             <tbody>
             <tr>
@@ -144,6 +144,7 @@
             </tr>
             </tbody>
         </table>
+        <h4 class="module_title" style="border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收：123元 ］</span><span class="t_green" style="float:right;margin-right:10px">123元</span></h4>
     </div>
 
 <?php if($t == 0){?>
@@ -584,7 +585,6 @@
         });
         //点击拒绝结算
         $("#refuse").on("click",function(){
-            
             $.post("<?php echo $this->createUrl('order/checkoutrefuse');?>",{type:'meeting',order_id:<?php echo $_GET['order_id']?>},function(){
                 alert('已拒绝结算！')
                 location.href = "<?php echo $this->createUrl("report/order_report");?>";
@@ -608,22 +608,10 @@
 
         //输入总成本
         $("#feast_cost").on("click",function(){
-    <?php if(isset($arr_wed_feast['total_cost'])){ if($arr_wed_feast['total_cost'] != 0){?>
             location.href="<?php echo $this->createUrl('order/ordercost');?>&from=meeting_feast&order_id=<?php echo $_GET['order_id']?>&money="+$("#feast_cost_data").html();
-    <?php }?>
-            alert("会议餐成本为零，不能录入！");
-    <?php }else{?>
-            alert("没订会议餐，不能录入！");
-    <?php }?>
         });
         $("#meeting_cost").on("click",function(){
-    <?php if(isset($arr_total['total_cost'])){ if($arr_total['total_cost'] != 0){?>
             location.href="<?php echo $this->createUrl('order/ordercost');?>&from=meeting&order_id=<?php echo $_GET['order_id']?>&money="+$("#meeting_cost_data").html();
-    <?php }?>
-            alert('会议成本为零，不能录入！');    
-    <?php }else{?>
-            alert("没订会议产品，不能录入！");
-    <?php }?>
         });
     })
 

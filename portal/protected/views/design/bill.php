@@ -911,22 +911,10 @@ $arr_locate = array(
 
         //输入总成本
         $("#feast_cost").on("click",function(){
-    <?php if(isset($arr_wed_feast['total_cost'])){ if($arr_wed_feast['total_cost'] != 0){?>
             location.href="<?php echo $this->createUrl('order/ordercost');?>&from=wedding_feast&order_id=<?php echo $_GET['order_id']?>&money="+$("#feast_cost_data").html();
-    <?php }else{?>
-            alert("婚宴成本为零，不能录入！");
-    <?php }}else{?>
-            alert("没有婚宴产品，不能录入！");
-    <?php }?>
         });
         $("#wedding_cost").on("click",function(){
-    <?php if(isset($arr_order_total['total_cost'])){ if($arr_order_total['total_cost'] != 0){?>
             location.href="<?php echo $this->createUrl('order/ordercost');?>&from=wedding&order_id=<?php echo $_GET['order_id']?>&money="+$("#wedding_cost_data").html();
-    <?php }else{?>
-            alert('婚礼成本为零，不能录入！');    
-    <?php }}else{?>
-            alert("没有婚礼产品，不能录入！");
-    <?php }?>
         });
 
     });

@@ -75,7 +75,7 @@ class ReportController extends InitController
             $item = array();
             $t = explode(' ', $value['order_date']);
             $t1 = explode('-', $t[0]);
-            if($t1[0] >= date("Y") && $t1[1] >= date("m") && $t1[2] >= date("d")){
+            if(($t1[0] >= date("Y") && $t1[1] > date("m")) || ($t1[0] >= date("Y") && $t1[1] == date("m") && $t1[2] > date("d"))){
                 $item['order_date'] = $t[0];
                 $item['order_type'] = $value['order_type'];
                 $item['pd'] = $value['planner_name']."/".$value['designer_name'];
