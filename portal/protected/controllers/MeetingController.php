@@ -78,6 +78,7 @@ class MeetingController extends InitController
         $companyForm = new CompanyForm();
         $post['account_id']  =  $_SESSION['account_id'];
         $post['company_name']    = $_POST['new_customer'];
+        $post['hotel_id']    = $_SESSION['staff_hotel_id'];
         $post['update_time']      = time();
         $arr = $companyForm->companyInsert($post);
         echo json_encode($arr);
@@ -782,7 +783,7 @@ class MeetingController extends InitController
             };
         }
 
-        // print_r($arr_wed_feast);die;
+        // print_r($payment_data);die;
         /*********************************************************************************************************************/
         /*向 VIEW 传数据*/
         /*********************************************************************************************************************/

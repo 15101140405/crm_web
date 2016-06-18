@@ -16,7 +16,7 @@
 </head>
 
 
-<body style="background:#fff">
+<body style="background:#F7F7F7">
     <!--导航-->
     <nav class="fixed_nav" id="main_nav">
         <ul>
@@ -40,13 +40,13 @@
     </nav>
     <!--订单报表-->
     <section class="daily_container">
-        <h2 class="daily_tit">今日进店</h2>
+        <!-- <h2 class="daily_tit">今日进店</h2>
         <ul class="daily_list">
             <li data-aslider-in="aslider1|fade" id="open">
                 <img class="item_icon" src="images/today.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">今日开单</span>
-                    <span class="num"><?php echo $order_num['order_open']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -57,7 +57,7 @@
                 <img class="item_icon" src="images/wed_m_open.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">进店婚礼</span>
-                    <span class="num"><?php echo $order_num['wed_m_open']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -65,14 +65,14 @@
                 <img class="item_icon" src="images/wed_m_pay.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">婚礼成单</span>
-                    <span class="num"><?php echo $order_num['wed_m_pay']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
              <li data-aslider-in="aslider1|fade" id="meeting_m_open">
                 <img class="item_icon" src="images/meeting_m_open.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">进店会议</span>
-                    <span class="num"><?php echo $order_num['meeting_m_open']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -80,19 +80,19 @@
                 <img class="item_icon" src="images/meeting_m_pay.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">会议成单</span>
-                    <span class="num"><?php echo $order_num['meeting_m_pay']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
             </li>
-        </ul>
+        </ul> -->
         <h2 class="daily_tit">婚礼订单</h2>
         <ul class="daily_list">
             <li data-aslider-in="aslider1|fade" id="wed_finish">
                 <img class="item_icon" src="images/wed_finish.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">已完成婚礼</span>
-                    <span class="num"><?php echo $order_num['wed_finish']?></span>
+                    <span class="num"><?php echo $order_num['wedding_done']?></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -100,7 +100,7 @@
                 <img class="item_icon" src="images/wed_doing.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">待执行婚礼</span>
-                    <span class="num"><?php echo $order_num['wed_doing']?></span>
+                    <span class="num"><?php echo $order_num['wedding_doing']?></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -112,7 +112,7 @@
                 <img class="item_icon" src="images/meeting_finish.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">已完成会议</span>
-                    <span class="num"><?php echo $order_num['meeting_finish']?></span>
+                    <span class="num"><?php echo $order_num['meeting_done']?></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -126,13 +126,13 @@
             </li>
         </ul>
 
-        <h2 class="daily_tit" id="clear_title">订单结算</h2>
+        <!-- <h2 class="daily_tit" id="clear_title">订单结算</h2>
         <ul class="daily_list" id="clear">
             <li data-aslider-in="aslider1|fade" id="wed_clearing">
                 <img class="item_icon" src="images/order_open.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">婚礼结算申请</span>
-                    <span class="num"><?php echo $order_num['wed_clear']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
@@ -140,11 +140,11 @@
                 <img class="item_icon" src="images/order_open.png" />
                 <div class="daily_info flex1 flexbox v_center" style="height:2rem;">
                     <span class="flex1">会议结算申请</span>
-                    <span class="num"><?php echo $order_num['meeting_clear']?></span>
+                    <span class="num"></span>
                     <img class="arrow" src="images/arrow_right.png" />
                 </div>
             </li>
-        </ul>
+        </ul> -->
     </section>
 
 
@@ -157,34 +157,56 @@
             </div>
             <div class="slider">
                 <ul class="aslider_order_list" id="list">
-            <?php if(!empty($order_data['open'])){foreach ($order_data['open'] as $key => $value) {?>
-                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+            <?php if(!empty($order_data['wedding_done'])){foreach ($order_data['wedding_done'] as $key => $value) {?>
+                    <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                    </li>
+                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
+                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    </li>
+                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
                     </li>
             <?php }}?>
-            <?php if(!empty($order_data['order'])){foreach ($order_data['order'] as $key => $value) {?>
-                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+            <?php if(!empty($order_data['wedding_doing'])){foreach ($order_data['wedding_doing'] as $key => $value) {?>
+                    <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                    </li>
+                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
+                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    </li>
+                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
                     </li>
             <?php }}?>
-            <?php if(!empty($order_data['clear'])){foreach ($order_data['clear'] as $key => $value) {?>
-                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+            <?php if(!empty($order_data['meeting_done'])){foreach ($order_data['meeting_done'] as $key => $value) {?>
+                    <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                    </li>
+                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
+                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    </li>
+                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
                     </li>
             <?php }}?>
-            <?php if(!empty($order_data['mopen'])){foreach ($order_data['mopen'] as $key => $value) {?>
-                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
+            <?php if(!empty($order_data['meeting_doing'])){foreach ($order_data['meeting_doing'] as $key => $value) {?>
+                    <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
                     </li>
-            <?php }}?>
-            <?php if(!empty($order_data['mpay'])){foreach ($order_data['mpay'] as $key => $value) {?>
-                    <li class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="<?php echo $value['type']?>">
-                        <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span class="yellow"><?php echo $value['planner_name']?> <?php echo $value['designer_name']?></span>
+                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
+                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    </li>
+                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
                     </li>
             <?php }}?>
                 </ul>
@@ -209,16 +231,15 @@
     <script>
     $(function(){
         //初始渲染
-        if("<?php echo $user_type?>" != 2){
-            $("#clear").remove();
-            $("#clear_title").remove();
-        };
-
-        $("#open").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='1']").removeClass("hid");
-        });
+        // if("<?php echo $user_type?>" != 2){
+        //     $("#clear").remove();
+        //     $("#clear_title").remove();
+        // };
+        // $("#open").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='1']").removeClass("hid");
+        // });
         $("#wed_finish").on("click",function(){
             $("#list li").removeClass("hid");
             $("#list li").addClass("hid");
@@ -239,31 +260,31 @@
             $("#list li").addClass("hid");
             $("[type='5']").removeClass("hid");
         });
-        $("#wed_clearing").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='6']").removeClass("hid");
-        });
-        $("#wed_m_open").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='11']").removeClass("hid");
-        });
-        $("#meeting_m_open").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='12']").removeClass("hid");
-        });
-        $("#wed_m_pay").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='13']").removeClass("hid");
-        });
-        $("#meeting_m_pay").on("click",function(){
-            $("#list li").removeClass("hid");
-            $("#list li").addClass("hid");
-            $("[type='14']").removeClass("hid");
-        });
+        // $("#wed_clearing").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='6']").removeClass("hid");
+        // });
+        // $("#wed_m_open").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='11']").removeClass("hid");
+        // });
+        // $("#meeting_m_open").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='12']").removeClass("hid");
+        // });
+        // $("#wed_m_pay").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='13']").removeClass("hid");
+        // });
+        // $("#meeting_m_pay").on("click",function(){
+        //     $("#list li").removeClass("hid");
+        //     $("#list li").addClass("hid");
+        //     $("[type='14']").removeClass("hid");
+        // });
 
         //导航
         $("#product_store").on("click",function(){

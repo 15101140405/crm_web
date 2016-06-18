@@ -60,7 +60,7 @@
             // }
 
             // localStorage.setItem("new_customer", JSON.stringify(new_customer));
-            location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php if($_GET['company_id'] != ""){ echo $_GET['company_id'] ;}?>";
+            location.href = "<?php echo $this->createUrl("meeting/selectCustomer");?>&from=<?php echo $_GET['from']?>&order_id=<?php echo $_GET['order_id']?>&company_id=<?php if($_GET['company_id'] != ""){ echo $_GET['company_id'] ;}?>&category=&set_id=&product_id=";
             //  }else{
             //    alert('太累了，歇一歇，刷新下试试！');
             //    return false;

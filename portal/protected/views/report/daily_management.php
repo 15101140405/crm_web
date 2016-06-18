@@ -67,7 +67,7 @@
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $wedding_all?></em>个</p>
-                    <p>婚礼成单</p>
+                    <p>婚礼累计成单</p>
                 </div>
             </li>
             <li class="flexbox">
@@ -76,7 +76,7 @@
                 </div>
                 <div class="info_box">
                     <p><em><?php echo $meeting_all?></em>个</p>
-                    <p>会议成单</p>
+                    <p>会议累计成单</p>
                 </div>
             </li>
             <li class="flexbox">
@@ -113,7 +113,7 @@
                 </div>
                 <div class="info_box">
                     <p><em><?php echo number_format($hotel_total_sales/10000,1)?></em>万</p>
-                    <p>销售额</p>
+                    <p>应收总额</p>
                 </div>
             </li>
             <li class="flexbox">
@@ -122,7 +122,25 @@
                 </div>
                 <div class="info_box">
                     <p><em><?php echo number_format($order_total_payment/10000,1)?></em>万</p>
-                    <p>回款</p>
+                    <p>实收总额</p>
+                </div>
+            </li>
+            <li class="flexbox">
+                <div class="imgbox">
+                    <img src="images/sales_detail.png" alt="">
+                </div>
+                <div class="info_box">
+                    <p><em><?php echo number_format($hotel_total_cost/10000,1)?></em>万</p>
+                    <p>实际支出</p>
+                </div>
+            </li>
+            <li class="flexbox">
+                <div class="imgbox">
+                    <img src="images/sales_detail.png" alt="">
+                </div>
+                <div class="info_box">
+                    <p><em><?php echo number_format(($order_total_payment-$hotel_total_cost)/10000,1)?></em>万</p>
+                    <p>现金结余</p>
                 </div>
             </li>
         </ul>

@@ -134,7 +134,7 @@ $arr_locate = array(
     </div>
     <!-- 回款信息 -->
     <div class="table_module">
-        <h4 class="module_title list_more" id="payment">回款纪录</h4>
+        <h4 class="module_title list_more" id="payment">收款记录</h4>
         <table class="mar_b10">
             <tbody>
             <tr>
@@ -154,6 +154,7 @@ $arr_locate = array(
             </tr>
             </tbody>
         </table>
+        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_order_total['total_price'] ?>元 ］</span><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
     <!-- 餐饮 -->
 <?php if($t == 0){?>
@@ -660,7 +661,7 @@ $arr_locate = array(
         <ul class="ulist">
             <li class="ulist_item list_more" id="feast_cost">
                 <span class="label">餐饮总支出：</span>
-                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0;} ?>元</div>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
             </li>
         </ul>
     </div>
@@ -668,7 +669,7 @@ $arr_locate = array(
         <ul class="ulist">
             <li class="ulist_item list_more" id="wedding_cost">
                 <span class="label">婚礼总支出：</span>
-                <div class="align_r1 dep_content" id="wedding_cost_data"><?php if(isset($arr_order_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_order_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_order_total['total_cost']);};}?>元</div>
+                <div class="align_r1 dep_content" id="wedding_cost_data"><?php if(isset($arr_order_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_order_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_order_total['total_cost']);};}?></div>
             </li>
         </ul>
     </div>
@@ -680,21 +681,21 @@ $arr_locate = array(
 <?php 
         if(!empty($arr_order_total)){
     ?>
-            <div class="bottom_fixed_bar">
-                <p class="total_right">折后总价：<i class="t_green">&yen;<?php echo $arr_order_total['total_price'] ?></i></p>
+            <div class="bottom_fixed_bar" id="bottom_bar">
+                <p class="total_right">应收款总额：<i class="t_green">&yen;<?php echo $arr_order_total['total_price'] ?></i></p>
                 <div class="total_left">
-                    <i><p>折后利润：&yen;<?php echo $arr_order_total['gross_profit'] ?></i>
-                    <i><p>折后毛利率：&yen;<?php echo sprintf("%01.2f", $arr_order_total['gross_profit_rate']*100).'%'?></i>
+                    <i><p>毛利：&yen;<?php echo $arr_order_total['gross_profit'] ?></i>
+                    <i><p>毛利率：&yen;<?php echo sprintf("%01.2f", $arr_order_total['gross_profit_rate']*100).'%'?></i>
                 </div>
             </div>
     <?php
         }else{
     ?>
-            <div class="bottom_fixed_bar">
+            <div class="bottom_fixed_bar" id="bottom_bar">
                 <p class="total_right">折后总价：<i class="t_green">&yen;0</i></p>
                 <div class="total_left">
-                    <i><p>折后利润：&yen;0</i>
-                    <i><p>折后毛利率：&yen;0</i>
+                    <i><p>毛利：&yen;0</i>
+                    <i><p>毛利率：&yen;0</i>
                 </div>
             </div>
     <?php
@@ -838,7 +839,14 @@ $arr_locate = array(
 <?php
     }else{//访问者在财务部门
 ?>
-
+        $("#detailinfo").removeClass('list_more');
+        $("#select_desigener").removeClass('list_more');
+        $("#select_planner").removeClass('list_more');
+        $("#channel").removeClass('list_more');
+        $("#feast_discount").removeClass('list_more');
+        $("#other_discount").removeClass('list_more');
+        $("#changefree").removeClass('list_more');
+        $("#bottom_bar").remove();
         if(order_status != 5){$("#bottom").remove();};
         //点击同意结算
         $("#agree").on("click",function(){

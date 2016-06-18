@@ -29,7 +29,7 @@
 <body>
 <article style="position: relative;top: -45px;">
     <div class="tool_bar" style="line-height: 3rem;">
-        <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div>
+        <!-- <div class="l_btn" data-icon="&#xe679;" style="margin-top: 10px;"></div> -->
         <h6  style="text-align: center;font-size: 2rem;"><?php echo $arr_order_data['order_name']; ?></h6>
         <h6  style="text-align: center;font-size: 1.2rem;">活动日期：<?php echo $arr_order_data['order_date']; ?></h6>
         <div class="r_btn"  style="font-size: 1.5rem;width: 3rem;" id="del">删除订单</div>
@@ -144,7 +144,7 @@
             </tr>
             </tbody>
         </table>
-        <h4 class="module_title" style="border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收：123元 ］</span><span class="t_green" style="float:right;margin-right:10px">123元</span></h4>
+        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_total['total_price'] ?>元 ］</span><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
 
 <?php if($t == 0){?>
@@ -373,7 +373,7 @@
         <ul class="ulist">
             <li class="ulist_item list_more" id="feast_cost">
                 <span class="label">餐饮总支出：</span>
-                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0;} ?>元</div>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?>元</div>
             </li>
         </ul>
     </div>
@@ -390,20 +390,20 @@
     <?php
         if (!empty($arr_total)) {
     ?>
-    <div class="bottom_fixed_bar">
-        <p class="total_right">总价：<i class="t_green">&yen;<?php echo $arr_total['total_price'] ?></i></p>
+    <div class="bottom_fixed_bar" id="bottom_bar">
+        <p class="total_right">应收款总额：<i class="t_green">&yen;<?php echo $arr_total['total_price'] ?></i></p>
         <div class="total_left">
-            <i><p>利润：&yen;<?php echo $arr_total['gross_profit'] ?></i>
+            <i><p>毛利：&yen;<?php echo $arr_total['gross_profit'] ?></i>
             <i><p>毛利率：<?php echo sprintf("%01.2f", $arr_total['gross_profit_rate']*100).'%' ?></i>
         </div>
     </div>
     <?php
         }else{
     ?>
-            <div class="bottom_fixed_bar">
-                <p class="total_right">总价：<i class="t_green">&yen;0</i></p>
+            <div class="bottom_fixed_bar" id="bottom_bar">
+                <p class="total_right">应收款总额：<i class="t_green">&yen;0</i></p>
                 <div class="total_left">
-                    <i><p>利润：&yen;0</i>
+                    <i><p>毛利：&yen;0</i>
                     <i><p>毛利率：&yen;0</i>
                 </div>
             </div>
@@ -538,6 +538,7 @@
 <?php
     }else{//访问者在财务部门
 ?>
+        $("#bottom_bar").remove();
         $("#action").remove();
         $("#page_list").remove();
         if(order_status != 5){$("#bottom").remove();};

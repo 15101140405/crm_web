@@ -1162,7 +1162,7 @@ class BackgroundController extends InitController
     public function actionSet_upload()
     {
         $id = "";
-        if(!isset($_POST['category'])){
+        if(isset($_POST['category'])){
             if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){
                 $data = new Wedding_set;
                 $data ->staff_hotel_id = $_POST['staff_hotel_id'];
