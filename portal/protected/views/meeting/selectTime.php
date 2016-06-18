@@ -85,13 +85,13 @@
             <input value="" class="" placeholder="请选择结束时间" readonly="readonly" name="appTime_end" id="appTime1" type="text">
         </div>
     </div>
-    <div class="select_ulist_module" id="hotel">
+    <!-- <div class="select_ulist_module" id="hotel">
             <ul class="select_ulist" id="hotel_ul">
                 <?php foreach ($hotel as $key => $value) { ?>
                 <li class="select_ulist_item round_select" hotel-id="<?php echo $value['id']?>"><?php echo $value['name']?></li>
                 <?php }?>
             </ul>
-    </div>
+    </div> -->
     <!-- <div class="select_ulist_module">
         <h4 class="module_title">会议时间</h4>
         <ul class="select_ulist">
@@ -167,7 +167,7 @@
                     order_time: 0, 
                     end_time: end_time, 
                     update_time : time,
-                    hotel_id : $(".round_select_selected").attr("hotel-id"),
+                    hotel_id : "<?php echo $_SESSION['staff_hotel_id']?>",
                     set_id : "<?php if (isset($_GET['set_id'])){echo $_GET['set_id'];}?>",
                     product_id : "<?php if (isset($_GET['product_id'])){echo $_GET['product_id'];}?>",
                 };

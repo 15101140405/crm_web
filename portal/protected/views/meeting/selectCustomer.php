@@ -14,9 +14,9 @@
 <body>
 <article>
     <div class="tool_bar">
-        <div class="l_btn" id="back" data-icon="&#xe679;"></div>
-        <h2 class="page_title">选择客户</h2>
-        <div class="r_btn" id="next" data-icon="&#xe6a3;"></div>
+        <div class="l_btn" data-icon="&#xe679;"></div>
+        <h2 class="page_title">选择客户公司</h2>
+        <div class="r_btn" data-icon="&#xe6a3;"></div>
     </div>
 
     <!-- 搜索
@@ -137,7 +137,6 @@
         });
       });
     }
-
     //新增按钮
     $(".btn").on("click", function () {
       var choose_obj = $(".select_ulist .select_selected");

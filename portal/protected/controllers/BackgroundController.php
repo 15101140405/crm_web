@@ -1163,7 +1163,7 @@ class BackgroundController extends InitController
     {
         $id = "";
         if(isset($_POST['category'])){
-            if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){
+            if($_POST['category'] != 5 && !isset($_POST['CI_ID'])){//如果不是主题婚礼（category= 5）的新增（!isset($_POST['CI_ID']）
                 $data = new Wedding_set;
                 $data ->staff_hotel_id = $_POST['staff_hotel_id'];
                 $data ->name = $_POST['CI_Name'];
@@ -1231,7 +1231,7 @@ class BackgroundController extends InitController
             $data = new Wedding_set;
             $data ->staff_hotel_id = $_POST['staff_hotel_id'];
             $data ->name = $_POST['CI_Name'];
-            $data ->category = $_POST['category'];
+            $data ->category = 2;
             $data ->final_price = $_POST['final_price'];
             $data ->feast_discount = $_POST['feast_discount'];
             $data ->other_discount = $_POST['other_discount'];

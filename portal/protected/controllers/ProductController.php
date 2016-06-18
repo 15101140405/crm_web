@@ -557,17 +557,23 @@ class ProductController extends InitController
         $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         $author="";
         $content_source_url="";
-        $content = "新客人进店了[".$hotel['name']."]
+//         $content = "新客人进店了[".$hotel['name']."]
+// 订单类型：".$type."
+// 日期：".$date[0]."
+// 开单人：".$staff["name"];
+        $content = array(
+    "content"   => "新客人进店了[".$hotel['name']."]
 订单类型：".$type."
 日期：".$date[0]."
-开单人：".$staff["name"];
+开单人：".$staff["name"],
+    );
         $digest="描述";
         $show_cover_pic="";
         $safe="";
 
-        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
-        $corpid=$company['corpid'];
-        $corpsecret=$company['corpsecret'];
+        // $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+        // $corpid=$company['corpid'];
+        // $corpsecret=$company['corpsecret'];
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
         $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
         //print_r($result);

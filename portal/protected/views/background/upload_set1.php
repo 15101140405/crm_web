@@ -133,21 +133,21 @@
         </div>
 <?php }?>
         <!--右侧内容区域-->
-        <div class="right_area right" style="background:#fff;">
-            <div>
-                <div class="tit_box clearfix" style="width:230px;background:#fff;border-bottom: 1px solid #e6e6e6;">
-                    <h2 class="left">折扣：</h2>
-                    <input class="input_in" id="feast_discount" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入折扣，如0.8">
+        <div class="right_area right" style="background:#fff;width:240px;">
+            <div style="width:240px;">
+                <div class="tit_box1" style="width:240px;background:#fff;height:20px;">
+                    <h2 class="left">原总价：&yen;<span id="total_price">0</span></h2>
+                </div>
+                <div class="tit_box clearfix" style="width:240px;background:#fff;border-bottom: 1px solid #e6e6e6;">
+                    <h2 class="left">套系价：</h2>
+                    <input class="input_in" id="final_price" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入组成套系后的总价">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
-                <ul class="add_list" style="width:230px;" id="shopping_car">
+                <ul class="add_list" style="width:240px;" id="shopping_car">
                 </ul>
                  
             </div>
-           <div class="button_box" id="create">
-                    &yen;
-                    <span id="total_price">0</span> 下一步
-                </div>
+            <div class="button_box" id="create">下一步</div>
         </div>
     </div>
 
@@ -180,7 +180,7 @@
         //点击加入套系
         $(".add_product").on("click",function(){
             var data = $(this).parent().parent()
-            html = '<li class="clearfix hid new_hid" product-id="'+data.attr('product-id')+'" unit-cost="'+data.attr('unit-cost')+'">'+
+            html = '<li class="clearfix hid new_hid" style="width:215px;" product-id="'+data.attr('product-id')+'" unit-cost="'+data.attr('unit-cost')+'">'+
                         '<img class="left" src="'+data.find('img').attr('src')+'" alt="">'+
                         '<div class="con left">'+
                             '<h3>'+data.find('.name').html()+'</h3>'+
@@ -263,23 +263,32 @@
         $("#create").on("click",function(){
             var product_list = "";
             $("#shopping_car li").each(function(){
-                product_list += $(this).attr('product-id') +"|"+ $(this).find(".product_price").val() +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
+                var price = $(this).find(".product_price").val()*$("#final_price").val()/$("#total_price").html();
+                product_list += $(this).attr('product-id') +"|"+ price.toFixed(2) +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-        <?php if(!isset($_GET['type'])){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
-        <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&final_price=" +$("#total_price").html()+ "&feast_discount=&other_discount=" +$("#feast_discount").val();
-        <?php }?>
+            if ($("#final_price").val() == "") {
+                var final_price = $("#total_price").html();
+            } else{
+                var final_price = $("#final_price").val();
+            };
+            <?php if(!isset($_GET['type'])){?>
+                var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
+                if (r==true){
+                    location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
+                }
+            <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
+            <?php }?>
         });
 
         //改变数量、单价时，刷新总价
         $('.product_price').live('change', function() {
             total_price(); 
         });
-        $('#feast_discount').live('change', function() {
-            total_price(); 
-        });
+        // $('#feast_discount').live('change', function() {
+        //     total_price(); 
+        // });
         $(".del_product").live("click",function(){
             $(this).parent().remove();
             total_price(); 
@@ -292,11 +301,11 @@
             $("#shopping_car li").each(function(){
                 total_price += $(this).find(".amount").val() * $(this).find(".product_price").val();
             });
-            var feast_discount = $("#feast_discount").val();
-            if(feast_discount != ""){
-                total_price = total_price*feast_discount;
-                total_price = total_price.toFixed(2)
-            };
+            // var feast_discount = $("#feast_discount").val();
+            // if(feast_discount != ""){
+            //     total_price = total_price*feast_discount;
+            //     total_price = total_price.toFixed(2)
+            // };
             $("#total_price").html(total_price);
         };
     })

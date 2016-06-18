@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="2016-5-30">
-      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\portal\protected\views\background\regist_host.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\portal\protected\views\background\regist——pro.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\crm_web_new\test" afterPath="" />
+    <list default="true" id="74d8fbb1-4cad-409a-9492-ba4e81439953" name="Default" comment="上传套系时不输入折扣">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/arrow_daily.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/last_img.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/meeting.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/order_list.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/sales_detail.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/today_gl.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/today_management.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/total_jb.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/images/wedding.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/model/OrderSet.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/js/bar_chart.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/report/order_list.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/portal/protected/views/order/ordercost.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/OrderMeetingCompany.php" afterPath="$PROJECT_DIR$/common/model/OrderMeetingCompany.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/DesignController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/MeetingController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/MeetingController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/OrderController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/OrderController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ProductController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ReportController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" afterPath="$PROJECT_DIR$/portal/protected/controllers/ServiceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/model/ServiceProduct.php" afterPath="$PROJECT_DIR$/common/model/ServiceProduct.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/form/SupplierProductForm.php" afterPath="$PROJECT_DIR$/common/form/SupplierProductForm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/WPRequest.php" afterPath="$PROJECT_DIR$/library/WPRequest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/addLinkman.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/addLinkman.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/design/bill.php" afterPath="$PROJECT_DIR$/portal/protected/views/design/bill.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/crm.portal.wf_development.log" afterPath="$PROJECT_DIR$/log/crm.portal.wf_development.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_img.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_img.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_self_info.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_self_info.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_host_video.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_host_video.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_product.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_product.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_product_detail.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_product_detail.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_set1.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_set1.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/index.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/login.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" afterPath="$PROJECT_DIR$/portal/protected/views/service/personnel_host.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/regist.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/regist.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/style.css" afterPath="$PROJECT_DIR$/portal/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/test.php" afterPath="$PROJECT_DIR$/library/test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_case.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_case.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/bill.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/bill.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/product/create_order.php" afterPath="$PROJECT_DIR$/portal/protected/views/product/create_order.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/css/daily_management.css" afterPath="$PROJECT_DIR$/portal/css/daily_management.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/report/daily_management.php" afterPath="$PROJECT_DIR$/portal/protected/views/report/daily_management.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/edit_set2.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/edit_set2.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/my.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/my.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/order/order.php" afterPath="$PROJECT_DIR$/portal/protected/views/order/order.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/selectCustomer.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/selectCustomer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/selectLinkman.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/selectLinkman.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/meeting/selectTime.php" afterPath="$PROJECT_DIR$/portal/protected/views/meeting/selectTime.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_product.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_product.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_product_lss.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_product_lss.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_set1.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_set1.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portal/protected/views/background/upload_set2.php" afterPath="$PROJECT_DIR$/portal/protected/views/background/upload_set2.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -105,29 +113,9 @@
         <entry file="file://$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
               <folding>
-                <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
-                <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
-                <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
-                <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
-                <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
-                <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
-                <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
-                <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
-                <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
-                <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
-                <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
-                <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
-                <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
-                <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
-                <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
-                <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
-                <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
-                <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
-                <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
-                <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
-                <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
+                <marker date="1466074129589" expanded="true" signature="52006:52016" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -204,6 +192,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -278,8 +268,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -496,26 +484,26 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1907001" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295129" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23686723" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="版本控制" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23686723" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="消息" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3295129" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="找到" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="消息" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3295129" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32859176" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="找到" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -552,7 +540,8 @@
     <MESSAGE value="手机会议部分" />
     <MESSAGE value="注册页拼错属性名" />
     <MESSAGE value="纷享销客；" />
-    <option name="LAST_COMMIT_MESSAGE" value="纷享销客；" />
+    <MESSAGE value="上传套系时不输入折扣" />
+    <option name="LAST_COMMIT_MESSAGE" value="上传套系时不输入折扣" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -564,27 +553,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
           <folding>
-            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
-            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
-            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
+            <marker date="1466074129589" expanded="true" signature="52006:52016" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -618,27 +587,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
-            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
-            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
+            <marker date="1466074129589" expanded="true" signature="52006:52016" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -994,29 +943,9 @@
     <entry file="file://$PROJECT_DIR$/portal/protected/controllers/BackgroundController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="118" column="0" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
           <folding>
-            <marker date="1465275440826" expanded="true" signature="10571:10693" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="10612:10655" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="11898:12434" placeholder="select * fro..case_info..." />
-            <marker date="1465275440826" expanded="true" signature="11962:12097" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12045:12083" placeholder="select accou..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12136:12267" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="12215:12253" placeholder="select hotel..staff..." />
-            <marker date="1465275440826" expanded="true" signature="12305:12360" placeholder="select CI_ID..case_bind..." />
-            <marker date="1465275440826" expanded="true" signature="17862:18215" placeholder="select weddi..." />
-            <marker date="1465275440826" expanded="true" signature="20628:20826" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="24390:24710" placeholder="select produ..service_product..." />
-            <marker date="1465275440826" expanded="true" signature="29106:29304" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="31283:31457" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="32389:32678" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="46896:47094" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="49607:49805" placeholder="select case_..case_resources_product..." />
-            <marker date="1465275440826" expanded="true" signature="55125:55308" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56416:56590" placeholder="select suppl..supplier..." />
-            <marker date="1465275440826" expanded="true" signature="56734:57023" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="57168:57447" placeholder="select suppl..." />
-            <marker date="1465275440826" expanded="true" signature="59401:59680" placeholder="select suppl..." />
+            <marker date="1466074129589" expanded="true" signature="52006:52016" placeholder="..." />
           </folding>
         </state>
       </provider>

@@ -339,41 +339,26 @@
         </div>
 <script>
     $(function(){
-        // alert("<?php echo $_GET['feast_discount']?>");
         //初始渲染
         $.cookie('img',"<?php echo $pic ?>");
         $("#CI_Show").val(<?php if(isset($case['CI_Show'])){echo $case['CI_Show'];}?>);
 
         //保存
         $("#save").on("click",function(){
-            var data = {
-                CI_Name : $("#case_name").val(),
-                CI_Show : $("#CI_Show option:selected").val(),
-                CI_Pic : $.cookie('img'),
-                case_resource : $.cookie('imgs'),
-                account_id : $.cookie('account_id'),
-                product_list : "<?php echo $_GET['product_list']?>",
-                final_price : "<?php echo $_GET['final_price']?>",
-                staff_hotel_id : $("#hotel option:selected").attr("staff-hotel-id"),
-                feast_discount : '<?php if($_GET['feast_discount']==""){echo '1';}else{echo $_GET['feast_discount'];}?>',
-                other_discount : '<?php if($_GET['other_discount']==""){echo '1';}else{echo $_GET['other_discount'];}?>',
-            <?php if($_GET['type'] == ""){?>
-                category : 2,
-                CI_Type : 5,
-            <?php }else if($_GET['type'] == 'meeting_set'){?>
-                category : 1,
-                CI_Type : 12,
-            <?php }else if($_GET['type'] == 'theme' && !isset($_GET['ci_id'])){?>
-                category : 5,
-                CI_Type : 4,
-            <?php }else if($_GET['type'] == 'theme' && isset($_GET['ci_id'])){?>  //当有ci_id时，代表编辑
-                category : 5,
-                CI_Type : 4,
-                CI_ID : '<?php echo $_GET['ci_id']?>',
-                CT_ID : '<?php echo $_GET['ct_id']?>',
-            <?php }?>
-            };
-            console.log(data);
+            var data;
+            data = {
+                CI_Name: $("#case_name").val(),
+                CI_Show: $("#CI_Show option:selected").val(),
+                CI_Pic: $.cookie('img'),
+                case_resource: $.cookie('imgs'),
+                account_id: $.cookie('account_id'),
+                product_list: "<?php echo $_GET['product_list']?>",
+                total_price: "<?php echo $_GET['product_list']?>",
+                final_price: "<?php echo $_GET['final_price']?>",
+                feast_discount: "",
+                other_discount: "",
+                staff_hotel_id: $("#hotel option:selected").attr("staff-hotel-id"),
+            }
             $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
             if(data.CI_Name == ""){$("#name_t").removeClass("hid")};
@@ -389,7 +374,6 @@
                 var url = "<?php echo $this->createUrl("background/set_upload");?>";
                 <?php }?>
             <?php }else{?>
-                // alert(1);
                 var url = "<?php echo $this->createUrl("background/set_upload");?>";
             <?php }?>
                 console.log(data);

@@ -54,6 +54,7 @@ class MeetingController extends InitController
         
         // var_dump($order_id);
         $companyForm = new CompanyForm();
+        $staff_hotel_id = $_SESSION['staff_hotel_id'];
         $companys = $companyForm->getcompanyList($accountId,$order_id);
         // var_dump($companys);
         $ordermeeting['company_id'] = "";
