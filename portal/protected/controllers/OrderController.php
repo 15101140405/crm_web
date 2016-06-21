@@ -1128,27 +1128,47 @@ class OrderController extends InitController
         // $_POST['money']=10000;
         $result = array();
         if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
-            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id=2 ");
+            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost,s.supplier_type_id from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id=2 ");
             $result = $result->queryAll();
         }else if($_POST['type'] == 'wedding' || $_POST['type'] == 'meeting'){
-            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id<>2 ");
+            $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost,s.supplier_type_id from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id<>2 ");
             $result = $result->queryAll();
         };
         // print_r($result);die;
+
         $total_cost = 0;
         foreach ($result as $key => $value) {
             $total_cost += $value['actual_unit_cost']*$value['unit'];
         };
-        $order = yii::app()->db->createCommand("select s1.name as designer_name,s2.name as planner_name ");
-        $order = $order->queryAll();
+
+        $order = yii::app()->db->createCommand("select s1.name as designer_name,s2.name as planner_name from `order` left join staff s1 on designer_id=s1.id left join staff s2 on planner_id=s2.id where `order`.id=".$_POST['order_id']);
+        $order = $order->queryAll();//取策划师／婚宴销售姓名
+
         if($total_cost == 0 && empty($result)){
-            echo "策划师还没录入商品，请您联系本单策划师：".;
-        }else{
+            echo "策划师还没录入商品，请您联系本单策划师/婚宴销售：".$order['designer_name']."/".$order['planner_name'];
+        }else if(!empty($result)){
+            echo 1;
+            foreach ($result as $key => $value) {
+                if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
+                    if($value['supplier_type_id'] == 2){
+                        OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$_POST['money']/$value['unit']));
+                    };
+                    break;
+                }else if($_POST['type'] == 'wedding' || $_POST['type'] == 'meeting'){
+                    if($value['supplier_type_id'] != 2){
+                        //print_r($value['actual_unit_cost']);
+                        OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$_POST['money']/$value['unit']));
+                    };
+                    break;
+                };
+            };
+        }else if($total_cost != 0 && !empty($result)){
+            echo 4;
             $temp = $_POST['money']/$total_cost;
             foreach ($result as $key => $value) {
                 OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$value['actual_unit_cost']*$temp));
             };
-        };
+        }
     }
 
     public function sendMessage($html,$corpid,$corpsecret)

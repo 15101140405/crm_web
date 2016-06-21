@@ -31,7 +31,7 @@
     <section class="daily_container daily_list_c">
         <ul class="tab_nav flexbox">
             <li>订单日期</li>
-            <li>统筹／策划</li>
+            <li>婚宴／策划</li>
             <li>推单</li>
         </ul>
         <ul class="term_list">

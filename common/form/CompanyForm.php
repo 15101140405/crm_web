@@ -53,6 +53,7 @@ class CompanyForm extends InitForm
         $model = new OrderMeetingCompany();  
         $model->account_id=$arr['account_id'];
         $model->company_name=$arr['company_name'];
+        $model->hotel_id=$arr['hotel_id'];
         $model->update_time = date('Y-m-d');
 
         if($model->save()>0){

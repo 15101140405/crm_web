@@ -47,9 +47,10 @@
                 };
                 $.post("<?php echo $this->createUrl('order/savecost');?>",data,function(retval){
                     if(retval == "zero_error"){
-                        alert("订单总价为零，不能输入成本！");
+                        alert(retval);
                     }else{
                         alert('保存成功！');
+                        // alert(retval);
                 <?php if($_GET['from'] == 'wedding_feast' || $_GET['from'] == 'wedding'){?>
                         location.href = "<?php echo $this->createUrl('design/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=";
                 <?php }else if($_GET['from'] == 'meeting_feast' || $_GET['from'] == 'meeting'){?>
