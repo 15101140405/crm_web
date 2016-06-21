@@ -487,7 +487,7 @@
                 location.href = "<?php echo $this->createUrl("background/edit_case");?>&ci_id=" + $(this).parent().parent().attr('CI-ID');
             };
             if("<?php echo $_GET['CI_Type']?>" == 5){
-                location.href = "<?php echo $this->createUrl("background/edit_set1");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
+                location.href = "<?php echo $this->createUrl("background/upload_set1");?>&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
             };
             if('<?php echo $_GET['CI_Type']?>' == 7){
                 location.href = "<?php echo $this->createUrl("background/edit_supplier_product");?>&product_id=" + $(this).parent().parent().attr('product-id');
