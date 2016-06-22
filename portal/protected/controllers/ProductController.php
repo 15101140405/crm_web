@@ -394,8 +394,9 @@ class ProductController extends InitController
         $img = $result->queryAll();
         if(!empty($img)){
             foreach ($img as $key => $value) {
-                $t=explode(".", $value['img_url']);
-                $img[$key]['img_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+                // $t=explode(".", $value['img_url']);
+                // $img[$key]['img_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];//文件名末尾的_sm会显示小图
+                $img[$key]['img_url'] = "http://file.cike360.com".$value['img_url'];
             };
         };
 
