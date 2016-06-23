@@ -48,30 +48,63 @@ class OrderController extends InitController
     public function actionOrder()
     {
         /*Yii::app()->session['userid']=100;*/
-        $order = Order::model()->findAll(array(
-                'condition' => 'planner_id = :planner_id || designer_id = :designer_id',
-                'params' => array(
-                        ':planner_id' => $_SESSION['userid'],
-                        ':designer_id' => $_SESSION['userid']
-                    ),
-                'order' => 'update_time DESC'
-            ));
-        /*print_r($order);die;*/
-        $order_data = array();
-        foreach ($order as $key => $value) {
-            if($value['account_id'] == $_SESSION['account_id'] && $value['staff_hotel_id'] == $_SESSION['staff_hotel_id']){
-                $item = array();
-                $item['order_name'] = $value['order_name'];
-                $item['order_type'] = $value['order_type'];
-                $item['id'] = $value['id'];
-                $t = explode(" ",$value['order_date']);
-                $item['order_date'] = $t[0];
-                $item['order_status'] = $value['order_status'];
-                $staff = Staff::model()->findByPk($value['planner_id']);
-                $item['planner_name'] = $staff['name'];
-                $order_data[] = $item;
-            };
-        };
+        // $order = Order::model()->findAll(array(
+        //         'condition' => 'planner_id = :planner_id || designer_id = :designer_id',
+        //         'params' => array(
+        //                 ':planner_id' => $_SESSION['userid'],
+        //                 ':designer_id' => $_SESSION['userid']
+        //             ),
+        //         'order' => 'update_time DESC'
+        //     ));
+
+        // $supplier_type_id = 16 ;//supplier_type_id为16的即“推单渠道”
+
+        // $list = SupplierProduct::model()->findAll(array(
+        //     "condition" => "supplier_type_id=:id",
+        //     "params"    => array( ":id" => $supplier_type_id), 
+        //                                                )
+        //                                          );
+        // $product_id = array();
+        // foreach ($list as $key => $value) {
+        //     $item = array();
+        //     $item['id'] = $value['id'];
+        //     $item['name'] = $value['name'];
+        //     $product_id[$key] = $value['id'];
+        // }
+        // $order_data = array();
+        // foreach ($order as $key => $value) {
+        //     if($value['account_id'] == $_SESSION['account_id'] && $value['staff_hotel_id'] == $_SESSION['staff_hotel_id']){
+        //         $item = array();
+        //         $item['order_name'] = $value['order_name'];
+        //         $item['order_type'] = $value['order_type'];
+        //         $item['id'] = $value['id'];
+        //         $t = explode(" ",$value['order_date']);
+        //         $item['order_date'] = $t[0];
+        //         $item['order_status'] = $value['order_status'];
+        //         $staff = Staff::model()->findByPk($value['planner_id']);
+        //         $item['planner_name'] = $staff['name'];
+
+        //         $criteria3 = new CDbCriteria; 
+        //         $criteria3 -> addInCondition("product_id",$product_id);
+        //         $criteria3 -> addCondition("order_id=:id");
+        //         $criteria3 ->params[':id']= $value['id'];; 
+        //         $select = OrderProduct::model()->find($criteria3);
+
+        //         $select_reference = SupplierProduct::model()->find(array(
+        //             "condition" => "id=:id",
+        //             "params" => array( ":id" => $select['product_id'])
+        //             )
+        //         );
+
+
+        //         $order_data[] = $item;
+        //     };
+        // };
+        $result = yii::app()->db->createCommand("SELECT `order`.order_name,order_type,`order`.id,`order`.order_date,order_status,staff.`name` AS planner_name,supplier_product.`name` AS reference_name 
+            FROM staff RIGHT JOIN `order` ON staff.id=planner_id LEFT JOIN (order_product RIGHT JOIN supplier_product ON supplier_product.id=product_id AND supplier_type_id=16) ON order_id=`order`.id 
+            where (planner_id=".$_SESSION['userid']." OR designer_id=".$_SESSION['userid'].") AND staff_hotel_id=".$_SESSION['staff_hotel_id']." 
+            ORDER BY `order`.update_time DESC");
+        $order_data = $result->queryAll();
 
         $hotel = StaffHotel::model()->findByPk($_SESSION['staff_hotel_id']);
 

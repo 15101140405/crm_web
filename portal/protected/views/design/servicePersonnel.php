@@ -202,10 +202,10 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=video&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=video&supplier_id=" + $(this).attr("supplier-id") + "&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=video&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=video&supplier_id=" + $(this).attr("supplier-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -250,10 +250,10 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=camera&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=camera&supplier_id=" + $(this).attr("supplier-id") +"&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=camera&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=camera&supplier_id=" + $(this).attr("supplier-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
@@ -286,7 +286,7 @@
 
                     $(".charge_list").prepend(html_makeup); //打印新的订单列表
                 <?php  } ?>
-                    //先判断是否已经选择摄影
+                    //先判断是否已经选择化妆
                 <?php
                 foreach ($makeup_selected_staff_id as $key => $value) {
                 ?>
@@ -299,31 +299,16 @@
 
                     //点击li跳转子页(渲染后界面)
                     $("li.selected").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=makeup&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=makeup&supplier_id=" + $(this).attr("supplier-id") + "&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=makeup&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=makeup&supplier_id=" + $(this).attr("supplier-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
 
                 case "other":
                     $(".charge_list").empty(); //清空订单列表
                 <?php
-
-                /*$arr_category_makeup = array(//background data
-                    '0' => array(
-                        'product_id' => '2',
-                        'name' => '督导师',
-                        'supplier_name' => '小李'
-                    ),
-                    '1' => array(
-                        'product_id' => '1',
-                        'name' => '灯光师',
-                        'supplier_name' => '小李'
-
-                    )
-
-                );*/
                 foreach ($arr_category_other as $key => $value) {
                 foreach ($value as $key1 => $value1) {
                     $arr_makeup[$key1] = $value1;
