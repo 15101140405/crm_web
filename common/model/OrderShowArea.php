@@ -11,14 +11,14 @@
  * @property string $update_time
  * @property string $avatar
  */
-class OrderSet extends InitActiveRecord
+class OrderShowArea extends InitActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'order_set';
+		return 'order_show_area';
 	}
 
 	/**
@@ -32,12 +32,8 @@ class OrderSet extends InitActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('order_id',$this->order_id);
-		$criteria->compare('wedding_set_id',$this->wedding_set_id,true);
-		$criteria->compare('amount',$this->amount,true);
-		$criteria->compare('actual_service_ratio',$this->amount,true);
-		$criteria->compare('order_product_list',$this->order_product_list,true);
-		$criteria->compare('final_price',$this->final_price,true);
+		$criteria->compare('name',$this->name);
+		$criteria->compare('description',$this->description);
 		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(

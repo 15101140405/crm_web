@@ -158,6 +158,74 @@ class OrderForm extends InitForm
         }
     }
 
+    public function single_order_price($order_id)
+    {
+
+    }
+
+    public function many_order_price($order_list) // $order_list = (1,2,3); 例如
+    {
+        $result = yii::app()->db->createCommand("select p.id,p.order_id,p.actual_price,p.unit,p.actual_unit_cost,p.actual_service_ratio,o.order_type,o.planner_id,o.designer_id,feast_discount,other_discount,discount_range,cut_price,sp.supplier_type_id from order_product p left join `order` o on p.order_id=o.id left join supplier_product sp on p.product_id=sp.id where p.order_id in ".$order_list." order by order_id");;
+        $result = $result->queryAll();
+        // print_r(json_encode($result));die;
+
+        $ttt = array(
+                "id" => "0",
+                "order_id" => "0",
+                "actual_price" => "0",
+                "unit" => "0",
+                "actual_unit_cost" => "0",
+                "actual_service_ratio" => "0",
+                "order_type" => "0",
+                "planner_id" => "0",
+                "designer_id" => "0",
+                "feast_discount" => "0",
+                "other_discount" => "0",
+                "discount_range" => "0",
+                "cut_price" => "0",
+                "supplier_type_id" => "0"
+            );
+        $result[]=$ttt;
+
+        $order_price = array();
+        $tem_order_id = $result[0]['order_id'];
+        $tem_order_price = 0;
+        foreach ($result as $key => $value) {            
+            if($value['order_id'] != $tem_order_id){
+                $item = array();
+                $item['order_id'] = $tem_order_id;
+                $item['total_price'] = $tem_order_price;
+                $tem_order_id = $value['order_id'];
+                $tem_order_price = 0;
+                $order_price[] = $item;
+            };
+            if($value['supplier_type_id'] == 2){
+                $tem_order_price += $value['actual_price']*$value['unit']*($value['feast_discount']*0.1)*(1+$value['actual_service_ratio']*0.01);
+                
+            }else{
+                $t = explode(',', $value['discount_range']);
+                $m = 0;
+                foreach ($t as $key_t => $value_t) {
+                    if($value_t == $value['supplier_type_id']){
+                        $m++;
+                    };
+                };
+                // echo $value['order_id'];
+                // return $t;
+                // echo $m.",".$value['actual_price'].",".$value['unit'].",".$value['other_discount']*0.1."|";
+                if($m == 0){
+                // echo $m.",".$value['id']."|";
+                    
+                    $tem_order_price += $value['actual_price']*$value['unit'];
+                }else{
+                    $tem_order_price += $value['actual_price']*$value['unit']*$value['other_discount']*0.1;
+                };
+                // echo $tem_order_price.",";
+            };
+        };
+        return $order_price;
+    }
+
     
     
 

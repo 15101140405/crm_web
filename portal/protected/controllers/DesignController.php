@@ -3785,6 +3785,7 @@ class DesignController extends InitController
 
             $supplier_product_id = array();
 
+
             foreach ($post->product as $key => $value) {
                 $supplier_product_id[] = $value ->productid;
             }
@@ -3876,7 +3877,10 @@ class DesignController extends InitController
 
         //分享销客接口
         
-        $result=WPRequest::sfxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
+        // $result=WPRequest::sfxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
+
+
+        
         //print_r($result);
         //echo $corpsecret;
     // } catch (Exception $e) {
