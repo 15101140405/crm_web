@@ -136,18 +136,39 @@
         <div class="right_area right" style="background:#fff;width:240px;">
             <div style="width:240px;">
                 <div class="tit_box1" style="width:240px;background:#fff;height:20px;">
-                    <h2 class="left">原总价：&yen;<span id="total_price">0</span></h2>
+                    <h2 class="left">合计：&yen;<span id="total_price">0</span></h2>
                 </div>
                 <div class="tit_box clearfix" style="width:240px;background:#fff;border-bottom: 1px solid #e6e6e6;">
-                    <h2 class="left">套系价：</h2>
-                    <input class="input_in" id="final_price" style="height: 30px;margin-top: 5px;border: 0;" type="text" value="" placeholder="请输入组成套系后的总价">
+                    <h2 class="left">定价：&yen;</h2>
+                    <input class="input_in" id="final_price" style="width:140px;height: 30px;margin-top: 5px;border: 0;" type="text" value="<?php if (isset($final_price)) {echo $final_price;}?>" placeholder="请输入套系总价">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
                 <ul class="add_list" style="width:240px;" id="shopping_car">
+                    <?php 
+                    if (isset($_GET['ct_id'])) {
+                        if (!empty($_GET['ct_id'])) {
+                            foreach ($product_list as $key => $value) {
+                    ?>
+                    <li class="clearfix new_hid" style="width:215px;" product-id="<?php echo $value['product_id']?>" unit-cost="<?php echo $value['cost']?>" style="display: list-item;">
+                        <img class="left product_pic" src="http://file.cike360.com/upload/2r20160516111246.jpg" alt="">
+                        <div class="con left">
+                            <h3 class="product_name"></h3>
+                            <div class="counter_box clearfix">
+                                <span class="minus_btn btn disabled left">-</span>
+                                <input class="count left amount" type="text" readonly="true" value="<?php echo $value['amount']?>">
+                                <span class="add_btn btn left">+</span>
+                            </div>
+                        </div>
+                        <img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px">
+                        <p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥<input class="product_price" style="width: 40px;" type="text" value="<?php echo $value['price']?>"></p>
+                    </li>
+                    <?php }}}?>
                 </ul>
                  
             </div>
-            <div class="button_box" id="create">下一步</div>
+            <div class="button_box" id="create">定价：&yen;<span id="final_price_show">0</span>下一步</div>
+            <span class="tip tip2 hid" id="list_tip">请为套系选择内容</span>
+            <span class="tip tip2 hid" id="price_tip">请设定套系价</span>
         </div>
     </div>
 
@@ -174,8 +195,31 @@
 <script>
     $(function(){
         //初始渲染
-        $("#product li").addClass("hid");
-        $("[supplier-type-id='20']").removeClass("hid");
+        <?php
+            if(!isset($_GET['type'])){
+        ?>
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='20']").removeClass("hid");
+        <?php }else if($_GET['type'] == "menu"){?>
+            $("#host").remove();
+            $("#video").remove();
+            $("#camera").remove();
+            $("#makeup").remove();
+            $("#other").remove();
+            $("#lss").remove();
+            $(".shuxian").remove();
+            $("#top").html("婚宴／会议餐")
+        <?php }else if($_GET['type'] == "theme"){?>
+            $("#product li").addClass("hid");
+            $("[supplier-type-id='20']").removeClass("hid");
+        <?php } ?>
+
+        $("#shopping_car li").each(function(){
+            var product = $("#product [product-id='"+$(this).attr('product-id')+"']");
+            $(this).find(".product_id").html(product.find(".name").html());
+            $(this).find(".product_pic").attr("src",product.find("img").attr("src"));
+            total_price(); 
+        });
 
         //点击加入套系
         $(".add_product").on("click",function(){
@@ -192,7 +236,7 @@
                         '</div>'+
                         '<img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px"></img>'+
                         '<p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥'+
-                            '<input class="product_price" type="text" value="'+data.find('.price').find("strong").html()+'">'+
+                            '<input class="product_price" style="width: 40px;" type="text" value="'+data.find('.price').find("strong").html()+'">'+
                         '</p>'+
                     '</li>';
             $("#shopping_car").prepend(html);
@@ -261,25 +305,34 @@
 
         //点击创建套系
         $("#create").on("click",function(){
+            $(".tip").removeClass("hid");
+            $(".tip").addClass("hid");
+            
             var product_list = "";
             $("#shopping_car li").each(function(){
                 var price = $(this).find(".product_price").val()*$("#final_price").val()/$("#total_price").html();
                 product_list += $(this).attr('product-id') +"|"+ price.toFixed(2) +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
-            if ($("#final_price").val() == "") {
-                var final_price = $("#total_price").html();
+            if(product_list == ""){
+                $("#list_tip").removeClass("hid")
+            } else if ($("#final_price").val() == "") {
+                $("#price_tip").removeClass("hid")
             } else{
-                var final_price = $("#final_price").val();
+                // if ($("#final_price").val() == "") {
+                //     var final_price = $("#total_price").html();
+                // } else{
+                //     var final_price = $("#final_price").val();
+                // };
+                <?php if(!isset($_GET['type'])){?>
+                    // var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
+                    // if (r==true){
+                        location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
+                    // }
+                <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+                location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
+                <?php }?>
             };
-            <?php if(!isset($_GET['type'])){?>
-                var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
-                if (r==true){
-                    location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
-                }
-            <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
-            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" +final_price;
-            <?php }?>
         });
 
         //改变数量、单价时，刷新总价
@@ -294,7 +347,16 @@
             total_price(); 
         });
         $(".shopping_car").find(".counter_box").count({limitnum:5});
-        
+
+        //输入套系总价时，刷新
+        $('#final_price_show').html($(final_price).val());
+        $('#final_price').bind('input propertychange', function() {
+            $('#final_price_show').html($(this).val());
+            if ($(this).val() =="") {
+                $('#final_price_show').html(0);
+            }
+        })  
+  
         //总价计算，并刷新
         function total_price(){
             var total_price = 0;

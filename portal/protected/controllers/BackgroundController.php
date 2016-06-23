@@ -573,8 +573,27 @@ class BackgroundController extends InitController
     public function actionUpload_set1()
     {
         $account_id = $_COOKIE['account_id'];
-
         if(!isset($_GET['type'])){
+            $product_list = array();
+            $final_price = 0;
+            if (isset($_GET['ct_id'])) {
+                if (!empty($_GET['ct_id'])) {
+                    $Wedding_set = Wedding_set::model()->findByPk($_GET['ct_id']);
+                    $final_price = $Wedding_set['final_price'];
+                    if($Wedding_set['product_list']!=""){
+                        $t = explode(",", $Wedding_set['product_list']);
+                        foreach ($t as $key => $value) {
+                            $item = array();
+                            $t1 = explode("|", $value);
+                            $item['product_id'] = $t1[0];
+                            $item['price'] = $t1[1];
+                            $item['amount'] = $t1[2];
+                            $item['cost'] = $t1[3];
+                            $product_list[]=$item;
+                        };
+                    };
+                }
+            }
             $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
                 "condition" => "account_id = :account_id",
                 "params"    => array(
@@ -596,8 +615,11 @@ class BackgroundController extends InitController
             // print_r($decoration_tap);die;
             // print_r($supplier_product);die;
             $this -> render("upload_set1",array(
-                'decoration_tap' => $decoration_tap,
-                'supplier_product' => $supplier_product,
+                'decoration_tap'    => $decoration_tap,
+                'supplier_product'  => $supplier_product,
+                'product_list'      => $product_list,
+                'final_price'      => $final_price,
+
             ));
         }else if($_GET['type'] == 'theme'){
             $result = yii::app()->db->createCommand("select product_name,price,unit,service_product.id as product_id,service_product.service_type as service_type,cost,case_info.CI_Pic,ref_pic_url from service_product left join service_person on service_person_id=service_person.id left join case_info on service_person.staff_id=case_info.CT_ID where service_product.product_show=1 and CI_Type in (6,13,14,15)");

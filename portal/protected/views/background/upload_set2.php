@@ -358,6 +358,7 @@
                 feast_discount: "",
                 other_discount: "",
                 staff_hotel_id: $("#hotel option:selected").attr("staff-hotel-id"),
+                CI_Type: 5,
             }
             $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
