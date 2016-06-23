@@ -94,6 +94,98 @@ class ProductForm extends InitForm
             $arr['success']= 0;
             return  $arr;
         };
+
     }
+
+    public function OpInsert($order_id,$sp_id,$amount,$price,$cost,$remark)
+    {
+        $sp = SupplierProduct::model()->findByPk($sp_id);
+        if($price == "#"){
+            $price = $sp['unit_price'];
+        };
+        if($cost == "#"){
+            $cost = $sp['unit_cost'];
+        };
+        if($remark == "#"){
+            $remark = $sp['description'];
+        };
+
+        $model = new OrderProduct(); //产品
+        $model->account_id = $sp['account_id'];
+        $model->order_id = $order_id;
+        $model->product_type = 0;
+        $model->product_id = $sp_id;
+        $model->order_set_id = 0;
+        $model->sort = 1;
+        $model->actual_price = $price;
+        $model->unit = $amount;
+        $model->actual_unit_cost = $cost;
+        $model->actual_service_ratio = 0;
+        $model->remark = $remark;
+        $model->update_time = date('Y-m-d');
+        $model->save();
+        $id = $model->attributes['id'];
+
+        return $id;
+    }
+
+    public function SpInsert($account_id,$supplier_id,$supplier_type_id,$decoration_tap,$name,$category,$unit_price,$unit_cost,$unit,$url)
+    {
+        $sp = new SupplierProduct;
+        $sp->account_id=$account_id;
+        $sp->supplier_id=$supplier_id;
+        $sp->service_product_id=0;
+        $sp->supplier_type_id=$supplier_type_id;
+        $sp->dish_type=0;
+        $sp->decoration_tap=$decoration_tap;
+        $sp->standard_type=0;
+        $sp->name=$name;
+        $sp->category=$category;
+        $sp->unit_price=$unit_price;
+        $sp->unit_cost=$unit_cost;
+        $sp->unit=$unit;
+        $sp->service_charge_ratio=0;
+        $sp->ref_pic_url=$url;
+        $sp->save();
+        $id = $sp->attributes['id'];
+
+        return $id;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

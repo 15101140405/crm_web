@@ -32,7 +32,7 @@
             <li class="select_ulist_item round_select round_select_selected" value="17">策划费</li>
             <li class="select_ulist_item round_select round_select_selected" value="19">场地费</li>
             <li class="select_ulist_item round_select round_select_selected" value="20">场地布置</li>
-            <li class="select_ulist_item round_select round_select_selected" value="3">服务人员</li>
+            <li class="select_ulist_item round_select round_select_selected" value="3,4,5,6,7">服务人员</li>
             <!-- <li class="select_ulist_item round_select round_select_selected" value="4">摄像</li>
             <li class="select_ulist_item round_select round_select_selected" value="5">摄影</li>
             <li class="select_ulist_item round_select round_select_selected" value="6">化妆</li>
