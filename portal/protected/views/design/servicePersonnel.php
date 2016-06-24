@@ -86,11 +86,17 @@
 <script src="js/common.js"></script>
 <script>
     $(function () {
+        var tab = localStorage.getItem('tab');
         //从tp_detail返回，渲染对应tab页面
-        if ($.util.param("tab") != "") {
-            showdata($.util.param("tab"));
-            $("[type-id='" + $.util.param("tab") + "']").addClass("act");
-            $("[type-id='" + $.util.param("tab") + "']").siblings().removeClass("act");
+        // if ($.util.param("tab") != "") {
+        //     showdata($.util.param("tab"));
+        //     $("[type-id='" + $.util.param("tab") + "']").addClass("act");
+        //     $("[type-id='" + $.util.param("tab") + "']").siblings().removeClass("act");
+        // } else 
+        if (tab != "") {
+            showdata(tab);
+            $("[type-id='" + tab + "']").addClass("act");
+            $("[type-id='" + tab + "']").siblings().removeClass("act");
         } else {
             showdata("host");
         }
@@ -101,6 +107,7 @@
             $(this).addClass("act");
             $(this).siblings().removeClass("act");
             showdata($(this).attr("type-id"));
+            localStorage.setItem('tab',$(this).attr("type-id"));
         })
 
         //点击返回按钮，判断from，返回对应页面
@@ -182,7 +189,7 @@
                 foreach ($arr_category_video as $key => $value) {
                 ?>
                     var html_video;
-                    html_video = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
+                    html_video = '<li class="ulist_item list_more " supplier-id="<?php  echo $value['supplier_id'];?>">';
                     html_video += '<div class="item ">';
                     html_video += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_video += '</div><i class="name"><?php  echo $value['team_name'];?></i>';//!$  此处加入了供应商姓名
@@ -229,7 +236,7 @@
                 foreach ($arr_category_camera as $key => $value) {
                 ?>
                     var html_camera;
-                    html_camera = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
+                    html_camera = '<li class="ulist_item list_more " supplier-id="<?php  echo $value['supplier_id'];?>">';
                     html_camera += '<div class="item ">';
                     html_camera += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_camera += '</div><i class="name"><?php  echo $value['team_name'];?></i>';
@@ -278,7 +285,7 @@
                 foreach ($arr_category_makeup as $key => $value) {
                 ?>
                     var html_makeup;
-                    html_makeup = '<li class="ulist_item list_more " staff-id="<?php  echo $value['staff_id'];?>">';
+                    html_makeup = '<li class="ulist_item list_more " supplier-id="<?php  echo $value['supplier_id'];?>">';
                     html_makeup += '<div class="item ">';
                     html_makeup += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_makeup += '</div><i class="name"><?php  echo $value['team_name'];?></i>';   //!$ 此处去掉了价格，加入了供应商姓名
@@ -315,14 +322,14 @@
                 }
                 ?>
                     var html_other;
-                    html_other = '<li class="ulist_item list_more" staff-id="<?php  echo $value['staff_id'];?>">';
+                    html_other = '<li class="ulist_item list_more" supplier-id="<?php  echo $value['supplier_id'];?>">';
                     html_other += '<div class="item ">';
                     html_other += '<p class="name"><?php  echo $value['name'];?></p>';
                     html_other += '</div><i class="name"><?php  echo $value['team_name'];?></i>'; //!$ 此处加入了供应商姓名
                     html_other += '</li>';
                     $(".charge_list").prepend(html_other); //打印新的订单列表
                 <?php  } ?>
-                    //先判断是否已经选择摄影
+                    //先判断是否已经选择其他人员
                 <?php
                 foreach ($other_selected_staff_id as $key => $value) {
                 ?>
@@ -338,7 +345,7 @@
                         location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&type=edit&tab=other&from=" + $.util.param("from") + "&order_id=" + $.util.param("order_id");
                     })
                     $("li.list_more").on("click", function () {
-                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=other&staff_id=" + $(this).attr("staff-id") + "&order_id=" + $.util.param("order_id");
+                        location.href = "<?php echo $this->createUrl("service/service_product_list", array());?>&tab=other&supplier_id=" + $(this).attr("supplier-id") + "&order_id=" + $.util.param("order_id");
                     })
                     break;
             }

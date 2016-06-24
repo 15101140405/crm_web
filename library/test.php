@@ -3,6 +3,13 @@
 include_once('WPRequest.php');
 
 echo "test:";
+
+$servicelist['host']=array();
+$servicelist['video']=array();
+$servicelist['camera']=array();
+$servicelist['makeup']=array();
+$servicelist['other']=array();
+var_dump($servicelist);
 // print_r($_POST);
 
 // $touser = 2222222;
@@ -53,6 +60,10 @@ echo "test:";
 <script>
 $(function(){
 	$("#list_tip").addClass("hid");
+    <?php
+    $rr =
+    ?>var ab = 5;<?php
+    echo "<br/>ttttttttttttest:".$rr;?>
 
 
     // $("[supplier-type-id='20']").removeClass("hid");

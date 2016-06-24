@@ -3001,14 +3001,16 @@ class DesignController extends InitController
         /*取supplier_product*/
         /*********************************************************************************************************************/
 
-        $accountId = $_SESSION['account_id'];
+        // $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
-        $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
-        /*print_r($supplierProducts);die;*/
-        $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
-        $supplierProducts2 = $SupplierProductForm->getSupplierProductList2($accountId);
-        $supplierProducts3 = $SupplierProductForm->getSupplierProductList3($accountId);
-        $supplierProducts4 = $SupplierProductForm->getSupplierProductList4($accountId);
+        $servicelist = $SupplierProductForm -> getServiceSupplierclassified();
+        // $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
+        // /*print_r($supplierProducts);die;*/
+        // $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
+        // $supplierProducts2 = $SupplierProductForm->getSupplierProductList2($accountId);
+        // $supplierProducts3 = $SupplierProductForm->getSupplierProductList3($accountId);
+        // $supplierProducts4 = $SupplierProductForm->getSupplierProductList4($accountId);
+
 
 
         /*********************************************************************************************************************/
@@ -3095,7 +3097,6 @@ class DesignController extends InitController
                 $other_selected_staff_id[] = $supplier['staff_id'];
             }
         }
-        
         $service_total = $host_total + $video_total + $camera_total + $makeup_total + $other_total ;
         
         $serve_bill = array(  //background data
@@ -3107,22 +3108,15 @@ class DesignController extends InitController
                 '化妆师' => $makeup_total,
                 '其他' => $other_total,
             )
-
         );
-
-
-        
-
         /*print_r($supplierProducts);die;*/
-
-
         $this->render("servicePersonnel",
             array(
-                'arr_category_host' => $supplierProducts,
-                'arr_category_video' => $supplierProducts1,
-                'arr_category_camera' => $supplierProducts2,
-                'arr_category_makeup' => $supplierProducts3,
-                'arr_category_other' => $supplierProducts4,
+                'arr_category_host' => $servicelist['host'],
+                'arr_category_video' => $servicelist['video'],
+                'arr_category_camera' => $servicelist['camera'],
+                'arr_category_makeup' => $servicelist['makeup'],
+                'arr_category_other' => $servicelist['other'],
                 'video_data' => $video_data,
                 'camera_data' => $camera_data,
                 'makeup_data' => $makeup_data,
