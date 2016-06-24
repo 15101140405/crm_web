@@ -45,16 +45,24 @@
                     'type' : '<?php echo $_GET['from']?>',
                     'money' : $("#cost").val()
                 };
+                console.log(data);
                 $.post("<?php echo $this->createUrl('order/savecost');?>",data,function(retval){
                     if(retval == "zero_error"){
                         alert(retval);
+                    }else if(retval == 000){
+                        alert('策划师还没录入商品，请您联系本单策划师/婚宴销售');
+                <?php if($_GET['from'] == 'wedding_feast' || $_GET['from'] == 'wedding'){?>
+                        location.href = "<?php echo $this->createUrl('design/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";
+                <?php }else if($_GET['from'] == 'meeting_feast' || $_GET['from'] == 'meeting'){?>
+                        location.href = "<?php echo $this->createUrl('meeting/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";
+                <?php }?>
                     }else{
                         alert('保存成功！');
                         // alert(retval);
                 <?php if($_GET['from'] == 'wedding_feast' || $_GET['from'] == 'wedding'){?>
-                        location.href = "<?php echo $this->createUrl('design/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=";
+                        location.href = "<?php echo $this->createUrl('design/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";
                 <?php }else if($_GET['from'] == 'meeting_feast' || $_GET['from'] == 'meeting'){?>
-                        location.href = "<?php echo $this->createUrl('meeting/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=";
+                        location.href = "<?php echo $this->createUrl('meeting/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";
                 <?php }?>
                     };
                 });

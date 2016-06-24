@@ -1156,9 +1156,9 @@ class OrderController extends InitController
 
     public function actionSavecost()
     {
-        // $_POST['order_id']=55;
-        // $_POST['type']='meeting';
-        // $_POST['money']=10000;
+        // $_POST['order_id']=481;
+        // $_POST['type']='wedding_feast';
+        // $_POST['money']=49140.2;
         $result = array();
         if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
             $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost,s.supplier_type_id from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id=2 ");
@@ -1174,17 +1174,19 @@ class OrderController extends InitController
             $total_cost += $value['actual_unit_cost']*$value['unit'];
         };
 
-        $order = yii::app()->db->createCommand("select s1.name as designer_name,s2.name as planner_name from `order` left join staff s1 on designer_id=s1.id left join staff s2 on planner_id=s2.id where `order`.id=".$_POST['order_id']);
-        $order = $order->queryAll();//取策划师／婚宴销售姓名
+        // $order = yii::app()->db->createCommand("select s1.name as designer_name,s2.name as planner_name from `order` left join staff s1 on designer_id=s1.id left join staff s2 on planner_id=s2.id where `order`.id=".$_POST['order_id']);
+        // $order = $order->queryAll();//取策划师／婚宴销售姓名
 
         if($total_cost == 0 && empty($result)){
-            echo "策划师还没录入商品，请您联系本单策划师/婚宴销售：".$order['designer_name']."/".$order['planner_name'];
-        }else if(!empty($result)){
+            echo 000;
+            // echo "策划师还没录入商品，请您联系本单策划师/婚宴销售：".$order[0]['designer_name']."/".$order[0]['planner_name'];
+        }else if(!empty($result) && $total_cost == 0){
             echo 1;
             foreach ($result as $key => $value) {
                 if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
                     if($value['supplier_type_id'] == 2){
-                        OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$_POST['money']/$value['unit']));
+                        echo $value['id'];
+                        print_r(OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$_POST['money']/$value['unit'])));
                     };
                     break;
                 }else if($_POST['type'] == 'wedding' || $_POST['type'] == 'meeting'){

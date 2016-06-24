@@ -1015,7 +1015,7 @@ class ResourceController extends InitController
         // *****************   构造 订单基本信息    *****************
         // *******************************************************
         
-        $result4 = yii::app()->db->createCommand("select o.id,o.order_name,planner_id,s1.name as planner_name,designer_id,s2.name as designer_name,staff_hotel_id,sh.name as hotel_name,groom_name,groom_phone,groom_wechat,groom_qq,bride_name,bride_phone,bride_phone,bride_wechat,bride_qq,contact_name,contact_phone from `order` o ".
+        $result4 = yii::app()->db->createCommand("select o.id,o.order_name,feast_discount,other_discount,discount_range,cut_price,planner_id,s1.name as planner_name,designer_id,s2.name as designer_name,staff_hotel_id,sh.name as hotel_name,groom_name,groom_phone,groom_wechat,groom_qq,bride_name,bride_phone,bride_phone,bride_wechat,bride_qq,contact_name,contact_phone from `order` o ".
             "left join staff_hotel sh on o.staff_hotel_id=sh.id ".
             "left join staff s1 on planner_id=s1.id ".
             "left join staff s2 on designer_id=s2.id ".
@@ -1024,6 +1024,74 @@ class ResourceController extends InitController
             // "left join supplier_product sp on op.product_id=sp.id ".
             "where o.id=".$_GET['order_id']/*." and sp.supplier_type_id=16"*/);
         $result4 = $result4->queryAll();
+        // print_r($result4);die;
+
+
+        //构造统筹师、策划师列表
+        $staff = yii::app()->db->createCommand("select * from staff where account_id in (select account_id from staff where id=".$_GET['token'].")");
+        $staff = $staff->queryAll();
+
+        $designer_list = array();
+        $planner_list = array();
+
+        foreach ($staff as $key => $value) {
+            $t = rtrim($value['department_list'], "]");
+            $t = ltrim($t, "[");
+            $t = explode(',', $t);
+            $d = 0;
+            $p = 0;
+            foreach ($t as $key_t => $value_t) {
+                if($value_t == 2){$p++;};
+                if($value_t == 3){$d++;};
+            };
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            if($d != 0){
+                $designer_list[]=$item;
+            };
+            if($p != 0){
+                $planner_list[]=$item;
+            };
+        }
+
+        //构造渠道列表
+        $result = new ProductForm;
+        $tuidan_list = $result->tuidan_list($_GET['token']);
+
+        //构造折扣范围列表
+        $discount = array();
+        $discount['feast_discount'] = $result4[0]['feast_discount'];
+        $discount['other_discount'] = $result4[0]['other_discount'];
+        $discount['list'] = array();
+        $descount_list = yii::app()->db->createCommand("select id,name from supplier_type where role=1");
+        $descount_list = $descount_list->queryAll();
+        if($discount['other_discount'] != 10 && isset($result4[0]['discount_range'])){
+            $t=explode(',', $result4[0]['discount_range']);
+            foreach ($descount_list as $key => $value) {
+                $item = array();
+                $item['id']=$value['id'];
+                $item['name']=$value['name'];
+                $item['select']=0;
+                $m=0;
+                foreach ($t as $key_t => $value_t) {
+                    if($value['id'] == $value_t){
+                        $m++;
+                    };
+                };
+                if($m!=0){
+                    $item['select']=1;
+                };
+                $discount['list'][]=$item;
+            };
+        }else{
+            $item['id']=$value['id'];
+            $item['name']=$value['name'];
+            $item['select']=1;
+            $discount['list'][]=$item;
+        };
+        
+
         // print_r($result3);die;
         $order_data = array(
                 "id"=> $result4[0]['id'] ,
@@ -1043,7 +1111,12 @@ class ResourceController extends InitController
                 "bride_wechat"=> $result4[0]['bride_wechat'] ,
                 "bride_qq"=> $result4[0]['bride_qq'] ,
                 "contact_name"=> $result4[0]['contact_name'] ,
-                "contact_phone"=> $result4[0]['contact_phone']
+                "contact_phone"=> $result4[0]['contact_phone'],
+                'designer_list'=> $designer_list,
+                'planner_list'=> $planner_list,
+                'tuidan_list'=> $tuidan_list,
+                'discount'=> $discount,
+                'cut_price'=> $result4[0]['cut_price'],
             );        
         $t=explode(' ', $order['order_date']);
         $order_data['order_date']=$t[0];
@@ -1361,7 +1434,7 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->words_insert($post['words'],$post['order_id'],$post['area'],$post['sort']);
+        $order_show->words_insert($post->words,$post->order_id,$post->area,$post->sort);
 
     }
 
@@ -1378,7 +1451,7 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->img_insert($post['type'],$post['url'],$post['staff_id'],$post['order_id'],$post['area'],$post['sort']);
+        $order_show->img_insert($post->type,$post->url,$post->staff_id,$post->order_id,$post->area,$post->sort);
     }
 
     public function actionProduct_insert()
@@ -1392,7 +1465,7 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->product_insert($post['area'],$post['sort'],$post['order_id'],$post['sp_id']);
+        $order_show->product_insert($post->area,$post->sort,$post->order_id,$post->sp_id);
     }
 
     public function actionNew_product_insert()
@@ -1417,7 +1490,7 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->new_product_insert($post['account_id'],$post['supplier_id'],$post['supplier_type_id'],$post['decoration_tap'],$post['name'],$post['category'],$post['price'],$post['cost'],$post['unit'],$post['remark'],$post['url'],$post['order_id'],$post['order_id'],$post['area'],$post['sort']);
+        $order_show->new_product_insert($post->account_id,$post->supplier_id,$post->supplier_type_id,$post->decoration_tap,$post->name,$post->category,$post->price,$post->cost,$post->unit,$post->remark,$post->url,$post->order_id,$post->order_id,$post->area,$post->sort);
     }
 
     public function actionSave_ppt()
@@ -1438,13 +1511,13 @@ class ResourceController extends InitController
         $order_show = OrderShow::model()->findAll(array(
                 'condition' => 'order_id=:order_id',
                 'params' => array(
-                        ':order_id' => $post['order_id'],
+                        ':order_id' => $post->order_id,
                     )
             ));
         //删除  list中不存在的order_show
         foreach ($order_show as $key => $value) {
             $t = 0;
-            foreach ($post['list'] as $key_l => $value_l) {
+            foreach ($post->list as $key_l => $value_l) {
                 if($value['id'] == $value_l['os_id']){
                     $t++;
                 };        
@@ -1468,7 +1541,7 @@ class ResourceController extends InitController
 
         //更新order_show   area_sort
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['os_id']." then ".$value['area_sort'];
         };
         $result = yii::app()->db->createCommand("update order_show set area_sort = case ".$sql." else area_sort end");
@@ -1476,7 +1549,7 @@ class ResourceController extends InitController
 
         //更新order_show   show_area
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['os_id']." then ".$value['show_area'];
         };
         $result = yii::app()->db->createCommand("update order_show set show_area = case ".$sql." else show_area end");
@@ -1493,39 +1566,39 @@ class ResourceController extends InitController
         //         'actual_unit_cost' => 109
         //     );
 
-        OrderProduct::model()->updateByPk($post['op_id'],array('actual_price'=>$post['actual_price'],'unit'=>$post['amount'],'actual_unit_cost'=>$post['actual_unit_cost']));
+        OrderProduct::model()->updateByPk($post->op_id,array('actual_price'=>$post->actual_price,'unit'=>$post->amount,'actual_unit_cost'=>$post->actual_unit_cost));
     }
 
     public function actionUpdate_menu()
     {
         $post = json_decode(file_get_contents('php://input'));
-        $post = array(
-            'order_id' => ,
-            'wedding_set_id' => ,
-            'table_amount' => ,
-            'remark' => ,
-            'actual_service_ratio' => ,
-            'list' => array(
-                    0 => array(
-                            'op_id' => ,
-                            'actual_price' => ,
-                        )
+        // $post = array(
+        //     'order_id' => ,
+        //     'wedding_set_id' => ,
+        //     'table_amount' => ,
+        //     'remark' => ,
+        //     'actual_service_ratio' => ,
+        //     'list' => array(
+        //             0 => array(
+        //                     'op_id' => ,
+        //                     'actual_price' => ,
+        //                 )
                     
-                ),
-        );   
+        //         ),
+        // );   
 
         //编辑order_set
-        OrderSet::model()->updateAll(array('amount'=>$post['table_amount'],'remark'=>$post['remark'],'actual_service_ratio'=>$post['actual_service_ratio']),'order_id=:order_id && wedding_set_id=:wedding_set_id',array(':order_id'=>$post['order_id'],':wedding_set_id'=>$post['wedding_set_id']));
+        OrderSet::model()->updateAll(array('amount'=>$post->table_amount,'remark'=>$post->remark,'actual_service_ratio'=>$post->actual_service_ratio),'order_id=:order_id && wedding_set_id=:wedding_set_id',array(':order_id'=>$post->order_id,':wedding_set_id'=>$post->wedding_set_id));
     
         //删除菜品
         $result = yii::app()->db->createCommand("select op.id ".
             "from order_product op left join supplier_product sp on op.product_id=sp.id ".
-            "where op.order_id=".$post['order_id']." and sp.supplier_type_id=2");
+            "where op.order_id=".$post->order_id." and sp.supplier_type_id=2");
         $result = $result->queryAll();
 
         foreach ($result as $key => $value) {
             $t = 0;
-            foreach ($post['list'] as $key_l => $value_l) {
+            foreach ($post->list as $key_l => $value_l) {
                 if($value['id'] == $value_l['op_id']){
                     $t++;
                 };
@@ -1539,7 +1612,7 @@ class ResourceController extends InitController
 
         //更新菜品   actual_price
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_price'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_price = case ".$sql." else actual_price end");
@@ -1547,7 +1620,7 @@ class ResourceController extends InitController
 
         //更新菜品   unit
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['unit'];
         };
         $result = yii::app()->db->createCommand("update order_product set unit = case ".$sql." else unit end");
@@ -1555,7 +1628,7 @@ class ResourceController extends InitController
 
         //更新菜品   actual_unit_cost
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_unit_cost'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_unit_cost = case ".$sql." else actual_unit_cost end");
@@ -1563,17 +1636,124 @@ class ResourceController extends InitController
 
         //更新菜品   actual_service_ratio
         $sql = "";
-        foreach ($post['list'] as $key => $value) {
+        foreach ($post->list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_service_ratio'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_service_ratio = case ".$sql." else actual_service_ratio end");
         $result = $result->queryAll();   
+    }
+
+    public function actionUpdate_designer()  //  改 策划师
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        echo $post->order_id;
+
+        Order::model()->updateByPk($post->order_id,array('designer_id'=>$post->designer_id));
+    }
+
+    public function actionUpdate_planner()   //  改 统筹师
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        Order::model()->updateByPk($post->order_id,array('planner_id'=>$post->planner_id));
+    }
+
+    public function actionUpdate_feast_discount()  //  改 餐饮折扣
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        Order::model()->updateByPk($post->order_id,array('feast_discount'=>$post->feast_discount));
+    }
+
+    public function actionUpdate_other_discount()  //  改 其他折扣
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        Order::model()->updateByPk($post->order_id,array('other_discount'=>$post->other_discount,'discount_range'=>$post->discount_range));
+    }
+
+    public function actionUpdate_cut_price()  //  改 免零
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        Order::model()->updateByPk($post->order_id,array('cut_price'=>$post->cut_price));
+    }
+
+    public function actionUpdate_tuidan()  //  改  推单渠道
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $result = yii::app()->db->createCommand("select o.id from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$post->order_id." and s.supplier_type_id=16");
+        $result = $result->queryAll();
+
+        foreach ($result as $key => $value) {
+            OrderProduct::model()->deleteByPk($value['id']);
+        };
+
+        if($post->product_id != 0){
+            $order = Order::model()->findByPk($post->order_id);
+
+            $data = new OrderProduct;
+            $data->account_id=$order['account_id'];
+            $data->order_id=$post->order_id;
+            $data->product_type=0;
+            $data->product_id=$post->product_id;
+            $data->order_set_id=$order_set_id;
+            $data->sort=1;
+            $data->actual_price=0;
+            $data->unit=1;
+            $data->actual_unit_cost=0;
+            $data->update_time=date('y-m-d h:i:s',time());
+            $data->actual_service_ratio=0;
+            $data->save();
+        };
+            
+    }
+
+    public function actionOrder_show()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $result = yii::app()->db->createCommand("select os.id,os.type,words,osi.img_url,sp.ref_pic_url,show_area,area_sort from order_show os ".
+            "left join order_show_img osi on img_id=osi.id ".
+            "left join order_product op on order_product_id=op.id ".
+            "left join supplier_product sp on op.product_id=sp.id ".
+            "where os.order_id=".$post->order_id.
+            " order by show_area ASC,area_sort ASC");
+        $result = $result->queryAll();
+
+        $show_data = array();
+        foreach ($result as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['type'] = $value['type'];
+            $item['show_area'] = $value['show_area'];
+            $item['area_sort'] =$value['area_sort'];
+            if($value['type'] == 0){
+                $item['data'] = $value['words'];
+            };
+            if($value['type'] == 1){
+                $item['data'] = $value['img_url'];
+            };
+            if($value['type'] == 2){
+                $item['data'] = $value['ref_pic_url'];
+            };
+            $show_data[] = $item;
+        };
+        
+        echo json_encode($show_data);
+        
     }
     
     public function array_remove(&$arr,$offset) 
     { 
         array_splice($arr, $offset, 1); 
     } 
+
+    public function actionCeshi()
+    {
+
+    }
 
 
 
