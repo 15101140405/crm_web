@@ -671,16 +671,10 @@ class ServiceController extends InitController
 
     public function actionService_product_list()
     {
-        if (!empty($_GET['order_id'])) {
-            $selected = OrderProduct::model()->findAll(array(
-                "condition" => "order_id = :order_id",
-                "params" => array(":order_id" => $_GET['order_id'],),
-                ));
-        }
         $selected ="";
         if (!empty($_GET['order_id'])) {
-            $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as supplier_product_id,actual_price,order_product.unit,supplier.id as supplier_id from order_product left join supplier_product on order_product.product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
-            $select = $result->queryAll();
+            $result = yii::app()->db->createCommand("select order_product.id as order_product_id,supplier_product.id as product_id,actual_price,order_product.unit,supplier.id as supplier_id from order_product left join supplier_product on order_product.product_id=supplier_product.id left join supplier on supplier_id=supplier.id where supplier.type_id=3 and order_product.order_id=".$_GET['order_id']);
+            $selected = $result->queryAll();
         }
         // $supplier = Supplier::model()->find(array(
         //         'condition' => 'staff_id=:staff_id',
