@@ -158,6 +158,13 @@ class ProductController extends InitController
         SupplierProduct::model()->deleteByPk($_POST['product_id']);
     } 
 
+    public function actionUnset()
+    {
+        $cookie = Yii::app()->request->getCookies();
+        echo $cookie['userid']->value;
+        unset($cookie['userid']);
+    }
+
     public function actionStore()
     {
         /*if(isset($_GET['account_id'])){
