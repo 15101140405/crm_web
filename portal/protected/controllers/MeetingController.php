@@ -298,57 +298,67 @@ class MeetingController extends InitController
         /*********************************************************************************************************************/
         /*取餐饮数据*/
         /*********************************************************************************************************************/
-        $supplier_id_result = Supplier::model()->findAll(array(
-            "condition" => "type_id = :type_id",
-            "params" => array(":type_id" => 2),
-        ));
-        $supplier_id = array();
-        foreach ($supplier_id_result as $value) {
-            $item = $value->id;
-            $supplier_id[] = $item;
-        };
-        /*print_r($supplier_id);*/
-        if(!empty($supplier_id)){
-            $criteria1 = new CDbCriteria; 
-            $criteria1->addInCondition("supplier_id",$supplier_id);
-            $criteria1->addCondition("category=:category");
-            $criteria1->params[':category']=2; 
-            $supplier_product = SupplierProduct::model()->findAll($criteria1);
-            /*print_r($supplier_product);*/
-            foreach ($supplier_product as $value) {
-                $item = $value->id;
-                $supplier_product_id[] = $item;
-            };
-            /*print_r($supplier_product_id);*/
-        };
+        // $supplier_id_result = Supplier::model()->findAll(array(
+        //     "condition" => "type_id = :type_id",
+        //     "params" => array(":type_id" => 2),
+        // ));
+        // $supplier_id = array();
+        // foreach ($supplier_id_result as $value) {
+        //     $item = $value->id;
+        //     $supplier_id[] = $item;
+        // };
+        // /*print_r($supplier_id);*/
+        // if(!empty($supplier_id)){
+        //     $criteria1 = new CDbCriteria; 
+        //     $criteria1->addInCondition("supplier_id",$supplier_id);
+        //     $criteria1->addCondition("category=:category");
+        //     $criteria1->params[':category']=2; 
+        //     $supplier_product = SupplierProduct::model()->findAll($criteria1);
+        //     // var_dump($supplier_product);die;
+        //     foreach ($supplier_product as $value) {
+        //         $item = $value->id;
+        //         $supplier_product_id[] = $item;
+        //     };
+        //     print_r($supplier_product_id);
+        // };
         
-        if(!empty($supplier_product_id)){
-            $criteria2 = new CDbCriteria; 
-            $criteria2->addInCondition("product_id",$supplier_product_id);
-            $criteria2->addCondition("order_id=:order_id");
-            $criteria2->params[':order_id']=$orderId; 
-            $supplier_product = OrderProduct::model()->findAll($criteria2);
-            foreach ($supplier_product as $value) {
-                $criteria3 = new CDbCriteria; 
-                $criteria3->addCondition("id=:id");
-                $criteria3->params[':id']=$value['product_id']; 
-                $supplier_product2 = SupplierProduct::model()->find($criteria3);
-                $item = array();
-                $item['id'] = $value->id;
-                $item['name'] = $supplier_product2['name'];
-                $item['product_id'] = $value->product_id;
-                $item['actual_price'] = $value->actual_price;
-                $item['unit'] = $value->unit;
-                $item['actual_unit_cost'] = $value->actual_unit_cost;
-                $item['actual_service_ratio'] = $value->actual_service_ratio;
-                $item['remark'] = $value->remark;
-                $wed_feast[] = $item;
-            };
-            /*print_r($wed_feast);*/
-        }
+        // if(!empty($supplier_product_id)){
+        //     $criteria2 = new CDbCriteria; 
+        //     $criteria2->addInCondition("product_id",$supplier_product_id);
+        //     $criteria2->addCondition("order_id=:order_id");
+        //     $criteria2->params[':order_id']=$orderId; 
+        //     $supplier_product = OrderProduct::model()->findAll($criteria2);
+
+        //     foreach ($supplier_product as $value) {
+        //         $criteria3 = new CDbCriteria; 
+        //         $criteria3->addCondition("id=:id");
+        //         $criteria3->params[':id']=$value['product_id']; 
+        //         $supplier_product2 = SupplierProduct::model()->findAll($criteria3);
+        //         print_r($supplier_product2);die;
+        //         foreach ($supplier_product2 as $key2 => $value2) {
+        //             $item = array();
+        //             $item['id'] = $value->id;
+        //             $item['name'] = $value2['name'];
+        //             $item['product_id'] = $value->product_id;
+        //             $item['actual_price'] = $value->actual_price;
+        //             $item['unit'] = $value->unit;
+        //             $item['actual_unit_cost'] = $value->actual_unit_cost;
+        //             $item['actual_service_ratio'] = $value->actual_service_ratio;
+        //             $item['remark'] = $value->remark;
+        //             $wed_feast[] = $item;
+        //         }
+        //     };
+        //     /*print_r($wed_feast);*/
+        // }
         /*print_r($wed_feast);*/
+
+        $result = yii::app()->db->createCommand("select op.id,sp.name,op.product_id,actual_price,op.unit,actual_unit_cost,actual_service_ratio,op.remark from order_product op ".
+            " left join supplier_product sp on op.product_id=sp.id".
+            " where op.order_id=".$orderId." and sp.supplier_type_id=2");
+        $wed_feast = $result->queryAll();
         
         if(!empty($wed_feast)){
+            // print_r($wed_feast);die;
             
             /*print_r($supplier_product2);*/
             $arr_wed_feast = array(

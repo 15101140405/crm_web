@@ -1156,9 +1156,9 @@ class OrderController extends InitController
 
     public function actionSavecost()
     {
-        // $_POST['order_id']=481;
-        // $_POST['type']='wedding_feast';
-        // $_POST['money']=49140.2;
+        // $_POST['order_id']=542;
+        // $_POST['type']='meeting_feast';
+        // $_POST['money']=9900.00;
         $result = array();
         if($_POST['type'] == 'wedding_feast' || $_POST['type'] == 'meeting_feast'){
             $result = yii::app()->db->createCommand("select o.id,o.actual_price,o.unit,o.actual_unit_cost,s.supplier_type_id from order_product o left join supplier_product s on o.product_id=s.id where o.order_id=".$_POST['order_id']." and s.supplier_type_id=2 ");
@@ -1198,9 +1198,11 @@ class OrderController extends InitController
                 };
             };
         }else if($total_cost != 0 && !empty($result)){
-            echo 4;
             $temp = $_POST['money']/$total_cost;
+            // echo $value['id']."|".$temp."/";
+            print_r($result);
             foreach ($result as $key => $value) {
+                // echo $value['actual_unit_cost'].",".$value['actual_unit_cost']*$temp."|";
                 OrderProduct::model()->updateByPk($value['id'],array('actual_unit_cost'=>$value['actual_unit_cost']*$temp));
             };
         }

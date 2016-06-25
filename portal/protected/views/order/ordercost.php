@@ -57,7 +57,7 @@
                         location.href = "<?php echo $this->createUrl('meeting/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";
                 <?php }?>
                     }else{
-                        alert('保存成功！');
+                        // alert('保存成功！');
                         // alert(retval);
                 <?php if($_GET['from'] == 'wedding_feast' || $_GET['from'] == 'wedding'){?>
                         location.href = "<?php echo $this->createUrl('design/bill');?>&order_id=<?php echo $_GET['order_id']?>&from=my_order";

@@ -144,7 +144,7 @@
             </tr>
             </tbody>
         </table>
-        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_total['total_price'] ?>元 ］</span><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
+        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <!-- <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_total['total_price'] ?>元 ］</span> --><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
 
 <?php if($t == 0){?>
@@ -373,7 +373,7 @@
         <ul class="ulist">
             <li class="ulist_item list_more" id="feast_cost">
                 <span class="label">餐饮总支出：</span>
-                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?>元</div>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
             </li>
         </ul>
     </div>
@@ -381,7 +381,7 @@
         <ul class="ulist">
             <li class="ulist_item list_more" id="meeting_cost">
                 <span class="label">其他总支出：</span>
-                <div class="align_r1 dep_content" id="meeting_cost_data"><?php if(isset($arr_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_total['total_cost']);};}?>元</div>
+                <div class="align_r1 dep_content" id="meeting_cost_data"><?php if(isset($arr_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_total['total_cost']);};}?></div>
             </li>
         </ul>
     </div>
