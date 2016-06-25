@@ -372,6 +372,7 @@ textarea {
 }
 
 .select_selected:after {
+    
     color: #00b90c;
     content: '\e645';
     font-family: iconfont
@@ -543,6 +544,12 @@ textarea {
     font-size: 2rem;
     font-family: iconfont;
     line-height: 2rem
+}
+
+.list_name {
+    width:60%;
+    overflow:hidden;
+    white-space:nowrap;
 }
 
 .bottom_fixed_bar {

@@ -24,7 +24,7 @@
         <ul class="charge_list">
             <?php foreach ($supplier_product as $value) { ?>
                 <li class="int_ulist_item list_more" supplier-id="<?php echo $value['supplier_id']?>" product-id="<?php echo $value['id']; ?>">
-                    <span><?php echo $value['name']; ?></span>
+                    <span class="list_name"><?php echo $value['name']; ?></span>
                     <div style="color:green;">[<?php echo $value['unit_price']?>]</div>
                 </li>
             <?php } ?>
