@@ -185,6 +185,7 @@ class ResourceController extends InitController
             }
             $list[$key]["resources"]= $jsonresources;
             $list[$key]['product'] = array();
+            // $list[$key]['set_category'] = 0;
         };
 
 
@@ -256,6 +257,7 @@ class ResourceController extends InitController
             
             $item['resources'] = $resources;
             $item['product'] = array();
+            // $item['set_category'] = 0;
             
             $list[] = $item;
         };
@@ -343,6 +345,7 @@ class ResourceController extends InitController
                     "ref_pic_url" => "http://file.cike360.com" . $value['ref_pic_url'],
                 );
             $tem_resource['product'][] = $tem_product;
+            // $tem_resource['set_category'] = 0;
             if($value['supplier_type_id'] == "8"){
                 $tem_case8['resources'][] = $tem_resource;    
             }else if($value['supplier_type_id'] == '9'){
@@ -419,7 +422,6 @@ class ResourceController extends InitController
                 if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
                     $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
                 }
-                
                 
                 $cur_crid = $rval["CR_ID"];
                 // $resourceobj=$resourceobj;
@@ -793,6 +795,7 @@ class ResourceController extends InitController
             }
             $host[$key]["resources"]= $jsonresources;
             $host[$key]['product'] = array();
+            // $host[$key]['set_category'] = 0;
         };
         foreach ($host as $key => $value) {
             $list[] = $value;
@@ -865,6 +868,7 @@ class ResourceController extends InitController
             }
             $result[$key]["resources"]= $jsonresources;
             $result[$key]['product'] = array();
+            // $result[$key]['set_category'] = 0;
         };
         foreach ($result as $key => $value) {
             $list[]=$value;
@@ -1157,6 +1161,9 @@ class ResourceController extends InitController
             };
             $order_show_list[]=$item;
         };
+        $result = yii::app()->db->createCommand("select * from order_show where order_id=".$_GET['order_id']." and show_area=0 order by area_sort DESC");
+        $non_area_show = $result->queryAll();
+        $i=$non_area_show[0]['area_sort']+1;
         foreach ($result1 as $key => $value) {
             $t=0;
             foreach ($order_show_list as $key_s => $value_s) {
@@ -1170,7 +1177,7 @@ class ResourceController extends InitController
                 $admin->order_product_id=$value['id'];
                 $admin->order_id=$_GET['order_id'];
                 $admin->show_area=0;
-                $admin->area_sort=1;
+                $admin->area_sort= $i;
                 $admin->update_time=date('y-m-d h:i:s',time());
                 $admin->save();
                 $show_id = $admin->attributes['id'];
@@ -1179,7 +1186,7 @@ class ResourceController extends InitController
                 $item['show_id']=$show_id;
                 $item['show_type']=2;
                 $item['show_area']=0;
-                $item['area_sort']=1;
+                $item['area_sort']=$i++;
                 $item['show_data']=$value['ref_pic_url'];
                 $item['product_id']=$value['id'];
                 $order_show_list[]=$item;
@@ -1212,9 +1219,11 @@ class ResourceController extends InitController
         foreach ($order_show_list as $key_l => $value_l) {
             if($value_l['show_area'] == 0){
                 $item=array();
+                $item['show_id']=$value_l['show_id'];
                 $item['data_type']=$value_l['show_type'];
                 $item['show_data']=$value_l['show_data'];
                 $item['product_id']=$value_l['product_id'];
+                $item['sort']=$value_l['area_sort'];
                 $tem['data'][]=$item;
             };
         };
@@ -1435,7 +1444,7 @@ class ResourceController extends InitController
 
         $order_show=new OrderShowForm;
         $order_show->words_insert($post->words,$post->order_id,$post->area,$post->sort);
-
+        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
     }
 
     public function actionImg_insert()
@@ -1452,6 +1461,7 @@ class ResourceController extends InitController
 
         $order_show=new OrderShowForm;
         $order_show->img_insert($post->type,$post->url,$post->staff_id,$post->order_id,$post->area,$post->sort);
+        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
     }
 
     public function actionProduct_insert()
@@ -1466,6 +1476,7 @@ class ResourceController extends InitController
 
         $order_show=new OrderShowForm;
         $order_show->product_insert($post->area,$post->sort,$post->order_id,$post->sp_id);
+        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
     }
 
     public function actionNew_product_insert()
@@ -1491,6 +1502,7 @@ class ResourceController extends InitController
 
         $order_show=new OrderShowForm;
         $order_show->new_product_insert($post->account_id,$post->supplier_id,$post->supplier_type_id,$post->decoration_tap,$post->name,$post->category,$post->price,$post->cost,$post->unit,$post->remark,$post->url,$post->order_id,$post->order_id,$post->area,$post->sort);
+        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
     }
 
     public function actionSave_ppt()
@@ -1713,6 +1725,7 @@ class ResourceController extends InitController
     public function actionOrder_show()
     {
         $post = json_decode(file_get_contents('php://input'));
+        // $post->order_id=1033
 
         $result = yii::app()->db->createCommand("select os.id,os.type,words,osi.img_url,sp.ref_pic_url,show_area,area_sort from order_show os ".
             "left join order_show_img osi on img_id=osi.id ".
@@ -1740,9 +1753,66 @@ class ResourceController extends InitController
             };
             $show_data[] = $item;
         };
-        
+
         echo json_encode($show_data);
-        
+
+    }
+
+    public function actionAdd_set_to_order()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $staff = Staff::model()->findByPk($post->token);
+
+        $result = yii::app()->db->createCommand("select * from case_info ci left join wedding_set ws on CT_ID=ws.id where ci.CI_ID=".$post->ci_id);
+        $result = $result->queryAll();
+
+        $product = explode(',', $result[0]['product_list']);
+
+        $data = new OrderSet;
+        $data->order_id=$post->order_id;
+        $data->wedding_set_id=$result[0]['id'];
+        $data->amount=$post->amount;
+        $data->remark="";
+        $data->actual_service_ratio=$post->actual_service_ratio;
+        $data->order_product_list=$result[0]['product_list'];
+        $data->final_price=$result[0]['final_price'];
+        $data->update_time=date('y-m-d h:i:s',time());
+        $data->save();
+        $order_set_id = $data->attributes['id'];
+        $i=1;
+        foreach ($product as $key => $value) {
+            $t=explode('|', $value);
+            $data = new OrderProduct;
+            $data->account_id=$staff['account_id'];
+            $data->order_id=$post->order_id;
+            $data->product_type=0;
+            $data->product_id=$t[0];
+            $data->order_set_id=$order_set_id;
+            $data->sort=1;
+            $data->actual_price=$t[1];
+            $data->unit=$t[2];
+            $data->actual_unit_cost=$t[3];
+            $data->update_time=date('y-m-d h:i:s',time());
+            $data->actual_service_ratio=$post->actual_service_ratio;
+            $data->remark="";
+            $data->save();
+            $order_product_id = $data->attributes['id'];
+
+
+            $data = new OrderShow;
+            $data->type=2;
+            $data->img_id=0;
+            $data->order_product_id=$order_product_id;
+            $data->words=0;
+            $data->order_id=$post->order_id;
+            $data->show_area=0;
+            $data->area_sort=$i++;
+            $data->update_time=date('y-m-d h:i:s',time());
+            $data->save();
+        }
+        // echo json_encode($result);
+
     }
     
     public function array_remove(&$arr,$offset) 

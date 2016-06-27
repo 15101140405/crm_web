@@ -607,9 +607,9 @@ class ReportController extends InitController
 
     public function actionOrder_report()
     {
-        $staff = Staff::model()->findByPk(222222);
-        $_SESSION['staff_hotel_id'] = 1;
-        // $staff = Staff::model()->findByPk($_SESSION['userid']);
+        // $staff = Staff::model()->findByPk(222222);
+        // $_SESSION['staff_hotel_id'] = 1;
+        $staff = Staff::model()->findByPk($_SESSION['userid']);
         $str =  rtrim($staff['department_list'], "]"); 
         $str =  ltrim($str, "[");
         $t = explode(",", $str);
@@ -806,18 +806,7 @@ class ReportController extends InitController
         //     if(!empty($item4)){$order_data['mpay'][] = $item4;}; 
         // };
         /*print_r($order_data);die;*/
-        $order_num = array(
-                'wedding_done' => 0,
-                'wedding_doing' => 0,
-                'meeting_doing' => 0,
-                'meeting_done' => 0,
-            );
-        $order_data = array(
-                'wedding_done' => array(),
-                'wedding_doing' => array(),
-                'meeting_doing' => array(),
-                'meeting_done' => array(),
-            );
+        
 
 
         // $result = yii::app()->db->createCommand("select o1.id as order_id,o1.order_date,o1.order_type,s1.name as planner_name,s2.name as designer_name from `order` o1 left join staff s1 on o1.planner_id=s1.id left join staff s2 on o1.designer_id=s2.id where o1.staff_hotel_id=".$_SESSION['staff_hotel_id']." and order_status in (2,3,4,5,6) order by order_date");
@@ -866,62 +855,143 @@ class ReportController extends InitController
         // print_r($list);die;
 
 
-        //有产品的订单
-        $result = yii::app()->db->createCommand("select actual_price,unit,actual_unit_cost,actual_service_ratio,order_id,order_date,order_type from order_product p left join `order` o on p.order_id=o.id where o.staff_hotel_id=".$_SESSION['staff_hotel_id']." and order_status in (2,3,4,5,6) order by p.order_id");
+        //取所有订单的产品
+        $result = yii::app()->db->createCommand("select actual_price,unit,actual_unit_cost,actual_service_ratio,order_id,order_date,order_type ".
+            " from order_product p left join `order` o on p.order_id=o.id ".
+            " where o.staff_hotel_id=".$_SESSION['staff_hotel_id']." and order_status in (2,3,4,5,6) order by p.order_id");
         $result = $result->queryAll();
-        $t_order_id = $result[0]['order_id'];
-        $tem_order_total = 0;
-        $tem_order_total_cost = 0;
-        foreach ($result as $key => $value) { //计算应收、实支、毛利
-            $tem_order_total += $value['actual_price']*$value['unit'];
-            $tem_order_total_cost += $value['actual_unit_cost']*$value['unit'];
-            if($t_order_id != $value['order_id']){
-                $t = explode(' ', $value['order_date']);
-                $t1 = explode('-', $t[0]);
-                $item = array(
-                        'order_id' => $value['order_id'],
-                        'order_date' => $t[0],
-                        'order_type' => '',
-                        'price' => $tem_order_total,
-                        'cost' => $tem_order_total_cost,
-                        'profit' => $tem_order_total-$tem_order_total_cost,
-                        'payment' => 0,
-                    );
-                if(($t1[0] >= date("Y") && $t1[1] > date("m")) || ($t1[0] >= date("Y") && $t1[1] == date("m") && $t1[2] >= date("d"))){
-                    if($value['order_type'] == 1){
-                        $item['order_type'] = '会议';
-                        $order_num['meeting_doing']++;
-                        $order_data['meeting_doing'][]=$item;
+        // echo json_encode($result);die;
 
-                    }else{
-                        $item['order_type'] = '婚礼';
-                        $order_num['wedding_doing']++;
-                        $order_data['wedding_doing'][]=$item;
-                    };
-                }else if(($t1[0] == date("Y") && $t1[1] < date("m")) || ($t1[0] == date("Y") && $t1[1] == date("m") && $t1[2] < date("d"))){
-                    if($value['order_type'] == 1){
-                        $item['order_type'] = '会议';
-                        $order_num['meeting_done']++;
-                        $order_data['meeting_done'][]=$item;
+        // $t_order_id = $result[0]['order_id'];
+        // $tem_order_total = 0;
+        // $tem_order_total_cost = 0;
+        // foreach ($result as $key => $value) { //计算应收、实支、毛利
+        //     $tem_order_total += $value['actual_price']*$value['unit'];
+        //     $tem_order_total_cost += $value['actual_unit_cost']*$value['unit'];
+        //     if($t_order_id != $value['order_id']){
+        //         $t = explode(' ', $value['order_date']);
+        //         $t1 = explode('-', $t[0]);
+        //         $item = array(
+        //                 'order_id' => $value['order_id'],
+        //                 'order_date' => $t[0],
+        //                 'order_type' => '',
+        //                 'price' => $tem_order_total,
+        //                 'cost' => $tem_order_total_cost,
+        //                 'profit' => $tem_order_total-$tem_order_total_cost,
+        //                 'payment' => 0,
+        //             );
+        //         if(($t1[0] >= date("Y") && $t1[1] > date("m")) || ($t1[0] >= date("Y") && $t1[1] == date("m") && $t1[2] >= date("d"))){
+        //             if($value['order_type'] == 1){
+        //                 $item['order_type'] = '会议';
+        //                 $order_num['meeting_doing']++;
+        //                 $order_data['meeting_doing'][]=$item;
 
-                    }else{
-                        $item['order_type'] = '婚礼';
-                        $order_num['wedding_done']++;
-                        $order_data['wedding_done'][]=$item;
-                    };
-                };
-                $t_order_id = $value['order_id'];
-                $tem_order_total = 0;
-                $tem_order_total_cost = 0;
-            };
-        };
+        //             }else{
+        //                 $item['order_type'] = '婚礼';
+        //                 $order_num['wedding_doing']++;
+        //                 $order_data['wedding_doing'][]=$item;
+        //             };
+        //         }else if(($t1[0] == date("Y") && $t1[1] < date("m")) || ($t1[0] == date("Y") && $t1[1] == date("m") && $t1[2] < date("d"))){
+        //             if($value['order_type'] == 1){
+        //                 $item['order_type'] = '会议';
+        //                 $order_num['meeting_done']++;
+        //                 $order_data['meeting_done'][]=$item;
 
-        //没有产品的订单
-        $result1 = yii::app()->db->createCommand("select o1.id as order_id,o1.order_date,o1.order_type,s1.name as planner_name,s2.name as designer_name from `order` o1 left join staff s1 on o1.planner_id=s1.id left join staff s2 on o1.designer_id=s2.id where o1.staff_hotel_id=".$_SESSION['staff_hotel_id']." and order_status in (2,3,4,5,6) order by order_date");
+        //             }else{
+        //                 $item['order_type'] = '婚礼';
+        //                 $order_num['wedding_done']++;
+        //                 $order_data['wedding_done'][]=$item;
+        //             };
+        //         };
+        //         $t_order_id = $value['order_id'];
+        //         $tem_order_total = 0;
+        //         $tem_order_total_cost = 0;
+        //     };
+        // };
+
+
+        //取所有订单
+        $result1 = yii::app()->db->createCommand("select o1.id as order_id,o1.order_date,o1.order_type,s1.name as planner_name,s2.name as designer_name ".
+            " from `order` o1 left join staff s1 on o1.planner_id=s1.id ".
+            " left join staff s2 on o1.designer_id=s2.id ".
+            " where o1.staff_hotel_id=".$_SESSION['staff_hotel_id']." and order_status in (2,3,4,5,6) order by order_date");
         $result1 = $result1->queryAll();
         // print_r(json_encode($result1));die;
 
+
+        //匹配订单与产品
+        $order_num = array(
+                'wedding_done' => 0,
+                'wedding_doing' => 0,
+                'meeting_doing' => 0,
+                'meeting_done' => 0,
+            );
+        $order_data = array(
+                'wedding_done' => array(),
+                'wedding_doing' => array(),
+                'meeting_doing' => array(),
+                'meeting_done' => array(),
+            );
         foreach ($result1 as $key => $value) {
+            $t = explode(' ', $value['order_date']);
+            $t1 = explode('-', $t[0]);  
+            if(($t1[0] == date("Y") && $t1[1] > date("m")) || ($t1[0] == date("Y") && $t1[1] == date("m") && $t1[2] >= date("d")) || ($t1[0] > date("Y"))){
+                $item = array(
+                    'order_id' => $value['order_id'],
+                    'order_date' => $t[0],
+                    'order_type' => '',
+                    'price' => 0,
+                    'cost' => 0,
+                    'profit' => 0,
+                    'payment' => 0,
+                );
+                foreach ($result as $key_p => $value_p) {
+                    if($value_p['order_id']==$value['order_id']){
+                        $item['cost'] += $value_p['actual_unit_cost']*$value_p['unit'];
+                    };
+                };
+                if($value['order_type'] == 1){
+                    $item['order_type'] = '会议';
+                    $order_num['meeting_doing']++;
+                    $order_data['meeting_doing'][]=$item;
+                }else{
+                    $item['order_type'] = '婚礼';
+                    $order_num['wedding_doing']++;
+                    $order_data['wedding_doing'][]=$item;
+                };
+            }else if(($t1[0] == date("Y") && $t1[1] < date("m")) || ($t1[0] == date("Y") && $t1[1] == date("m") && $t1[2] < date("d"))){
+                $item = array(
+                    'order_id' => $value['order_id'],
+                    'order_date' => $t[0],
+                    'order_type' => '',
+                    'price' => 0,
+                    'cost' => 0,
+                    'profit' => 0,
+                    'payment' => 0,
+                );
+                foreach ($result as $key_p => $value_p) {
+                    if($value_p['order_id']==$value['order_id']){
+                        $item['cost'] += $value_p['actual_unit_cost']*$value_p['unit'];
+                    };
+                };
+                if($value['order_type'] == 1){
+                    $item['order_type'] = '会议';
+                    $order_num['meeting_done']++;
+                    $order_data['meeting_done'][]=$item;
+
+                }else{
+                    $item['order_type'] = '婚礼';
+                    $order_num['wedding_done']++;
+                    $order_data['wedding_done'][]=$item;
+                };
+            };
+        }
+
+        
+
+
+
+        /*foreach ($result1 as $key => $value) {
             $m = 0;
             foreach ($order_data as $key_d => $value_d) {
                 foreach ($value_d as $key_o => $value_o) {
@@ -975,7 +1045,7 @@ class ReportController extends InitController
                     };
                 };
             };    
-        };
+        };*/
         // print_r(json_encode($order_data));die;
 
         //取回款

@@ -154,7 +154,7 @@ $arr_locate = array(
             </tr>
             </tbody>
         </table>
-        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_order_total['total_price'] ?>元 ］</span><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
+        <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额<!--  <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_order_total['total_price'] ?>元 ］</span> --><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
     <!-- 餐饮 -->
 <?php if($t == 0){?>

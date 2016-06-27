@@ -76,4 +76,50 @@ class OrderShowForm extends InitForm
     	$os->update_time=date('y-m-d h:i:s',time());
     	$os->save();
     }
+
+    public function area_sort_batch_add($order_id,$area_id,$sort)
+    {
+        $result = yii::app()->db->createCommand("select * from order_show where order_id=".$order_id." and area_id=".$area_id." and area_sort>=".$sort);
+        $result = $result->queryAll();
+
+        $sql = "";
+        foreach ($result as $key => $value) {
+             $sql .= " when id=".$value['id']." then ".$value['area_sort']+1;
+        };
+        $result1 = yii::app()->db->createCommand("update order_show set area_sort = case ".$sql." else area_sort end");
+        $result1 = $result1->queryAll();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

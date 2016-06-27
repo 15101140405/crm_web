@@ -160,54 +160,54 @@
             <?php if(!empty($order_data['wedding_done'])){foreach ($order_data['wedding_done'] as $key => $value) {?>
                     <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                        <!-- <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span> -->
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">实际毛利：<?php echo sprintf("%.2f", $value['payment']-$value['cost'])?>元</span>
                     </li>
-                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
-                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
-                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    <li  class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
+                        <span style="color: #b6babf">［实支：<?php echo sprintf("%.2f", $value['cost'])?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo sprintf("%.2f", $value['payment'])?>元］</span>
                     </li>
-                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
-                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
-                    </li>
+                    <!-- <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="2">
+                    </li> -->
             <?php }}?>
             <?php if(!empty($order_data['wedding_doing'])){foreach ($order_data['wedding_doing'] as $key => $value) {?>
                     <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                        <!-- <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span> -->
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">实际毛利：<?php echo sprintf("%.2f", $value['payment']-$value['cost'])?>元</span>
                     </li>
-                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
-                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
-                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    <li  class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
+                        <span style="color: #b6babf">［实支：<?php echo sprintf("%.2f", $value['cost'])?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo sprintf("%.2f", $value['payment'])?>元］</span>
                     </li>
-                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
-                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
-                    </li>
+                    <!-- <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="3">
+                    </li> -->
             <?php }}?>
             <?php if(!empty($order_data['meeting_done'])){foreach ($order_data['meeting_done'] as $key => $value) {?>
                     <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                        <!-- <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span> -->
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">实际毛利：<?php echo sprintf("%.2f", $value['payment']-$value['cost'])?>元</span>
                     </li>
-                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
-                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
-                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    <li  class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
+                        <span style="color: #b6babf">［实支：<?php echo sprintf("%.2f", $value['cost'])?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo sprintf("%.2f", $value['payment'])?>元］</span>
                     </li>
-                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
-                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
-                    </li>
+                    <!-- <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="4">
+                    </li> -->
             <?php }}?>
             <?php if(!empty($order_data['meeting_doing'])){foreach ($order_data['meeting_doing'] as $key => $value) {?>
                     <li style="    border-bottom: none;" class="flexbox" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
                         <span class="flex1"><?php echo $value['order_date']?>[<?php echo $value['order_type']?>]</span>
-                        <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span>
+                        <!-- <span style="color: #bd9d62;float:right;">［应收：<?php echo $value['price']?>元］</span> -->
+                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">实际毛利：<?php echo sprintf("%.2f", $value['payment']-$value['cost'])?>元</span>
                     </li>
-                    <li style="border-bottom: none;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
-                        <span style="color: #b6babf">［实支：<?php echo $value['cost']?>元］</span>
-                        <span style="color: #b6babf;float:right;">［实收：<?php echo $value['payment']?>元］</span>
+                    <li  class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
+                        <span style="color: #b6babf">［实支：<?php echo sprintf("%.2f", $value['cost'])?>元］</span>
+                        <span style="color: #b6babf;float:right;">［实收：<?php echo sprintf("%.2f", $value['payment'])?>元］</span>
                     </li>
-                    <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
-                        <span style="float: right;display: block;margin-right: 10px;" class="yellow">毛利：<?php echo $value['profit']?>元</span>
-                    </li>
+                    <!-- <li style="height: 16px;" class="flexbox block" order-id="<?php echo $value['order_id']?>" order-type="<?php echo $value['order_type']?>" type="5">
+                    </li> -->
             <?php }}?>
                 </ul>
             </div>
