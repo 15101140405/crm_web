@@ -26,8 +26,8 @@ class WPRequest
     public static function post($url, $post_data = '', $timeout = 5)
     {
         $header = array(                                      //为适应“纷享销客”做的设置
-            'Content-Type: application/json',
-        );
+            'Content-Type: application/json',                 ////////
+        );                                                    ////////
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -116,7 +116,7 @@ class WPRequest
 
 
     /*发送消息（text消息）*/
-    public static function sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret)
+    public static function sendMessage_Text($touser,$toparty,$content,$corpid,$corpsecret)
     {
         $obj = json_encode(array(
             'touser' => $touser,
@@ -565,6 +565,25 @@ class WPRequest
             "corpAccessToken"   => $corp['corpAccessToken'],
             "corpId"            => $corp['corpId'],
             "toUser"            => self::idlist(),
+            "msgType"           => "text",
+            "text"              => $content,
+            ));
+        // print_r($obj);die;
+        $rtnobj = self::post($url, $obj);
+        return $rtnobj;
+    }
+
+    //给指定人员发送消息
+    //若要做单独接口，用末端的几行就行
+    //为避免重复调用获取密钥接口，重新整合在这里，做好密钥本地存储更新后重做本部分
+    public static function fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content,$openUserId)
+    {
+        $corp = self::getCorp($appId,$appSecret,$permanentCode);
+        $url = "https://open.fxiaoke.com/cgi/message/send";
+        $obj = json_encode(array(
+            "corpAccessToken"   => $corp['corpAccessToken'],
+            "corpId"            => $corp['corpId'],
+            "toUser"            => $openUserId,
             "msgType"           => "text",
             "text"              => $content,
             ));

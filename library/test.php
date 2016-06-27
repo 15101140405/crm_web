@@ -9,36 +9,39 @@ $servicelist['video']=array();
 $servicelist['camera']=array();
 $servicelist['makeup']=array();
 $servicelist['other']=array();
-var_dump($servicelist);
+// var_dump($servicelist);
 // print_r($_POST);
 
 // $touser = 2222222;
 // $content = "开单了";
 // $corpid = "wxee0a719fd467c364";
 // $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
+// $result = WPRequest::getAccessToken($corpid,$corpsecret);
 // $result = WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+// var_dump($result);
 
-// $appId = "FSAID_131515e";
-// $appSecret = "d78a157317794b558d6638c9a6d28938";
-// $permanentCode = "FDB18BBF17DFB6F7CFAABDFC13841DFE";
+$appId = "FSAID_131515e";
+$appSecret = "d78a157317794b558d6638c9a6d28938";
+$permanentCode = "FDB18BBF17DFB6F7CFAABDFC13841DFE";
 // // $toUser = array("FSUID_6C1FF482960507E189C0D14CB19D7FF6","FSUID_6C1FF482960507E189C0D14CB19D7FF6");
-// $content = array(
-//     "content"	=> "消息。",
-//     );
-
+$content = array(
+    "content"	=> "消息。",
+    );
+$openUserId = WPRequest::idlist();
 // // $departmentId = 1008;
 // // $fetchChild = true;
 // // $openUserId = array('FSUID_459E85AA5C2C23316709285CBED22B91');
 // // $result = WPRequest::getCorpAccessToken($appId,$appSecret,$permanentCode);
 // $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
+$result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content,$openUserId);
 // $result = WPRequest::getdepartmentlist($appId,$appSecret,$permanentCode);
 // $result = WPRequest::getuserlist($appId,$appSecret,$permanentCode,$departmentId,$fetchChild);
 // $result = WPRequest::getalluserlist($appId,$appSecret,$permanentCode,$fetchChild);
-
-// var_dump($result);
+// $result = WPRequest::idlist();
+var_dump($result);
 
 ?>
-
+<!-- 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -60,10 +63,7 @@ var_dump($servicelist);
 <script>
 $(function(){
 	$("#list_tip").addClass("hid");
-    <?php
-    $rr =
-    ?>var ab = 5;<?php
-    echo "<br/>ttttttttttttest:".$rr;?>
+
 
 
     // $("[supplier-type-id='20']").removeClass("hid");
@@ -72,4 +72,4 @@ $(function(){
 </script>
 </body>
 
-</html>
+</html> -->
