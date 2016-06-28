@@ -496,7 +496,7 @@ class WPRequest
 
     public static function idlist()
     {
-        $yyylist = array(
+        $yyylist = array(//花乡桥店信息指定接受者
             'FSUID_67A4868F7CFAE4AF788AC32E71FCE339',
             'FSUID_CB0A0E5AB1F711A228DBCCE3F989627F',
             'FSUID_6BA4A68106FF34311E82CFB4F89D2DF5',
@@ -519,13 +519,13 @@ class WPRequest
             'FSUID_459E85AA5C2C23316709285CBED22B91',
             'FSUID_E1CF441FB0630D803E3FD27C99E05922',
             );
-        return $testlist;
+        return $yyylist;
     }
     
     //给全体发送消息
     //若要做单独接口，用末端的几行就行
     //为避免重复调用获取密钥接口，重新整合在这里，做好密钥本地存储更新后重做本部分
-    public static function fxiaokesendMessage($appId,$appSecret,$permanentCode,$content,$openUserId)
+    public static function fxiaokesendMessage($appId,$appSecret,$permanentCode,$content)
     {
         $url = "https://open.fxiaoke.com/cgi/department/list";
         $corp = self::getCorp($appId,$appSecret,$permanentCode);
@@ -557,14 +557,13 @@ class WPRequest
                     //     );
                 }
             }
-            $openUserId = self::idlist();
         }
         // print_r($openUserId);die;
         $url = "https://open.fxiaoke.com/cgi/message/send";
         $obj = json_encode(array(
             "corpAccessToken"   => $corp['corpAccessToken'],
             "corpId"            => $corp['corpId'],
-            "toUser"            => self::idlist(),
+            "toUser"            => $openUserId,
             "msgType"           => "text",
             "text"              => $content,
             ));

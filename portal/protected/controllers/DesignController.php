@@ -3641,27 +3641,12 @@ class DesignController extends InitController
         // }
         $result['code'] = $code;
         echo json_encode($result);
-
-
-
         //发微信提醒&发纷享销客
     // try {
         $order = Order::model()->findByPk($order_id);
         //$order = Order::model()->findByPk($_GET['order_id']);
         $hotel = StaffHotel::model()->findByPk($order['staff_hotel_id']);
-
         $staff = Staff::model()->findByPk($post->token);
-
-        /*$html = '<div class="rich_media_content " id="js_content">    
-                    
-                    <p>订单类型：婚礼</p>
-                    <p>新人姓名：'.$order['order_name'].'</p>
-                    <p>开始时间：'.$order['order_date'].'</p>
-                    <p>结束时间：'.$order['end_time'].'</p>
-                    <p>统筹师：'.$staff["name"].'</p>
-                    <p><br></p>
-                </div>';*/
-        /*print_r($order);die;*/
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
@@ -3675,13 +3660,11 @@ class DesignController extends InitController
 日期：".$date[0]."
 开单人：".$staff["name"];
         };
-        
-        // /*print_r($html);die;*/
-        // $touser="@all";//你要发的人
-        // $toparty="";
-        // $totag="";
+        $touser="@all";//你要发的人
+        $toparty="";
+        $totag="";
         // $title="新客人进店了！";//标题
-        // $agentid=0;//应用
+        $agentid = 0;//应用
         // $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         // $author="";
         // $content_source_url="";
@@ -3690,68 +3673,27 @@ class DesignController extends InitController
         // $show_cover_pic="";
         // $safe="";
 
-        // $company = StaffCompany::model()->findByPk($staff['account_id']);  
-        // $corpid=$company['corpid'];
-        // $corpsecret=$company['corpsecret'];
+        $company = StaffCompany::model()->findByPk($staff['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
         //echo $corpid."|".$corpsecret;
         
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
 
         //分享销客接口
-        
-        // $result=WPRequest::sfxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
-
-
-        
-        //print_r($result);
-        //echo $corpsecret;
-    // } catch (Exception $e) {
-    //     print $e->getMessage();   
-    //     exit(); 
-    // }
-        // $obj = json_encode(array(
-        //     'touser' => $touser,
-        //     'toparty' => $toparty,
-        //     'totag' => "",
-        //     'msgtype' => "text",
-        //     'agentid' => 0,
-        //     'text' => array('content' => $content)
-        // ), JSON_UNESCAPED_UNICODE);
-        
-        // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" . $corpid . "&corpsecret=" . $corpsecret;
-        // $timeout = 5;
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // $file_contents = curl_exec($ch);
-        // curl_close($ch);
-
-        // $data = $file_contents;
-        // $aobj = json_decode($data);
-        // $access_token = $aobj->access_token;
-
-        // $url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" . $access_token;
-
-        // $post_data = $obj;
-        // $timeout = 10;
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        // curl_setopt($ch, CURLOPT_POST, 1);
-        // if ($post_data != '') {
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        // }
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // curl_setopt($ch, CURLOPT_HEADER, false);
-        // $file_contents = curl_exec($ch);
-        // curl_close($ch);
-        // print_r($file_contents);
+        $appId = $hotel['fxiaoke_AppID'];
+        $appSecret = $hotel['fxiaoke_APPSecret'];
+        $permanentCode = $hotel['permanentCode'];
+        $content2 = array(
+            "content"   => $html,
+            );
+        if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+            $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+        } else if ($order['staff_hotel_id'] == 4) {
+            $openUserId = WPRequest::idlist();
+            $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+        }
     }
 
     public function actionSelect_supplier()

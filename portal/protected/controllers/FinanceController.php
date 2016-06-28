@@ -404,15 +404,31 @@ class FinanceController extends InitController
 日期：".$date[0]."
 策划师：".$staff1['name']."
 统筹师：".$staff2['name'];
-            $corpid = "wxee0a719fd467c364";
-            $corpsecret = "DQZtiEV2EqTf3_iLnxIzvi3aHie8Q8UWyNJSuDJfqymupa7_tQuTV-gmFNWN84Gb";
-            WPRequest::sendMessage_Text($touser,$toparty,$content,$corpid,$corpsecret);
-
+            $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+            $corpid=$company['corpid'];
+            $corpsecret=$company['corpsecret'];
+            // WPRequest::sendMessage_Text($touser,$toparty,$content,$corpid,$corpsecret);
+            //分享销客接口
+            $appId = $hotel['fxiaoke_AppID'];
+            $appSecret = $hotel['fxiaoke_APPSecret'];
+            $permanentCode = $hotel['permanentCode'];
+            $content2 = array(
+                "content"   => $content,
+                );
+            if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+                $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+            } else if ($order['staff_hotel_id'] == 4) {
+                $openUserId = WPRequest::idlist();
+                $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+            }
         }
 
         $payment= new OrderPayment;
         $payment->order_id=$_POST['order_id'];
         $payment->money=$_POST['payment'];
+        if (empty($_POST['payment_time'])) {
+            # code...
+        }
         $payment->time=$_POST['payment_time'];
         $payment->remarks=$_POST['remarks'];
         $payment->way=$_POST['payment_way'];

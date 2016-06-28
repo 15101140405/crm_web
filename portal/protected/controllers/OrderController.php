@@ -474,17 +474,14 @@ class OrderController extends InitController
     public function actionTransition()
     {
         $arr_staff=array();
-        $department = array("[1,2,3]","[2,3]");
-        $criteria1 = new CDbCriteria; 
-        $criteria1->addInCondition("department_list",$department);
-        $criteria1->addCondition("account_id=:account_id");
-        $criteria1->params[':account_id']=1; 
-        $staff = Staff::model()->findAll($criteria1);
-        /*print_r($supplier_product);*/
+        $result = yii::app()->db->createCommand("SELECT * FROM staff WHERE account_id = 1 && (department_list LIKE '[2,%' || department_list LIKE '%,2,%' || department_list LIKE '%,2]')");
+        $staff = $result->queryAll();
+        // print_r($staff);
+        $item = array();
         foreach ($staff as $value) {
-            $item['id'] = $value->id;
-            $item['name'] = $value->name;
-            $item['avatar'] = $value->avatar;
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            $item['avatar'] = $value['avatar'];
             $arr_staff[] = $item;
         };
         $this->render("transition",array(
@@ -1137,16 +1134,32 @@ class OrderController extends InitController
         $target = Staff::model()->findByPk($_POST['staff_id']);
         $order = Order::model()->findByPk($_POST['order_id']);
         $date = explode(" ",$order['order_date']);
-        $content = "";
+        $content = $user['name']."将订单".$order['order_name']."[".$date[0]."]转移给".$target['name'];
         if($_POST['type'] == 'designer'){
-            Order::model()->updateByPk($_POST['order_id'],array('designer_id' => $_POST['staff_id']));
-            $content = "“".$user['name']."”将订单"."[".$date[0]."婚礼]转移给“".$target['name']."”";            
+            Order::model()->updateByPk($_POST['order_id'],array('designer_id' => $_POST['staff_id']));           
         }else if($_POST['type'] == 'planner'){
             Order::model()->updateByPk($_POST['order_id'],array('planner_id' => $_POST['staff_id']));
-            $content = "“".$user['name']."”将订单"."[".$date[0]."会议]转移给“".$target['name']."”";   
         };
-        $account = StaffCompany::model()->findByPk($_SESSION['account_id']);
-        $this->sendMessage($content,$account['corpid'],$account['corpsecret']);
+        $touser="@all";//你要发的人
+        $toparty="";
+        $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        //纷享接口
+        $hotel = StaffHotel::model()->findByPk($order['staff_hotel_id']);
+        $appId = $hotel['fxiaoke_AppID'];
+        $appSecret = $hotel['fxiaoke_APPSecret'];
+        $permanentCode = $hotel['permanentCode'];
+        $content2 = array(
+            "content"   => $content,
+            );
+        if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+            $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+        } else if ($order['staff_hotel_id'] == 4) {
+            $openUserId = WPRequest::idlist();
+            $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+        } 
     }
 
     public function actionOrdercost()

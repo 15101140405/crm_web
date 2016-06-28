@@ -99,7 +99,7 @@
         </div>
         <div class="demos" id="time" style="margin-top:15px;margin-bottom:15px">
             <p for="appDateTime" style="color:#00b90c;font-size:1.4rem;padding-left:12px;background-color:#fff;line-height:48px;">收款时间</p>
-            <input value="2015-05-01 15:42:02" class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text">
+            <input value="" class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text">
         </div>
         <div class="text_bar" style="background: #fff;">
             <p for="appDateTime" style="font-size:1.4rem;background-color:#fff;line-height:48px;">备注</p>
@@ -136,7 +136,13 @@
 
         //点击新增
         $("#insert").on("click",function(){
-            data = {payment:$("#cashier").attr("value"),payment_time:$('#appDateTime').val(),payment_way:$('#way_ul .round_select_selected').attr('way-value'),payment_type:$('#type_ul .round_select_selected').attr('type-value'),order_id:<?php echo $_GET["order_id"]?>,remarks:$("#remark").val()};
+            data = {
+                payment:$("#cashier").attr("value"),
+                payment_time:$('#appDateTime').val(),
+                payment_way:$('#way_ul .round_select_selected').attr('way-value'),
+                payment_type:$('#type_ul .round_select_selected').attr('type-value'),
+                order_id:<?php echo $_GET["order_id"]?>,
+                remarks:$("#remark").val()};
             console.log(data);
             $.post('<?php echo $this->createUrl("finance/indexdata");?>',data,function(retval){
                 location.href='<?php echo $this->createUrl("finance/cashierlist");?>&order_id=<?php echo $_GET['order_id'];?>&from=<?php echo $_GET['from']?>';
