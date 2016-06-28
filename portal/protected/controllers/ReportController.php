@@ -195,9 +195,9 @@ class ReportController extends InitController
         //取销售额  ()
         $order_product_designOrder = yii::app()->db->createCommand("".
             "select actual_price,order_product.unit,actual_unit_cost,actual_service_ratio,designer_id,planner_id,other_discount,feast_discount,discount_range,supplier_type_id,s1.`name` as designer_name,s2.`name` as planner_name ".
-            "from order_product left join `order` on order_id = `order`.id ".
-            "left join supplier_product on product_id = supplier_product.id ".
-            "left join staff s1 on designer_id = s1.id ".
+            "from (((order_product left join `order` on order_id = `order`.id) ".
+            "left join supplier_product on product_id = supplier_product.id) ".
+            "left join staff s1 on designer_id = s1.id) ".
             "left join staff s2 on planner_id = s2.id".
             " where order_id in " .$sure_order_id. "order by designer_id");
         $order_product_designOrder = $order_product_designOrder->queryAll(); 
@@ -293,26 +293,22 @@ class ReportController extends InitController
         };
         $sure_order_id = substr($sure_order_id,0,strlen($sure_order_id)-1);
         $sure_order_id .= ")";
-
-
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
-
         $order_product_planGroup = yii::app()->db->createCommand("". //个人餐饮业绩
             "select planner_id,s2.name,sum(actual_price*unit*feast_discount*0.1*(1+actual_service_ratio*0.01)) as total ".
-            "from order_product left join `order` on order_id = `order`.id ".
+            "from (order_product left join `order` on order_id = `order`.id) ".
             "left join staff s2 on planner_id = s2.id".
             " where order_id in " .$sure_order_id. "group by planner_id");
         $order_product_planGroup = $order_product_planGroup->queryAll(); 
-
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
 
         $order_product_designOrder = yii::app()->db->createCommand("".  //个人策划业绩
             "select actual_price,order_product.unit,actual_service_ratio,designer_id,planner_id,other_discount,feast_discount,discount_range,supplier_type_id,s1.`name` as designer_name,s2.`name` as planner_name ".
-            "from order_product left join `order` on order_id = `order`.id ".
-            "left join supplier_product on product_id = supplier_product.id ".
-            "left join staff s1 on designer_id = s1.id ".
+            "from (((order_product left join `order` on order_id = `order`.id) ".
+            "left join supplier_product on product_id = supplier_product.id) ".
+            "left join staff s1 on designer_id = s1.id) ".
             "left join staff s2 on planner_id = s2.id".
             " where order_id in " .$sure_order_id. "order by designer_id");
         $order_product_designOrder = $order_product_designOrder->queryAll(); 
@@ -349,26 +345,22 @@ class ReportController extends InitController
                         'name' => $value['designer_name'],
                         'total' => $t_total_sales
                     ); 
-            }else{
-                $design_person_sales[] = $tem_person_data;
+            }else{    
                 $tem_person_data = array(
                         'designer_id' => $value['designer_id'],
                         'name' => $value['designer_name'],
                         'total' => $t_total_sales
                     );
+                $design_person_sales[] = $tem_person_data;
             };
             // echo $tem_id."|";
             $tem_id = $value['designer_id'];
         };
-
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
         // ＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋＋
-
         $arr_staff_sales = array();//存全部员工销售额;
         $staff_sales = array();//存个人销售额；
-
         // print_r($design_person_sales);die;
-
         foreach ($order_product_planGroup as $key_p => $value_p) {
             $staff_sales['id'] = $value_p['planner_id'];
             $staff_sales['name'] = $value_p['name'];
