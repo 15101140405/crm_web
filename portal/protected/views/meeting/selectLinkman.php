@@ -132,8 +132,9 @@
                 }
             console.log(meeting_info);
 
-            $.post("<?php echo $this->createUrl('meeting/meetingdetailinsert')?>",meeting_info,function(retval){
+            $.post("<?php echo $this->createUrl('meeting/meetingdetailinsert')?>",meeting_info,function(retval){;
               if($('.select_ulist_item').hasClass("select_selected")){
+                // alert(22222);
                 location.href = "<?php echo $this->createUrl("order/order");?>&account_id=<?php echo $_SESSION['account_id']?>&code=&t=plan&department=";
               }else{
                 alert("请先选择联系人！");

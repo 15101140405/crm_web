@@ -152,6 +152,30 @@ class SupplierProductForm extends InitForm
         return $result;
         
     }
+
+    public function getServiceSupplierclassified()
+    {
+        $result = yii::app()->db->createCommand(
+            "SELECT staff.`name`,supplier.id AS supplier_id,type_id,service_team.`name` AS team_name 
+            FROM ((supplier LEFT JOIN staff ON supplier.staff_id=staff.id) LEFT JOIN service_person ON service_person.staff_id=supplier.staff_id) LEFT JOIN service_team ON service_person.team_id=service_team.id 
+            WHERE supplier.account_id=".$_SESSION['account_id']." AND (type_id=3 OR type_id=4 OR type_id=5 OR type_id=6 OR type_id=7) 
+            ORDER BY supplier.update_time DESC"
+            );
+        $servicesupplier = $result->queryAll();
+        $servicelist['host']=array();
+        $servicelist['video']=array();
+        $servicelist['camera']=array();
+        $servicelist['makeup']=array();
+        $servicelist['other']=array();
+        foreach ($servicesupplier as $key => $value) {
+            if ($value['type_id'] == 3) {$servicelist['host'][] = $value;}
+            if ($value['type_id'] == 4) {$servicelist['video'][] = $value;}
+            if ($value['type_id'] == 5) {$servicelist['camera'][] = $value;}
+            if ($value['type_id'] == 6) {$servicelist['makeup'][] = $value;}
+            if ($value['type_id'] == 7) {$servicelist['other'][] = $value;}
+        }
+        return $servicelist;
+    }
  
     public function getSupplierProductList($accountId)
     {

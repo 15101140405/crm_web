@@ -3001,14 +3001,16 @@ class DesignController extends InitController
         /*取supplier_product*/
         /*********************************************************************************************************************/
 
-        $accountId = $_SESSION['account_id'];
+        // $accountId = $_SESSION['account_id'];
         $SupplierProductForm = new SupplierProductForm();
-        $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
-        /*print_r($supplierProducts);die;*/
-        $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
-        $supplierProducts2 = $SupplierProductForm->getSupplierProductList2($accountId);
-        $supplierProducts3 = $SupplierProductForm->getSupplierProductList3($accountId);
-        $supplierProducts4 = $SupplierProductForm->getSupplierProductList4($accountId);
+        $servicelist = $SupplierProductForm -> getServiceSupplierclassified();
+        // $supplierProducts = $SupplierProductForm->getSupplierProductList($accountId);
+        // /*print_r($supplierProducts);die;*/
+        // $supplierProducts1 = $SupplierProductForm->getSupplierProductList1($accountId);
+        // $supplierProducts2 = $SupplierProductForm->getSupplierProductList2($accountId);
+        // $supplierProducts3 = $SupplierProductForm->getSupplierProductList3($accountId);
+        // $supplierProducts4 = $SupplierProductForm->getSupplierProductList4($accountId);
+
 
 
         /*********************************************************************************************************************/
@@ -3095,7 +3097,6 @@ class DesignController extends InitController
                 $other_selected_staff_id[] = $supplier['staff_id'];
             }
         }
-        
         $service_total = $host_total + $video_total + $camera_total + $makeup_total + $other_total ;
         
         $serve_bill = array(  //background data
@@ -3107,22 +3108,15 @@ class DesignController extends InitController
                 '化妆师' => $makeup_total,
                 '其他' => $other_total,
             )
-
         );
-
-
-        
-
         /*print_r($supplierProducts);die;*/
-
-
         $this->render("servicePersonnel",
             array(
-                'arr_category_host' => $supplierProducts,
-                'arr_category_video' => $supplierProducts1,
-                'arr_category_camera' => $supplierProducts2,
-                'arr_category_makeup' => $supplierProducts3,
-                'arr_category_other' => $supplierProducts4,
+                'arr_category_host' => $servicelist['host'],
+                'arr_category_video' => $servicelist['video'],
+                'arr_category_camera' => $servicelist['camera'],
+                'arr_category_makeup' => $servicelist['makeup'],
+                'arr_category_other' => $servicelist['other'],
                 'video_data' => $video_data,
                 'camera_data' => $camera_data,
                 'makeup_data' => $makeup_data,
@@ -3568,178 +3562,7 @@ class DesignController extends InitController
     public function actionAdd_order()
     {
         $post = json_decode(file_get_contents('php://input'));
-        // print_r($post);
-        /*$post = '{
-  "token": 100,
-  "groomname": "",
-  "groomtelephone": "",
-  "bridename": "",
-  "bridetelephone": "",
-  "linkmanname": "",
-  "linkmantelephone": "",
-  "orderdate": "请选择日期",
-  "hotelid": "1",
-  "product": [
-    {
-      "productid": "773",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 1
-    },
-    {
-      "productid": "772",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 2
-    },
-    {
-      "productid": "771",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 3
-    },
-    {
-      "productid": "770",
-      "producttype": 0,
-      "unitprice": "69",
-      "amount": "1",
-      "sort": 4
-    },
-    {
-      "productid": "769",
-      "producttype": 0,
-      "unitprice": "139",
-      "amount": "1",
-      "sort": 5
-    },
-    {
-      "productid": "768",
-      "producttype": 0,
-      "unitprice": "129",
-      "amount": "1",
-      "sort": 6
-    },
-    {
-      "productid": "767",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 7
-    },
-    {
-      "productid": "766",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 8
-    },
-    {
-      "productid": "765",
-      "producttype": 0,
-      "unitprice": "129",
-      "amount": "1",
-      "sort": 9
-    },
-    {
-      "productid": "764",
-      "producttype": 0,
-      "unitprice": "109",
-      "amount": "1",
-      "sort": 10
-    },
-    {
-      "productid": "763",
-      "producttype": 0,
-      "unitprice": "299",
-      "amount": "1",
-      "sort": 11
-    },
-    {
-      "productid": "762",
-      "producttype": 0,
-      "unitprice": "790",
-      "amount": "1",
-      "sort": 12
-    },
-    {
-      "productid": "761",
-      "producttype": 0,
-      "unitprice": "689",
-      "amount": "1",
-      "sort": 13
-    },
-    {
-      "productid": "760",
-      "producttype": 0,
-      "unitprice": "199",
-      "amount": "1",
-      "sort": 14
-    },
-    {
-      "productid": "759",
-      "producttype": 0,
-      "unitprice": "49",
-      "amount": "1",
-      "sort": 15
-    },
-    {
-      "productid": "758",
-      "producttype": 0,
-      "unitprice": "49",
-      "amount": "1",
-      "sort": 16
-    },
-    {
-      "productid": "757",
-      "producttype": 0,
-      "unitprice": "39",
-      "amount": "1",
-      "sort": 17
-    },
-    {
-      "productid": "756",
-      "producttype": 0,
-      "unitprice": "49",
-      "amount": "1",
-      "sort": 18
-    },
-    {
-      "productid": "755",
-      "producttype": 0,
-      "unitprice": "79",
-      "amount": "1",
-      "sort": 19
-    },
-    {
-      "productid": "754",
-      "producttype": 0,
-      "unitprice": "99",
-      "amount": "1",
-      "sort": 20
-    },
-    {
-      "productid": "753",
-      "producttype": 0,
-      "unitprice": "69",
-      "amount": "1",
-      "sort": 21
-    },
-    {
-      "productid": "752",
-      "producttype": 0,
-      "unitprice": "89",
-      "amount": "1",
-      "sort": 22
-    }
-  ]
-}';
-        $post = json_decode($post);*/
-        // $post = '{"token":"100","groomname":"PAD","groomtelephone":"","bridename":"","bridetelephone":"","linkmanname":"","linkmantelephone":"","orderdate":"2016-06-01 14:22","hotelid":"0","product":[{"productid":"773","producttype":0,"unitprice":"89","amount":"1","sort":1},{"productid":"772","producttype":0,"unitprice":"89","amount":"1","sort":2},{"productid":"771","producttype":0,"unitprice":"89","amount":"1","sort":3},{"productid":"770","producttype":0,"unitprice":"69","amount":"1","sort":4},{"productid":"769","producttype":0,"unitprice":"139","amount":"1","sort":5},{"productid":"768","producttype":0,"unitprice":"129","amount":"1","sort":6},{"productid":"767","producttype":0,"unitprice":"89","amount":"1","sort":7},{"productid":"766","producttype":0,"unitprice":"89","amount":"1","sort":8},{"productid":"765","producttype":0,"unitprice":"129","amount":"1","sort":9},{"productid":"764","producttype":0,"unitprice":"109","amount":"1","sort":10},{"productid":"763","producttype":0,"unitprice":"299","amount":"1","sort":11},{"productid":"762","producttype":0,"unitprice":"790","amount":"1","sort":12},{"productid":"761","producttype":0,"unitprice":"689","amount":"1","sort":13},{"productid":"760","producttype":0,"unitprice":"199","amount":"1","sort":14},{"productid":"759","producttype":0,"unitprice":"49","amount":"1","sort":15},{"productid":"758","producttype":0,"unitprice":"49","amount":"1","sort":16},{"productid":"757","producttype":0,"unitprice":"39","amount":"1","sort":17},{"productid":"756","producttype":0,"unitprice":"49","amount":"1","sort":18},{"productid":"755","producttype":0,"unitprice":"79","amount":"1","sort":19},{"productid":"754","producttype":0,"unitprice":"99","amount":"1","sort":20},{"productid":"753","producttype":0,"unitprice":"69","amount":"1","sort":21},{"productid":"752","producttype":0,"unitprice":"89","amount":"1","sort":22}]}';
-        // $post = json_decode($post);
-        // print_r($post);die;
+        
         $code = 0;
         $result['msg'] = "";
         // try {
@@ -3760,7 +3583,7 @@ class DesignController extends InitController
             $data ->order_name = $post->groomname."&".$post->bridename;
             $data ->order_type = 2;
             $data ->order_date = $post->orderdate;
-            $data ->order_status = 1;
+            $data ->order_status = 0;
             $data ->other_discount = 10;
             $data ->feast_discount = 10;
             $data ->cut_price = 0;
@@ -3818,27 +3641,12 @@ class DesignController extends InitController
         // }
         $result['code'] = $code;
         echo json_encode($result);
-
-
-
         //发微信提醒&发纷享销客
     // try {
         $order = Order::model()->findByPk($order_id);
         //$order = Order::model()->findByPk($_GET['order_id']);
         $hotel = StaffHotel::model()->findByPk($order['staff_hotel_id']);
-
         $staff = Staff::model()->findByPk($post->token);
-
-        /*$html = '<div class="rich_media_content " id="js_content">    
-                    
-                    <p>订单类型：婚礼</p>
-                    <p>新人姓名：'.$order['order_name'].'</p>
-                    <p>开始时间：'.$order['order_date'].'</p>
-                    <p>结束时间：'.$order['end_time'].'</p>
-                    <p>统筹师：'.$staff["name"].'</p>
-                    <p><br></p>
-                </div>';*/
-        /*print_r($order);die;*/
         $date = explode(" ",$order['order_date']);
         $html = "";
         if($order['order_type'] == 2){
@@ -3852,13 +3660,11 @@ class DesignController extends InitController
 日期：".$date[0]."
 开单人：".$staff["name"];
         };
-        
-        // /*print_r($html);die;*/
-        // $touser="@all";//你要发的人
-        // $toparty="";
-        // $totag="";
+        $touser="@all";//你要发的人
+        $toparty="";
+        $totag="";
         // $title="新客人进店了！";//标题
-        // $agentid=0;//应用
+        $agentid = 0;//应用
         // $thumb_media_id="1VIziIEzGn_YvRxXK3OxPQpylPHLUnnA2gJ5_v8Cus2la7sjhAWYgzyFZhIVI9UoS6lkQ-ZLuMPZgP8BOVIS-XQ";
         // $author="";
         // $content_source_url="";
@@ -3867,68 +3673,27 @@ class DesignController extends InitController
         // $show_cover_pic="";
         // $safe="";
 
-        // $company = StaffCompany::model()->findByPk($staff['account_id']);  
-        // $corpid=$company['corpid'];
-        // $corpsecret=$company['corpsecret'];
+        $company = StaffCompany::model()->findByPk($staff['account_id']);  
+        $corpid=$company['corpid'];
+        $corpsecret=$company['corpsecret'];
         //echo $corpid."|".$corpsecret;
         
         //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
-        // $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
+        $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
 
         //分享销客接口
-        
-        // $result=WPRequest::sfxiaokesendMessage($appId,$appSecret,$permanentCode,$content);
-
-
-        
-        //print_r($result);
-        //echo $corpsecret;
-    // } catch (Exception $e) {
-    //     print $e->getMessage();   
-    //     exit(); 
-    // }
-        // $obj = json_encode(array(
-        //     'touser' => $touser,
-        //     'toparty' => $toparty,
-        //     'totag' => "",
-        //     'msgtype' => "text",
-        //     'agentid' => 0,
-        //     'text' => array('content' => $content)
-        // ), JSON_UNESCAPED_UNICODE);
-        
-        // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" . $corpid . "&corpsecret=" . $corpsecret;
-        // $timeout = 5;
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // $file_contents = curl_exec($ch);
-        // curl_close($ch);
-
-        // $data = $file_contents;
-        // $aobj = json_decode($data);
-        // $access_token = $aobj->access_token;
-
-        // $url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" . $access_token;
-
-        // $post_data = $obj;
-        // $timeout = 10;
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        // curl_setopt($ch, CURLOPT_POST, 1);
-        // if ($post_data != '') {
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        // }
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // curl_setopt($ch, CURLOPT_HEADER, false);
-        // $file_contents = curl_exec($ch);
-        // curl_close($ch);
-        // print_r($file_contents);
+        $appId = $hotel['fxiaoke_AppID'];
+        $appSecret = $hotel['fxiaoke_APPSecret'];
+        $permanentCode = $hotel['permanentCode'];
+        $content2 = array(
+            "content"   => $html,
+            );
+        if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+            $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+        } else if ($order['staff_hotel_id'] == 4) {
+            $openUserId = WPRequest::idlist();
+            $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+        }
     }
 
     public function actionSelect_supplier()

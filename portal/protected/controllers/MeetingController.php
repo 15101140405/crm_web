@@ -1094,11 +1094,22 @@ class MeetingController extends InitController
         $company = StaffCompany::model()->findByPk($_SESSION['account_id']);  
         $corpid=$company['corpid'];
         $corpsecret=$company['corpsecret'];
-        echo 1;
-        //$result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
+        // $result=WPRequest::sendMessage_Mpnews($touser, $toparty, $totag, $agentid, $title, $thumb_media_id, $author, $content_source_url, $content, $digest, $show_cover_pic, $safe);
         $result=WPRequest::sendMessage_Text($touser, $toparty, $content,$corpid,$corpsecret);
-        print_r($result);
-        echo 2;
+        // print_r($result);
+        //分享销客接口
+        $appId = $hotel['fxiaoke_AppID'];
+        $appSecret = $hotel['fxiaoke_APPSecret'];
+        $permanentCode = $hotel['permanentCode'];
+        $content2 = array(
+            "content"   => $html,
+            );
+        if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+            $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+        } else if ($order['staff_hotel_id'] == 4) {
+            $openUserId = WPRequest::idlist();
+            $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+        } 
     }
 
     public function actionSavetp()
