@@ -7,11 +7,14 @@
     <title>上传</title>
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
-    <script type="text/javascript" src="http://file.cike360.com/swfupload/swfupload.js"></script>
-    <script type="text/javascript" src="js/handlers.js"></script>
+    
+
+    <script type="text/javascript" src="js/input.js"></script>
+
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="js/input.js"></script>
+    <script type="text/javascript" src="js/swfupload.js"></script>
+    <script type="text/javascript" src="js/handlers.js"></script>
     <script type="text/javascript" src="js/upload.js"></script>
     <!-- 引用控制层插件样式 -->
     <!-- <link rel="stylesheet" href="css/zyUpload.css" type="text/css"> -->

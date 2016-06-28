@@ -11,11 +11,11 @@ $arr_locate = array(
     $newstr = ltrim($newstr, "[");
     $arr_type = explode(",",$newstr);
     $t = 0;
-    foreach ($arr_type as $key => $value) {
+    /*foreach ($arr_type as $key => $value) {
         if($value == 5){
             $t++;
-        }
-    };
+        };
+    };*/
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -156,8 +156,28 @@ $arr_locate = array(
         </table>
         <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额<!--  <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_order_total['total_price'] ?>元 ］</span> --><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
+
+
+    <!-- 支出信息 -->
+     <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="feast_cost">
+                <span class="label">餐饮总支出：</span>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
+            </li>
+        </ul>
+    </div>
+    <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="wedding_cost">
+                <span class="label">婚礼总支出：</span>
+                <div class="align_r1 dep_content" id="wedding_cost_data"><?php if(isset($arr_order_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_order_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_order_total['total_cost']);};}?></div>
+            </li>
+        </ul>
+    </div>
+
     <!-- 餐饮 -->
-<?php if($t == 0){?>
+
     <div class="bill_item_module" id="feast">
         <h4 class="module_title list_more">婚宴</h4>
         <div class="ulist_module">
@@ -656,24 +676,8 @@ $arr_locate = array(
     ?>
         </div>
     </div>
-<?php }else{?>
-    <div class="ulist_module">
-        <ul class="ulist">
-            <li class="ulist_item list_more" id="feast_cost">
-                <span class="label">餐饮总支出：</span>
-                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
-            </li>
-        </ul>
-    </div>
-    <div class="ulist_module">
-        <ul class="ulist">
-            <li class="ulist_item list_more" id="wedding_cost">
-                <span class="label">婚礼总支出：</span>
-                <div class="align_r1 dep_content" id="wedding_cost_data"><?php if(isset($arr_order_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_order_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_order_total['total_cost']);};}?></div>
-            </li>
-        </ul>
-    </div>
-<?php }?>
+
+   
            
 
     

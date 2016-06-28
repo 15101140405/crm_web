@@ -324,7 +324,6 @@ class BackgroundController extends InitController
         if($_GET['CI_Type'] == 2 || $_GET['CI_Type'] == 5 || $_GET['CI_Type'] == 16){
             $staff_id = $_COOKIE['userid'];
             $result = yii::app()->db->createCommand("select * from case_info where ".
-
                 "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
                     "(select account_id from staff where id=".$staff_id.") ) ".
 
@@ -336,7 +335,7 @@ class BackgroundController extends InitController
             foreach($list as  $key => $val){
                 if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
                     $t = explode(".", $val['CI_Pic']);
-                    if(isset($t[0]) && $t[1]){
+                    if(isset($t[0]) && isset($t[1])){
                         $list[$key]["CI_Pic"]=$url.$t[0]."_sm.".$t[1];
                     }else{
                         $list[$key]["CI_Pic"]="images/cover.jpg";

@@ -3,11 +3,7 @@
     $newstr = ltrim($newstr, "[");
     $arr_type = explode(",",$newstr);
     $t = 0;
-    foreach ($arr_type as $key => $value) {
-        if($value == 5){
-            $t++;
-        }
-    };
+    
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -122,7 +118,7 @@
         </ul>
     </div>
     <!-- 回款信息 -->
-    <!-- 回款信息 -->
+    
     <div class="table_module">
         <h4 class="module_title list_more" id="payment">收款记录</h4>
         <table class="mar_b10">
@@ -147,7 +143,26 @@
         <h4 class="module_title" style="font-size:1.5rem;border-top: 1px solid #eee;" id="payment">实收总额 <!-- <span class="t_gray" style="margin-left:10px"> [ 应收总额：<?php echo $arr_total['total_price'] ?>元 ］</span> --><span class="t_green" style="float:right;margin-right:10px"><?php echo $payment_data['feast_deposit']+$payment_data['medium_term']+$payment_data['final_payments'] ?>元</span></h4>
     </div>
 
-<?php if($t == 0){?>
+
+    <!-- 支出信息 -->
+    <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="feast_cost">
+                <span class="label">餐饮总支出：</span>
+                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
+            </li>
+        </ul>
+    </div>
+    <div class="ulist_module">
+        <ul class="ulist">
+            <li class="ulist_item list_more" id="meeting_cost">
+                <span class="label">其他总支出：</span>
+                <div class="align_r1 dep_content" id="meeting_cost_data"><?php if(isset($arr_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_total['total_cost']);};}?></div>
+            </li>
+        </ul>
+    </div>
+
+
     <!-- 餐饮 -->
     <div class="bill_item_module" id="feast">
         <h4 class="module_title list_more">会议餐</h4>
@@ -368,24 +383,9 @@
     ?>
         </div>
     </div>
-<?php }else{?>
-    <div class="ulist_module">
-        <ul class="ulist">
-            <li class="ulist_item list_more" id="feast_cost">
-                <span class="label">餐饮总支出：</span>
-                <div class="align_r1 dep_content" id="feast_cost_data"><?php if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_wed_feast['total_cost']);}else{echo 0.00;} ?></div>
-            </li>
-        </ul>
-    </div>
-    <div class="ulist_module">
-        <ul class="ulist">
-            <li class="ulist_item list_more" id="meeting_cost">
-                <span class="label">其他总支出：</span>
-                <div class="align_r1 dep_content" id="meeting_cost_data"><?php if(isset($arr_total['total_cost'])){if(isset($arr_wed_feast['total_cost'])){echo sprintf("%.2f", $arr_total['total_cost']-$arr_wed_feast['total_cost']);}else{echo sprintf("%.2f", $arr_total['total_cost']);};}?></div>
-            </li>
-        </ul>
-    </div>
-<?php }?>
+
+    
+
     
     <?php
         if (!empty($arr_total)) {
@@ -533,6 +533,14 @@
 
         //order_status = 5 && 访问者为 财务 时 , 出现：同意／拒绝 按钮
         var order_status = <?php echo $arr_order_data['order_status'];?>;
+<?php 
+    foreach ($arr_type as $key => $value) {
+        if($value == 5){
+            $t++;
+        }
+    };
+?>
+
 <?php if($t == 0){//访问者不在财务部门?>
         $("#bottom").remove();
 <?php

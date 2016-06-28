@@ -1,6 +1,7 @@
 <?php
 
 include_once('../library/WPRequest.php');
+include_once('../library/taobao-sdk-PHP-auto_1455552377940-20160505/TopSdk.php');
 
 class ResourceController extends InitController
 {
@@ -925,6 +926,8 @@ class ResourceController extends InitController
 
     public function actionNeworderlist()
     {
+        $_GET['token'] = 100;
+
         $result = yii::app()->db->createCommand("select o.id,s.name,order_date,order_type,order_name,order_status from `order` o left join staff_hotel s on staff_hotel_id=s.id where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
         $result = $result->queryAll();
 
@@ -939,7 +942,7 @@ class ResourceController extends InitController
             $item['order_date'] = $t[0];
             $item['order_name'] = $value['order_name'];
             $item['total_price'] = 0;
-            $item['img_url'] = "";
+            $item['img_url'] = "style/images/list_img.jpg";
             if($value['order_type'] == 1){
                 $item['order_type'] = "会议";
             }else{
@@ -1001,6 +1004,21 @@ class ResourceController extends InitController
             "where s.order_id=".$_GET['order_id']);
         $result = $result->queryAll();
 
+        foreach ($result as $key => $value) {
+            $t1 = explode('.', $value['ref_pic_url']);
+            if(isset($t1[0]) && isset($t1[1])){
+                $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
+            }else{
+                $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+            };
+            $t2 = explode('.', $value['img_url']);
+            if(isset($t2[0]) && isset($t2[1])){
+                $result[$key]['img_url'] = 'http://file.cike360.com'.$t2[0]."_sm.".$t2[1];
+            }else{
+                $result[$key]['img_url'] = 'http://file.cike360.com'.$value['img_url'];
+            };
+        };
+
         //取本订单里的  order_product
         $result1 = yii::app()->db->createCommand("select op.id,op.order_set_id,ws.category as set_category,ws.name as set_name,st.name,op.actual_price,op.unit as amount,op.actual_unit_cost,op.actual_service_ratio,sp.name as product_name,sp.description,sp.ref_pic_url,sp.supplier_type_id,sp.unit,op.order_set_id,os.show_area ".
             "from order_product op ".
@@ -1011,6 +1029,15 @@ class ResourceController extends InitController
             "left join wedding_set ws on order_set.wedding_set_id=ws.id ".
             "where op.order_id=".$_GET['order_id']);
         $result1 = $result1->queryAll(); 
+
+        foreach ($result1 as $key => $value) {
+            $t1 = explode('.', $value['ref_pic_url']);
+            if(isset($t1[0]) && isset($t1[1])){
+                $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
+            }else{
+                $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+            };
+        }
 
         //取本订单数据
         $order = Order::model()->findByPk($_GET['order_id']);
@@ -1060,8 +1087,8 @@ class ResourceController extends InitController
         }
 
         //构造渠道列表
-        $result = new ProductForm;
-        $tuidan_list = $result->tuidan_list($_GET['token']);
+        $result5 = new ProductForm;
+        $tuidan_list = $result5->tuidan_list($_GET['token']);
 
         //构造折扣范围列表
         $discount = array();
@@ -1143,6 +1170,12 @@ class ResourceController extends InitController
 
         //比较 s | p
         $order_show_list = array();
+        // $order_show_data = OrderShow::model()->findAll(array(
+        //         'condition' => 'order_id=:order_id',
+        //         'params' => array(
+        //                 ':order_id' => $_GET['order_id']
+        //             )
+        //     ));
         foreach ($result as $key => $value) {
             $item=array();
             $item['show_id']=$value['id'];
@@ -1161,9 +1194,12 @@ class ResourceController extends InitController
             };
             $order_show_list[]=$item;
         };
-        $result = yii::app()->db->createCommand("select * from order_show where order_id=".$_GET['order_id']." and show_area=0 order by area_sort DESC");
-        $non_area_show = $result->queryAll();
-        $i=$non_area_show[0]['area_sort']+1;
+        $result6 = yii::app()->db->createCommand("select * from order_show where order_id=".$_GET['order_id']." and show_area=0 order by area_sort DESC");
+        $non_area_show = $result6->queryAll();
+        $i=1;
+        if(!empty($non_area_show)){
+            $i=$non_area_show[0]['area_sort']+1;
+        };
         foreach ($result1 as $key => $value) {
             $t=0;
             foreach ($order_show_list as $key_s => $value_s) {
@@ -1203,12 +1239,21 @@ class ResourceController extends InitController
             foreach ($order_show_list as $key_l => $value_l) {
                 if($value_l['show_area'] == $value['id']){
                     $item=array();
+                    $item['show_id']=$value_l['show_id'];
                     $item['data_type']=$value_l['show_type'];
                     $item['show_data']=$value_l['show_data'];
                     $item['product_id']=$value_l['product_id'];
+                    $item['sort']=$value_l['area_sort'];
                     $tem['data'][]=$item;
                 };
             };
+            if(!empty($tem['data'])){
+                foreach ( $tem['data'] as $key => $value ){
+                    $num1[$key] = $value ['sort'];
+                };
+                array_multisort($num1, SORT_ASC, $tem['data']);
+            };
+                
             $order_show[]=$tem;
         };
         $tem=array();
@@ -1227,6 +1272,12 @@ class ResourceController extends InitController
                 $tem['data'][]=$item;
             };
         };
+        foreach ( $tem['data'] as $key => $value ){
+            $num1[$key] = $value ['sort'];
+        };
+
+        array_multisort($num1, SORT_ASC, $tem['data']);
+        
         $order_show[]=$tem;
 
 
@@ -1281,18 +1332,18 @@ class ResourceController extends InitController
         //无区域产品，列出来
         $non_area_product = array();
         foreach ($result1 as $key => $value) {
-            if($value['show_area'] == 0){
+            if($value['show_area'] == 0 && $value['supplier_type_id']!=2){
                 $item=array();
-                $item['product_id']=$value_p['id'];
-                $item['product_name']=$value_p['product_name'];
-                $item['description']=$value_p['description'];
-                $item['ref_pic_url']=$value_p['ref_pic_url'];
-                $item['price']=$value_p['actual_price'];
-                $item['amount']=$value_p['amount'];
-                $item['unit']=$value_p['unit'];
-                $item['cost']=$value_p['actual_unit_cost'];
+                $item['product_id']=$value['id'];
+                $item['product_name']=$value['product_name'];
+                $item['description']=$value['description'];
+                $item['ref_pic_url']=$value['ref_pic_url'];
+                $item['price']=$value['actual_price'];
+                $item['amount']=$value['amount'];
+                $item['unit']=$value['unit'];
+                $item['cost']=$value['actual_unit_cost'];
                 $item['set']="";
-                if($value_p['order_set_id'] != 0){
+                if($value['order_set_id'] != 0){
                     $item['set']="套系产品";
                 };
                 $non_area_product[]=$item;
@@ -1360,12 +1411,35 @@ class ResourceController extends InitController
             };
         };
 
+        // *******************************************************
+        // ***************   构造 email 列表    *******************
+        // *******************************************************
+
+        $email = StaffEmail::model()->findAll(array(
+                'condition' => 'staff_id=:staff_id',
+                'params' => array(
+                        ':staff_id' => $_GET['token'],
+                    )
+            ));
+
+        $email_list = array();
+        foreach ($email as $key => $value) {
+            $item=array();
+            $item['email'] = $value['email'];
+            $email_list[] = $item;
+        };
+        // print_r($email_list);die;
+
+
         $order_detail = array();
         $order_detail['order_data'] = $order_data;
         $order_detail['order_show'] = $order_show;
         $order_detail['area_product'] = $area_product;
         $order_detail['non_area_product'] = $non_area_product;
         $order_detail['set_data'] = $set_data;
+        $order_detail['email_list'] = $email_list;
+
+
 
 
         echo json_encode($order_detail);
@@ -1374,62 +1448,172 @@ class ResourceController extends InitController
     public function actionProductstore()
     {
         $staff = Staff::model()->findByPk($_GET['token']);
-        $result = yii::app()->db->createCommand("select * from supplier_product sp ".
-            // "left join supplier_product_decoration_tap dt on sp.decoration_tap=dt.id ".
-            " where account_id=".$staff['account_id']);
+        $result = yii::app()->db->createCommand("select * from supplier_product sp where account_id=".$staff['account_id']);
         $result = $result->queryAll();
 
-        $product_store = array(
-                '场地布置' => array(),
-                '主持' => array(),
-                '化妆' => array(),
-                '摄影' => array(),
-                '摄像' => array(),
-                '其他' => array(),
-                '灯光设备' => array(),
-                '视频设备' => array(),
-                '音响设备' => array(),
-            );
-        $tap = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']);
-        $tap = $tap->queryAll();
-        foreach ($tap as $key => $value) {
-            $tap[$key]['product_list']=array();
-            foreach ($result as $key_p => $value_p) {
-                if($value_p['decoration_tap']==$value['id']){
-                    $tap[$key]['product_list'][]=$value_p;
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'role=:role',
+                'params' => array(
+                        ':role' => 1
+                    )
+            ));
+
+        // $product_store = array(
+        //         '场地布置' => array(),
+        //         '主持' => array(),
+        //         '化妆' => array(),
+        //         '摄影' => array(),
+        //         '摄像' => array(),
+        //         '其他' => array(),
+        //         '灯光设备' => array(),
+        //         '视频设备' => array(),
+        //         '音响设备' => array(),
+        //     );
+        $decoration_tap = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']);
+        $decoration_tap = $decoration_tap->queryAll();
+
+        $product_store = array();
+
+        foreach ($supplier_type as $key_st => $value_st) {
+            $tem = array();
+            $tem['supplier_type_id'] = $value_st['id'];
+            $tem['supplier_type_name'] = $value_st['name'];
+            $tem['type'] = 0;
+            $tem['tap'] = array();
+            $tem['list'] = array();
+            if($value_st['id'] == 20){
+                $tem['type'] = 1;
+                foreach ($decoration_tap as $key_tap => $value_tap) {
+                    $item = array();
+                    $item['id'] = $value_tap['id'];
+                    $item['name'] = $value_tap['name'];
+                    $item['list'] = array();
+                    foreach ($result as $key_r => $value_r) {
+                        if($value_r['decoration_tap'] == $value_tap['id']){
+                            $item['list'][]=$value_r;
+                        };
+                    };
+                    $tem['tap'][]=$item;
                 };
-                if($value_p['supplier_type_id']==3){
-                    $product_store['主持'][]=$value_p;
+            }else{
+                foreach ($result as $key_r => $value_r) {
+                    if($value_r['supplier_type_id'] == $value_st['id']){
+                        $tem['list'][]=$value_r;
+                    };
                 };
-                if($value_p['supplier_type_id']==6){
-                    $product_store['化妆'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==5){
-                    $product_store['摄影'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==4){
-                    $product_store['摄像'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==7){
-                    $product_store['其他'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==8){
-                    $product_store['灯光设备'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==9){
-                    $product_store['视频设备'][]=$value_p;
-                };
-                if($value_p['supplier_type_id']==23){
-                    $product_store['音响设备'][]=$value_p;
+            };
+            $product_store[]=$tem;
+        };
+
+        foreach ($product_store as $key => $value) {
+            if($value['type'] == 1){
+                foreach ($value['tap'] as $key1 => $value1) {
+                    foreach ($value1['list'] as $key2 => $value2) {
+                        $t = explode('.', $value2['ref_pic_url']);
+                        if(isset($t[0]) && isset($t[1])){
+                            $product_store[$key]['tap'][$key1]['list'][$key2]['ref_pic_url'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                        }else{
+                            $product_store[$key]['tap'][$key1]['list'][$key2]['ref_pic_url'] = 'style/images/none_pic.png';
+                        }
+                    }
+                }
+            }else{
+                foreach ($value['list'] as $key1 => $value1) {
+                    $t = explode('.', $value1['ref_pic_url']);
+                    if(isset($t[0]) && isset($t[1])){
+                        $product_store[$key]['list'][$key1]['ref_pic_url'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                    }else{
+                        $product_store[$key]['list'][$key1]['ref_pic_url'] = 'style/images/none_pic.png';
+                    }
                 };
             };
         };
-        foreach ($tap as $key => $value) {
-            $product_store['场地布置'][$value['name']]=$value['product_list'];
-        };
+
+        // foreach ($tap as $key => $value) {
+        //     $tap[$key]['product_list']=array();
+        //     foreach ($result as $key_p => $value_p) {
+        //         if($value_p['decoration_tap']==$value['id']){
+        //             $tap[$key]['product_list'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==3){
+        //             $product_store['主持'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==6){
+        //             $product_store['化妆'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==5){
+        //             $product_store['摄影'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==4){
+        //             $product_store['摄像'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==7){
+        //             $product_store['其他'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==8){
+        //             $product_store['灯光设备'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==9){
+        //             $product_store['视频设备'][]=$value_p;
+        //         };
+        //         if($value_p['supplier_type_id']==23){
+        //             $product_store['音响设备'][]=$value_p;
+        //         };
+        //     };
+        // };
+        // foreach ($tap as $key => $value) {
+        //     $product_store['场地布置'][$value['name']]=$value['product_list'];
+        // };
 
             
         echo json_encode($product_store);
+    }
+
+    public function actionDishstore()
+    {
+        // $_GET['token'] == 100;
+        $staff = Staff::model()->findByPk($_GET['token']);
+
+        $supplier_product = SupplierProduct::model()->findAll(array(
+                'condition' => 'supplier_type_id=:st_id && account_id=:account_id',
+                'params' => array(
+                        ':st_id' => 2,
+                        ':account_id' => $staff['account_id']
+                    )
+            ));
+
+
+        $dish = DishType::model()->findAll();
+
+        $dish_store = array();
+        foreach ($dish as $key => $value) {
+            $temp = array();
+            $temp['dish_id'] = $value['id'];
+            $temp['dish_name'] = $value['name'];
+            $temp['dish_pic'] = $value['pic'];
+            $temp['list'] = array();
+            foreach ($supplier_product as $key1 => $value1) {
+                if($value1['dish_type'] == $value['id']){
+                    $t = explode('.', $value1['ref_pic_url']);
+                    $item = array();
+                    $item['sp_id'] = $value1['id'];
+                    $item['name'] = $value1['name'];
+                    $item['price'] = $value1['unit_price'];
+                    $item['cost'] = $value1['unit_cost'];
+                    $item['unit'] = $value1['unit'];
+                    if(isset($t[0]) && isset($t[1])){
+                        $item['pic'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
+                    }else{
+                        $item['pic'] = 'style/images/none_pic.png';
+                    }
+                    $temp['list'][] = $item;
+                };
+            };
+            $dish_store[] = $temp;
+        };
+
+        echo json_encode($dish_store);
+
     }
 
     public function actionWords_insert()
@@ -1442,9 +1626,11 @@ class ResourceController extends InitController
         //         'sort' => 2,
         //     );
 
+        echo $post->sort;
+
         $order_show=new OrderShowForm;
-        $order_show->words_insert($post->words,$post->order_id,$post->area,$post->sort);
-        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
+        $order_show->area_sort_batch_add(/*1033,3,2*/$post->order_id,$post->area,$post->sort);
+        $order_show->words_insert(/*"ceshiwords",1033,3,2*/$post->words,$post->order_id,$post->area,$post->sort);
     }
 
     public function actionImg_insert()
@@ -1460,8 +1646,8 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->img_insert($post->type,$post->url,$post->staff_id,$post->order_id,$post->area,$post->sort);
         $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
+        $order_show->img_insert($post->type,$post->url,$post->staff_id,$post->order_id,$post->area,$post->sort);
     }
 
     public function actionProduct_insert()
@@ -1475,8 +1661,8 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->product_insert($post->area,$post->sort,$post->order_id,$post->sp_id);
         $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
+        $order_show->product_insert($post->area,$post->sort,$post->order_id,$post->sp_id);
     }
 
     public function actionNew_product_insert()
@@ -1501,13 +1687,17 @@ class ResourceController extends InitController
         //     );
 
         $order_show=new OrderShowForm;
-        $order_show->new_product_insert($post->account_id,$post->supplier_id,$post->supplier_type_id,$post->decoration_tap,$post->name,$post->category,$post->price,$post->cost,$post->unit,$post->remark,$post->url,$post->order_id,$post->order_id,$post->area,$post->sort);
         $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
+        $order_show->new_product_insert($post->account_id,$post->supplier_id,$post->supplier_type_id,$post->decoration_tap,$post->name,$post->category,$post->price,$post->cost,$post->unit,$post->remark,$post->url,$post->order_id,$post->order_id,$post->area,$post->sort);
     }
 
     public function actionSave_ppt()
     {
         $post = json_decode(file_get_contents('php://input'));
+        // $json_st = '{"order_id":"1033","order_show":[{"area_id":"1","area_name":"新娘布置","description":null,"data":[]},{"area_id":"2","area_name":"酒店室外","description":null,"data":[{"show_id":"9581","data_type":"2","show_data":"000","product_id":"4461","sort":"2"}]},{"area_id":"3","area_name":"签到区","description":null,"data":[{"show_id":"9565","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9566","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9570","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9571","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9572","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9573","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9574","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9575","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"5"},{"show_id":"9576","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"4"},{"show_id":"9577","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"4"},{"show_id":"9578","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"4"},{"show_id":"9579","data_type":"0","show_data":"ceshiwords","product_id":0,"sort":"3"}]},{"area_id":"4","area_name":"仪式区","description":null,"data":[]},{"area_id":0,"area_name":"待分配产品","description":"","data":[{"show_id":"9522","data_type":"2","show_data":"/upload/伊缘圆 (2)20160523114630.jpg","product_id":"3990","sort":"2"},{"show_id":"9523","data_type":"2","show_data":"/upload/伊缘圆 (37)20160519155117.jpg","product_id":"3991","sort":"3"},{"show_id":"9524","data_type":"2","show_data":"/upload/伊缘圆 (33)20160519154522.jpg","product_id":"3992","sort":"4"},{"show_id":"9525","data_type":"2","show_data":"/upload/伊缘圆 (2)20160519151813.jpg","product_id":"3993","sort":"5"},{"show_id":"9526","data_type":"2","show_data":"/upload/7d80a1bfa1b5ccb1b08ca88dc8987a5bf6adcb7172ac-cmz1yd20160524134641.jpg","product_id":"3994","sort":"6"},{"show_id":"9527","data_type":"2","show_data":"/upload/15C5ACD0-54F3-4326-8FF1-9FEFF1DB965820160524141027.jpg","product_id":"3995","sort":"7"},{"show_id":"9528","data_type":"2","show_data":"000","product_id":"3998","sort":"8"},{"show_id":"9529","data_type":"2","show_data":"000","product_id":"3999","sort":"9"},{"show_id":"9530","data_type":"2","show_data":"/upload/3420160524135134.jpg","product_id":"4000","sort":"10"},{"show_id":"9531","data_type":"2","show_data":"/upload/b9604d7f7b3034c1d95c02885b71db0961ab21374031-RNmHwU20160524141319.jpg","product_id":"4001","sort":"11"},{"show_id":"9532","data_type":"2","show_data":"/upload/d702f70c13c7e428de35211d0c790ac761138522bcee-422K2T20160523113906.jpg","product_id":"4002","sort":"12"},{"show_id":"9533","data_type":"2","show_data":"/upload/66520fa57fceefe5cde71d76796c2e05c74b1bba1973d-3XaEsz20160523113621.jpg","product_id":"4003","sort":"13"},{"show_id":"9534","data_type":"2","show_data":"1","product_id":"4004","sort":"14"},{"show_id":"9535","data_type":"2","show_data":"000","product_id":"4005","sort":"15"},{"show_id":"9536","data_type":"2","show_data":"000","product_id":"4006","sort":"16"},{"show_id":"9537","data_type":"2","show_data":"000","product_id":"4007","sort":"17"},{"show_id":"9538","data_type":"2","show_data":"/upload/52c524dc79a2220160522171642.jpg","product_id":"4008","sort":"18"},{"show_id":"9539","data_type":"2","show_data":"/upload/52c5250b3639020160522171808.jpg","product_id":"4009","sort":"19"},{"show_id":"9540","data_type":"2","show_data":"/upload/伊缘圆 (1)120160519133854.jpg","product_id":"4010","sort":"20"},{"show_id":"9541","data_type":"2","show_data":"/upload/伊缘圆 (18)20160519165718.jpg","product_id":"4011","sort":"21"},{"show_id":"9542","data_type":"2","show_data":"/upload/jmb72SJAyB7JkB4akXs6fQWc3nXQjYnhh70020160523111458.jpg","product_id":"4012","sort":"22"},{"show_id":"9543","data_type":"2","show_data":"000","product_id":"4013","sort":"23"},{"show_id":"9544","data_type":"2","show_data":"000","product_id":"4014","sort":"24"},{"show_id":"9545","data_type":"2","show_data":"1","product_id":"4015","sort":"25"},{"show_id":"9546","data_type":"2","show_data":"000","product_id":"4016","sort":"26"},{"show_id":"9547","data_type":"2","show_data":"000","product_id":"4017","sort":"27"},{"show_id":"9548","data_type":"2","show_data":"000","product_id":"4018","sort":"28"},{"show_id":"9549","data_type":"2","show_data":"/upload/66520fa57fceefe5cde71d76796c2e05c74b1bba1973d-3XaEsz20160523113621.jpg","product_id":"4019","sort":"29"},{"show_id":"9550","data_type":"2","show_data":"/upload/d702f70c13c7e428de35211d0c790ac761138522bcee-422K2T20160523113906.jpg","product_id":"4020","sort":"30"},{"show_id":"9551","data_type":"2","show_data":"/upload/QQ截图2016061415482120160614154838.png","product_id":"4021","sort":"31"},{"show_id":"9552","data_type":"2","show_data":"/upload/QQ截图2016061415421520160614154459.png","product_id":"4022","sort":"32"},{"show_id":"9553","data_type":"2","show_data":"/upload/QQ截图2016061415470520160614154724.png","product_id":"4023","sort":"33"},{"show_id":"9554","data_type":"2","show_data":"/upload/c新娘花房 (3)20160614154037.jpg","product_id":"4024","sort":"34"},{"show_id":"9555","data_type":"2","show_data":"/upload/QQ截图2016061415331720160614153334.png","product_id":"4025","sort":"35"},{"show_id":"9556","data_type":"2","show_data":"/upload/图片320160614152427.png","product_id":"4026","sort":"36"},{"show_id":"9557","data_type":"2","show_data":"/upload/伊缘圆 (2)20160519151813.jpg","product_id":"4027","sort":"37"},{"show_id":"9558","data_type":"2","show_data":"/upload/0220160524135057.jpg","product_id":"4028","sort":"38"},{"show_id":"9559","data_type":"2","show_data":"/upload/4320160524135243.jpg","product_id":"4029","sort":"39"},{"show_id":"9560","data_type":"2","show_data":"/upload/图片220160614150453.png","product_id":"4030","sort":"40"},{"show_id":"9561","data_type":"2","show_data":"/upload/图片120160614150153.png","product_id":"4031","sort":"41"},{"show_id":"9562","data_type":"2","show_data":"/upload/QQ截图2016061414570820160614145740.png","product_id":"4032","sort":"42"},{"show_id":"9563","data_type":"2","show_data":"000","product_id":"4036","sort":"43"},{"show_id":"9564","data_type":"2","show_data":"000","product_id":"4037","sort":"44"},{"show_id":"9567","data_type":"0","show_data":"上传文字123123123","product_id":0,"sort":"21"},{"show_id":"9568","data_type":"0","show_data":"上传文字123123","product_id":0,"sort":"4"},{"show_id":"9569","data_type":"0","show_data":"上传文字34234234234","product_id":0,"sort":"4"},{"show_id":"1001","data_type":"2","show_data":"/upload/b27f929fb5975de4d70df883d6964a887ff5935b2d1df-5hHHnX20160524134720.jpg","product_id":"3997","sort":"1"},{"show_id":"7255","data_type":"2","show_data":"/upload/BF472384-354E-4033-B79C-91E4A4D2D6AE20160524140642.jpg","product_id":"3996","sort":"1"}]}]}';
+        // $post = json_decode($json_st);
+        // $json = json_decode( json_encode($post),true);
+
         // $post = array(
         //         'order_id' => 1033,
         //         'list' => array(
@@ -1517,6 +1707,23 @@ class ResourceController extends InitController
         //                 3 => array('os_id'=> 4,'area_sort'=> 7,'show_area'=>4),
         //             )
         //     );
+
+        $list=array();
+        foreach ($post->order_show as $key => $value) {
+            if(!empty($value->data)){
+                foreach ($value->data as $key1 => $value1) {
+                    $item = array();
+                    $item['os_id'] = $value1->show_id;
+                    $item['area_sort'] = $value1->sort;
+                    $item['show_area'] = $value->area_id;
+                    $list[]=$item;
+                };    
+            }
+            
+        };
+        // print_r($list);
+        
+        // print_r(json_encode($list));die;
 
         
 
@@ -1529,7 +1736,7 @@ class ResourceController extends InitController
         //删除  list中不存在的order_show
         foreach ($order_show as $key => $value) {
             $t = 0;
-            foreach ($post->list as $key_l => $value_l) {
+            foreach ($list as $key_l => $value_l) {
                 if($value['id'] == $value_l['os_id']){
                     $t++;
                 };        
@@ -1551,21 +1758,26 @@ class ResourceController extends InitController
             }
         };
 
-        //更新order_show   area_sort
-        $sql = "";
-        foreach ($post->list as $key => $value) {
-            $sql .= " when id=".$value['os_id']." then ".$value['area_sort'];
-        };
-        $result = yii::app()->db->createCommand("update order_show set area_sort = case ".$sql." else area_sort end");
-        $result = $result->queryAll();
+        // //更新order_show   area_sort
+        // $sql = "";
+        // foreach ($list as $key => $value) {
+        //     $sql .= " when id=".$value['os_id']." then ".$value['area_sort'];
+        // };
+        // $result = yii::app()->db->createCommand("update order_show set area_sort = case ".$sql." else area_sort end");
+        // $result = $result->queryAll();
 
-        //更新order_show   show_area
-        $sql = "";
-        foreach ($post->list as $key => $value) {
-            $sql .= " when id=".$value['os_id']." then ".$value['show_area'];
+        // //更新order_show   show_area
+        // $sql = "";
+        // foreach ($post->list as $key => $value) {
+        //     $sql .= " when id=".$value['os_id']." then ".$value['show_area'];
+        // };
+        // $result = yii::app()->db->createCommand("update order_show set show_area = case ".$sql." else show_area end");
+        // $result = $result->queryAll();
+
+        //更新  order_show :  area_sort、show_area
+        foreach ($list as $key => $value) {
+            OrderShow::model()->updateByPk($value['os_id'],array('show_area'=>$value['show_area'],'area_sort'=>$value['area_sort']));
         };
-        $result = yii::app()->db->createCommand("update order_show set show_area = case ".$sql." else show_area end");
-        $result = $result->queryAll();
     }
 
     public function actionUpdate_op()
@@ -1579,6 +1791,14 @@ class ResourceController extends InitController
         //     );
 
         OrderProduct::model()->updateByPk($post->op_id,array('actual_price'=>$post->actual_price,'unit'=>$post->amount,'actual_unit_cost'=>$post->actual_unit_cost));
+    }
+
+    public function actionDel_op()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        OrderProduct::model()->deleteByPk($post->op_id);
+        OrderShow::model()->deleteAll('order_product_id=:op_id',array(':op_id'=>$post->op_id));
     }
 
     public function actionUpdate_menu()
@@ -1600,18 +1820,20 @@ class ResourceController extends InitController
         // );   
 
         //编辑order_set
-        OrderSet::model()->updateAll(array('amount'=>$post->table_amount,'remark'=>$post->remark,'actual_service_ratio'=>$post->actual_service_ratio),'order_id=:order_id && wedding_set_id=:wedding_set_id',array(':order_id'=>$post->order_id,':wedding_set_id'=>$post->wedding_set_id));
+        OrderSet::model()->updateByPk($post->feast->order_set_id,array('amount'=>$post->feast->amount,'actual_service_ratio'=>$post->feast->actual_service_ratio));
     
+        $order_set = OrderSet::model()->findByPk($post->feast->order_set_id);
+
         //删除菜品
         $result = yii::app()->db->createCommand("select op.id ".
             "from order_product op left join supplier_product sp on op.product_id=sp.id ".
-            "where op.order_id=".$post->order_id." and sp.supplier_type_id=2");
+            "where op.order_id=".$order_set['order_id']." and sp.supplier_type_id=2");
         $result = $result->queryAll();
 
         foreach ($result as $key => $value) {
             $t = 0;
-            foreach ($post->list as $key_l => $value_l) {
-                if($value['id'] == $value_l['op_id']){
+            foreach ($post->feast->product_list as $key_l => $value_l) {
+                if($value['id'] == $value_l->product_id){
                     $t++;
                 };
             };
@@ -1622,9 +1844,9 @@ class ResourceController extends InitController
 
 
 
-        //更新菜品   actual_price
+        /*//更新菜品   actual_price
         $sql = "";
-        foreach ($post->list as $key => $value) {
+        foreach ($post->feast->product_list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_price'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_price = case ".$sql." else actual_price end");
@@ -1632,7 +1854,7 @@ class ResourceController extends InitController
 
         //更新菜品   unit
         $sql = "";
-        foreach ($post->list as $key => $value) {
+        foreach ($post->feast->product_list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['unit'];
         };
         $result = yii::app()->db->createCommand("update order_product set unit = case ".$sql." else unit end");
@@ -1640,7 +1862,7 @@ class ResourceController extends InitController
 
         //更新菜品   actual_unit_cost
         $sql = "";
-        foreach ($post->list as $key => $value) {
+        foreach ($post->feast->product_list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_unit_cost'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_unit_cost = case ".$sql." else actual_unit_cost end");
@@ -1648,11 +1870,62 @@ class ResourceController extends InitController
 
         //更新菜品   actual_service_ratio
         $sql = "";
-        foreach ($post->list as $key => $value) {
+        foreach ($post->feast->product_list as $key => $value) {
             $sql .= " when id=".$value['op_id']." then ".$value['actual_service_ratio'];
         };
         $result = yii::app()->db->createCommand("update order_product set actual_service_ratio = case ".$sql." else actual_service_ratio end");
-        $result = $result->queryAll();   
+        $result = $result->queryAll();  */
+
+        foreach ($post->feast->product_list as $key => $value) {
+            OrderProduct::model()->updateByPk($value->product_id,array('actual_price'=>$value->price,'unit'=>$value->amount,'actual_unit_cost'=>$value->cost,'actual_service_ratio'=>$post->feast->actual_service_ratio));
+        }; 
+    }
+
+    public function actionUpdate_other()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        //编辑order_set
+        OrderSet::model()->updateByPk($post->other->order_set_id,array('amount'=>$post->other->amount,'actual_service_ratio'=>$post->other->actual_service_ratio));
+    
+        $order_set = OrderSet::model()->findByPk($post->other->order_set_id);
+
+        //删除单品
+        $supplier_type = SupplierType::model()->findAll(array(
+                'condition' => 'role=:role',
+                'params' => array(
+                        ':role' => 1
+                    )
+            ));
+
+        $supplier_type_list = "(";
+        foreach ($supplier_type as $key => $value) {
+            $supplier_type_list .= $value['id'].",";
+        };
+        $supplier_type_list = rtrim($supplier_type_list, ",");
+        $supplier_type_list .= ")";
+
+
+        $result = yii::app()->db->createCommand("select op.id ".
+            "from order_product op left join supplier_product sp on op.product_id=sp.id ".
+            "where op.order_id=".$order_set['order_id']." and sp.supplier_type_id in ".$supplier_type_list);
+        $result = $result->queryAll();
+
+        foreach ($result as $key => $value) {
+            $t = 0;
+            foreach ($post->other->product_list as $key_l => $value_l) {
+                if($value['id'] == $value_l->product_id){
+                    $t++;
+                };
+            };
+            if($t == 0){
+                OrderProduct::model()->deleteByPk($value['id']);
+            };
+        };
+
+        foreach ($post->other->product_list as $key => $value) {
+            OrderProduct::model()->updateByPk($value->product_id,array('actual_price'=>$value->price,'unit'=>$value->amount,'actual_unit_cost'=>$value->cost));
+        };
     }
 
     public function actionUpdate_designer()  //  改 策划师
@@ -1813,6 +2086,138 @@ class ResourceController extends InitController
         }
         // echo json_encode($result);
 
+    }
+
+    public function actionNew_email_print()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $data = new StaffEmail;
+        $data->staff_id = $post->staff_id;
+        $data->email = $post->email;
+        $data->update_time = date('y-m-d h:i:s',time());
+        $data->save();
+
+        $print = new PrintForm;
+        $print->pad_print($post->order_id,$post->email);
+    }
+
+    public function actionOld_email_print()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $print = new PrintForm;
+        $print->pad_print($post->order_id,$post->email);
+        // $print->pad_print(1033,'80962715@qq.com');
+    }
+
+    public function actionUpdate_feast_remark()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        OrderSet::model()->updateByPk($post->order_set_id,array('remark'=>$post->remark));
+    }
+
+    public function actionUpdate_order_detail_info()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $result = OrderWedding::model()->updateAll(array(
+            'groom_name' => $post->groom_name,
+            'groom_phone' => $post->groom_phone,
+            'groom_qq' => $post->groom_qq,
+            'groom_wechat' => $post->groom_wechat,
+            'bride_name' => $post->bride_name,
+            'bride_phone' => $post->bride_phone,
+            'bride_qq' => $post->bride_qq,
+            'bride_wechat' => $post->bride_wechat,
+            'contact_name' => $post->contact_name,
+            'contact_phone' => $post->contact_phone,
+        ),'order_id=:order_id',array('order_id'=>$post->order_id));
+
+        print_r($result);
+    }
+
+    public function actionDel_feast_set()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        //删除：order_set
+        // OrderSet::model()->deleteAll('order_id=:order_id && wedding_set_id=:wedding_set_id',array(':order_id' => $post->order_id , ':wedding_set_id' => $post->wedding_set_id));
+        OrderSet::model()->deleteByPk($post->order_set_id);
+        OrderProduct::model()->deleteAll('order_id=:order_id && order_set_id=:order_set_id' , array(':order_id' => $post->order_id , ':order_set_id' => $post->order_set_id));
+    }
+
+    public function actionDel_other_set()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        //删除：order_set、order_product、order_show
+        OrderSet::model()->deleteByPk($post->order_set_id);
+        $order_product = OrderProduct::model()->findAll(array(
+                'condition' => 'order_id=:order_id && order_set_id=:order_set_id',
+                'params' => array(
+                    ':order_id' => $post->order_id , 
+                    ':order_set_id' => $post->order_set_id
+                )
+            ));
+        foreach ($order_product as $key => $value) {
+            OrderShow::model()->deleteAll('order_id=:order_id && product_id=:product_id' , array(':order_id' => $post->order_id , ':product_id' => $value['id']));
+            OrderProduct::model()->deleteByPk($value['id']);
+        }   
+    }
+
+
+    public function actionSendcode()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
+        
+        $data = array('telephone' => $post->phone);
+        $result = WPRequest::post($url, $data);
+
+        $t = MessageCode::model()->findAll(array(
+                'condition' => 'phone=:phone',
+                'params' => array(
+                        ':phone' => $post->phone
+                    )
+            ));
+
+        if(empty($t)){
+            $message_code = new MessageCode;
+            $message_code->phone = $post->phone;
+            $message_code->code = $result;
+            $message_code->update_time = date('y-m-d h:i:s',time());
+            $message_code->save();
+        }else{
+            MessageCode::model()->updateAll(array('code' => $result),'phone=:phone',array(':phone' => $post->phone));
+        };
+    }
+
+    public function actionTestcode()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $code = MessageCode::model()->find(array(
+                'condition' => 'phone=:phone',
+                'params' => array(
+                        ':phone' => $post->phone
+                    )
+            ));
+        if(empty($code)){
+            echo 'failed';
+        }else{
+            if(isset($code['code'])){
+                if($code['code'] == $post->code){
+                    echo 'success';
+                }else{
+                    echo 'failed';
+                };
+            }else{
+                echo 'failed';
+            };
+        };
     }
     
     public function array_remove(&$arr,$offset) 
