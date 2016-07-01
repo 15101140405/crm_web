@@ -1154,8 +1154,8 @@ class ResourceController extends InitController
         $result3 = yii::app()->db->createCommand("select sp.id,sp.name from order_product op left join supplier_product sp on product_id=sp.id where op.order_id=".$_GET['order_id']." and sp.supplier_type_id=16");
         $result3 = $result3->queryAll();
         if(!empty($result3)){
-            $order_data['tuidan_id']=$result3['id'];
-            $order_data['tuidan_name']=$result3['name'];
+            $order_data['tuidan_id']=$result3[0]['id'];
+            $order_data['tuidan_name']=$result3[0]['name'];
         }else{
             $order_data['tuidan_id']="";
             $order_data['tuidan_name']="";
@@ -1248,9 +1248,11 @@ class ResourceController extends InitController
                 };
             };
             if(!empty($tem['data'])){
+                $num1 = array();
                 foreach ( $tem['data'] as $key => $value ){
                     $num1[$key] = $value ['sort'];
                 };
+                // print_r($num1);echo ',';print_r($tem['data']);echo '|';
                 array_multisort($num1, SORT_ASC, $tem['data']);
             };
                 
@@ -1272,11 +1274,16 @@ class ResourceController extends InitController
                 $tem['data'][]=$item;
             };
         };
-        foreach ( $tem['data'] as $key => $value ){
-            $num1[$key] = $value ['sort'];
-        };
+        if(!empty($tem['data'])){
+            foreach ( $tem['data'] as $key => $value ){
+                $num1[$key] = $value ['sort'];
+            };
+            // print_r($num1);die;
+            // print_r($tem['data']);die;
 
-        array_multisort($num1, SORT_ASC, $tem['data']);
+            array_multisort($num1, SORT_ASC, $tem['data']);    
+        };
+        
         
         $order_show[]=$tem;
 
@@ -1455,7 +1462,8 @@ class ResourceController extends InitController
                 'condition' => 'role=:role',
                 'params' => array(
                         ':role' => 1
-                    )
+                    ),
+                'order' => 'sort ASC'
             ));
 
         // $product_store = array(
@@ -1469,7 +1477,7 @@ class ResourceController extends InitController
         //         '视频设备' => array(),
         //         '音响设备' => array(),
         //     );
-        $decoration_tap = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']);
+        $decoration_tap = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']." order by sort ASC");
         $decoration_tap = $decoration_tap->queryAll();
 
         $product_store = array();
@@ -2019,10 +2027,10 @@ class ResourceController extends InitController
                 $item['data'] = $value['words'];
             };
             if($value['type'] == 1){
-                $item['data'] = $value['img_url'];
+                $item['data'] = "http://file.cike360.com".$value['img_url'];
             };
             if($value['type'] == 2){
-                $item['data'] = $value['ref_pic_url'];
+                $item['data'] = "http://file.cike360.com".$value['ref_pic_url'];
             };
             $show_data[] = $item;
         };
@@ -2167,20 +2175,46 @@ class ResourceController extends InitController
         }   
     }
 
-
-    public function actionSendcode()
+    public function actionAdd_set_dish()
     {
         $post = json_decode(file_get_contents('php://input'));
 
-        $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";
+        $staff = Staff::model()->findByPk($post->token);
+        $sp = SupplierProduct::model()->findByPk($post->sp_id);
+        $order_set = OrderSet::model()->findByPk($post->order_set_id);
+
+        $data = new OrderProduct;
+        $data->account_id = $staff['account_id'];
+        $data->order_id = $post->order_id;
+        $data->product_type = 0;
+        $data->product_id = $post->sp_id;
+        $data->order_set_id = $post->order_set_id;
+        $data->actual_price = $post->price;
+        $data->unit = $post->amount;
+        $data->actual_unit_cost = $sp['unit_cost'];
+        $data->actual_service_ratio = $order_set['actual_service_ratio'];
+        $data->remark = "";
+        $data->update_time = date('y-m-d h:i:s',time());
+        $data->save();
+    }
+
+
+    public function actionSendcode()
+    {
+        // $post = json_decode(file_get_contents('php://input'));
+
+
+        $url = "http://localhost/school/crm_web/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";   //服务器发消息
+        // $url = "http://localhost/library/taobao-sdk-PHP-auto_1455552377940-20160505/send_code.php";               //本地发消息
         
-        $data = array('telephone' => $post->phone);
-        $result = WPRequest::post($url, $data);
+        $data = array('telephone' => $_GET['telephone']);
+        $result = WPRequest::post_code($url, $data);
+        // print_r($result);
 
         $t = MessageCode::model()->findAll(array(
                 'condition' => 'phone=:phone',
                 'params' => array(
-                        ':phone' => $post->phone
+                        ':phone' => $_GET['telephone']
                     )
             ));
 
@@ -2191,26 +2225,47 @@ class ResourceController extends InitController
             $message_code->update_time = date('y-m-d h:i:s',time());
             $message_code->save();
         }else{
-            MessageCode::model()->updateAll(array('code' => $result),'phone=:phone',array(':phone' => $post->phone));
+            MessageCode::model()->updateAll(array('code' => $result),'phone=:phone',array(':phone' => $_GET['telephone']));
         };
     }
 
     public function actionTestcode()
     {
-        $post = json_decode(file_get_contents('php://input'));
+        // $post = json_decode(file_get_contents('php://input'));
 
         $code = MessageCode::model()->find(array(
                 'condition' => 'phone=:phone',
                 'params' => array(
-                        ':phone' => $post->phone
+                        ':phone' => $_GET['telephone']
                     )
             ));
         if(empty($code)){
             echo 'failed';
         }else{
             if(isset($code['code'])){
-                if($code['code'] == $post->code){
-                    echo 'success';
+                if($code['code'] == $_GET['code']){
+                    $staff = Staff::model()->find(array(
+                            'condition' => 'telephone=:telephone',
+                            'params' => array(
+                                    ':telephone' => $_GET['telephone']
+                                )
+                        ));
+                    if(!empty($staff)){
+                        if($staff['account_id'] != 0){
+                            echo 'existed';
+                        }else{
+                            echo 'success_existed';
+                        };
+                    }else{
+                        $data = new Staff;
+                        $data->account_id = 0;
+                        $data->name = '体验用户';
+                        $data->telephone = $_GET['telephone'];
+                        $data->department_list='[2,3]';
+                        $data->password = '88888888';
+                        $data->save();
+                        echo 'success_new';
+                    }
                 }else{
                     echo 'failed';
                 };

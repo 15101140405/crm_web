@@ -1,6 +1,6 @@
 <?php
 include "TopSdk.php";
-
+// $post = json_decode(file_get_contents('php://input'));
 $telephone = $_POST['telephone'];
 // $telephone = "18611323194";
 $code = rand(100000, 999999);
@@ -19,7 +19,7 @@ $req->setRecNum($telephone);
 $req->setSmsTemplateCode("SMS_9445074");
 $resp = $c->execute($req);
 echo $code;
-// print_r($resp);
+// print_r($_POST);
 
 // print_r($_POST);
 

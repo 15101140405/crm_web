@@ -79,7 +79,7 @@ class BackgroundController extends InitController
             //     'telephone' => $_POST['telephone'],
             // ), JSON_UNESCAPED_UNICODE);
             $data = array('telephone' => $telephone, );
-            $result = WPRequest::post($url, $data);
+            $result = WPRequest::post_code($url, $data);
             Yii::app()->session['code'] = $result;
 
         }
@@ -229,7 +229,7 @@ class BackgroundController extends InitController
                     }else{  //注册者还不是主持人
                         echo "验证码已发送到您的手机！";
                         $data = array('telephone' => $_POST['telephone'], );
-                        $result = WPRequest::post($url, $data);
+                        $result = WPRequest::post_code($url, $data);
                         Yii::app()->session['code'] = $result;
                         //echo $_SESSION['code'];
                     };
@@ -237,7 +237,7 @@ class BackgroundController extends InitController
             }else{ // 如果手机号还未注册
                 echo "您的手机未注册，验证码已发送到您的手机！";
                 $data = array('telephone' => $_POST['telephone'], );
-                $result = WPRequest::post($url, $data);
+                $result = WPRequest::post_code($url, $data);
                 Yii::app()->session['code'] = $result;
                 //echo $_SESSION['code'];
             };
