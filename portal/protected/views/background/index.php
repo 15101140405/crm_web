@@ -33,15 +33,17 @@
                 <li id="shipin"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=20" >我的视频</a></li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
+                <li id="introduction"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=16" >门店介绍</a>
+                </li>
                 <li id="feast"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" >餐饮</a>
                 </li>
                 <li id="set"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=5" >套系</a>
                 </li>
                 <li id="decration"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=7" >场地布置</a>
                 </li>
-                <li id="lss"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=8" >灯光／音响／视频</a>
+                <li id="service"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=61" >服务人员</a>
                 </li>
-                <li id="introduction"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=16" >门店介绍</a>
+                <li id="lss"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=8" >灯光／音响／视频</a>
                 </li>
                 <li id="case"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" >案例</a>
                 </li>
@@ -72,6 +74,12 @@
                                 <option value="灯光" type-id="8">灯光</option>
                                 <option value="音响" type-id="23">音响</option>
                                 <option value="视频" type-id="9">视频</option>
+                            <?php }else if($_GET['CI_Type'] == 61){?>
+                                <option value="主持" type-id="3">主持</option>
+                                <option value="摄像" type-id="4">摄像</option>
+                                <option value="摄影" type-id="5">摄影</option>
+                                <option value="化妆" type-id="6">化妆</option>
+                                <option value="其他" type-id="7">其他</option>
                             <?php }?>
                             </select>
                         </div>
@@ -315,6 +323,34 @@
                             <a class="edit_btn left edit" href="javascript:;">编辑</a>
                         </div>
                     </li>
+            <?php }}else if($_GET['CI_Type'] == 61){?>
+            <?php   foreach ($supplier as $key => $value) {?>
+                    <li class="clearfix" tap="<?php echo $value['type_id']?>" supplier-id="<?php echo $value['id']?>" service-person-id="<?php echo $value['service_person_id']?>" ci-id="<?php echo $value['CI_ID']?>" ci-type="<?php echo $value['CI_Type']?>">
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_img left">
+                                <?php if($value['CI_Pic'] == ""){?>
+                                <img src="http://file.cike360.com/upload/伊缘圆 (3)20160519121134_sm.jpg" alt="">
+                                <?php }else{?>
+                                <img src="http://file.cike360.com<?php echo $value['CI_Pic']?>" alt="">
+                                <?php }?>
+                                <!-- <span>私密视频</span> -->
+                            </div>
+                            <div class="video_info left">
+                                <h3 style="margin-top:1rem;"><?php echo $value['name']?></h3>
+                                <div class="state_box clearfix">
+                                    <!-- <img class="left" src="images/up06.jpg" alt=""> -->
+                                    <span class="left">手机号：<?php echo $value['telephone']?></span>
+                                    <!-- <span class="from left">来自：爱奇艺网页</span> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix">
+                            <span class="left state"><?php echo $value['type_name']?></span>
+                            <a class="edit_btn left del" style="background-color: #f82d00;" href="javascript:;">删除</a>
+                            <a class="edit_btn left edit" href="javascript:;">编辑</a>
+                            <a class="edit_btn left add_product" href="javascript:;">添加产品</a>
+                        </div>
+                    </li>
             <?php }}?>
                 </ul>
             </div>
@@ -372,6 +408,7 @@
             $("#case").remove();
             $("#set").remove();
             $("#decration").remove();
+            $("#service").remove();
             $("#lss").remove();
             $("#feast").remove();
         };
@@ -410,11 +447,12 @@
         if(<?php echo $_GET['CI_Type']?> == 2){$("#case a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 16){$("#introduction a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 5){$("#set a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
-        if(<?php echo $_GET['CI_Type']?> == 6){$("#host a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 0){$("#host a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 13){$("#video a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 14){$("#camera a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 15){$("#makeup a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7){$("#decration a").addClass("active")};
+        if(<?php echo $_GET['CI_Type']?> == 61){$("#service a").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 8){$("#lss a").addClass("active")};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#feast a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
         if(<?php echo $_GET['CI_Type']?> == 17){$("#decoration a").addClass("active");$("#shaixuan1").remove();$("#shaixuan_remark").remove();};
@@ -431,6 +469,7 @@
         if(<?php echo $_GET['CI_Type']?> == 5){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").html("+会议套系");$("#upload_wedding_menu").html("+婚礼套系");};
         if(<?php echo $_GET['CI_Type']?> == 6 || <?php echo $_GET['CI_Type']?> == 13 || <?php echo $_GET['CI_Type']?> == 14 || <?php echo $_GET['CI_Type']?> == 15){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> == 7 || <?php echo $_GET['CI_Type']?> == 8){$("#upload").html("新增产品");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
+        if(<?php echo $_GET['CI_Type']?> == 61){$("#upload").html("新增人员");$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
         if(<?php echo $_GET['CI_Type']?> != 9){$("#upload_dishes").remove()};
         if(<?php echo $_GET['CI_Type']?> == 9){$("#upload").remove();};
         if(<?php echo $_GET['CI_Type']?> == 17 || <?php echo $_GET['CI_Type']?> == 18 || <?php echo $_GET['CI_Type']?> == 19 || <?php echo $_GET['CI_Type']?> == 20){$("#upload").remove();$("#upload_dish").remove();$("#upload_meeting_menu").remove();$("#upload_wedding_menu").remove();};
@@ -444,6 +483,7 @@
             if(<?php echo $_GET['CI_Type']?> == 16){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=16"};
             if(<?php echo $_GET['CI_Type']?> == 7){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
             if(<?php echo $_GET['CI_Type']?> == 8){location.href="<?php echo $this->createUrl("background/upload_product_lss");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 61){location.href="<?php echo $this->createUrl("background/upload_service_person");?>"};
         });
         $("#upload_dish").on("click",function(){
             location.href="<?php echo $this->createUrl("background/upload_dish");?>";
@@ -472,6 +512,8 @@
             if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
             <?php }else if($_GET['CI_Type'] == 8){?>
             if(tap != 0){$("[type-id='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
+            <?php }else if($_GET['CI_Type']){?>
+            if(tap != 0){$("[tap='"+tap+"']").removeClass("hid")}else{$("#product_item li").removeClass("hid");};
             <?php }?>
         });
 
@@ -498,6 +540,9 @@
             if('<?php echo $_GET['CI_Type']?>' == 9){
                 location.href = "<?php echo $this->createUrl("background/edit_supplier_product");?>&type=dish&product_id=" + $(this).parent().parent().attr('product-id');
             };
+            if('<?php echo $_GET['CI_Type']?>' == 61){
+                location.href="<?php echo $this->createUrl("background/upload_service_person");?>&supplier_id="+$(this).parent().parent().attr('supplier-id')+"&service_person_id="+$(this).parent().parent().attr('service-person-id')+"&ci_id="+$(this).parent().parent().attr('ci-id')+"&ci_type="+$(this).parent().parent().attr('ci-type');
+            }
         });
         $(".edit_menu").on("click",function(){
             location.href = location.href = "<?php echo $this->createUrl("background/edit_set1");?>&type=menu&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&ct_id="  + $(this).parent().parent().attr('CT-ID');
@@ -515,6 +560,14 @@
         });
         $("#product").on("click",function(){
             location.href = "<?php echo $this->createUrl("background/edit_product");?>&service_person_id=" + $(this).parent().parent().attr('service-person-id') + "&ci_id=" + $(this).parent().parent().attr('CI-ID') + "&CI_Type=<?php echo $_GET['CI_Type']?>";
+        });
+
+        //策划师上传四大金刚产品
+        $(".add_product").on("click",function(){
+            var service_person_id = $(this).parent().parent().attr('service-person-id');
+            var ci_id = $(this).parent().parent().attr('ci-id');
+            var ci_type = $(this).parent().parent().attr('ci-type');
+            location.href = "<?php echo $this->createUrl("background/edit_product");?>&type=designer_add&service_person_id="+service_person_id+"&ci_id="+ci_id+"&CI_Type="+ci_type;
         });
 
         //删除
@@ -536,7 +589,15 @@
                 $.post("<?php echo $this->createUrl("background/del_product");?>",data,function(){
                     location.reload();
                 });
-            };
+            }else if('<?php echo $_GET['CI_Type']?>' == 61){
+                var data = {
+                    supplier_id : $(this).parent().parent().attr("supplier-id")
+                };
+                console.log(data);
+                $.post("<?php echo $this->createUrl("background/del_supplier");?>",data,function(){
+                    location.reload();
+                });
+            }
         });
         $(".del_menu").on("click",function(){
             var data = {

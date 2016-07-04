@@ -29,7 +29,7 @@
         <div class="index_con_box" style="margin-bottom:170px;margin-top:80px;">
             <div class="con">
                 <ul class="upload_list" id="resources_list">
-            <?php if(!empty($product)) {
+            <?php if(!empty($product) && !isset($_GET['type'])) {
                     foreach ($product as $key => $value) {?>
                     <li class="clearfix" >
                         <div class="upload_con_box left clearfix">
@@ -46,6 +46,28 @@
                         </div>
                         <div class="edit_btn_box right clearfix" style="width:50%">
                             <span class="left state" style="float: left;margin-right: 0;">报价：<?php echo $value['price']?>元／<?php echo $value['unit']?></span>
+                            <div class="edit_btn left del_resource del" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;background-color:red;" href="javascript:;">删除</div>
+                            <div class="edit_btn left del_resource edit" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">编辑</div>
+                        </div>
+                    </li>
+            <?php }}else if(!empty($product) && isset($_GET['type'])){?>
+                <?php foreach ($product as $key => $value) {?>
+                    <li class="clearfix" >
+                        <div class="upload_con_box left clearfix">
+                            <div class="video_info left">
+                                <h3><?php echo $value['name']?></h3>
+                                <div class="state_box clearfix">
+                                    <img class="left" src="images/up06.jpg" alt="">
+                                    <span class="left">描述</span>
+                                    <span class="from left"><?php echo $value['description']?></span>
+                                </div>
+                                <!-- <p class="tag">标签:<span>分销</span>
+                                </p> -->
+                            </div>
+                        </div>
+                        <div class="edit_btn_box right clearfix" style="width:65%">
+                            <span class="left state" style="float: left;margin-right: 0;">报价：<?php echo $value['unit_price']?>元／<?php echo $value['unit']?></span>
+                            <span class="left state" style="float: left;margin-right: 0;margin-left: 20px">底价<?php echo $value['unit_cost']?>元／<?php echo $value['unit']?></span>
                             <div class="edit_btn left del_resource del" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;background-color:red;" href="javascript:;">删除</div>
                             <div class="edit_btn left del_resource edit" service-product-id="<?php echo $value['id']?>" style="float: right;margin-top: 25px;" href="javascript:;">编辑</div>
                         </div>
@@ -103,26 +125,47 @@
         if(CI_Type == 19){service_type = 23};
         if(CI_Type == 20){service_type = 9};
         $("#insert").on("click",function(){
+        <?php if(!isset($_GET['type'])){?>
             location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>";
+        <?php }else{?>
+            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&type=<?php echo $_GET['type']?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>";
+        <?php }?>
         });
 
         //返回
         $("#b").on("click",function(){
             $.cookie('img', null); 
             $.cookie('img1', null); 
+        <?php if(!isset($_GET['type'])){?>
             location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=<?php echo $_GET['CI_Type']?>";
+        <?php }else{?>
+            <?php if($_GET['type'] == 'designer_add'){?>
+            location.href="<?php echo $this->createUrl("background/index");?>&CI_Type=61";
+        <?php }}?>
         });
 
         //编辑
         $(".edit").on("click",function(){
+        <?php if(!isset($_GET['type'])){?>
             location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>&service_product_id="+$(this).attr("service-product-id");
+        <?php }else{?>
+            <?php if($_GET['type'] == 'designer_add'){?>
+            location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&type=<?php echo $_GET['type']?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>&service_product_id="+$(this).attr("service-product-id");
+        <?php }}?>
         });
 
         //删除
         $(".del").on("click",function(){
+        <?php if(!isset($_GET['type'])){?>
             $.post("<?php echo $this->createUrl("background/del_service_product");?>",{id : $(this).attr("service-product-id")},function(){
                 location.reload();
-            })
+            });
+        <?php }else{?>
+            $.post("<?php echo $this->createUrl("background/designer_del_service_product");?>",{id : $(this).attr("service-product-id")},function(){
+                location.reload();
+            });
+        <?php }?>
+            
         })
     })
 </script>

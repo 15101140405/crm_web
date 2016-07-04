@@ -1225,7 +1225,8 @@ class OrderController extends InitController
         $post = json_decode(file_get_contents('php://input'));
         // $post=array('order_date' => '2016-06-19 19:30');
         // print_r($post['order_date']);die;
-        $date = explode(' ', $post['order_date']);
+        $date = explode(' ', $post->order_date);
+        // $date = explode(' ', $post['order_date']);
         $order = yii::app()->db->createCommand("select order_status,order_type,name from `order` o left join staff on o.planner_id=staff.id  where order_date like '".$date[0]."'");
         $order = $order->queryAll();
         if(!empty($order)){
@@ -1241,25 +1242,43 @@ class OrderController extends InitController
             };
             if($t == 1){
                 if($order['order_type'] == 1){
-                    echo '有咨询，会议，销售：'.$order['name'];
+                    $json = array(
+                        'data' => '有咨询，会议，销售：'.$order['name'],
+                    );
+                    echo json_encode($json);
                 }else{
-                    echo '有咨询，婚礼，销售：'.$order['name'];
+                    $json = array(
+                        'data' => '有咨询，婚礼，销售：'.$order['name'],
+                    );
+                    echo json_encode($json);
                 };
             }else if($t == 2){
                 if($order['order_type'] == 1){
-                    echo '有预定，会议，销售：'.$order['name'];
+                    $json = array(
+                        'data' => '有预定，会议，销售：'.$order['name'],
+                    );
+                    echo json_encode($json);
                 }else{
                     echo '有预定，婚礼，销售：'.$order['name'];
                 };
             }else if($t == 3){
                 if($order['order_type'] == 1){
-                    echo '已定，会议，销售：'.$order['name'];
+                    $json = array(
+                        'data' => '已定，会议，销售：'.$order['name'],
+                    );
+                    echo json_encode($json);
                 }else{
-                    echo '已定，婚礼，销售：'.$order['name'];
+                    $json = array(
+                        'data' => '已定，婚礼，销售：'.$order['name'],
+                    );
+                    echo json_encode($json);
                 };
             };
         }else{
-            echo "空档期，可以预定！";
+            $json = array(
+                'data' => "空档期，可以预定！",
+            );
+            echo json_encode($json);
         };
     }
 

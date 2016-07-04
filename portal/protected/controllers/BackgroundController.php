@@ -428,6 +428,53 @@ class BackgroundController extends InitController
             $this->render("index",array(
                     'supplier_product' => $supplier_product,
                 ));
+        }else if($_GET['CI_Type'] == 61){
+            $supplier = yii::app()->db->createCommand("select s.id,staff.id as staff_id,staff.name,staff.telephone,st.name as type_name,st.id as type_id,sp.id as service_person_id".
+                // " from ((supplier s left join supplier_product sp on s.id=sp.supplier_id) ".
+                " from (supplier s left join staff on s.staff_id=staff.id".
+                " left join supplier_type st on s.type_id=st.id".
+                " left join service_person sp on sp.staff_id=staff.id)".
+                " where sp.status=0 and s.account_id=".$_COOKIE['account_id']." and s.type_id in (3,4,5,6,7) ".
+                " group by s.id order by s.update_time");
+            $supplier = $supplier->queryAll();
+            // print_r(json_encode($supplier));die;
+            $supplier_data = array();
+            foreach ($supplier as $key => $val) {
+                $item['id'] = $val['id'];
+                $item['name'] = $val['name'];
+                $item['telephone'] = $val['telephone'];
+                $item['type_name'] = $val['type_name'];
+                $item['type_id'] = $val['type_id'];
+                $item['service_person_id'] = $val['service_person_id'];
+                $item['CI_Type'] = 0;
+                if($val['type_id'] == 3){
+                    $item['CI_Type'] = 6;
+                }else if($val['type_id'] == 4){
+                    $item['CI_Type'] = 13;
+                }else if($val['type_id'] == 5){
+                    $item['CI_Type'] = 14;
+                }else if($val['type_id'] == 6){
+                    $item['CI_Type'] = 15;
+                }else if($val['type_id'] == 7){
+                    $item['CI_Type'] = 21;
+                }
+                $case = CaseInfo::model()->find(array(
+                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                        'params' => array(
+                                ':CI_Type' => $item['CI_Type'],
+                                ':CT_ID' => $val['staff_id'],
+                            )
+                    ));
+                $item['CI_ID'] = $case['CI_ID'];
+                $item['CI_Pic'] = $case['CI_Pic'];
+                $supplier_data[] = $item;
+            };
+
+            // echo json_encode($supplier_data);die;
+
+            $this->render("index",array(
+                'supplier' => $supplier_data
+            ));
         }else if($_GET['CI_Type'] == 9){
             $criteria = new CDbCriteria;
             $criteria->addCondition("account_id = :account_id && product_show=:product_show && supplier_type_id=:supplier_type_id");    
@@ -515,7 +562,6 @@ class BackgroundController extends InitController
             }else{
                 $item['CR_Path'] = "images/cover.jpg";
             };
-            
             $item['CR_ID'] = $value['CR_ID'];
             $item['CR_Sort'] = $value['CR_Sort'];
             $resources[] = $item;
@@ -941,34 +987,77 @@ class BackgroundController extends InitController
         //取产品数据
         /*$result = yii::app()->db->createCommand("select * from supplier_product left join supplier on supplier_id=supplier.id left join staff on supplier.staff_id=staff.id left join service_person on staff.id=service_person.staff_id where service_person.id=".$_GET['service_person_id']);
         $product = $result->queryAll();*/
-        $product = ServiceProduct::model()->findAll(array(
-                'condition' => 'service_person_id=:service_person_id && product_show=:product_show',
-                'params' => array(
-                        ':service_person_id' => $_GET['service_person_id'],
-                        ':product_show' => 1,
-                    ),
-            ));
-        // print_r($product);die;
-        $this->render('edit_product',array(
-                'product' => $product,
-            ));
+        if(!isset($_GET['type'])){
+            $product = ServiceProduct::model()->findAll(array(
+                    'condition' => 'service_person_id=:service_person_id && product_show=:product_show',
+                    'params' => array(
+                            ':service_person_id' => $_GET['service_person_id'],
+                            ':product_show' => 1,
+                        ),
+                ));
+
+            // print_r($product);die;
+            $this->render('edit_product',array(
+                    'product' => $product,
+                ));
+        }else{
+            /*$product = ServiceProduct::model()->findAll(array(
+                    'condition' => 'service_person_id=:service_person_id && product_show=:product_show',
+                    'params' => array(
+                            ':service_person_id' => $_GET['service_person_id'],
+                            ':product_show' => 1,
+                        ),
+                ));
+            $supplier_product = SupplierProduct::model()->find(array(
+                    'condition' => 'account_id=:account_id && service_product_id=:service_product_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':service_product_id' => $product['id']
+                        )
+                ));*/
+            $result = yii::app()->db->createCommand("select * ".
+                " from supplier_product sp1 left join service_product sp2 on sp1.service_product_id=sp2.id ".
+                " where sp1.account_id=".$_COOKIE['account_id']." and sp2.product_show=1 and sp2.service_person_id=".$_GET['service_person_id']);
+            $result = $result->queryAll();
+            $this->render('edit_product',array(
+                    'product' => $result,
+                ));
+        }
     }
 
     public function actionEdit_product_detail()
     {
         if(!isset($_GET['service_product_id'])){
             $this->render('edit_product_detail');
-        }else{
+        }else if(!isset($_GET['type'])){
             $service_product = ServiceProduct::model()->findByPk($_GET['service_product_id']);
             if(isset($service_product['ref_pic_url'])){
                 $t=explode(".",$service_product['ref_pic_url']);
                 //print_r($service_product['ref_pic_url']);die;
                 $service_product['ref_pic_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
             };
+            // print_r($service_product);die;
             $this->render('edit_product_detail',array(
-                    'product' => $service_product
+                'product' => $service_product
+            ));
+        }else if(isset($_GET['type'])){
+            $supplier_product = SupplierProduct::model()->find(array(
+                    'condition' => 'account_id=:account_id && service_product_id=:service_product_id',
+                    'params' => array(
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':service_product_id' => $_GET['service_product_id']
+                        )
                 ));
-        };
+            if(isset($supplier_product['ref_pic_url'])){
+                $t=explode(".",$supplier_product['ref_pic_url']);
+                //print_r($service_product['ref_pic_url']);die;
+                $supplier_product['ref_pic_url'] = "http://file.cike360.com".$t[0]."_sm.".$t[1];
+            };
+            // print_r($supplier_product);die;
+            $this->render('edit_product_detail',array(
+                'product' => $supplier_product
+            ));
+        }
     }
 
     public function actionCase_upload()
@@ -1810,6 +1899,330 @@ class BackgroundController extends InitController
             SupplierProduct::model()->updateAll(array(
                     'product_show' => 0,
                 ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $value['id'],':service_product_id' => $_POST['id']));
+        };
+    }
+
+    public function actionUpload_service_person()
+    {
+        if(!isset($_GET['supplier_id'])){
+            $this->render('upload_service_person');
+        }else{
+            $supplier = Supplier::model()->findByPk($_GET['supplier_id']);
+            $staff = Staff::model()->findByPk($supplier['staff_id']);
+            $case = CaseInfo::model()->findByPk($_GET['ci_id']);
+            $resources = CaseResources::model()->findAll(array(
+                    'condition' => 'CI_ID=:CI_ID',
+                    'params' => array(
+                            ':CI_ID' => $_GET['ci_id']
+                        )
+                ));
+            foreach ($resources as $key => $value) {
+                $t = explode('.', $value['CR_Path']);
+                if(isset($t[0]) && isset($t[1])){
+                    $resources[$key]['CR_Path'] = 'http://file.cike360.com'.$t[0].'_sm.'.$t[1];
+                };
+            };
+            // print_r($resources);die;            
+            // print_r($resources);die;
+            $this->render('upload_service_person',array(
+                    'staff' => $staff,
+                    'case' => $case,
+                    'resources' => $resources
+                ));
+        };
+    }
+
+    public function actionUpload_sp()
+    {
+        /***************************************/
+        /*************** Staff表 ***************/
+        /***************************************/
+        $staff = Staff::model()->find(array(
+                'condition' => 'telephone=:telephone',
+                'params' => array(
+                        ':telephone' => $_POST['telephone']
+                    )
+            ));
+        $staff_id = 0;
+        if(empty($staff)){
+            $data = new Staff;
+            $data->account_id=$_COOKIE['account_id'];
+            $data->name=$_POST['name'];
+            $data->telephone=$_POST['telephone'];
+            $data->department_list='[4]';
+            $data->update_time=date('y-m-d h:i:s',time());
+            $data->save();
+            $staff_id = $data->attributes['id'];
+        }else{
+            $staff_id = $staff['id'];
+        };
+
+
+        /***************************************/
+        /*********** Service_Person表 **********/
+        /***************************************/
+        $service_person_id = 0;
+
+        $service_person = ServicePerson::model()->find(array(
+            'condition' => 'staff_id=:staff_id && service_type=:service_type',
+            'params' => array(
+                    ':staff_id' => $staff_id,
+                    ':service_type' => $_POST['supplier_type']
+                )
+        ));
+        if(empty($staff) || empty($service_person)){
+            $data1 = new ServicePerson;
+            $data1->team_id = 2;
+            $data1->name = $_POST['name'];
+            $data1->status = 0;
+            $data1->telephone = $_POST['telephone'];
+            $data1->update_time = date('y-m-d h:i:s',time());
+            $data1->staff_id = $staff_id;
+            $data1->service_type = $_POST['supplier_type'];
+            $data1->team_id = 2;
+            $data1->save();
+            $service_person_id = $data1->attributes['id'];
+        }else{
+            $service_person_id = $service_person['id'];
+        };
+
+
+        /***************************************/
+        /***************  Case_Info  ***********/
+        /***************************************/
+        $CI_Type = 0;
+        if($_POST['supplier_type'] == 3){ $CI_Type = 6; };
+        if($_POST['supplier_type'] == 4){ $CI_Type = 13; };
+        if($_POST['supplier_type'] == 5){ $CI_Type = 14; };
+        if($_POST['supplier_type'] == 6){ $CI_Type = 15; };
+        if($_POST['supplier_type'] == 7){ $CI_Type = 21; };
+
+        $case_info = CaseInfo::model()->find(array(
+                'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                'params' => array(
+                        ':CI_Type' => $CI_Type,
+                        ':CT_ID' => $staff_id
+                    )
+            ));
+
+        $CI_ID = 0;
+        if(empty($case_info)){
+            $data2 = new CaseInfo;
+            $data2->CI_Name = $_POST['name'];
+            $data2->CI_Pic = $_POST['img'];
+            $data2->CI_CreateTime = date('y-m-d h:i:s',time());
+            $data2->CI_Sort = 1;
+            $data2->CI_Show = 1;
+            $data2->CI_Type = $CI_Type;
+            $data2->CT_ID = $staff_id;
+            $data2->save();
+            $CI_ID = $data2->attributes['CI_ID'];
+        }else{
+            $CI_ID = $case_info['id'];
+        };
+
+        /***************************************/
+        /*************  Case_Resource  *********/
+        /***************************************/
+
+        $t = explode(",",$_POST['case_resource']);
+        $resources = array();
+        foreach ($t as $key => $value) {
+            $t1 = explode(".", $value);
+            $item = array();
+            if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                $item['Cr_Type'] = 1 ;
+            }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                $item['Cr_Type'] = 2 ;
+            }
+            $item['Cr_Path'] = $value;
+            $resources[]=$item;
+        };
+        /*print_r($resources);die;*/
+
+
+        $i = 1;
+        foreach ($resources as $key => $value) {
+            $data3 = new CaseResources;
+            $data3->CI_ID = $CI_ID;
+            $data3->CR_Show = 1;
+            $data3->CR_Type = $value['Cr_Type'];
+            $data3->CR_Name = "";
+            $data3->CR_Path = $value['Cr_Path'];
+            $data3->CR_Remarks = "";
+            $data3->CR_Sort = $i++;
+            $data3->save();
+        };
+
+
+        /***************************************/
+        /**************  Supplier  *************/
+        /***************************************/
+        $supplier = Supplier::model()->find(array(
+                'condition' => 'staff_id=:staff_id && type_id=:type_id',
+                'params' => array(
+                        ':staff_id' => $staff_id,
+                        ':type_id' => $_POST['supplier_type']
+                    )
+            ));
+        if(empty($staff) || empty($supplier)){
+            $data4 = new Supplier;
+            $data4->account_id = $_COOKIE['account_id'];
+            $data4->type_id = $_POST['supplier_type'];
+            $data4->staff_id = $staff_id;
+            $data4->update_time = date('y-m-d h:i:s',time());
+            $data4->save();
+            echo 'success';
+        }else{
+            echo 'exist';
+        }
+    }
+
+    public function actionDel_supplier()
+    {
+        Supplier::model()->deleteByPk($_POST['supplier_id']);
+        SupplierProduct::model()->updateAll(array('product_show'=>0),'account_id=:account_id && supplier_id=:supplier_id',array(':account_id'=>$_COOKIE['account_id'],':supplier_id'=>$_POST['supplier_id']));
+    }
+
+    public function actionDesigner_add_service_p()
+    {
+        $CI_Type = 0;
+        if($_POST['service_type'] == 3){ $CI_Type = 6; };
+        if($_POST['service_type'] == 4){ $CI_Type = 13; };
+        if($_POST['service_type'] == 5){ $CI_Type = 14; };
+        if($_POST['service_type'] == 6){ $CI_Type = 15; };
+        if($_POST['service_type'] == 7){ $CI_Type = 21; };
+
+        $service_person = ServicePerson::model()->findByPk($_POST['service_person_id']);
+        $case = CaseInfo::model()->find(array(
+                'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                'params' => array(
+                        ':CI_Type' => $CI_Type,
+                        ':CT_ID' => $service_person['staff_id']
+                    )
+            ));
+        $supplier = Supplier::model()->find(array(
+                'condition' => 'staff_id=:staff_id && type_id=:type_id',
+                'params' => array(
+                        ':staff_id' => $service_person['staff_id'],
+                        ':type_id' => $_POST['service_type']
+                    )
+            ));
+
+
+        /**********************************************/
+        /**************  service_product  *************/
+        /**********************************************/
+        $data = new ServiceProduct;
+        $data->service_person_id = $_POST['service_person_id'];
+        $data->service_type = $_POST['service_type'];
+        $data->product_name = $_POST['product_name'];
+        $data->price = $_POST['cost'];
+        $data->cost = 0;
+        $data->unit = $_POST['unit'];
+        $data->update_time = date('y-m-d h:i:s',time());
+        $data->description = $_POST['description'];
+        $data->product_show = 1;
+        $data->save();
+        $service_product_id=$data->attributes['id'];
+
+        /**********************************************/
+        /**************  supplier_product  *************/
+        /**********************************************/
+
+        $data = new SupplierProduct;
+        $data ->account_id = $_COOKIE['account_id'];
+        $data ->supplier_id = $supplier['id'];
+        $data ->service_product_id = $service_product_id;
+        $data ->supplier_type_id = $_POST['service_type'];
+        $data ->decoration_tap = 0;
+        $data ->standard_type = 0;
+        $data ->name = $_POST['product_name'];
+        $data ->category = 2;
+        $data ->unit_price = $_POST['price'];
+        if(!isset($_POST['cost']) && !isset($_POST['ref_pic_url'])){
+            $data ->unit_cost = $_POST['cost'];    
+            $data ->ref_pic_url = $case['CI_Pic'];
+        }else{
+            $data ->unit_cost = $_POST['cost'];    
+            $data ->ref_pic_url = $case['CI_Pic'];
+        };
+        $data ->unit = $_POST['unit'];
+        $data ->service_charge_ratio = 0;
+        $data ->description = $_POST['description'];
+        $data ->update_time = date('y-m-d h:i:s',time());
+        $data ->save();
+    }
+
+    public function actionDesigner_edit_service_p()
+    {
+
+        ServiceProduct::model()->updateByPk($_POST['id'],array(
+                'product_name' => $_POST['product_name'],
+                'price' => $_POST['cost'],
+                'unit' => $_POST['unit'],
+                'description' => $_POST['description'],
+            ));
+
+        SupplierProduct::model()->updateAll(array(
+                'name' => $_POST['product_name'],
+                'unit_price' => $_POST['price'],
+                'unit_cost' => $_POST['cost'],
+                // 'ref_pic_url' => $_POST['ref_pic_url'],
+                'unit' => $_POST['unit'],
+                'description' => $_POST['description'],
+            ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $_COOKIE['account_id'],':service_product_id' => $_POST['service_product_id']));
+
+    }
+
+    public function actionDesigner_del_service_product()
+    {
+        ServiceProduct::model()->updateByPk($_POST['id'],array(
+                'product_show' => 0,
+            ));
+
+
+        SupplierProduct::model()->updateAll(array(
+                'product_show' => 0,
+            ),'account_id=:account_id && service_product_id=:service_product_id',array(':account_id' => $_COOKIE['account_id'],':service_product_id' => $_POST['id']));
+    }
+
+    public function actionEdit_sp(){
+        $supplier=Supplier::model()->findByPk($_POST['supplier_id']);
+        Staff::model()->updateByPk($supplier['staff_id'],array('name'=>$_POST['name'],'telephone'=>$_POST['telephone']));
+        // Supplier::model()->updateByPk($_GET['supplier_id'],array('type'=>$_POST['supplier_type']));
+        // ServicePerson::model()->updateByPk($_GET['service_person_id'],array('service_type'=>$_POST['supplier_type']));
+        CaseInfo::model()->updateByPk($_POST['CI_ID'],array('CI_Pic' => $_POST['img']));
+
+        if($_POST['case_resource'] != ""){
+            $t = explode(",",$_POST['case_resource']);
+            $resources = array();
+            foreach ($t as $key => $value) {
+                $t1 = explode(".", $value);
+                $item = array();
+                if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
+                    $item['Cr_Type'] = 1 ;
+                }else if($t1[1] == "mp4" || $t1[1] == "avi" || $t1[1] == "flv" || $t1[1] == "mpeg" || $t1[1] == "mov" || $t1[1] == "wmv" || $t1[1] == "rm" || $t1[1] == "3gp"){
+                    $item['Cr_Type'] = 2 ;
+                }
+                $item['Cr_Path'] = $value;
+                $resources[]=$item;
+            };
+            /*print_r($resources);die;*/
+
+
+            $i = 1;
+            foreach ($resources as $key => $value) {
+                $data3 = new CaseResources;
+                $data3->CI_ID = $_POST['CI_ID'];
+                $data3->CR_Show = 1;
+                $data3->CR_Type = $value['Cr_Type'];
+                $data3->CR_Name = "";
+                $data3->CR_Path = $value['Cr_Path'];
+                $data3->CR_Remarks = "";
+                $data3->CR_Sort = $i++;
+                $data3->save();
+            };
         };
     }
 }

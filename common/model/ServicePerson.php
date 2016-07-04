@@ -97,6 +97,7 @@ class ServicePerson extends InitActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('team_id',$this->team_id);
 		$criteria->compare('name',$this->name);
+		$criteria->compare('status',$this->status);
 		$criteria->compare('gender',$this->gender,true);
 		$criteria->compare('avatar',$this->avatar,true);
 		$criteria->compare('telephone',$this->telephone);

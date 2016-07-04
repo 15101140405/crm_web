@@ -79,12 +79,25 @@ class ResourceController extends InitController
 
     public function actionList()
     {
+        /************************************************************************/
+        /************************************************************************/
+        /******** CR_ID 构造规则：  ***********************************************/
+        /******** 场地布置 10000000          ＋ sp_id     *************************/
+        /******** 灯光／音响／视频  30000000   ＋  sp_id    *************************/
+        /******** PPT 里的纯“图片” 60000000   ＋   show_id *************************/
+        /******** 餐饮零点  90000000          +  sp_id     ************************/
+        /******** 服务人员 120000000          ＋ CI_ID     ************************/
+        /************************************************************************/
+        /************************************************************************/
+
+
+
 
         //取案例
         $url ="http://file.cike360.com";
         $staff_id = $_GET['token'];
         //type 1 公司 2 分店 3 个人
-        $result = yii::app()->db->createCommand("select * from case_info where "./*
+        $result = yii::app()->db->createCommand("select * from case_info where ".
 
             "( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
                 "(select account_id from staff where id=".$staff_id.") ) ".
@@ -94,11 +107,11 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
 
-            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  and ".*/
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  and ".
 
             " CI_Show=1 and CI_Type in (1,2,3) order by CI_Sort Desc");
             
-        $list = $result->queryAll();
+        $case = $result->queryAll();
 
         /*$list = findAllBySql("select * from case_info where ".
 
@@ -109,83 +122,101 @@ class ResourceController extends InitController
             "(select hotel_list from staff where id=:id) ) ".
             " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID= :id ))  ".
             " and CI_Show=1 order by CI_Sort Desc" ,array(':id'=>$staff_id)); */
-        foreach($list as  $key => $val){
-            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
-                /*$t=explode(".", $val["CI_Pic"]);
-                $CI_Pic = "";
-                if(isset($t[0]) && isset($t[1])){
-                    $CI_Pic = $t[0]."_sm.".$t[1];    
-                }else{
-                    $CI_Pic = $val['CI_Pic'];
-                };*/
-                $list[$key]["CI_Pic"]=$url.$val['CI_Pic'];
-            };
-            //$val["size"]=$this->getUrlFileSize($val["CI_Pic"]);
-            /*$resources = CaseResources::model()->findAll(array(
-                    'condition' => 'CI_ID=:CI_ID',
-                    'params' => array(
-                            ':CI_ID' => $val["CI_ID"]
-                        )
-                )); */
-  
-            $result1 = yii::app()->db->createCommand("select case_resources.CR_ID,case_resources.CR_Type,case_resources.CR_Sort,case_resources.CR_Name,case_resources.CR_Path,CR_Show,CR_Remarks,supplier_product.id,supplier_product.name,supplier_product.unit_price,supplier_product.unit,supplier_product.ref_pic_url,supplier_product.description from case_resources left join case_resources_product on case_resources_product.CR_ID=case_resources.CR_ID left join supplier_product on case_resources_product.supplier_product_id=supplier_product.id where CI_ID =".$val["CI_ID"]." order by case_resources.CR_Sort");
-            
-            $resources = $result1->queryAll();
-            $jsonresources = array();
-            $cur_resourceobj=null;
-            $cur_crid = 0;
-            //$cur_product = null;
-            //$i = 0;
-            $cur_product = array();
-            foreach ($resources as $rkey => $rval) {
-                $resourceobj =array(
-                    "CR_ID"=>$rval["CR_ID"],
-                    "CR_Name"=>$rval["CR_Name"],
-                    "CR_Path"=>$rval["CR_Path"],
-                    "CR_Sort"=>$rval["CR_Sort"],
-                    "CR_Show"=>$rval["CR_Show"],
-                    "CR_Remarks"=>$rval["CR_Remarks"],
-                    "CR_Type"=>$rval["CR_Type"]
-                    );
-                if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
-                    $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
-                }
-
-                $cur_crid = $rval["CR_ID"];
-                // $cur_resourceobj=$resourceobj;
-                if($rval["id"]!=null){
-                    $t=explode(".", $rval["ref_pic_url"]);
-                    if(isset($t[0]) && isset($t[1])){
-                        $ref_pic_url = $t[0]."_sm.".$t[1];    
-                    }else{
-                        $ref_pic_url = $rval['ref_pic_url'];
+        $list = array();
+        foreach($case as  $key => $val){
+            if($val['CI_Show'] == 1){
+                if($val['CI_Type'] == 1 || $val['CI_Type'] == 2 || $val['CI_Type'] == 3){
+                    $item = array();
+                    $item['CI_ID'] = $val['CI_ID'];
+                    $item['CI_Name'] = $val['CI_Name'];
+                    $item['CI_Place'] = $val['CI_Place'];
+                    $item['CI_Pic'] = $val['CI_Pic'];
+                    $item['CI_Time'] = $val['CI_Time'];
+                    $item['CI_CreateTime'] = $val['CI_CreateTime'];
+                    $item['CI_Sort'] = $val['CI_Sort'];
+                    $item['CI_Show'] = $val['CI_Show'];
+                    $item['CI_Remarks'] = $val['CI_Remarks'];
+                    $item['CI_Type'] = $val['CI_Type'];
+                    $item['CT_ID'] = $val['CT_ID'];
+                    if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                        /*$t=explode(".", $val["CI_Pic"]);
+                        $CI_Pic = "";
+                        if(isset($t[0]) && isset($t[1])){
+                            $CI_Pic = $t[0]."_sm.".$t[1];    
+                        }else{
+                            $CI_Pic = $val['CI_Pic'];
+                        };*/
+                        $item["CI_Pic"]=$url.$val['CI_Pic'];
                     };
-                    $productobj=array(
-                        "id"=>$rval["id"],
-                        "name"=>$rval["name"],
-                        "unit_price"=>$rval["unit_price"],
-                        "unit"=>$rval["unit"],
-                        "description"=>$rval["description"],
-                        "ref_pic_url"=>"http://file.cike360.com".$ref_pic_url
-                        );
-                    $cur_product[]=$productobj;
-                    $resourceobj["product"]=$cur_product;
-                }
-                else{
-                    $resourceobj["product"]=array();
-                }
-                if(/*$cur_crid!=$rval["CR_ID"]&&*/$cur_crid!=0){
-                    $jsonresources[]=$resourceobj;
-                    //$cur_resourceobj=null;
-                    $cur_product=array();
+                    //$val["size"]=$this->getUrlFileSize($val["CI_Pic"]);
+                    /*$resources = CaseResources::model()->findAll(array(
+                            'condition' => 'CI_ID=:CI_ID',
+                            'params' => array(
+                                    ':CI_ID' => $val["CI_ID"]
+                                )
+                        )); */
+          
+                    $result1 = yii::app()->db->createCommand("select case_resources.CR_ID,case_resources.CR_Type,case_resources.CR_Sort,case_resources.CR_Name,case_resources.CR_Path,CR_Show,CR_Remarks,supplier_product.id,supplier_product.name,supplier_product.unit_price,supplier_product.unit,supplier_product.ref_pic_url,supplier_product.description from case_resources left join case_resources_product on case_resources_product.CR_ID=case_resources.CR_ID left join supplier_product on case_resources_product.supplier_product_id=supplier_product.id where CI_ID =".$val["CI_ID"]." order by case_resources.CR_Sort");
+                    
+                    $resources = $result1->queryAll();
+                    $jsonresources = array();
+                    $cur_resourceobj=null;
+                    $cur_crid = 0;
+                    //$cur_product = null;
+                    //$i = 0;
+                    $cur_product = array();
+                    foreach ($resources as $rkey => $rval) {
+                        $resourceobj =array(
+                            "CR_ID"=>$rval["CR_ID"],
+                            "CR_Name"=>$rval["CR_Name"],
+                            "CR_Path"=>$rval["CR_Path"],
+                            "CR_Sort"=>$rval["CR_Sort"],
+                            "CR_Show"=>$rval["CR_Show"],
+                            "CR_Remarks"=>$rval["CR_Remarks"],
+                            "CR_Type"=>$rval["CR_Type"]
+                            );
+                        if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
+                            $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
+                        }
+
+                        $cur_crid = $rval["CR_ID"];
+                        // $cur_resourceobj=$resourceobj;
+                        if($rval["id"]!=null){
+                            $t=explode(".", $rval["ref_pic_url"]);
+                            if(isset($t[0]) && isset($t[1])){
+                                $ref_pic_url = $t[0]."_sm.".$t[1];    
+                            }else{
+                                $ref_pic_url = $rval['ref_pic_url'];
+                            };
+                            $productobj=array(
+                                "id"=>$rval["id"],
+                                "name"=>$rval["name"],
+                                "unit_price"=>$rval["unit_price"],
+                                "unit"=>$rval["unit"],
+                                "description"=>$rval["description"],
+                                "ref_pic_url"=>"http://file.cike360.com".$ref_pic_url
+                                );
+                            $cur_product[]=$productobj;
+                            $resourceobj["product"]=$cur_product;
+                        }
+                        else{
+                            $resourceobj["product"]=array();
+                        }
+                        if(/*$cur_crid!=$rval["CR_ID"]&&*/$cur_crid!=0){
+                            $jsonresources[]=$resourceobj;
+                            //$cur_resourceobj=null;
+                            $cur_product=array();
+                        };
+                        if($cur_crid==0){
+                            $jsonresources[] = $resourceobj;
+                        };
+                        $resourceobj = array();
+                    }
+                    $item["resources"]= $jsonresources;
+                    $item['product'] = array();
+                    $list[] = $item;
                 };
-                if($cur_crid==0){
-                    $jsonresources[] = $resourceobj;
-                };
-                $resourceobj = array();
-            }
-            $list[$key]["resources"]= $jsonresources;
-            $list[$key]['product'] = array();
+            };
             // $list[$key]['set_category'] = 0;
         };
 
@@ -199,7 +230,7 @@ class ResourceController extends InitController
                         ':account_id' => $staff['account_id'],
                     ),
             ));
-        $i=10000;
+        $i=10000000;
         foreach ($tap as $key1 => $value1) {
             /*$t = explode(".", $value['pic']);
             if(isset($t[0]) && isset($t[1])){
@@ -269,9 +300,9 @@ class ResourceController extends InitController
 
 
         // 取灯光／音响／视频
-        $lss = yii::app()->db->createCommand("select * from supplier_product where supplier_type_id in (8,9,23)");
+        $lss = yii::app()->db->createCommand("select * from supplier_product where supplier_type_id in (8,9,23) and account_id=".$staff['account_id']);
         $lss = $lss->queryAll();
-        $t = 30000;
+        $t = 30000000;
         $type = yii::app()->db->createCommand("select * from supplier_type where id in (8,9,23)");
         $type = $type->queryAll();
         // print_r($type);die;
@@ -380,7 +411,7 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=4 ))  and".*/
 
-            " CI_Show=1 and CI_Type=5 order by CI_Sort Desc");
+            " CI_Show=1 and CI_Type=5 and CT_ID in (select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=".$staff['account_id'].")) order by CI_Sort Desc");
         $set = $set->queryAll();
         foreach($set as  $key3 => $val){
             if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
@@ -483,7 +514,7 @@ class ResourceController extends InitController
             };
             $set[$key3]['product'] = $product;
         };
-        /*echo json_encode($set);die;*/
+        // echo json_encode($set);die;
         foreach ($set as $key4 => $value) {
             $list[]=$value;
         };
@@ -508,112 +539,116 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )) and".*/
 
-            " CI_Show=1 and CI_Type=9 order by CI_Sort Desc");
+            " CI_Show=1 and CI_Type=9 and CT_ID in (select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=".$staff['account_id'].")) order by CI_Sort Desc");
         $menu = $menu->queryAll();
         /*print_r($set);die;*/
         foreach($menu as  $key3 => $val){
-            if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
-                /*$t=explode(".", $val["CI_Pic"]);
-                $CI_Pic = "";
-                if(isset($t[0]) && isset($t[1])){
-                    $CI_Pic = $t[0]."_sm.".$t[1];    
-                }else{
-                    $CI_Pic = $val['CI_Pic'];
-                };*/
-                $menu[$key3]["CI_Pic"]=$url.$val['CI_Pic'];
-            };
-            //$val["size"]=$this->getUrlFileSize($val["CI_Pic"]);
-            /*$resources = CaseResources::model()->findAll(array(
-                    'condition' => 'CI_ID=:CI_ID',
-                    'params' => array(
-                            ':CI_ID' => $val["CI_ID"]
-                        )
-                )); */
-  
-            $result1 = yii::app()->db->createCommand("select case_resources.CR_ID,case_resources.CR_Type,case_resources.CR_Sort,case_resources.CR_Name,case_resources.CR_Path,CR_Show,CR_Remarks,supplier_product.id,supplier_product.name,supplier_product.unit_price,supplier_product.unit,supplier_product.ref_pic_url,supplier_product.description from case_resources left join case_resources_product on case_resources_product.CR_ID=case_resources.CR_ID left join supplier_product on case_resources_product.supplier_product_id=supplier_product.id where CI_ID =".$val["CI_ID"]." order by case_resources.CR_Sort");
-            
-            $resources = $result1->queryAll();
-            $jsonresources = array();
-            $cur_resourceobj=null;
-            $cur_crid = 0;
-            //$cur_product = null;
-            //$i = 0;
-            $cur_product = array();
-            foreach ($resources as $rkey => $rval) {
-                $resourceobj =array(
-                    "CR_ID"=>$rval["CR_ID"],
-                    "CR_Name"=>$rval["CR_Name"],
-                    "CR_Path"=>$rval["CR_Path"],
-                    "CR_Sort"=>$rval["CR_Sort"],
-                    "CR_Show"=>$rval["CR_Show"],
-                    "CR_Remarks"=>$rval["CR_Remarks"],
-                    "CR_Type"=>$rval["CR_Type"]
-                    );
-                if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
-                    $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
-                };
-                
-                $cur_crid = $rval["CR_ID"];
-                // $cur_resourceobj=$resourceobj;
-                if($rval["id"]!=null){
-                    $t=explode(".", $rval["ref_pic_url"]);
+            if($val['CI_Show'] == 1){
+                if(!$this->startwith($val["CI_Pic"],"http://")&&!$this->startwith($val["CI_Pic"],"https://")){
+                    /*$t=explode(".", $val["CI_Pic"]);
+                    $CI_Pic = "";
                     if(isset($t[0]) && isset($t[1])){
-                        $ref_pic_url = $t[0].".".$t[1];    
+                        $CI_Pic = $t[0]."_sm.".$t[1];    
                     }else{
-                        $ref_pic_url = $rval['ref_pic_url'];
-                    };
-                    $productobj=array(
-                        "id"=>$rval["id"],
-                        "name"=>$rval["name"],
-                        "unit_price"=>$rval["unit_price"],
-                        "unit"=>$rval["unit"],
-                        "description"=>$rval["description"],
-                        "ref_pic_url"=>"http://file.cike360.com".$ref_pic_url
+                        $CI_Pic = $val['CI_Pic'];
+                    };*/
+                    $menu[$key3]["CI_Pic"]=$url.$val['CI_Pic'];
+                };
+                //$val["size"]=$this->getUrlFileSize($val["CI_Pic"]);
+                /*$resources = CaseResources::model()->findAll(array(
+                        'condition' => 'CI_ID=:CI_ID',
+                        'params' => array(
+                                ':CI_ID' => $val["CI_ID"]
+                            )
+                    )); */
+      
+                $result1 = yii::app()->db->createCommand("select case_resources.CR_ID,case_resources.CR_Type,case_resources.CR_Sort,case_resources.CR_Name,case_resources.CR_Path,CR_Show,CR_Remarks,supplier_product.id,supplier_product.name,supplier_product.unit_price,supplier_product.unit,supplier_product.ref_pic_url,supplier_product.description from case_resources left join case_resources_product on case_resources_product.CR_ID=case_resources.CR_ID left join supplier_product on case_resources_product.supplier_product_id=supplier_product.id where CI_ID =".$val["CI_ID"]." order by case_resources.CR_Sort");
+                
+                $resources = $result1->queryAll();
+                $jsonresources = array();
+                $cur_resourceobj=null;
+                $cur_crid = 0;
+                //$cur_product = null;
+                //$i = 0;
+                $cur_product = array();
+                foreach ($resources as $rkey => $rval) {
+                    $resourceobj =array(
+                        "CR_ID"=>$rval["CR_ID"],
+                        "CR_Name"=>$rval["CR_Name"],
+                        "CR_Path"=>$rval["CR_Path"],
+                        "CR_Sort"=>$rval["CR_Sort"],
+                        "CR_Show"=>$rval["CR_Show"],
+                        "CR_Remarks"=>$rval["CR_Remarks"],
+                        "CR_Type"=>$rval["CR_Type"]
                         );
-                    $cur_product[]=$productobj;
-                    $resourceobj["product"]=$cur_product;
-                }
-                else{
-                    $resourceobj["product"]=array();
+                    if(!$this->startwith($rval["CR_Path"],"http://")&&!$this->startwith($rval["CR_Path"],"https://")){
+                        $resourceobj["CR_Path"]=$url.$rval["CR_Path"];    
+                    };
+                    
+                    $cur_crid = $rval["CR_ID"];
+                    // $cur_resourceobj=$resourceobj;
+                    if($rval["id"]!=null){
+                        $t=explode(".", $rval["ref_pic_url"]);
+                        if(isset($t[0]) && isset($t[1])){
+                            $ref_pic_url = $t[0].".".$t[1];    
+                        }else{
+                            $ref_pic_url = $rval['ref_pic_url'];
+                        };
+                        $productobj=array(
+                            "id"=>$rval["id"],
+                            "name"=>$rval["name"],
+                            "unit_price"=>$rval["unit_price"],
+                            "unit"=>$rval["unit"],
+                            "description"=>$rval["description"],
+                            "ref_pic_url"=>"http://file.cike360.com".$ref_pic_url
+                            );
+                        $cur_product[]=$productobj;
+                        $resourceobj["product"]=$cur_product;
+                    }
+                    else{
+                        $resourceobj["product"]=array();
+                    };
+                    $jsonresources[]=$resourceobj;
+                    //$cur_resourceobj=null;
+                    $cur_product=array();
                 };
-                $jsonresources[]=$resourceobj;
-                //$cur_resourceobj=null;
-                $cur_product=array();
-            };
-            $menu[$key3]["resources"]= $jsonresources;
+                $menu[$key3]["resources"]= $jsonresources;
 
-            $wedding_set = Wedding_set::model()->findByPk($val['CT_ID']);
+                $wedding_set = Wedding_set::model()->findByPk($val['CT_ID']);
 
-            $temp = explode(',', $wedding_set['product_list']);
+                $temp = explode(',', $wedding_set['product_list']);
 
-            $product = array();
+                $product = array();
 
-            foreach ($temp as $key_tem => $temp_val) {
-                $item = array();
+                foreach ($temp as $key_tem => $temp_val) {
+                    $item = array();
 
-                $t = explode('|', $temp_val);
+                    $t = explode('|', $temp_val);
 
-                $supplier_product = SupplierProduct::model()->findByPk($t[0]);
-                /*print_r($t);die;*/
-                $t1=explode(".", $supplier_product["ref_pic_url"]);
-                if(isset($t1[0]) && isset($t1[1])){
-                    $ref_pic_url = $t1[0].".".$t1[1];    
-                }else{
-                    $ref_pic_url = $supplier_product['ref_pic_url'];
+                    $supplier_product = SupplierProduct::model()->findByPk($t[0]);
+                    /*print_r($t);die;*/
+                    $t1=explode(".", $supplier_product["ref_pic_url"]);
+                    if(isset($t1[0]) && isset($t1[1])){
+                        $ref_pic_url = $t1[0].".".$t1[1];    
+                    }else{
+                        $ref_pic_url = $supplier_product['ref_pic_url'];
+                    };
+                    $item['id'] = $supplier_product['id'];
+                    $item['name'] = $supplier_product['name'];
+                    $item['unit_price'] = $supplier_product['unit_price'];
+                    $item['unit'] = $t[2];
+                    $item['description'] = $supplier_product['description'];
+                    $item['ref_pic_url'] = "http://file.cike360.com".$ref_pic_url;
+                    $product[] = $item;
                 };
-                $item['id'] = $supplier_product['id'];
-                $item['name'] = $supplier_product['name'];
-                $item['unit_price'] = $supplier_product['unit_price'];
-                $item['unit'] = $t[2];
-                $item['description'] = $supplier_product['description'];
-                $item['ref_pic_url'] = "http://file.cike360.com".$ref_pic_url;
-                $product[] = $item;
+                $menu[$key3]['product'] = $product;
             };
-            $menu[$key3]['product'] = $product;
         };
-        /*echo json_encode($set);die;*/
-        foreach ($menu as $key4 => $value) {
-            $list[]=$value;
+        // echo json_encode($menu);die;
+        foreach ($menu as $key4 => $value4) {
+            if($value4['CI_Show'] == '1'){
+                $list[]=$value4;
+            };
         };
 
 
@@ -621,10 +656,12 @@ class ResourceController extends InitController
 
 
         //取餐饮零点
-        $i2 = 100000;
+        $i2 = 90000000;
         $staff = Staff::model()->findByPk($_GET['token']);
         $dish_type = DishType::model()->findAll();
-        $result = yii::app()->db->createCommand("select supplier_product.id as CR_ID,supplier_product.name as CR_Name,ref_pic_url as CR_Path,description as CR_Remarks,dish_type.id as CI_ID,unit_price,unit from supplier_product left join dish_type on dish_type=dish_type.id where product_show=1 and account_id=".$staff['account_id']);
+        $result = yii::app()->db->createCommand("select supplier_product.id as CR_ID,supplier_product.name as CR_Name,ref_pic_url as CR_Path,description as CR_Remarks,dish_type.id as CI_ID,unit_price,unit ".
+            "from supplier_product left join dish_type on dish_type=dish_type.id ".
+            "where product_show=1 and account_id=".$staff['account_id']);
         $supplier_product = $result->queryAll();
         foreach ($dish_type as $key_type => $value_type) {
             $item = array();
@@ -875,8 +912,6 @@ class ResourceController extends InitController
             $list[]=$value;
         };
 
-
-
         echo json_encode($list);
 
     }
@@ -926,7 +961,7 @@ class ResourceController extends InitController
 
     public function actionNeworderlist()
     {
-        $_GET['token'] = 100;
+        // $_GET['token'] = 100;
 
         $result = yii::app()->db->createCommand("select o.id,s.name,order_date,order_type,order_name,order_status from `order` o left join staff_hotel s on staff_hotel_id=s.id where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
         $result = $result->queryAll();
@@ -994,15 +1029,31 @@ class ResourceController extends InitController
 
     public function actionOrderdetail()
     {
+
+        /************************************************************************/
+        /************************************************************************/
+        /******** CR_ID 构造规则：  ***********************************************/
+        /******** 场地布置 10000000          ＋ sp_id     *************************/
+        /******** 灯光／音响／视频  30000000   ＋  sp_id    *************************/
+        /******** PPT 里的纯“图片” 60000000   ＋   show_id *************************/
+        /******** 餐饮零点  90000000          +  sp_id     ************************/
+        /******** 服务人员 120000000          ＋ CI_ID     ************************/
+        /************************************************************************/
+        /************************************************************************/
+
+
+
         // $post = json_decode(file_get_contents('php://input'));
 
         //取本订单 当前在order_show里的数据
-        $result = yii::app()->db->createCommand("select s.id,s.type,i.img_url,s.order_product_id,sp.ref_pic_url,words,show_area,area_sort from order_show s ".
+        $result = yii::app()->db->createCommand("select s.id,s.type,i.img_url,s.order_product_id,sp.ref_pic_url,sp.supplier_type_id,sp.id as sp_id,words,show_area,area_sort from order_show s ".
             "left join order_show_img i on s.img_id=i.id ".
             "left join order_product op on s.order_product_id=op.id ".
             "left join supplier_product sp on op.product_id=sp.id ".
             "where s.order_id=".$_GET['order_id']);
         $result = $result->queryAll();
+
+        // echo json_encode($result);die;
 
         foreach ($result as $key => $value) {
             $t1 = explode('.', $value['ref_pic_url']);
@@ -1020,8 +1071,9 @@ class ResourceController extends InitController
         };
 
         //取本订单里的  order_product
-        $result1 = yii::app()->db->createCommand("select op.id,op.order_set_id,ws.category as set_category,ws.name as set_name,st.name,op.actual_price,op.unit as amount,op.actual_unit_cost,op.actual_service_ratio,sp.name as product_name,sp.description,sp.ref_pic_url,sp.supplier_type_id,sp.unit,op.order_set_id,os.show_area ".
+        $result1 = yii::app()->db->createCommand("select op.id,op.order_set_id,o.other_discount,o.discount_range,o.feast_discount,ws.category as set_category,ws.name as set_name,st.name,op.actual_price,op.unit as amount,op.actual_unit_cost,op.actual_service_ratio,sp.name as product_name,sp.description,sp.ref_pic_url,sp.supplier_type_id,sp.unit,sp.id as sp_id,op.order_set_id,os.show_area ".
             "from order_product op ".
+            "left join `order` o on op.order_id=o.id ".
             "left join order_show os on op.id=os.order_product_id ".
             "left join supplier_product sp on op.product_id=sp.id ".
             "left join supplier_type st on sp.supplier_type_id=st.id ".
@@ -1037,7 +1089,7 @@ class ResourceController extends InitController
             }else{
                 $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
             };
-        }
+        };
 
         //取本订单数据
         $order = Order::model()->findByPk($_GET['order_id']);
@@ -1188,12 +1240,32 @@ class ResourceController extends InitController
             }else if($value['type'] == 1){
                 $item['show_data']=$value['img_url'];
                 $item['product_id']=0;
+                $item['CR_ID'] = 60000000 + $value['id'];
             }else if($value['type'] == 2){
                 $item['show_data']=$value['ref_pic_url'];
                 $item['product_id']=$value['order_product_id'];
+                if($value['supplier_type_id'] == 20){
+                    $item['CR_ID'] = 10000000 + $value['sp_id'];
+                }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
+                    $item['CR_ID'] = 30000000 + $value['sp_id'];
+                }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
+                    $CI_Type = 0;
+                    if($value['supplier_type_id'] == 3){$CI_Type=6;};
+                    if($value['supplier_type_id'] == 4){$CI_Type=13;};
+                    if($value['supplier_type_id'] == 5){$CI_Type=14;};
+                    if($value['supplier_type_id'] == 6){$CI_Type=15;};
+                    if($value['supplier_type_id'] == 7){$CI_Type=21;};
+                    $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value['sp_id']);
+                    $result7 = $result7->queryAll();
+                    // print_r($result7);die;
+                    if(isset($result7[0])){
+                                $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                            };
+                }
             };
             $order_show_list[]=$item;
         };
+        // echo json_encode($order_show_list);die;
         $result6 = yii::app()->db->createCommand("select * from order_show where order_id=".$_GET['order_id']." and show_area=0 order by area_sort DESC");
         $non_area_show = $result6->queryAll();
         $i=1;
@@ -1244,6 +1316,7 @@ class ResourceController extends InitController
                     $item['show_data']=$value_l['show_data'];
                     $item['product_id']=$value_l['product_id'];
                     $item['sort']=$value_l['area_sort'];
+                    $item['CR_ID']=$value_l['CR_ID'];
                     $tem['data'][]=$item;
                 };
             };
@@ -1271,10 +1344,12 @@ class ResourceController extends InitController
                 $item['show_data']=$value_l['show_data'];
                 $item['product_id']=$value_l['product_id'];
                 $item['sort']=$value_l['area_sort'];
+                $item['CR_ID']=$value_l['CR_ID'];
                 $tem['data'][]=$item;
             };
         };
         if(!empty($tem['data'])){
+            $num1 = array();
             foreach ( $tem['data'] as $key => $value ){
                 $num1[$key] = $value ['sort'];
             };
@@ -1315,11 +1390,29 @@ class ResourceController extends InitController
                     $item['unit']=$value_p['unit'];
                     $item['cost']=$value_p['actual_unit_cost'];
                     $item['set']="";
-                    if($value_p['order_set_id'] != 0){
-                        $item['set']="套系产品";
-                    };
-                    $tem['product_list'][]=$item;
-                    $tem['area_total'] += $item['price']*$item['amount'];
+
+                    //构造 CR_ID  top
+                    if($value_p['supplier_type_id'] == 20){
+                        $item['CR_ID'] = 10000000 + $value_p['sp_id'];
+                    }else if($value_p['supplier_type_id'] == 8 || $value_p['supplier_type_id'] == 9 || $value_p['supplier_type_id'] == 23){
+                        $item['CR_ID'] = 30000000 + $value_p['sp_id'];
+                    }else if($value_p['supplier_type_id'] == 3 || $value_p['supplier_type_id'] == 4 || $value_p['supplier_type_id'] == 5 || $value_p['supplier_type_id'] == 6 || $value_p['supplier_type_id'] == 7){
+                        $CI_Type = 0;
+                        if($value_p['supplier_type_id'] == 3){$CI_Type=6;};
+                        if($value_p['supplier_type_id'] == 4){$CI_Type=13;};
+                        if($value_p['supplier_type_id'] == 5){$CI_Type=14;};
+                        if($value_p['supplier_type_id'] == 6){$CI_Type=15;};
+                        if($value_p['supplier_type_id'] == 7){$CI_Type=21;};
+                        $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value_p['sp_id']);
+                        $result7 = $result7->queryAll();
+                        // print_r($result7);die;
+                        if(isset($result7[0])){
+                                $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                            };
+                    }
+                    //构造 CR_ID  end
+
+
                     $t = 0;
                     foreach ($discount_range as $key_r => $value_r) {
                         if($value_r == $value_p['supplier_type_id']){
@@ -1327,10 +1420,18 @@ class ResourceController extends InitController
                         };
                     };
                     if($t!=0){
+                        $item['discount'] = $order['other_discount']*0.1;
                         $tem['discount_total'] += $item['price']*$item['amount']*$order['other_discount'];
                     }else{
+                        $item['discount'] = 1;
                         $tem['discount_total'] += $item['price']*$item['amount'];
                     }
+
+                    if($value_p['order_set_id'] != 0){
+                        $item['set']="套系产品";
+                    };
+                    $tem['product_list'][]=$item;
+                    $tem['area_total'] += $item['price']*$item['amount'];
                 };
             };
             $area_product[] = $tem;
@@ -1340,6 +1441,14 @@ class ResourceController extends InitController
         $non_area_product = array();
         foreach ($result1 as $key => $value) {
             if($value['show_area'] == 0 && $value['supplier_type_id']!=2){
+                $discount_range = rtrim($value['discount_range'], ",");
+                $discount_range = explode(',', $discount_range);
+                $r = 0;
+                foreach ($discount_range as $key_dr => $value_dr) {
+                    if($value_dr == $value['supplier_type_id']){
+                        $r++;
+                    };
+                };
                 $item=array();
                 $item['product_id']=$value['id'];
                 $item['product_name']=$value['product_name'];
@@ -1350,6 +1459,33 @@ class ResourceController extends InitController
                 $item['unit']=$value['unit'];
                 $item['cost']=$value['actual_unit_cost'];
                 $item['set']="";
+
+                //构造 CR_ID  top
+                if($value_p['supplier_type_id'] == 20){
+                    $item['CR_ID'] = 10000000 + $value_p['sp_id'];
+                }else if($value_p['supplier_type_id'] == 8 || $value_p['supplier_type_id'] == 9 || $value_p['supplier_type_id'] == 23){
+                    $item['CR_ID'] = 30000000 + $value_p['sp_id'];
+                }else if($value_p['supplier_type_id'] == 3 || $value_p['supplier_type_id'] == 4 || $value_p['supplier_type_id'] == 5 || $value_p['supplier_type_id'] == 6 || $value_p['supplier_type_id'] == 7){
+                    $CI_Type = 0;
+                    if($value_p['supplier_type_id'] == 3){$CI_Type=6;};
+                    if($value_p['supplier_type_id'] == 4){$CI_Type=13;};
+                    if($value_p['supplier_type_id'] == 5){$CI_Type=14;};
+                    if($value_p['supplier_type_id'] == 6){$CI_Type=15;};
+                    if($value_p['supplier_type_id'] == 7){$CI_Type=21;};
+                    $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value_p['sp_id']);
+                    $result7 = $result7->queryAll();
+                    // print_r($result7);die;
+                    if(isset($result7[0])){
+                        $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                    };
+                }
+                //构造 CR_ID  end
+
+                if($r == 0){
+                    $item['discount'] = 1;
+                }else{
+                    $item['discount'] = $value['other_discount']*0.1;
+                };
                 if($value['order_set_id'] != 0){
                     $item['set']="套系产品";
                 };
@@ -1386,6 +1522,23 @@ class ResourceController extends InitController
                     $item['amount']=$value_p['amount'];
                     $item['unit']=$value_p['unit'];
                     $item['cost']=$value_p['actual_unit_cost'];
+                    $item['CR_ID']=90000000 + $value_p['sp_id'];
+                    if($value_p['supplier_type_id'] == 2){
+                        $item['discount'] = $value_p['feast_discount'];
+                    }else{
+                        $t=explode(',', $value_p['discount_range']);
+                        $m=0;
+                        foreach ($t as $key_tm => $value_tm) {
+                            if($value_tm == $value_p['supplier_type_id']){
+                                $m++;
+                            };
+                        };
+                        if($m == 0){
+                            $item['discount'] = 1;
+                        }else{
+                            $item['discount'] = $value_p['other_discount']*0.1;
+                        };
+                    };
                     $tem['product_list'][]=$item;
                     if($value_s['category'] == 3 || $value_s['category'] == 4){
                         $tem['total_price'] += $value_p['actual_price']*$value_p['amount']*(1+$value_s['actual_service_ratio']*0.01);
@@ -1404,6 +1557,7 @@ class ResourceController extends InitController
                     $item['price']=$value_p['actual_price'];
                     $item['amount']=$value_p['amount'];
                     $item['unit']=$value_p['unit'];
+                    $item['CR_ID']=90000000 + $value_p['sp_id'];
                     $item['cost']=$value_p['actual_unit_cost'];
                     if($value_s['category'] == 3 || $value_s['category'] == 4){
                         $tem['product_list'][]=$item;
@@ -1454,6 +1608,17 @@ class ResourceController extends InitController
 
     public function actionProductstore()
     {
+        /************************************************************************/
+        /************************************************************************/
+        /******** CR_ID 构造规则：  ***********************************************/
+        /******** 场地布置 10000000          ＋ sp_id     *************************/
+        /******** 灯光／音响／视频  30000000   ＋  sp_id    *************************/
+        /******** PPT 里的纯“图片” 60000000   ＋   show_id *************************/
+        /******** 餐饮零点  90000000          +  sp_id     ************************/
+        /******** 服务人员 120000000          ＋ CI_ID     ************************/
+        /************************************************************************/
+        /************************************************************************/
+
         $staff = Staff::model()->findByPk($_GET['token']);
         $result = yii::app()->db->createCommand("select * from supplier_product sp where account_id=".$staff['account_id']);
         $result = $result->queryAll();
@@ -1498,7 +1663,44 @@ class ResourceController extends InitController
                     $item['list'] = array();
                     foreach ($result as $key_r => $value_r) {
                         if($value_r['decoration_tap'] == $value_tap['id']){
-                            $item['list'][]=$value_r;
+                            $t = array();
+                            $t['id'] = $value_r['id'];
+                            $t['account_id'] = $value_r['account_id'];
+                            $t['supplier_id'] = $value_r['supplier_id'];
+                            $t['service_product_id'] = $value_r['service_product_id'];
+                            $t['supplier_type_id'] = $value_r['supplier_type_id'];
+                            $t['dish_type'] = $value_r['dish_type'];
+                            $t['decoration_tap'] = $value_r['decoration_tap'];
+                            $t['standard_type'] = $value_r['standard_type'];
+                            $t['name'] = $value_r['name'];
+                            $t['category'] = $value_r['category'];
+                            $t['unit_price'] = $value_r['unit_price'];
+                            $t['unit_cost'] = $value_r['unit_cost'];
+                            $t['unit'] = $value_r['unit'];
+                            $t['service_charge_ratio'] = $value_r['service_charge_ratio'];
+                            $t['ref_pic_url'] = $value_r['ref_pic_url'];
+                            $t['description'] = $value_r['description'];
+                            $t['product_show'] = $value_r['product_show'];
+                            $t['update_time'] = $value_r['update_time'];
+                            if($value_r['supplier_type_id'] == 20){
+                                $t['CR_ID'] = 10000000 + $value_r['id'];
+                            }else if($value_r['supplier_type_id'] == 8 || $value_r['supplier_type_id'] == 9 || $value_r['supplier_type_id'] == 23){
+                                $t['CR_ID'] = 30000000 + $value_r['id'];
+                            }else if($value_r['supplier_type_id'] == 3 || $value_r['supplier_type_id'] == 4 || $value_r['supplier_type_id'] == 5 || $value_r['supplier_type_id'] == 6 || $value_r['supplier_type_id'] == 7){
+                                $CI_Type = 0;
+                                if($value_r['supplier_type_id'] == 3){$CI_Type=6;};
+                                if($value_r['supplier_type_id'] == 4){$CI_Type=13;};
+                                if($value_r['supplier_type_id'] == 5){$CI_Type=14;};
+                                if($value_r['supplier_type_id'] == 6){$CI_Type=15;};
+                                if($value_r['supplier_type_id'] == 7){$CI_Type=21;};
+                                $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value_r['id']);
+                                $result7 = $result7->queryAll();
+                                // print_r($result7);die;
+                                if(isset($result7[0])){
+                                    $t['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                                };
+                            }
+                            $item['list'][]=$t;
                         };
                     };
                     $tem['tap'][]=$item;
@@ -1506,7 +1708,46 @@ class ResourceController extends InitController
             }else{
                 foreach ($result as $key_r => $value_r) {
                     if($value_r['supplier_type_id'] == $value_st['id']){
-                        $tem['list'][]=$value_r;
+                        $t = array();
+                        $t['id'] = $value_r['id'];
+                        $t['account_id'] = $value_r['account_id'];
+                        $t['supplier_id'] = $value_r['supplier_id'];
+                        $t['service_product_id'] = $value_r['service_product_id'];
+                        $t['supplier_type_id'] = $value_r['supplier_type_id'];
+                        $t['dish_type'] = $value_r['dish_type'];
+                        $t['decoration_tap'] = $value_r['decoration_tap'];
+                        $t['standard_type'] = $value_r['standard_type'];
+                        $t['name'] = $value_r['name'];
+                        $t['category'] = $value_r['category'];
+                        $t['unit_price'] = $value_r['unit_price'];
+                        $t['unit_cost'] = $value_r['unit_cost'];
+                        $t['unit'] = $value_r['unit'];
+                        $t['service_charge_ratio'] = $value_r['service_charge_ratio'];
+                        $t['ref_pic_url'] = $value_r['ref_pic_url'];
+                        $t['description'] = $value_r['description'];
+                        $t['product_show'] = $value_r['product_show'];
+                        $t['update_time'] = $value_r['update_time'];
+                        if($value_r['supplier_type_id'] == 20){
+                            $t['CR_ID'] = 10000000 + $value_r['id'];
+                        }else if($value_r['supplier_type_id'] == 8 || $value_r['supplier_type_id'] == 9 || $value_r['supplier_type_id'] == 23){
+                            $t['CR_ID'] = 30000000 + $value_r['id'];
+                        }else if($value_r['supplier_type_id'] == 3 || $value_r['supplier_type_id'] == 4 || $value_r['supplier_type_id'] == 5 || $value_r['supplier_type_id'] == 6 || $value_r['supplier_type_id'] == 7){
+                            $CI_Type = 0;
+                            if($value_r['supplier_type_id'] == 3){$CI_Type=6;};
+                            if($value_r['supplier_type_id'] == 4){$CI_Type=13;};
+                            if($value_r['supplier_type_id'] == 5){$CI_Type=14;};
+                            if($value_r['supplier_type_id'] == 6){$CI_Type=15;};
+                            if($value_r['supplier_type_id'] == 7){$CI_Type=21;};
+                            $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value_r['id']);
+                            $result7 = $result7->queryAll();
+                            // print_r($result7);die;
+                            if(isset($result7[0])){
+                                if(isset($result7[0])){
+                                $t['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                            };
+                            };
+                        }
+                        $tem['list'][]=$t;
                     };
                 };
             };
@@ -1609,6 +1850,7 @@ class ResourceController extends InitController
                     $item['price'] = $value1['unit_price'];
                     $item['cost'] = $value1['unit_cost'];
                     $item['unit'] = $value1['unit'];
+                    $item['CR_ID'] = 90000000 + $value1['id'];
                     if(isset($t[0]) && isset($t[1])){
                         $item['pic'] = "http://file.cike360.com".$t[0].'_sm.'.$t[1];
                     }else{
@@ -2005,10 +2247,22 @@ class ResourceController extends InitController
 
     public function actionOrder_show()
     {
+
+        /************************************************************************/
+        /************************************************************************/
+        /******** CR_ID 构造规则：  ***********************************************/
+        /******** 场地布置 10000000          ＋ sp_id     *************************/
+        /******** 灯光／音响／视频  30000000   ＋  sp_id    *************************/
+        /******** PPT 里的纯“图片” 60000000   ＋   show_id *************************/
+        /******** 餐饮零点  90000000          +  sp_id     ************************/
+        /******** 服务人员 120000000          ＋ CI_ID     ************************/
+        /************************************************************************/
+        /************************************************************************/
+
         $post = json_decode(file_get_contents('php://input'));
         // $post->order_id=1033
 
-        $result = yii::app()->db->createCommand("select os.id,os.type,words,osi.img_url,sp.ref_pic_url,show_area,area_sort from order_show os ".
+        $result = yii::app()->db->createCommand("select os.id,os.type,words,osi.img_url,sp.ref_pic_url,show_area,area_sort,sp.id as sp_id from order_show os ".
             "left join order_show_img osi on img_id=osi.id ".
             "left join order_product op on order_product_id=op.id ".
             "left join supplier_product sp on op.product_id=sp.id ".
@@ -2028,9 +2282,28 @@ class ResourceController extends InitController
             };
             if($value['type'] == 1){
                 $item['data'] = "http://file.cike360.com".$value['img_url'];
+                $item['CR_ID'] = 60000000 + $value['id'];
             };
             if($value['type'] == 2){
                 $item['data'] = "http://file.cike360.com".$value['ref_pic_url'];
+                if($value['supplier_type_id'] == 20){
+                    $item['CR_ID'] = 10000000 + $value['sp_id'];
+                }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
+                    $item['CR_ID'] = 30000000 + $value['sp_id'];
+                }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
+                    $CI_Type = 0;
+                    if($value['supplier_type_id'] == 3){$CI_Type=6;};
+                    if($value['supplier_type_id'] == 4){$CI_Type=13;};
+                    if($value['supplier_type_id'] == 5){$CI_Type=14;};
+                    if($value['supplier_type_id'] == 6){$CI_Type=15;};
+                    if($value['supplier_type_id'] == 7){$CI_Type=21;};
+                    $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value['sp_id']);
+                    $result7 = $result7->queryAll();
+                    // print_r($result7);die;
+                    if(isset($result7[0])){
+                                $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                            };
+                }
             };
             $show_data[] = $item;
         };
@@ -2220,7 +2493,7 @@ class ResourceController extends InitController
 
         if(empty($t)){
             $message_code = new MessageCode;
-            $message_code->phone = $post->phone;
+            $message_code->phone = $_GET['telephone'];
             $message_code->code = $result;
             $message_code->update_time = date('y-m-d h:i:s',time());
             $message_code->save();
