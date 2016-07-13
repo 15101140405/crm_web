@@ -376,7 +376,7 @@
                 telephone : $("#telephone").val(),
                 img : $.cookie('img'),
                 case_resource : $.cookie('imgs'),
-                // account_id : $.cookie('account_id'),
+                account_id : $.cookie('account_id'),
             <?php if(!isset($_GET['supplier_id'])){?>
                 supplier_type : $("#supplier_type option:selected").attr("tap-id"),
             <?php }else{?>

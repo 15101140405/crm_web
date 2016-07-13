@@ -1121,7 +1121,7 @@ class ResourceController extends InitController
         $result = yii::app()->db->createCommand("select o.id,s.name,order_date,order_type,order_name,order_status,staff.name as designername ".
             " from `order` o left join staff_hotel s on staff_hotel_id=s.id ".
             " left join staff on o.designer_id=staff.id ".
-            " where o.account_id=".$staff['account_id']." and (designer_id=".$_GET['token']." or planner_id=".$_GET['token'].") order by o.update_time");
+            " where o.account_id=".$staff['account_id']." and (designer_id=".$_GET['token']." or planner_id=".$_GET['token'].") order by o.update_time DESC");
         $result = $result->queryAll();
 
         $order_list = "(";
@@ -1813,7 +1813,7 @@ class ResourceController extends InitController
         /************************************************************************/
 
         $staff = Staff::model()->findByPk($_GET['token']);
-        $result = yii::app()->db->createCommand("select * from supplier_product sp where account_id=".$staff['account_id']);
+        $result = yii::app()->db->createCommand("select * from supplier_product sp where product_show=1 and account_id=".$staff['account_id']);
         $result = $result->queryAll();
 
         $supplier_type = SupplierType::model()->findAll(array(
@@ -1954,36 +1954,36 @@ class ResourceController extends InitController
 
         foreach ($result as $key => $value) {
             $t = array();
-            $t['id'] = $value_r['id'];
-            $t['account_id'] = $value_r['account_id'];
-            $t['supplier_id'] = $value_r['supplier_id'];
-            $t['service_product_id'] = $value_r['service_product_id'];
-            $t['supplier_type_id'] = $value_r['supplier_type_id'];
-            $t['dish_type'] = $value_r['dish_type'];
-            $t['decoration_tap'] = $value_r['decoration_tap'];
-            $t['standard_type'] = $value_r['standard_type'];
-            $t['name'] = $value_r['name'];
-            $t['category'] = $value_r['category'];
-            $t['unit_price'] = $value_r['unit_price'];
-            $t['unit_cost'] = $value_r['unit_cost'];
-            $t['unit'] = $value_r['unit'];
-            $t['service_charge_ratio'] = $value_r['service_charge_ratio'];
-            $t['ref_pic_url'] = $value_r['ref_pic_url'];
-            $t['description'] = $value_r['description'];
-            $t['product_show'] = $value_r['product_show'];
-            $t['update_time'] = $value_r['update_time'];
-            if($value_r['supplier_type_id'] == 20){
-                $t['CR_ID'] = 10000000 + $value_r['id'];
-            }else if($value_r['supplier_type_id'] == 8 || $value_r['supplier_type_id'] == 9 || $value_r['supplier_type_id'] == 23){
-                $t['CR_ID'] = 30000000 + $value_r['id'];
-            }else if($value_r['supplier_type_id'] == 3 || $value_r['supplier_type_id'] == 4 || $value_r['supplier_type_id'] == 5 || $value_r['supplier_type_id'] == 6 || $value_r['supplier_type_id'] == 7){
+            $t['id'] = $value['id'];
+            $t['account_id'] = $value['account_id'];
+            $t['supplier_id'] = $value['supplier_id'];
+            $t['service_product_id'] = $value['service_product_id'];
+            $t['supplier_type_id'] = $value['supplier_type_id'];
+            $t['dish_type'] = $value['dish_type'];
+            $t['decoration_tap'] = $value['decoration_tap'];
+            $t['standard_type'] = $value['standard_type'];
+            $t['name'] = $value['name'];
+            $t['category'] = $value['category'];
+            $t['unit_price'] = $value['unit_price'];
+            $t['unit_cost'] = $value['unit_cost'];
+            $t['unit'] = $value['unit'];
+            $t['service_charge_ratio'] = $value['service_charge_ratio'];
+            $t['ref_pic_url'] = $value['ref_pic_url'];
+            $t['description'] = $value['description'];
+            $t['product_show'] = $value['product_show'];
+            $t['update_time'] = $value['update_time'];
+            if($value['supplier_type_id'] == 20){
+                $t['CR_ID'] = 10000000 + $value['id'];
+            }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
+                $t['CR_ID'] = 30000000 + $value['id'];
+            }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
                 $CI_Type = 0;
-                if($value_r['supplier_type_id'] == 3){$CI_Type=6;};
-                if($value_r['supplier_type_id'] == 4){$CI_Type=13;};
-                if($value_r['supplier_type_id'] == 5){$CI_Type=14;};
-                if($value_r['supplier_type_id'] == 6){$CI_Type=15;};
-                if($value_r['supplier_type_id'] == 7){$CI_Type=21;};
-                $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value_r['id']);
+                if($value['supplier_type_id'] == 3){$CI_Type=6;};
+                if($value['supplier_type_id'] == 4){$CI_Type=13;};
+                if($value['supplier_type_id'] == 5){$CI_Type=14;};
+                if($value['supplier_type_id'] == 6){$CI_Type=15;};
+                if($value['supplier_type_id'] == 7){$CI_Type=21;};
+                $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value['id']);
                 $result7 = $result7->queryAll();
                 // print_r($result7);die;
                 if(isset($result7[0])){
@@ -1993,6 +1993,7 @@ class ResourceController extends InitController
                 };
             }
             if($value['supplier_type_id'] == 3){
+                // echo $value['supplier_type_id'].",".json_encode($t)."||";
                 $product_store[1]['tap'][0]['list'][]=$t;
             };
             if($value['supplier_type_id'] == 4){

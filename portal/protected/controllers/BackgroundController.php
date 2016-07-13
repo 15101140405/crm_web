@@ -1939,6 +1939,16 @@ class BackgroundController extends InitController
         /***************************************/
         /*************** Staff表 ***************/
         /***************************************/
+        // $_POST = array(
+        //         'name' => "小柯", 
+        //         'telephone' => "13810249821", 
+        //         'img' => "/upload/xiaoke20160713130544.jpg", 
+        //         'case_resource' => "/upload/20160620113442_9348620160713130551.jpg,/up…160713130552.jpg,/upload/xiaoke20160713130651.mp4", 
+        //         'supplier_type' => "3",
+        //         'account_id' => "0"
+        //     );
+
+
         $staff = Staff::model()->find(array(
                 'condition' => 'telephone=:tele',
                 'params' => array(
@@ -2008,6 +2018,7 @@ class BackgroundController extends InitController
             ));
 
         $CI_ID = 0;
+        // print_r($case_info);die;
         if(empty($case_info)){
             $data2 = new CaseInfo;
             $data2->CI_Name = $_POST['name'];
@@ -2020,9 +2031,9 @@ class BackgroundController extends InitController
             $data2->save();
             $CI_ID = $data2->attributes['CI_ID'];
         }else{
-            $CI_ID = $case_info['id'];
+            $CI_ID = $case_info['CI_ID'];
         };
-
+        // echo $CI_ID;die;
         /***************************************/
         /*************  Case_Resource  *********/
         /***************************************/
@@ -2031,7 +2042,7 @@ class BackgroundController extends InitController
         $resources = array();
         foreach ($t as $key => $value) {
             $t1 = explode(".", $value);
-        echo json_encode($t1);die;
+        // echo json_encode($t1);die;
 
             $item = array();
             if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
@@ -2042,11 +2053,13 @@ class BackgroundController extends InitController
             $item['Cr_Path'] = $value;
             $resources[]=$item;
         };
-        /*print_r($resources);die;*/
+        // print_r($resources);die;
+        // echo $CI_ID;die;
 
 
         $i = 1;
         foreach ($resources as $key => $value) {
+            // echo json_encode($value).",".$CI_ID."||";
             $data3 = new CaseResources;
             $data3->CI_ID = $CI_ID;
             $data3->CR_Show = 1;
@@ -2063,15 +2076,17 @@ class BackgroundController extends InitController
         /**************  Supplier  *************/
         /***************************************/
         $supplier = Supplier::model()->find(array(
-                'condition' => 'staff_id=:staff_id && type_id=:type_id',
+                'condition' => 'staff_id=:staff_id && type_id=:type_id && account_id=:account_id',
                 'params' => array(
                         ':staff_id' => $staff_id,
-                        ':type_id' => $_POST['supplier_type']
+                        ':type_id' => $_POST['supplier_type'],
+                        ':account_id' => $_POST['account_id']
                     )
             ));
+        // print_r($supplier);die;
         if(empty($staff) || empty($supplier)){
             $data4 = new Supplier;
-            $data4->account_id = $_COOKIE['account_id'];
+            $data4->account_id = $_POST['account_id'];
             $data4->type_id = $_POST['supplier_type'];
             $data4->staff_id = $staff_id;
             $data4->update_time = date('y-m-d h:i:s',time());
