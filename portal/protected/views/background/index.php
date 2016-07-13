@@ -95,12 +95,12 @@
                     foreach ($case_data as $key => $value) {
                     if($value['CI_Type'] == $_GET['CI_Type']){?>
                     <li class="clearfix" tap='' CI-ID="<?php echo $value['CI_ID']?>" CT-ID="<?php echo $value['CT_ID']?>">
-                        <div class="upload_con_box left clearfix">
+                        <div class="upload_con_box left clearfix" style="width:50%">
                             <div class="video_img left">
                                 <img src="<?php echo $value['CI_Pic']?>" alt="">
                                 <!-- <span>私密视频</span> -->
                             </div>
-                            <div class="video_info left">
+                            <div class="video_info left" style="width:60%">
                                 <h3><?php echo $value['CI_Name']?></h3>
                                 <div class="state_box clearfix">
                                     <!-- <img class="left" src="images/up06.jpg" alt=""> -->
@@ -146,12 +146,12 @@
             <?php }}}else if($_GET['CI_Type']== 7){
                         foreach ($case_data as $key => $value) {?>
                     <li class="clearfix" tap='<?php echo $value['decoration_tap']?>' product-id ="<?php echo $value['id'];?>">
-                        <div class="upload_con_box left clearfix">
+                        <div class="upload_con_box left clearfix" style="width:50%">
                             <div class="video_img left">
                                 <img src="<?php echo $value['ref_pic_url']?>" alt="">
                                 <!-- <span>私密视频</span> -->
                             </div>
-                            <div class="video_info left">
+                            <div class="video_info left" style="width:60%">
                                 <h3><?php echo $value['name']?></h3>
                                 <div class="state_box clearfix">
                                     <!-- <img class="left" src="images/up06.jpg" alt=""> -->
@@ -479,7 +479,7 @@
         $("#upload").on("click",function(){
             if(<?php echo $_GET['CI_Type']?> == 1){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=1"};
             if(<?php echo $_GET['CI_Type']?> == 4){location.href="<?php echo $this->createUrl("background/upload_set1");?>&type=theme"};
-            if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_case");?>"};
+            if(<?php echo $_GET['CI_Type']?> == 2){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=2"};
             if(<?php echo $_GET['CI_Type']?> == 16){location.href="<?php echo $this->createUrl("background/upload_case");?>&ci_type=16"};
             if(<?php echo $_GET['CI_Type']?> == 7){location.href="<?php echo $this->createUrl("background/upload_product");?>"};
             if(<?php echo $_GET['CI_Type']?> == 8){location.href="<?php echo $this->createUrl("background/upload_product_lss");?>"};

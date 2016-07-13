@@ -1227,7 +1227,9 @@ class OrderController extends InitController
         // print_r($post['order_date']);die;
         $date = explode(' ', $post->order_date);
         // $date = explode(' ', $post['order_date']);
-        $order = yii::app()->db->createCommand("select order_status,order_type,name from `order` o left join staff on o.planner_id=staff.id  where order_date like '".$date[0]."'");
+        $order = yii::app()->db->createCommand("select order_status,order_type,name ".
+            " from `order` o left join staff on o.planner_id=staff.id ".
+            " where order_date like '".$date[0]."' and staff_hotel_id=".$post->staff_hotel_id);
         $order = $order->queryAll();
         if(!empty($order)){
             $t = 0;

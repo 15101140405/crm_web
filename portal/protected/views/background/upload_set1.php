@@ -155,7 +155,7 @@
                             <h3 class="product_name"></h3>
                             <div class="counter_box clearfix">
                                 <span class="minus_btn btn disabled left">-</span>
-                                <input class="count left amount" type="text" readonly="true" value="<?php echo $value['amount']?>">
+                                <input class="count left amount" type="text" value="<?php echo $value['amount']?>">
                                 <span class="add_btn btn left">+</span>
                             </div>
                         </div>
@@ -230,7 +230,7 @@
                             '<h3>'+data.find('.name').html()+'</h3>'+
                             '<div class="counter_box clearfix">'+
                                 '<span class="minus_btn btn disabled left">-</span>'+
-                                '<input class="count left amount" type="text" readonly="true" value="1">'+
+                                '<input class="count left amount" type="text" value="1">'+
                                 '<span class="add_btn btn left">+</span>'+
                             '</div>'+
                         '</div>'+
@@ -339,6 +339,11 @@
         $('.product_price').live('change', function() {
             total_price(); 
         });
+        $('.amount').live('change', function() {
+            total_price(); 
+        });
+
+
         // $('#feast_discount').live('change', function() {
         //     total_price(); 
         // });

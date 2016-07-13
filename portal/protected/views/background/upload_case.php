@@ -284,7 +284,7 @@
                 account_id : $.cookie('account_id'),
             <?php if(isset($_GET['ci_type'])){?>
                 CI_Type : <?php echo $_GET['ci_type']?>,
-            <?php }?>    
+            <?php }?>  
             };
             console.log(data);
             $(".tip").removeClass("hid");

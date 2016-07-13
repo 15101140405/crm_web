@@ -394,10 +394,12 @@
                 alert("请补全信息");
             }else{
         <?php if(!isset($_GET['supplier_id'])){?>
-                $.post("<?php echo $this->createUrl("background/upload_sp");?>",data,function(){
-                    $.cookie('img',null); 
-                    $.cookie('imgs',null); 
-                    location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=61";
+                console.log(data);
+                $.post("<?php echo $this->createUrl("background/upload_sp");?>",data,function(data2){
+                    alert(data2);
+                    // $.cookie('img',null); 
+                    // $.cookie('imgs',null); 
+                    // location.href = "<?php echo $this->createUrl("background/index");?>&CI_Type=61";
                 });
         <?php }else{?>
                 $.post("<?php echo $this->createUrl("background/edit_sp");?>",data,function(){

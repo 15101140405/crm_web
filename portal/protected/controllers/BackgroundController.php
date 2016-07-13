@@ -362,7 +362,8 @@ class BackgroundController extends InitController
                             ':standard_type' => 0,
                             ':supplier_type_id' => 20, 
                             ':product_show' => 1,
-                        )
+                        ),
+                    'order' => 'update_time DESC'
                 ));
             foreach($product as  $key => $val){
                 $t = explode(".", $val['ref_pic_url']);
@@ -1067,17 +1068,17 @@ class BackgroundController extends InitController
         $_POST['CI_Remarks'] = 333;*/
 
         $data = new CaseInfo;
-        $data ->CI_Name = $_POST['CI_Name'];
-        $data ->CI_Place = "";
-        $data ->CI_Pic = $_POST['CI_Pic'];
+        $data->CI_Name = $_POST['CI_Name'];
+        $data->CI_Place = "";
+        $data->CI_Pic = $_POST['CI_Pic'];
         // $data ->CI_Time = $_POST['CI_Time'];
-        $data ->CI_Sort = 1;
-        $data ->CI_Show = $_POST['CI_Show'];
-        $data ->CI_Remarks = "";
+        $data->CI_Sort = 1;
+        $data->CI_Show = $_POST['CI_Show'];
+        $data->CI_Remarks = "";
         if(!isset($_POST['CI_Type'])){
-            $data ->CI_Type = 2;    
+            $data->CI_Type = 2;    
         }else{
-            $data ->CI_Type = $_POST['CI_Type'];
+            $data->CI_Type = $_POST['CI_Type'];
         };
         $data->save();
 
@@ -1085,13 +1086,13 @@ class BackgroundController extends InitController
         
         $data = new CaseBind;
         if($_POST['CI_Type'] != 1 && $_POST['CI_Type'] != 4){
-            $data ->CB_Type = 1;
-            $data ->TypeID = $_POST['account_id'];
+            $data->CB_Type = 1;
+            $data->TypeID = $_POST['account_id'];
         }else{
-            $data ->CB_Type = 4;
-            $data ->TypeID = 0;
+            $data->CB_Type = 4;
+            $data->TypeID = 0;
         };
-        $data ->CI_ID = $CI_ID;
+        $data->CI_ID = $CI_ID;
         $data->save();
 
 
@@ -1155,7 +1156,7 @@ class BackgroundController extends InitController
         $data ->service_charge_ratio = $_POST['service_charge_ratio'];
         $data ->ref_pic_url = $_POST['ref_pic_url'];
         $data ->description = $_POST['description'];
-        $data ->update_time = $_POST['update_time'];
+        $data ->update_time = date('y-m-d h:i:s',time());
         $data->save();
     }
 
@@ -1934,13 +1935,14 @@ class BackgroundController extends InitController
 
     public function actionUpload_sp()
     {
+        // echo $_POST['telephone'];
         /***************************************/
         /*************** Staff表 ***************/
         /***************************************/
         $staff = Staff::model()->find(array(
-                'condition' => 'telephone=:telephone',
+                'condition' => 'telephone=:tele',
                 'params' => array(
-                        ':telephone' => $_POST['telephone']
+                        ':tele' => $_POST['telephone'],
                     )
             ));
         $staff_id = 0;
@@ -2029,6 +2031,8 @@ class BackgroundController extends InitController
         $resources = array();
         foreach ($t as $key => $value) {
             $t1 = explode(".", $value);
+        echo json_encode($t1);die;
+
             $item = array();
             if($t1[1] == "jpg" || $t1[1] == "png" || $t1[1] == "jpeg" || $t1[1] == "JPEG" || $t1[1] == "gif" || $t1[1] == "bmp" ){
                 $item['Cr_Type'] = 1 ;

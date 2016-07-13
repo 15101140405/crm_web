@@ -119,11 +119,11 @@
         //新增产品
         var CI_Type = <?php echo $_GET['CI_Type']?>;
         var service_type = 0;
-        if(CI_Type == 6){service_type = 3};
-        if(CI_Type == 17){service_type = 20};
-        if(CI_Type == 18){service_type = 8};
-        if(CI_Type == 19){service_type = 23};
-        if(CI_Type == 20){service_type = 9};
+        if(<?php echo $_GET['CI_Type']?> == 6){service_type = 3};
+        if(<?php echo $_GET['CI_Type']?> == 13){service_type = 4};
+        if(<?php echo $_GET['CI_Type']?> == 14){service_type = 5};
+        if(<?php echo $_GET['CI_Type']?> == 15){service_type = 6};
+        if(<?php echo $_GET['CI_Type']?> == 21){service_type = 7};
         $("#insert").on("click",function(){
         <?php if(!isset($_GET['type'])){?>
             location.href = "<?php echo $this->createUrl("background/edit_product_detail");?>&CI_Type=<?php echo $_GET['CI_Type']?>&service_person_id=<?php echo $_GET['service_person_id']?>&service_type="+service_type+"&ci_id=<?php echo $_GET['ci_id']?>";
