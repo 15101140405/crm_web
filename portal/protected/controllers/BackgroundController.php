@@ -375,9 +375,10 @@ class BackgroundController extends InitController
                 
             };
             $tap = SupplierProductDecorationTap::model()->findAll(array(
-                    'condition' => 'account_id=:account_id',
+                    'condition' => 'account_id=:account_id || account_id=:ai',
                     'params' => array(
-                            ':account_id' => $_COOKIE['account_id']
+                            ':account_id' => $_COOKIE['account_id'],
+                            ':ai' => 0
                         )
                 ));
             /*print_r($product);die;*/
@@ -631,19 +632,34 @@ class BackgroundController extends InitController
                         foreach ($t as $key => $value) {
                             $item = array();
                             $t1 = explode("|", $value);
+                            $supplier_product = SupplierProduct::model()->findByPk($t1[0]);
+/*
+                            $result = yii::app()->db->createCommand("select * ".
+                                " from order_show os left join order_product op on order_product_id=op.id ".
+                                " left join supplier_product sp on op.product_id=sp.id ".
+                                " where sp.id=".$t1[0]." and os.order_id=".);
+                            $result = $result->queryAll();
+*/                          
+                            $area = 0;
+                            if(isset($t1[4])){
+                                $area = $t1[4];
+                            };
                             $item['product_id'] = $t1[0];
+                            $item['name'] = $supplier_product['name'];
                             $item['price'] = $t1[1];
                             $item['amount'] = $t1[2];
                             $item['cost'] = $t1[3];
+                            $item['area'] = $area;
                             $product_list[]=$item;
                         };
                     };
                 }
             }
             $decoration_tap = SupplierProductDecorationTap::model()->findAll(array(
-                "condition" => "account_id = :account_id",
+                "condition" => "account_id = :account_id || account_id=:ai",
                 "params"    => array(
                     ":account_id" => $account_id,
+                    ":ai" => 0
                     )));
             $supplier_product = SupplierProduct::model()->findAll(array(
                 'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
@@ -658,6 +674,13 @@ class BackgroundController extends InitController
                     $supplier_product[$key]['ref_pic_url'] = $t[0]."_sm.".$t[1];    
                 };
             };
+            $area = OrderShowArea::model()->findAll(array(
+                    'condition' => 'id != :id',
+                    'params' => array(
+                            ':id' => 1
+                        )
+                ));
+            // print_r($area);die;
             // print_r($decoration_tap);die;
             // print_r($supplier_product);die;
             $this -> render("upload_set1",array(
@@ -665,7 +688,7 @@ class BackgroundController extends InitController
                 'supplier_product'  => $supplier_product,
                 'product_list'      => $product_list,
                 'final_price'      => $final_price,
-
+                'area' => $area
             ));
         }else if($_GET['type'] == 'theme'){
             $result = yii::app()->db->createCommand("select product_name,price,unit,service_product.id as product_id,service_product.service_type as service_type,cost,case_info.CI_Pic,ref_pic_url from service_product left join service_person on service_person_id=service_person.id left join case_info on service_person.staff_id=case_info.CT_ID where service_product.product_show=1 and CI_Type in (6,13,14,15)");
@@ -1077,8 +1100,18 @@ class BackgroundController extends InitController
         $data->CI_Remarks = "";
         if(!isset($_POST['CI_Type'])){
             $data->CI_Type = 2;    
+            if(isset($_POST['account_id'])){
+                if($_POST['account_id'] == 0){
+                    $data->CT_ID=1;
+                };
+            };
         }else{
             $data->CI_Type = $_POST['CI_Type'];
+            if(isset($_POST['account_id'])){
+                if($_POST['account_id'] == 0){
+                    $data->CT_ID=1;
+                };
+            };
         };
         $data->save();
 

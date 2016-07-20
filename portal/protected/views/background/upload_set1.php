@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/base_background.css" />
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
     <link rel="stylesheet" type="text/css" href="css/upload_set.css" />
+    <link rel="stylesheet" href="css/common.css"/>
 </head>
 
 <body style="background:#fff;">
@@ -73,7 +74,7 @@
                         </p>
                         <!-- <p class="original_price">&yen;<del>400.00</del>
                         </p> -->
-                        <button class="add_product">加入套系</button>
+                        <button class="add_product demo15">加入套系</button>
                     </div>
                 </li>
         <?php }}?>
@@ -125,7 +126,7 @@
                         </p>
                         <!-- <p class="original_price">&yen;<del>400.00</del>
                         </p> -->
-                        <button class="add_product">加入套系</button>
+                        <button class="add_product demo15">加入套系</button>
                     </div>
                 </li>
         <?php }}?>
@@ -135,32 +136,42 @@
         <!--右侧内容区域-->
         <div class="right_area right" style="background:#fff;width:240px;">
             <div style="width:240px;">
-                <div class="tit_box1" style="width:240px;background:#fff;height:20px;">
+                <div class="tit_box1 clearfix" style="width:240px;background:#fff;height:20px;display:none">
                     <h2 class="left">合计：&yen;<span id="total_price">0</span></h2>
                 </div>
                 <div class="tit_box clearfix" style="width:240px;background:#fff;border-bottom: 1px solid #e6e6e6;">
-                    <h2 class="left">定价：&yen;</h2>
-                    <input class="input_in" id="final_price" style="width:140px;height: 30px;margin-top: 5px;border: 0;" type="text" value="<?php if (isset($final_price)) {echo $final_price;}?>" placeholder="请输入套系总价">
+                    <h2 class="left">最终价格：&yen;</h2>
+                    <input class="input_in" id="final_price" style="width: 100px;height: 30px;margin-top: 5px;margin-left: 10px;text-align: center;color: #ff0101;border: 1px solid rgba(0, 0, 0, 0.14);font-size:.9rem" type="text" value="<?php if (isset($final_price)) {echo $final_price;}?>" placeholder="请输入套系总价">
                     <!-- <a href="#" class="right">查看更多</a> -->
                 </div>
-                <ul class="add_list" style="width:240px;" id="shopping_car">
+                <ul class="add_list" style="width:240px;padding-top:40px" id="shopping_car">
                     <?php 
                     if (isset($_GET['ct_id'])) {
                         if (!empty($_GET['ct_id'])) {
                             foreach ($product_list as $key => $value) {
                     ?>
-                    <li class="clearfix new_hid" style="width:215px;" product-id="<?php echo $value['product_id']?>" unit-cost="<?php echo $value['cost']?>" style="display: list-item;">
+                    <li class="clearfix new_hid" style="width:215px;padding-top:15px;padding-bottom:15px;" product-id="<?php echo $value['product_id']?>" unit-cost="<?php echo $value['cost']?>" style="display: list-item;">
                         <img class="left product_pic" src="http://file.cike360.com/upload/2r20160516111246.jpg" alt="">
                         <div class="con left">
-                            <h3 class="product_name"></h3>
+                            <h3 class="product_name"><?php echo $value['name']."|".$value['area']?></h3>
                             <div class="counter_box clearfix">
-                                <span class="minus_btn btn disabled left">-</span>
-                                <input class="count left amount" type="text" value="<?php echo $value['amount']?>">
-                                <span class="add_btn btn left">+</span>
+                                <!-- <span class="minus_btn btn disabled left">-</span> -->
+                                <span style="float:left;margin-right:5px;">数量:</span><input class="count left amount" type="text" value="<?php echo $value['amount']?>" style="border:1px solid #bebebe;">
+                                <!-- <span class="add_btn btn left">+</span> -->
                             </div>
                         </div>
                         <img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px">
-                        <p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥<input class="product_price" style="width: 40px;" type="text" value="<?php echo $value['price']?>"></p>
+                        <br><p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥<input class="product_price" style="width: 40px;" type="text" value="<?php echo $value['price']?>"></p>
+                        <div class="radio-group-1" style="float: left;margin-top: 1rem;">
+                <?php foreach ($area as $key1 => $value1) {?>
+                            <label class="u-radio" area-id="<?php echo $value1['id']?>">
+                                <input name="radio<?php echo $key?>" type="radio" <?php if($value['area']==$value1['id']){echo "checked='true'";}?>>
+                                <i class="icon"></i>
+                                <span class="text"><?php echo $value1['name']?></span>
+                            </label>
+                            <?php if($key1%2 != 0){echo "<br>";}?>
+                <? }?>
+                        </div>
                     </li>
                     <?php }}}?>
                 </ul>
@@ -169,7 +180,44 @@
             <div class="button_box" id="create">定价：&yen;<span id="final_price_show">0</span>下一步</div>
             <span class="tip tip2 hid" id="list_tip">请为套系选择内容</span>
             <span class="tip tip2 hid" id="price_tip">请设定套系价</span>
+            <span class="tip tip2 hid" id="product_area">请选择商品区域</span>
         </div>
+    </div>
+
+    <div id="HBox">
+        <form action="" method="post" onsubmit="return false;">
+            <ul class="list">
+                <li>
+                    <strong>昵 称  <font color="#ff0000">*</font></strong>
+                    <div class="fl"><input type="text" name="nickname" value="" class="ipt nickname" /></div>
+                </li>
+                <li>
+                    <strong>手 机 <font color="#ff0000">*</font></strong>
+                    <div class="fl"><input type="text" name="phone" value="" class="ipt phone" /></div>
+                </li>
+                <li>
+                    <strong>邮 箱 <font color="#ff0000">*</font></strong>
+                    <div class="fl"><input type="text" name="email" value="" class="ipt email" /></div>
+                </li>
+                <li>
+                    <strong>性 别 <font color="#ff0000">&nbsp;</font></strong>
+                    <div class="fl">
+                        <label class="mr10"><input type="radio" name="sex" value="1"/>男</label>
+                        <label class="mr10"><input type="radio" name="sex" value="2"/>女</label>
+                        <label><input type="radio" name="sex" value="3"/>保密</label>
+                    </div>
+                </li>
+                <li>
+                    <strong>爱 好 <font color="#ff0000">&nbsp;</font></strong>
+                    <div class="fl">
+                        <label class="mr10"><input type="checkbox" name="like" value="男" />男</label>
+                        <label class="mr10"><input type="checkbox" name="like" value="女"/>女</label>
+                        <label><input type="checkbox" name="like" value="都喜欢"/>都喜欢</label>
+                    </div>
+                </li>
+                <li><input type="submit" value="确认提交" class="submitBtn" /></li>
+            </ul>
+        </form>
     </div>
 
     <!--底部-->
@@ -192,9 +240,12 @@
     </div>
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/upload_set.js"></script>
+<script src="js/jquery.hDialog.js"></script>
 <script>
     $(function(){
+        var radio_index = 1;
         //初始渲染
+
         <?php
             if(!isset($_GET['type'])){
         ?>
@@ -223,25 +274,35 @@
 
         //点击加入套系
         $(".add_product").on("click",function(){
-            var data = $(this).parent().parent()
-            html = '<li class="clearfix hid new_hid" style="width:215px;" product-id="'+data.attr('product-id')+'" unit-cost="'+data.attr('unit-cost')+'">'+
+            var data = $(this).parent().parent();
+            html = '<li class="clearfix hid new_hid" style="width:215px;padding-top:15px;padding-bottom:15px;" product-id="'+data.attr('product-id')+'" unit-cost="'+data.attr('unit-cost')+'">'+
                         '<img class="left" src="'+data.find('img').attr('src')+'" alt="">'+
                         '<div class="con left">'+
                             '<h3>'+data.find('.name').html()+'</h3>'+
                             '<div class="counter_box clearfix">'+
-                                '<span class="minus_btn btn disabled left">-</span>'+
-                                '<input class="count left amount" type="text" value="1">'+
-                                '<span class="add_btn btn left">+</span>'+
+                                // '<span class="minus_btn btn disabled left">-</span>'+
+                                '<span style="float:left;margin-right:5px;">数量:</span><input class="count left amount" type="text" value="1" style="border:1px solid #bebebe;">'+
+                                // '<span class="add_btn btn left">+</span>'+
                             '</div>'+
                         '</div>'+
                         '<img src="images/close.png" class="del_product" style="width: 10px;height: 10px;float: right;margin-right:0;margin-bottom:5px"></img>'+
                         '<p class="right unit_price" style="margin-top: 5px;margin-right: 15px;">¥'+
                             '<input class="product_price" style="width: 40px;" type="text" value="'+data.find('.price').find("strong").html()+'">'+
                         '</p>'+
+                        '<div class="radio-group-1" style="float: left;margin-top: 1rem;">'+
+                <?php foreach ($area as $key => $value) {?>
+                            '<label class="u-radio" area-id="<?php echo $value['id']?>">'+
+                                '<input name="radio'+radio_index+'" type="radio">'+
+                                '<i class="icon"></i>'+
+                                '<span class="text"><?php echo $value['name']?></span>'+
+                            '</label>'+
+                <? }?>
+                        '</div>'+
                     '</li>';
             $("#shopping_car").prepend(html);
             $(".new_hid").fadeIn();
             total_price();
+            radio_index++;
         });
 
         //场地布置筛选
@@ -307,11 +368,11 @@
         $("#create").on("click",function(){
             $(".tip").removeClass("hid");
             $(".tip").addClass("hid");
-            
             var product_list = "";
             $("#shopping_car li").each(function(){
+                // console.log($(this).find('input:checked').parent().attr('area-id'));
                 var price = $(this).find(".product_price").val()*$("#final_price").val()/$("#total_price").html();
-                product_list += $(this).attr('product-id') +"|"+ price.toFixed(2) +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +",";
+                product_list += $(this).attr('product-id') +"|"+ price.toFixed(2) +"|"+ $(this).find(".amount").val() +"|"+ $(this).attr("unit-cost") +"|"+ $(this).find('input:checked').parent().attr('area-id') +",";
             });
             product_list = product_list.substring(0,product_list.length-1);
             if(product_list == ""){
@@ -319,21 +380,36 @@
             } else if ($("#final_price").val() == "") {
                 $("#price_tip").removeClass("hid")
             } else{
-                // if ($("#final_price").val() == "") {
-                //     var final_price = $("#total_price").html();
-                // } else{
-                //     var final_price = $("#final_price").val();
-                // };
-                <?php if(!isset($_GET['type'])){?>
-                    // var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
-                    // if (r==true){
-                        location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
-                    // }
-                <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
-                location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
-                <?php }?>
+                var radio_checked=1;
+                $("#shopping_car li").each(function(idx,ele){
+                    var val=$('input:radio[name="radio'+idx+'"]:checked').val();
+                    if(val==null){
+                        $(this).find(".text").css("color",'red');
+                        radio_checked=0;
+                    };
+
+                });
+                if(radio_checked == 0){
+                    $("#product_area").removeClass("hid");
+                    $(".right_area").css("border-color","red");
+                }else{
+
+            <?php if(!isset($_GET['type'])){?>
+                // var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
+                // if (r==true){
+                    location.href = "<?php echo $this->createUrl("background/edit_set2");?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val() + "&ct_id=<?php echo $_GET['ct_id']?>&ci_id=<?php echo $_GET['ci_id']?>&feast_discount=";
+                // }
+            <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
+            location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
+            <?php }?>  
+
+                }
+
+                
             };
         });
+
+        
 
         //改变数量、单价时，刷新总价
         $('.product_price').live('change', function() {
@@ -361,6 +437,12 @@
                 $('#final_price_show').html(0);
             }
         })  
+
+        $(".u-radio").find("input").live("click",function(){
+            $(this).parent().parent().find(".text").css("color","#000");
+            area_selected();
+        });
+
   
         //总价计算，并刷新
         function total_price(){
@@ -373,7 +455,23 @@
             //     total_price = total_price*feast_discount;
             //     total_price = total_price.toFixed(2)
             // };
+            $("#final_price_show").html(total_price);
+            $("#final_price").val(total_price);
             $("#total_price").html(total_price);
+        };
+
+        //判断商品选择区域
+        function area_selected () {
+            var radio_checked = 1;
+            $("#shopping_car li").each(function(idx,ele){
+                var val=$('input:radio[name="radio'+idx+'"]:checked').val();
+                if(val==null){
+                    radio_checked=0;
+                };
+            });
+            if(radio_checked == 1){
+                $(".right_area").css("border-color","#d2d2d2");
+            };
         };
     })
 </script>

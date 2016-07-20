@@ -353,7 +353,7 @@
                 case_resource: $.cookie('imgs'),
                 account_id: $.cookie('account_id'),
                 product_list: "<?php echo $_GET['product_list']?>",
-                total_price: "<?php echo $_GET['product_list']?>",
+                total_price: "<?php echo $_GET['total_price']?>",
                 final_price: "<?php echo $_GET['final_price']?>",
                 feast_discount: "",
                 other_discount: "",

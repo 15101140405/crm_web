@@ -1212,9 +1212,10 @@ class PlanController extends InitController
             );
         if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
             $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
-        } else if ($order['staff_hotel_id'] == 4) {
+        }else if ($order['staff_hotel_id'] == 4) {
             $openUserId = WPRequest::idlist();
             $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+        };
     }
 
     public function actionLinkmaninsert(){

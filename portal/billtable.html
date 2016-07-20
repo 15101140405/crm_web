@@ -1,43 +1,1029 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>报价单</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
+    <title>大图预览</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
-<body>
-<style type="text/css">
-.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ebab3a;border-collapse: collapse;}
-.tftable th {font-size:12px;background-color:#e6983b;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;text-align:left;}
-.tftable tr {background-color:#ffffff;}
-.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;}
-.tftable tr:hover {background-color:#ffff99;}
-</style>
-<style type="text/css">
-.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #ebab3a;border-collapse: collapse;}
-.tftable th {font-size:12px;background-color:#e6983b;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;text-align:left;}
-.tftable tr {background-color:#ffffff;}
-.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #ebab3a;}
-.tftable tr:hover {background-color:#ffff99;}
-</style>
+<style>
+*{margin:0;padding:0;border:0;outline:0;font:inherit;vertical-align:baseline;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+html,body,form,fieldset,p,div,h1,h2,h3,h4,h5,h6{-webkit-text-size-adjust:none}
+html{font-size: 62.5%}
+@media screen and (min-width:375px){
+html{font-size:73.24%}
+}
+@media screen and (min-width:414px){
+html{font-size:73.24%}
+}
+@media screen and (min-width:481px){
+html{font-size:94%}
+}
+@media screen and (min-width:561px){
+html{font-size:109%}
+}
+@media screen and (min-width:641px){
+html{font-size:109%}
+}
+body{margin:0 auto;min-width:320px;font-family:"Heiti SC","Microsoft YaHei",Arial,"Helvetica";background:#f2f2f2;color:#333;font-size:1.2rem}
+ol,ul,li{list-style:none}
+table{border-collapse:collapse;border-spacing:0}
+mark{background: none;}
+h1,h2,h3,h4,h5,h6{font-weight:normal}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+strong,var,em,i{font-style:normal;font-weight:normal}
+a{text-decoration:none;color:#333}
+img{display:block;width:100%}
+del{text-decoration:line-through}
+.clear{height:0;overflow: hidden;clear: both;}
+.float_l{float:left}
+.float_r{float:right}
+.mar_r10{margin-right:10px}
+.mar_b10{margin-bottom:10px}
+.arial{font-family:'arial'}
+.ellipsis{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ellipsis_two{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ellipsis_three{display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;}
+.letter_middle{display:box;display:-webkit-box;box-orient:vertical;-webkit-box-orient:vertical;box-pack:center;-webkit-box-pack:center}
+/******layout.css*********/
+.box{
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+}
+.box.center {
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+}
+.box.h_center {
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+}
+.box.v_center:not(.vertical) {
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+}
+.box.v_center.vertical {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+}
+.flexbox.h_center {
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+.flexbox.v_center:not(.vertical) {
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+}
+.flexbox.v_center.vertical {
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+}
+.flexbox.center {
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-align: center;
+    box-pack: center;
+    align-items: center;
+    -webkit-align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+/* start 弹性布局*/
+.flexbox {
+    display: -webkit-box;
+    display: box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+.flexbox.reverse{
+    flex-direction: row-reverse;
+    -webkit-flex-direction: row-reverse;
+    -ms-direction: row-reverse;
+    -webkit-box-direction: reverse;
+    -moz-box-direction: reverse;
+    box-direction: reverse;
+}
+.flex1,
+.flexitem {
+    display: block;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+.flex2{
+    display: block;
+    -webkit-box-flex: 2;
+    -moz-box-flex: 2;
+    -webkit-flex: 2;
+    flex: 2;
+}
+.flex3{
+    display: block;
+    -webkit-box-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-flex: 3;
+    flex: 3;
+}
+.flex4{
+    display: block;
+    -webkit-box-flex: 4;
+    -moz-box-flex: 4;
+    -webkit-flex: 4;
+    flex: 4;
+}
+.flex5{
+    display: block;
+    -webkit-box-flex: 5;
+    -moz-box-flex: 5;
+    -webkit-flex: 5;
+    flex: 5;
+}
+.flex6{
+    display: block;
+    -webkit-box-flex: 6;
+    -moz-box-flex: 6;
+    -webkit-flex: 6;
+    flex: 6;
+}
+.flex7{
+    display: block;
+    -webkit-box-flex: 7;
+    -moz-box-flex: 7;
+    -webkit-flex: 7;
+    flex: 7;
+}
+.flex8{
+    display: block;
+    -webkit-box-flex: 8;
+    -moz-box-flex: 8;
+    -webkit-flex:8;
+    flex: 8;
+}
+.flex9{
+    display: block;
+    -webkit-box-flex: 9;
+    -moz-box-flex: 9;
+    -webkit-flex:9;
+    flex: 9;
+}
+/*end*/
 
-<table class="tftable" border="1">
-<tr><th colspan="3">基本信息</th></tr>
-<tr><td width="10%">订单编号</td><td colspan="2" width="90%">W1033-2016-06-21</td></tr>
-<tr><td width="10%">新郎信息</td><td width="50%">xiaoming</td><td width="40%"></td></tr>
-<tr><td width="10%">新娘信息</td><td width="50%">xiaohua</td><td width="40%"></td></tr>
-<tr><td width="10%">策划师</td><td colspan="2" width="90%">汪莹</td></tr>
-<tr><td width="10%">婚宴折扣</td><td colspan="2" width="90%">6</td></tr>
-<tr><td width="10%">婚礼折扣</td><td colspan="2" width="90%">6.4</td></tr>
-<tr><td width="10%">抹零</td><td colspan="2" width="90%">0</td></tr>
-<tr><td width="10%">订单总价</td><td colspan="2" width="90%">13478.88</td></tr>
-</table>
+/*栅格 start 2015/8/10 14:36:31*/
+.grid {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+}
+.grid .row {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+}
 
-<table class="tftable" border="1">
-<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr>
-<tr><td width="10%" rowspan = "5">婚宴</td><td width="4%">1</td><td width="12%">唐人素菜包</td><td width="20%"></td><td width="4%">50</td><td width="9%">盘</td><td width="18%">79</td><td width="23%"> </td></tr>
-</table><table class="tftable" border="1">
-<tr><th>产品类别</th><th>序号</th><th>产品名称</th><th>质量标准</th><th>数量</th><th>单位</th><th>单价</th><th>示意图</th></tr><tr><td width="10%" rowspan = "1">场地布置</td><td width="4%">1</td><td width="12%">圆舞台花艺</td><td width="20%"></td><td width="4%">6</td><td width="4%">米</td><td width="23%">2000</td><td width="23%"> </td></tr></table></body>
+.grid .column_1,
+.grid .column_2,
+.grid .column_3,
+.grid .column_4,
+.grid .column_5,
+.grid .column_6,
+.grid .column_7,
+.grid .column_8,
+.grid .column_9,
+.grid .column_10,
+.grid .column_11,
+.grid .column_12,
+.grid .column1,
+.grid .column2,
+.grid .column3,
+.grid .column4,
+.grid .column5,
+.grid .column6,
+.grid .column7,
+.grid .column8,
+.grid .column9,
+.grid .column10,
+.grid .column11,
+.grid .column12 {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+}
+.grid,
+.grid .row,
+.grid .column_1:before,
+.grid .column_2:before,
+.grid .column_3:before,
+.grid .column_4:before,
+.grid .column_5:before,
+.grid .column_6:before,
+.grid .column_7:before,
+.grid .column_8:before,
+.grid .column_9:before,
+.grid .column_10:before,
+.grid .column_11:before,
+.grid .column_12:before,
+.grid .column1:before,
+.grid .column2:before,
+.grid .column3:before,
+.grid .column4:before,
+.grid .column5:before,
+.grid .column6:before,
+.grid .column7:before,
+.grid .column8:before,
+.grid .column9:before,
+.grid .column10:before,
+.grid .column11:before,
+.grid .column12:before {
+    content: " ";
+    display: table;
+}
+.grid,
+.grid .column_1:after,
+.grid .column_2:after,
+.grid .column_3:after,
+.grid .column_4:after,
+.grid .column_5:after,
+.grid .column_6:after,
+.grid .column_7:after,
+.grid .column_8:after,
+.grid .column_9:after,
+.grid .column_10:after,
+.grid .column_11:after,
+.grid .column_12:after,
+.grid .column1:after,
+.grid .column2:after,
+.grid .column3:after,
+.grid .column4:after,
+.grid .column5:after,
+.grid .column6:after,
+.grid .column7:after,
+.grid .column8:after,
+.grid .column9:after,
+.grid .column10:after,
+.grid .column11:after,
+.grid .column12:after {
+    clear: both;
+}
+
+.grid .column_1,
+.grid .column1{
+    width: 8.33333333%;
+}
+.grid .column_2,
+.grid .column2{
+    width: 16.66666667%;
+}
+.grid .column_3,
+.grid .column3{
+    width: 25%;
+}
+.grid .column_4,
+.grid .column4{
+    width: 33.33333333%;
+}
+.grid .column_5,
+.grid .column5{
+    width: 41.66666667%;
+}
+.grid .column_6,
+.grid .column6,{
+    width: 50%;
+}
+.grid .column_7,
+.grid .column7{
+    width: 58.33333333%;
+}
+.grid .column_8,
+.grid .column8{
+    width: 66.66666667%;
+}
+.grid .column_9,
+.grid .column9{
+    width: 75%;
+}
+.grid .column_10,
+.grid .column10{
+    width: 83.33333333%;
+}
+.grid .column_11,
+.grid .column11{
+    width: 91.66666667%;
+}
+.grid .column_12,
+.grid .column12{
+    width: 100%;
+}
+
+.grid2:after,
+.grid3:after,
+.grid4:after,
+.grid5:after,
+.grid6:after,
+.grid7:after,
+.grid8:after,
+.grid9:after,
+.grid10:after,
+.grid11:after,
+.grid12:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+.grid12>*,
+.grid11>*,
+.grid10>*,
+.grid9>*,
+.grid8>*,
+.grid7>*,
+.grid6>*,
+.grid6>*,
+.grid5>*,
+.grid4>*,
+.grid3>*,
+.grid2>* {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+}
+
+.grid12>*:before,
+.grid11>*:before,
+.grid10>*:before,
+.grid9>*:before,
+.grid8>*:before,
+.grid7>*:before,
+.grid6>*:before,
+.grid5>*:before,
+.grid4>*:before,
+.grid3>*:before,
+.grid2>*:before{
+    content: " ";
+    display: table;
+}
+
+.grid12>*:after,
+.grid11>*:after,
+.grid10>*:after,
+.grid9>*:after,
+.grid8>*:after,
+.grid7>*:after,
+.grid6>*:after,
+.grid5>*:after,
+.grid4>*:after,
+.grid3>*:after,
+.grid2>*:after{
+    clear:both;
+}
+
+.grid12>* {
+    width: 8.333333333%;
+}
+.grid11>* {
+    width: 9.0909090909%;
+}
+.grid10>* {
+    width: 10%;
+}
+.grid9>* {
+    width: 11.11111111%;
+}
+.grid8>* {
+    width: 12.5%;
+}
+.grid7>* {
+    width: 14.28571428%;
+}
+.grid6>* {
+    width: 16.66666667%;
+}
+.grid5>* {
+    width: 20%;
+}
+.grid4>* {
+    width: 25%;
+}
+.grid3>* {
+    width: 33.33333333%;
+}
+.grid2>* {
+    width: 50%;
+}
+/*end*/
+
+
+
+
+/*print.css*/
+.print_module {
+    padding: 4rem 1rem;
+    background: #fff;
+}
+.print_top {
+    margin-bottom: 3rem;
+}
+.print_title_box header {
+    margin-bottom: 3rem;
+}
+
+.print_title_box header h1 {
+    color: #666;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.print_title_box header p {
+    color: #999;
+}
+
+.set_price_table_box {
+    background: #f0efeb;
+    padding: 1rem;
+}
+
+.set_price {
+    border: none;
+}
+
+.set_price tr td {
+    height: 2.3rem;
+    width: 20%;
+    font-size: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #d4d4ca;
+    border-bottom: 2px solid #d4d4ca;
+    font-weight: bold;
+}
+
+.set_price tr:first-child td {
+    border: none;
+    border-bottom: 2px solid #d4d4ca;
+    font-weight: normal;
+}
+
+.set_price tr td:first-child {
+    border-bottom: 2px solid #000;
+    border-left: none;
+    border-right: none;
+    color: #666;
+    font-weight: normal;
+}
+
+.set_price tr td:last-child {
+    border-right: none;
+}
+
+.set_price tr td:nth-child(2) {
+    border-left: none;
+}
+
+.set_price tr td:nth-child(3),
+.set_price tr td:last-child {
+    background: #edeae5;
+}
+
+.set_price tr:first-child td,
+.set_price tr:nth-child(4) td {
+    background: none;
+}
+
+.set_price tr:nth-child(4) td {
+    border-bottom: 2px solid #000;
+}
+
+.set_price tr:last-child td {
+    padding-top: 1rem;
+    border: none;
+    background: none;
+}
+
+.set_price tr:last-child td .foot {
+    height: 100%;
+    text-align: left;
+}
+.set_price tr:last-child td .foot>div{
+    overflow: hidden;
+}
+.set_price tr:last-child td .foot>div p{
+    float: left;
+    font-size: .9rem;
+}
+.option_table_box{
+    margin-bottom: 2rem;
+}
+.option_table tr td {
+    width: 12%;
+    min-height: 1.8rem;
+    line-height: 1.8rem;
+    font-size: 1rem;
+    text-align: right;
+    padding-right: 1rem;
+    border-bottom: 1px solid #c8cabd;
+    border-right: 1px solid #c8cabd;
+}
+
+.option_table tr td:first-child {
+    width: 28%;
+}
+.option_table tr td:first-child img{
+    width: 82%;
+}
+.option_table tr td:last-child {
+    width: 14%;
+    border-right: none;
+}
+
+.option_table thead tr td {
+    height: 2.5rem;
+    line-height: 2.5rem;
+    background: #a9a69d;
+    text-align: center;
+    padding: 0
+}
+
+.option_table tbody tr:nth-child(odd) td {
+    background: #f0efeb;
+}
+
+.option_table tbody tr:nth-child(even) td {
+    background: #edeae5;
+}
+
+.option_table thead tr td:first-child {
+    background: #fff;
+}
+
+.option_table tbody tr td:first-child,
+.option_table tbody tr td:nth-child(4) {
+    background: #fff;
+}
+
+.option_table tbody tr:last-child td {
+    border-bottom: 2px solid #a9a69d;
+}
+
+.option_table tfoot tr td {
+    border-bottom: 2px solid #a9a69d;
+}
+.option_table tfoot tr td:first-child{
+    border-right: none;
+}
+.option_table tfoot tr td:last-child {
+    background: #a9a69d;
+}
+.total.bule{
+    color: #3f95e0;
+    font-weight: bold;
+}
+.total.green{
+    color: #83ac2c;
+    font-weight: bold;
+}
+.total.sl{
+    color: #0c3861;
+    font-weight: bold;
+}
+
+
+</style><body>
+    <article class="print_module">
+        <div class="print_top flexbox">
+            <div class="print_title_box flex1">
+
+                <header>
+                    <h1>福泰会议</h1>
+                    <p class="address">地址：<span>大郊亭店</span>
+                    </p>
+                    <p class="date">日期：<span>2015-06-27</span>
+                    </p>
+                </header>
+
+                <div class="set_price_table_box">
+                    <table class="set_price" width=100%>
+                        <tr>
+                            <td></td>
+                            <td>婚宴</td>
+                            <td>服务人员</td>
+                            <td>场地布置</td>
+                            <td>灯光音响视频</td>
+                        </tr>
+                        <tr>
+                            <td><img src="http://file.cike360.com/image/print_hy.png" alt=""></td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td><img src="http://file.cike360.com/image/print_ml.png" alt=""></td>
+                            <td colspan="4">9</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="foot flexbox v_center">
+                                    <div class="flex1">
+                                        <p>婚宴销售:<br/><img src="http://file.cike360.com/image/print_hlyh.png" alt="" style="width:4rem;"></p>
+                                        <p>
+                                            <span class="name">张斯恒 </span><span class="tel">15101140405</span>
+                                        </p>
+                                    </div>
+                                    <div class="flex1">
+                                        <p>婚礼策划:<br/><img src="http://file.cike360.com/image/print_hlch.png" alt="" style="width:6.2rem;"></p>
+                                        <p>
+                                            <span class="name"></span><span class="tel"></span>
+                                        </p>
+                                
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--echart-->
+            <div class="chart_box flexbox center">
+                <div id="main" style="width: 500px;height:450px;">
+                    
+                </div>
+            </div>
+        </div><section class="option_table_box">
+                <div class="option_table">
+                    <table width=100%;>
+                        <thead>
+                            <tr>
+                                <td><img src="http://file.cike360.com/image/print_t01.png" alt=""></td>
+                                <td>Amount</td>
+                                <td>Unit</td>
+                                <td>Price</td>
+                                <td>Remark</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody><tr>
+                            <td>礼仪督导（李倩菱）</td>
+                            <td>1</td>
+                            <td>元/场</td>
+                            <td>500</td>
+                            <td>111</td>
+                            <td>500</td>
+                        </tr></tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="total bule">总计</td>
+                                <td colspan="4"></td>
+                                <td>500</td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </section><section class="option_table_box">
+                <div class="option_table">
+                    <table width=100%;>
+                        <thead>
+                            <tr>
+                                <td><img src="http://file.cike360.com/image/print_t02.png" alt=""></td>
+                                <td>Amount</td>
+                                <td>Unit</td>
+                                <td>Price</td>
+                                <td>Remark</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="total bule">总计</td>
+                                <td colspan="4"></td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </section><section class="option_table_box">
+                <div class="option_table">
+                    <table width=100%;>
+                        <thead>
+                            <tr>
+                                <td><img src="http://file.cike360.com/image/print_t03.png" alt=""></td>
+                                <td>Amount</td>
+                                <td>Unit</td>
+                                <td>Price</td>
+                                <td>Remark</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="total bule">总计</td>
+                                <td colspan="4"></td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </section><section class="option_table_box">
+                <div class="option_table">
+                    <table width=100%;>
+                        <thead>
+                            <tr>
+                                <td><img src="http://file.cike360.com/image/print_t04.png" alt=""></td>
+                                <td>Amount</td>
+                                <td>Unit</td>
+                                <td>Price</td>
+                                <td>Remark</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="total bule">总计</td>
+                                <td colspan="4"></td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </section><section class="option_table_box">
+                <div class="option_table">
+                    <table width=100%;>
+                        <thead>
+                            <tr>
+                                <td><img src="http://file.cike360.com/image/print_t05.png" alt=""></td>
+                                <td>Amount</td>
+                                <td>Unit</td>
+                                <td>Price</td>
+                                <td>Remark</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="total bule">总计</td>
+                                <td colspan="4"></td>
+                                <td>0</td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </section></article>
+<script src="http://file.cike360.com/js/zepto.min.js"></script>
+<script src="http://file.cike360.com/js/echarts.min.js"></script>
+<script>
+var myChart = echarts.init(document.getElementById('main'));
+option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    }, 
+    legend: {
+        orient: 'horizontal',
+        y: 'bottom',
+        x: '20',
+        itemWidth: 15,
+        textStyle: {
+            fontSize: 10,
+            color: '#999',
+        },
+        data: ['新房布置', '签到台', '合影区', '服务人员', '设备', '宴会厅', '室外布置', '餐饮']
+    }, 
+    series: [
+        {
+            name: '访问来源',
+            type: 'pie',
+            selectedMode: 'single',
+            radius: ['30%', '50%'],
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: false,
+                        normal: {
+                            position: 'inner'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    }
+                }
+            },
+            data: [
+                {
+                    value: 500,
+                    name: '服务人员',
+                    itemStyle: {
+                        normal: {
+                            color: '#bf21ec'
+                        }
+                    }
+                },      
+                {
+                    value: 12000,
+                    name: '灯光／音响／视频',
+                    itemStyle: {
+                        normal: {
+                            color: '#63d0ca',
+                        }
+                    }
+                },
+                {
+                    value: 0,
+                    name: '场地布置',
+                    itemStyle: {
+                        normal: {
+                            color: '#f3e434'
+                        }
+                    }
+                },
+                {
+                    value: 1680,
+                    name: '婚宴',
+                    itemStyle: {
+                        normal: {
+                            color: '#3d94cd'
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            name: '访问来源',
+            type: 'pie',
+            selectedMode: '',
+            radius: ['0', '32%'],
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: true,
+                        position: 'center',
+                        textStyle: {
+                            fontSize: '20',
+                            fontWeight: 'bold',
+                            color: '#333',
+                        },
+                        formatter: function (data) {
+                            return data.name + '\n' + data.value;
+                        },
+                    },
+                    labelLine: {
+                        show: false
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data: [
+                {
+                    value: '￥26180',
+                    name: '总价TOTAL',
+                    itemStyle: {
+                        normal: {
+                            color: '#fff'
+                        }
+                    }
+                },      
+                ]
+        },   
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius: ['54%', '73%'],
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: false
+                    },
+                    labelLine: {
+                        show: false
+                    }
+                }
+            },
+            data: [
+                {
+                    value: 310,
+                    name: '新房布置',
+                    itemStyle: {
+                        normal: {
+                            color: '#3d94cd'
+                        }
+                    }
+                }, 
+                {
+                    value: 234,
+                    name: '签到台',
+                    itemStyle: {
+                        normal: {
+                            color: '#84ac25'
+                        }
+                    }
+                },
+                {
+                    value: 135,
+                    name: '合影区',
+                    itemStyle: {
+                        normal: {
+                            color: '#7eb495'
+                        }
+                    }
+                },
+                {
+                    value: 1048,
+                    name: '服务人员',
+                    itemStyle: {
+                        normal: {
+                            color: '#ff577b'
+                        }
+                    }
+                },
+                {
+                    value: 251,
+                    name: '设备',
+                    itemStyle: {
+                        normal: {
+                            color: '#2e78a8'
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+};
+myChart.setOption(option);
+
+$(function () {
+    $(".print_btn").on('click', function () {
+        $(".print_module_mask").addClass('show');
+    })
+    $(".print_module_mask").on('click', function (event) {
+        if (event.target == this) {
+            $(this).removeClass('show');
+        }
+    })
+})
+</script>
+</body>
+
 </html>

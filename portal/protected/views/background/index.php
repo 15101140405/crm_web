@@ -33,8 +33,8 @@
                 <li id="shipin"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=20" >我的视频</a></li>
             </ul>
             <ul class="nav_list clearfix" style="float:left;margin-left:20px;">
-                <li id="introduction"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=16" >门店介绍</a>
-                </li>
+                <!-- <li id="introduction"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=16" >门店介绍</a>
+                </li> -->
                 <li id="feast"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=9" >餐饮</a>
                 </li>
                 <li id="set"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=5" >套系</a>
@@ -47,10 +47,10 @@
                 </li>
                 <li id="case"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=2" >案例</a>
                 </li>
-                <li id="theme"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=4">主题婚礼</a>
+                <!-- <li id="theme"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=4">主题婚礼</a>
                 </li>
                 <li id="classic"><a href="<?php echo $this->createUrl("background/index");?>&CI_Type=1">经典婚礼</a>
-                </li>
+                </li> -->
                 <!-- <li><a href="javascript:;">ABOUT US</a>
                 </li> -->
             </ul>

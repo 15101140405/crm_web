@@ -44,10 +44,10 @@
                         <li><img id="video" department="12" src="images/cjtubiao_17.png" alt=""><p class="name">摄像师</p></li>
                         <li><img id="camera" department="13" src="images/cjtubiao_15.png" alt=""><p class="name">摄影师</p></li>
                         <li><img id="makeup" department="14" src="images/cjtubiao_13.png" alt=""><p class="name">化妆师</p></li>
-                        <li><img id="decoration" department="15" src="images/cjtubiao_13.png" alt=""><p class="name">场地布置</p></li>
-                        <li><img id="lighting" department="16" src="images/cjtubiao_13.png" alt=""><p class="name">灯光</p></li>
-                        <li><img id="sound" department="17" src="images/cjtubiao_13.png" alt=""><p class="name">音响</p></li>
-                        <li><img id="shipin" department="18" src="images/cjtubiao_13.png" alt=""><p class="name">视频</p></li>
+                        <li><img id="decoration" department="15" src="images/cjtubiao_20.png" alt=""><p class="name">场地布置</p></li>
+                        <li><img id="lighting" department="16" src="images/cjtubiao_21.png" alt=""><p class="name">灯光</p></li>
+                        <li><img id="sound" department="17" src="images/cjtubiao_22.png" alt=""><p class="name">音响</p></li>
+                        <li><img id="shipin" department="18" src="images/cjtubiao_23.png" alt=""><p class="name">视频</p></li>
                     </ul>
                 </div>
                 <button class="registbtn registbtn_next">下一步</button>
