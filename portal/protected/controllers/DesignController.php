@@ -3581,7 +3581,10 @@ class DesignController extends InitController
             $data ->adder_id = $staff['id'];
             $data ->staff_hotel_id = $post->hotelid;
             $data ->order_name = $post->groomname."&".$post->bridename;
-            $data ->order_type = 2;
+            if(isset($post->orderplace)){
+                $data ->order_place = $post->orderplace;
+            };
+            $data ->order_type = $post->ordertype;
             $data ->order_date = $post->orderdate;
             $data ->order_status = 0;
             $data ->other_discount = 10;

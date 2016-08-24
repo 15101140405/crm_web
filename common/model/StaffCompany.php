@@ -81,12 +81,13 @@ class StaffCompany extends InitActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('account_id',$this->account_id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('place',$this->place,true);
 		$criteria->compare('display_order',$this->display_order);
 		$criteria->compare('update_time',$this->update_time);
 		$criteria->compare('corpid',$this->update_time);
 		$criteria->compare('corpsecreat',$this->update_time);
+		$criteria->compare('first_service_team',$this->first_service_team);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

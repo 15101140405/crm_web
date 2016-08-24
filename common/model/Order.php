@@ -101,6 +101,7 @@ class Order extends InitActiveRecord
 		$criteria->compare('adder_id',$this->adder_id,true);
 		$criteria->compare('staff_hotel_id',$this->staff_hotel_id);
 		$criteria->compare('order_name',$this->order_name,true);
+		$criteria->compare('order_place',$this->order_place,true);
 		$criteria->compare('order_type',$this->order_type,true);
 		$criteria->compare('order_date',$this->order_date,true);
 		$criteria->compare('order_time',$this->order_time,true);

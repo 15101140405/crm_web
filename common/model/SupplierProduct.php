@@ -97,6 +97,7 @@ class SupplierProduct extends InitActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('ori_id',$this->ori_id);
 		$criteria->compare('account_id',$this->account_id);
 		$criteria->compare('supplier_id',$this->supplier_id);
 		$criteria->compare('service_product_id',$this->service_product_id);

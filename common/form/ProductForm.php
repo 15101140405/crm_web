@@ -154,7 +154,10 @@ class ProductForm extends InitForm
 
     public function Tuidan_list($token)
     {
-        $result = yii::app()->db->createCommand("select sp.id,sp.name from staff s left join staff_company sc on s.account_id=sc.id left join supplier_product sp on sp.account_id=s.account_id where sp.supplier_type_id=16 and s.id=".$token);
+        $result = yii::app()->db->createCommand("select sp.id,sp.name ".
+            " from staff s left join staff_company sc on s.account_id=sc.id ".
+            " left join supplier_product sp on sp.account_id=s.account_id ".
+            " where sp.product_show=1 and sp.supplier_type_id=16 and s.id=".$token);
         $result = $result->queryAll();
         return $result;
     }

@@ -11,37 +11,42 @@
  * @property string $update_time
  * @property string $avatar
  */
-class Wedding_set extends InitActiveRecord
+class LibraryWeb extends InitActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'wedding_set';
+		return 'library_web';
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
 	 */
-	
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('ori_id',$this->ori_id);
-		$criteria->compare('staff_hotel_id',$this->staff_hotel_id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('final_price',$this->final_price,true);
-		$criteria->compare('feast_discount',$this->feast_discount,true);
-		$criteria->compare('other_discount',$this->avatar,true);
-		$criteria->compare('product_list',$this->product_list,true);
-		$criteria->compare('category',$this->category,true);
-		$criteria->compare('set_show',$this->show,true);
+		$criteria->compare('Web_ID',$this->Web_ID);
+		$criteria->compare('Web_URL',$this->Web_URL);
+		$criteria->compare('Web_Name',$this->Web_Name,true);
+		$criteria->compare('Web_Logo',$this->Web_Logo,true);
+		$criteria->compare('Grab_Config',$this->Grab_Config,true);
+		$criteria->compare('Grab_Status',$this->Grab_Status,true);
+		$criteria->compare('Web_Status',$this->Web_Status,true);
 		$criteria->compare('update_time',$this->update_time,true);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

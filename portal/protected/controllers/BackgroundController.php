@@ -662,9 +662,10 @@ class BackgroundController extends InitController
                     ":ai" => 0
                     )));
             $supplier_product = SupplierProduct::model()->findAll(array(
-                'condition' => 'account_id=:account_id && standard_type=:standard_type && product_show=:product_show',
+                'condition' => '(account_id=:account_id || account_id=:ai) && standard_type=:standard_type && product_show=:product_show',
                     'params' => array(
                             ':account_id' => $_COOKIE['account_id'],
+                            ':ai' => 0,
                             ':standard_type' => 0,
                             ':product_show' => 1,
                         )));

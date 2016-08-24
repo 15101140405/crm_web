@@ -84,6 +84,224 @@ class ResourceController extends InitController
         }
     }
 
+    public function actionMyUpload(){
+        
+        /**************************************/
+        /***************取案例******************/
+        /**************************************/
+        $url ="http://file.cike360.com";
+        $staff_id = $_GET['token'];
+        $staff = Staff::model()->findByPk($staff_id);
+        //type 1 公司 2 分店 3 个人
+        $result = yii::app()->db->createCommand("select * from case_info where ".
+
+            "CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID=0) ".
+            
+            " or ( CI_ID in ( select CI_ID from case_bind where CB_type=1 and TypeID in ".
+            "(select account_id from staff where id=".$staff_id.") ) ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=2 and TypeID in ".
+            "(select hotel_list from staff where id=".$staff_id.") ) ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=3 and TypeID=".$staff_id." ))  ".
+
+            " or CI_ID in ( select CI_ID from case_bind where CB_type=4 )  and ".
+
+            " CI_Show=1 and CI_Type in (2) order by CT_ID DESC,CI_Sort ASC");
+            
+        $case = $result->queryAll();
+
+        $case_data = array();
+        foreach ($case as $key => $value) {
+            if($value['CI_Type'] == 2 && $value['CI_Show'] == 1){
+                $item = array();
+                $item['CI_ID'] = $value['CI_ID'];
+                $item['CI_Name'] = $value['CI_Name'];
+                $item['CI_Pic'] = "http://file.cike360.com".$value['CI_Pic'];
+                
+                $video = CaseResources::model()->findAll(array(
+                        'condition' => 'CI_ID=:CI_ID && CR_Type=:CR_Type',
+                        'params' => array(
+                                ':CI_ID' => $value['CI_ID'],
+                                ':CR_Type' => 2
+                            )
+                    ));
+                $item['video'] = array();
+                foreach ($video as $key1 => $value1) {
+                    $item_video = array();
+                    $item_video['CR_ID'] = $value1['CR_ID'];
+                    $item_video['CR_Path'] = "http://file.cike360.com".$value1['CR_Path'];
+                    $item['video'][] = $item_video;
+                }; 
+                $case_data[] = $item;
+            }
+                
+        };
+
+
+        /**************************************/
+        /***************取套系******************/
+        /**************************************/
+        $set0 = yii::app()->db->createCommand("select * from case_info where ".
+            " CI_Show=1 and CI_Type=5 and CT_ID in (".
+            " select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=0)) order by CI_Sort Desc");
+        $set0 = $set0->queryAll();
+        $set_cur = yii::app()->db->createCommand("select * from case_info where ".
+            " CI_Show=1 and CI_Type=5 and CT_ID in ( ".
+            " select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=".$staff['account_id'].")) order by CI_Sort Desc");
+        $set_cur = $set_cur->queryAll();
+
+        $set_data = array();
+        foreach ($set0 as $key => $value) {
+            $item = array();
+            $item['CI_ID'] = $value['CI_ID'];
+            $item['CI_Name'] = $value['CI_Name'];
+            $item['CI_Pic'] = "http://file.cike360.com".$value['CI_Pic'];
+            $set_data[] = $item;
+        };
+        foreach ($set_cur as $key => $value) {
+            $item = array();
+            $item['CI_ID'] = $value['CI_ID'];
+            $item['CI_Name'] = $value['CI_Name'];
+            $item['CI_Pic'] = "http://file.cike360.com".$value['CI_Pic'];
+            $set_data[] = $item;
+        };
+
+        /**************************************/
+        /***************取场地布置***************/
+        /**************************************/
+        $i=10000000;
+        if($staff['account_id'] != 0){
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id || account_id=:ai',
+                    'params' => array(
+                            ':account_id' => $staff['account_id'],
+                            ':ai' => 0
+                        ),
+                    'order' => 'account_id ASC,sort ASC'
+                ));
+        }else{
+            $tap = SupplierProductDecorationTap::model()->findAll(array(
+                    'condition' => 'account_id=:account_id',
+                    'params' => array(
+                            ':account_id' => $staff['account_id'],
+                        ),
+                    'order' => 'sort ASC'
+                ));
+        };
+            
+        $decoration_data = array();
+        foreach ($tap as $key1 => $value1) {
+            $item = array(
+                'CI_ID' => $i+$value1['id'],
+                "CI_Name"=> $value1['name'],
+                "CI_Pic"=> "http://file.cike360.com".$value1['pic'],
+            );
+            $decoration_data[] = $item;
+        };
+
+        /**************************************/
+        /***************取婚宴套餐***************/
+        /**************************************/
+        $menu = yii::app()->db->createCommand("select * from case_info where ".
+            " CI_Show=1 and CI_Type=9 and CT_ID in ( ".
+            " select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=".$staff['account_id'].")) order by CI_Sort Desc");
+        $menu = $menu->queryAll();
+
+        $menu_data = array();
+        foreach ($menu as $key => $value) {
+            $item = array(
+                'CI_ID' => $i+$value['CI_ID'],
+                "CI_Name"=> $value['CI_Name'],
+                "CI_Pic"=> "http://file.cike360.com".$value['CI_Pic'],
+            );
+            $menu_data[] = $item;
+        };
+
+        /**************************************/
+        /***************取婚宴零点***************/
+        /**************************************/
+        $dish_type = DishType::model()->findAll();
+
+        $dish_data = array();
+        foreach ($dish_type as $key => $value) {
+            $item = array(
+                'CI_ID' => $i+$value['id'],
+                "CI_Name"=> $value['name'],
+                "CI_Pic"=> "http://file.cike360.com".$value['pic'],
+            );
+            $dish_data[] = $item;
+        };
+
+        /********************************************/
+        /***************取灯光、音响、视频***************/
+        /********************************************/
+        $t = 30000000;
+        $type = yii::app()->db->createCommand("select * from supplier_type where id in (8,9,23)");
+        $type = $type->queryAll();
+        
+        $lss_data = array();
+        $lss_data[0] = array(
+                "CI_ID" => $t+8,
+                "CI_Name" => "灯光设备",
+                "CI_Pic" => "http://file.cike360.com" . $type[0]['img'],
+            );
+        $lss_data[1] = array(
+                "CI_ID" => $t+9,
+                "CI_Name" => "视频设备",
+                "CI_Pic" => "http://file.cike360.com" . $type[1]['img'],
+            );
+        $lss_data[2] = array(
+                "CI_ID" => $t+23,
+                "CI_Name" => "音响设备",
+                "CI_Pic" => "http://file.cike360.com" . $type[2]['img'],
+            );
+
+        /**************************************/
+        /***************取服务人员***************/
+        /**************************************/
+        $result8 = yii::app()->db->createCommand("select CI_ID, CI_Name, CI_Pic, CI_Type ".
+            "from case_info ci ".
+            "left join staff s on ci.CT_ID=s.id ".
+            "left join supplier sup on s.id=sup.staff_id ".
+            "where sup.account_id=".$staff['account_id']." and ci.CI_Type in (6,13,14,15,21) order by ci.CI_Type");
+        $service = $result8->queryAll();
+
+        $service_data = array();
+        foreach ($service as $key => $value) {
+            $item = array(
+                'CI_ID' => $i+$value['CI_ID'],
+                "CI_Name"=> $value['CI_Name'],
+                "CI_Pic"=> "http://file.cike360.com".$value['CI_Pic'],
+                "CI_Type" => ""
+            );
+            if($value['CI_Type'] == '6'){$item['CI_Type'] = "主持人";};
+            if($value['CI_Type'] == '13'){$item['CI_Type'] = "摄像师";};
+            if($value['CI_Type'] == '14'){$item['CI_Type'] = "摄影师";};
+            if($value['CI_Type'] == '15'){$item['CI_Type'] = "化妆师";};
+            if($value['CI_Type'] == '21'){$item['CI_Type'] = "其它";};
+            $service_data[] = $item;
+        };
+
+
+
+
+        /**************************************/
+        /***************输出结果*****************/
+        /**************************************/
+        $result = array(
+                '案例' => $case_data,
+                '套系' => $set_data,
+                '服务人员' => $service_data,
+                '场地布置' => $decoration_data,
+                '灯光／音响／视频' => $lss_data,
+                '婚宴套餐' => $menu_data,
+                '菜品零点' => $dish_data,
+            );
+
+        echo json_encode($result);
+    }
+
     public function actionList()
     {
         /************************************************************************/
@@ -800,7 +1018,10 @@ class ResourceController extends InitController
 
         // $service_person = array();
 
-        $tem_CI_ID = $non_r_host[0]['CI_ID'];
+        $tem_CI_ID = 0;
+        if(isset($non_r_host[0]['CI_ID'])){
+            $tem_CI_ID = $non_r_host[0]['CI_ID'];
+        }; 
 
         $end = array(
                 "CI_ID"=> "0",
@@ -1109,7 +1330,62 @@ class ResourceController extends InitController
             $list[]=$value;
         };
 
-        echo json_encode($list);
+
+        /***********************************************************************************/
+        /*＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊  订单列表  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊*/
+        /***********************************************************************************/
+
+        // $staff = Staff::model()->findByPk($_GET['token']);
+
+        $result1 = yii::app()->db->createCommand("select * from `order` where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
+        $result1 = $result1->queryAll();
+
+        $order_doing = array();
+
+        foreach ($result1 as $key => $value) {
+            $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+            $zero2=strtotime ($value['order_date']);  //订单创建时间
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['order_name'],
+                    'order_date' => $value['order_date'],
+                    'to_date' => 0,
+                );
+            if($zero2 >= $zero1){
+                $item['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                $order_doing[]=$item;
+            };
+        };
+
+
+
+        /***********************************************************************************/
+        /*＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊  区域列表  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊*/
+        /***********************************************************************************/
+
+        $order_show_list = OrderShowArea::model()->findAll(array(
+                'condition' => 'id != :id',
+                'params' => array(
+                        ':id' => 1
+                    )
+            ));
+
+        $area = array();
+
+        foreach ($order_show_list as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            $area[] = $item;
+        };
+
+        $list_result = array(
+                'list' => $list,
+                'arr_order' => $order_doing,
+                'area' => $area
+            );
+
+        echo json_encode($list_result);
 
     }
 
@@ -1159,84 +1435,7 @@ class ResourceController extends InitController
     public function actionNeworderlist()
     {
         // $_GET['token'] = 100;
-        $staff = Staff::model()->findByPk($_GET['token']);
-
-        $result = yii::app()->db->createCommand("select o.id,s.name,order_date,order_type,order_name,order_status,staff.name as designername ".
-            " from `order` o left join staff_hotel s on staff_hotel_id=s.id ".
-            " left join staff on o.designer_id=staff.id ".
-            " where o.account_id=".$staff['account_id']." and (designer_id=".$_GET['token']." or planner_id=".$_GET['token'].") order by o.update_time DESC");
-        $result = $result->queryAll();
-
-        $order_list = "(";
-        $arr_order = array();
-        foreach ($result as $key => $value) {
-            $order_list .= $value['id'].",";
-            $t=explode(' ', $value['order_date']);
-            $item=array();
-            $item['hotel_name'] = $value['name'];
-            $item['order_id'] = $value['id'];
-            $item['order_date'] = $t[0];
-            $item['order_name'] = $value['order_name'];
-            $item['total_price'] = 0;
-            $item['img_url'] = "style/images/list_img.jpg";
-            $item['designername'] = $value['designername'];
-            if($value['order_type'] == 1){
-                $item['order_type'] = "会议";
-            }else{
-                $item['order_type'] = "婚礼";
-            };
-            if($value['order_status'] == 0){
-                $item['order_status'] = '待定';
-            }else if($value['order_status'] == 1){
-                $item['order_status'] = '预定';
-            }else if($value['order_status'] == 2){
-                $item['order_status'] = '已交定金';
-            }else if($value['order_status'] == 3){
-                $item['order_status'] = '付中期款';
-            }else if($value['order_status'] == 4){
-                $item['order_status'] = '已付尾款';
-            }else if($value['order_status'] == 5){
-                $item['order_status'] = '结算中';
-            }else if($value['order_status'] == 6){
-                $item['order_status'] = '已完成';
-            };
-            $arr_order[] = $item;
-        };
-        if($order_list != "("){
-            $order_list = substr($order_list,0,strlen($order_list)-1);
-        };
-        $order_list .= ")";
-        // echo $order_list;die;
-        $order_price = array();
-        if($order_list != "()"){
-            $data = new OrderForm;
-            $order_price = $data -> many_order_price($order_list);  //计算所有订单的总价
-        };
-            
-        // echo json_encode($order_price);die;
-
-        if($order_list != "()"){
-            $result = yii::app()->db->createCommand("select s.order_id,i.img_url,s.show_area ".
-                "from order_show s left join `order` o on s.order_id=o.id ".
-                "left join order_show_img i on img_id=i.id ".
-                // "left join order_show_img_type t on i.type=t.id ".
-                "where o.id in ".$order_list." and s.type=1");
-            $result = $result->queryAll();
-
-            foreach ($arr_order as $key => $value) {
-                foreach ($order_price as $key_p => $value_p) {
-                    if($value['order_id'] == $value_p['order_id']){
-                        $arr_order[$key]['total_price'] = $value_p['total_price'];
-                    };
-                };
-                foreach ($result as $key_r => $value_r) {
-                    if($value['order_id'] == $value_r['order_id'] && $value_r['show_area'] == 1){
-                        $arr_order[$key]['img_url'] = "http://file.cike360.com".$value_r['img_url'];
-                    };
-                };
-            };
-        };
-        echo json_encode($arr_order);
+        
 
     }
 
@@ -1270,12 +1469,20 @@ class ResourceController extends InitController
         // echo json_encode($result);die;
 
         foreach ($result as $key => $value) {
-            $t1 = explode('.', $value['ref_pic_url']);
-            if(isset($t1[0]) && isset($t1[1])){
-                $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
-            }else{
-                $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+            $t0 = explode('/', $value['ref_pic_url']);
+            if(isset($t0[1])){
+                if($t0[1] == 'upload'){
+                    $t1 = explode('.', $value['ref_pic_url']);
+                    if(isset($t1[0]) && isset($t1[1])){
+                        $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
+                    }else{
+                        $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+                    };
+                }else if($t0[1] == 'imgs'){
+                    $result[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+                };
             };
+                
             $t2 = explode('.', $value['img_url']);
             if(isset($t2[0]) && isset($t2[1])){
                 $result[$key]['img_url'] = 'http://file.cike360.com'.$t2[0]."_sm.".$t2[1];
@@ -1297,13 +1504,24 @@ class ResourceController extends InitController
         $result1 = $result1->queryAll(); 
 
         foreach ($result1 as $key => $value) {
-            $t1 = explode('.', $value['ref_pic_url']);
-            if(isset($t1[0]) && isset($t1[1])){
-                $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
-            }else{
-                $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+            $t0 = explode('/', $value['ref_pic_url']);
+            if(isset($t0[1])){
+                if($t0[1] == 'upload'){
+                    $t1 = explode('.', $value['ref_pic_url']);
+                    if(isset($t1[0]) && isset($t1[1])){
+                        $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$t1[0]."_sm.".$t1[1];
+                    }else{
+                        $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+                    };
+                }else if($t0[1] == 'imgs'){
+                    $result1[$key]['ref_pic_url'] = 'http://file.cike360.com'.$value['ref_pic_url'];
+                    
+                };
             };
+                
         };
+
+        // echo json_encode($result1);die;
 
         //取本订单数据
         $order = Order::model()->findByPk($_GET['order_id']);
@@ -1411,7 +1629,76 @@ class ResourceController extends InitController
                 $type_price['light'] += $value['actual_price']*$value['amount'];
             };
         };
-            
+
+        //构造跟单
+        $follow = OrderMerchandiser::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    ),
+                'order'=>'time'
+            ));
+
+        $follow_data = array();
+        foreach ($follow as $key => $value) {
+            $item = array(
+                    'id' => $value['id'],
+                    'type' => $value['type'],
+                    'staff_name' => $value['staff_name'],
+                    'time' => $value['time'],
+                    'order_name' => $value['order_name'],
+                    'order_date' => $value['order_date'],
+                    'remarks' => $value['remarks'],
+                );
+            $follow_data[] = $item;
+        };
+
+        //构造收款记录
+        $payment = OrderPayment::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => $_GET['order_id']
+                    ),
+                'order' => 'time'
+            ));
+        $payment_data = array(
+                '0' => array(
+                        'total_price' => 0,
+                        'list' => array(),
+                    ),
+                '1' => array(
+                        'total_price' => 0,
+                        'list' => array(),
+                    ),
+                '2' => array(
+                        'total_price' => 0,
+                        'list' => array(),
+                    ),
+            );
+        foreach ($payment as $key => $value) {
+            if($value['type'] == 0){
+                $payment_data['0']['total_price'] += $value['money'];
+                $item=array();
+                $item['id'] = $value['id'];
+                $item['money'] = $value['money'];
+                $item['time'] = $value['time'];
+                $payment_data['0']['list'][] = $item;
+            }else if($value['type'] == 1){
+                $payment_data['1']['total_price'] += $value['money'];
+                $item=array();
+                $item['id'] = $value['id'];
+                $item['money'] = $value['money'];
+                $item['time'] = $value['time'];
+                $payment_data['1']['list'][] = $item;
+            }else if($value['type'] == 2){
+                $payment_data['2']['total_price'] += $value['money'];
+                $item=array();
+                $item['id'] = $value['id'];
+                $item['money'] = $value['money'];
+                $item['time'] = $value['time'];
+                $payment_data['2']['list'][] = $item;
+            };
+        };  
         // print_r($result3);die;
         $order_data = array(
                 "id"=> $result4[0]['id'] ,
@@ -1424,6 +1711,7 @@ class ResourceController extends InitController
                 "designer_phone"=> $result4[0]['designer_phone'] ,
                 "staff_hotel_id"=> $result4[0]['staff_hotel_id'] ,
                 "hotel_name"=> $result4[0]['hotel_name'] ,
+                "order_place"=> $order['order_place'] ,
                 "groom_name"=> $result4[0]['groom_name'] ,
                 "groom_phone"=> $result4[0]['groom_phone'] ,
                 "groom_wechat"=> $result4[0]['groom_wechat'] ,
@@ -1439,7 +1727,9 @@ class ResourceController extends InitController
                 'tuidan_list'=> $tuidan_list,
                 'discount'=> $discount,
                 'cut_price'=> $result4[0]['cut_price'],
-                'type_price'=> $type_price
+                'type_price'=> $type_price,
+                'follow_data'=> $follow_data,
+                'payment_data'=> $payment_data
             );        
         $t=explode(' ', $order['order_date']);
         $order_data['order_date']=$t[0];
@@ -1469,45 +1759,46 @@ class ResourceController extends InitController
         //             )
         //     ));
         foreach ($result as $key => $value) {
-            $item=array();
-            $item['show_id']=$value['id'];
-            $item['show_type']=$value['type'];
-            $item['show_area']=$value['show_area'];
-            $item['area_sort']=$value['area_sort'];
-            $item['CR_ID'] = 0;
-            if($value['type'] == 0){
-                $item['show_data']=$value['words'];
-                $item['product_id']=0;
-            }else if($value['type'] == 1){
-                $item['show_data']=$value['img_url'];
-                $item['product_id']=0;
-                $item['CR_ID'] = 60000000 + $value['id'];
-            }else if($value['type'] == 2){
-                $item['show_data']=$value['ref_pic_url'];
-                $item['product_id']=$value['order_product_id'];
-                if($value['supplier_type_id'] == 20){
-                    $item['CR_ID'] = 10000000 + $value['sp_id'];
-                }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
-                    $item['CR_ID'] = 30000000 + $value['sp_id'];
-                }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
-                    $CI_Type = 0;
-                    if($value['supplier_type_id'] == 3){$CI_Type=6;};
-                    if($value['supplier_type_id'] == 4){$CI_Type=13;};
-                    if($value['supplier_type_id'] == 5){$CI_Type=14;};
-                    if($value['supplier_type_id'] == 6){$CI_Type=15;};
-                    if($value['supplier_type_id'] == 7){$CI_Type=21;};
-                    $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value['sp_id']);
-                    $result7 = $result7->queryAll();
-                    // print_r($result7);die;
-                    if(isset($result7[0])){
-                                $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
-                            };
-                }
-            }
-            $order_show_list[]=$item;
+            if($value['supplier_type_id'] != 2){
+                $item=array();
+                $item['show_id']=$value['id'];
+                $item['show_type']=$value['type'];
+                $item['show_area']=$value['show_area'];
+                $item['area_sort']=$value['area_sort'];
+                $item['CR_ID'] = 0;
+                if($value['type'] == 0){
+                    $item['show_data']=$value['words'];
+                    $item['product_id']=0;
+                }else if($value['type'] == 1){
+                    $item['show_data']=$value['img_url'];
+                    $item['product_id']=0;
+                    $item['CR_ID'] = 60000000 + $value['id'];
+                }else if($value['type'] == 2){
+                    $item['show_data']=$value['ref_pic_url'];
+                    $item['product_id']=$value['order_product_id'];
+                    if($value['supplier_type_id'] == 20){
+                        $item['CR_ID'] = 10000000 + $value['sp_id'];
+                    }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
+                        $item['CR_ID'] = 30000000 + $value['sp_id'];
+                    }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
+                        $CI_Type = 0;
+                        if($value['supplier_type_id'] == 3){$CI_Type=6;};
+                        if($value['supplier_type_id'] == 4){$CI_Type=13;};
+                        if($value['supplier_type_id'] == 5){$CI_Type=14;};
+                        if($value['supplier_type_id'] == 6){$CI_Type=15;};
+                        if($value['supplier_type_id'] == 7){$CI_Type=21;};
+                        $result7 = yii::app()->db->createCommand("SELECT case_info.CI_ID from case_info left join supplier on case_info.CT_ID=supplier.staff_id  left join supplier_product on supplier.id=supplier_product.supplier_id where supplier_product.id=".$value['sp_id']);
+                        $result7 = $result7->queryAll();
+                        // print_r($result7);die;
+                        if(isset($result7[0])){
+                                    $item['CR_ID'] = 120000000 + $result7[0]['CI_ID'];
+                                };
+                    };
+                };
+                $order_show_list[]=$item;
+            };
         };
 
-        // echo json_encode($order_show_list);die;
         // echo json_encode($order_show_list);die;
         $result6 = yii::app()->db->createCommand("select * ".
             "from order_show where order_id=".$_GET['order_id']." and show_area=0 ".
@@ -1518,32 +1809,34 @@ class ResourceController extends InitController
             $i=$non_area_show[0]['area_sort']+1;
         };
         foreach ($result1 as $key => $value) {
-            $t=0;
-            foreach ($order_show_list as $key_s => $value_s) {
-                if($value['id'] == $value_s['product_id']){
-                    $t++;
+            if($value['supplier_type_id'] != 2){
+                $t=0;
+                foreach ($order_show_list as $key_s => $value_s) {
+                    if($value['id'] == $value_s['product_id']){
+                        $t++;
+                    };
                 };
-            };
-            if($t == 0 && $value['supplier_type_id'] !=2){
-                $admin=new OrderShow;
-                $admin->type=2;
-                $admin->order_product_id=$value['id'];
-                $admin->order_id=$_GET['order_id'];
-                $admin->show_area=0;
-                $admin->area_sort= $i;
-                $admin->update_time=date('y-m-d h:i:s',time());
-                $admin->save();
-                $show_id = $admin->attributes['id'];
+                if($t == 0 && $value['supplier_type_id'] !=2){
+                    $admin=new OrderShow;
+                    $admin->type=2;
+                    $admin->order_product_id=$value['id'];
+                    $admin->order_id=$_GET['order_id'];
+                    $admin->show_area=0;
+                    $admin->area_sort= $i;
+                    $admin->update_time=date('y-m-d h:i:s',time());
+                    $admin->save();
+                    $show_id = $admin->attributes['id'];
 
-                $item=array();
-                $item['show_id']=$show_id;
-                $item['show_type']=2;
-                $item['show_area']=0;
-                $item['area_sort']=$i++;
-                $item['show_data']=$value['ref_pic_url'];
-                $item['product_id']=$value['id'];
-                $item['CR_ID']=0;                             //  没有区域的产品，在PPT部分，加了一个CR_ID＝0
-                $order_show_list[]=$item;
+                    $item=array();
+                    $item['show_id']=$show_id;
+                    $item['show_type']=2;
+                    $item['show_area']=0;
+                    $item['area_sort']=$i++;
+                    $item['show_data']=$value['ref_pic_url'];
+                    $item['product_id']=$value['id'];
+                    $item['CR_ID']=0;                             //  没有区域的产品，在PPT部分，加了一个CR_ID＝0
+                    $order_show_list[]=$item;
+                };
             };
         };
         $order_show = array();
@@ -1851,6 +2144,82 @@ class ResourceController extends InitController
         // print_r($email_list);die;
 
 
+        // // *******************************************************
+        // // ***************   构造 我的订单 列表    *******************
+        // // *******************************************************
+
+        // $result = yii::app()->db->createCommand("select * from `order` where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
+        // $result = $result->queryAll();
+
+        // // print_r($result);die;
+
+        // $order_doing = array();
+        // $order_done = array();
+        // $order_nearest = array(
+        //         'name' => '无订单',
+        //         'to_date' => 0,
+        //         'order_date' => ""
+        //     );
+
+        // foreach ($result as $key => $value) {
+        //     $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+        //     $zero2=strtotime ($value['order_date']);  //订单创建时间
+        //     $item = array(
+        //             'id' => $value['id'],
+        //             'name' => $value['order_name'],
+        //             'order_date' => $value['order_date'],
+        //             'to_date' => 0,
+        //         );
+        //     if($zero2 >= $zero1){
+        //         $item['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+        //         $order_doing[]=$item;
+        //     }else{
+        //         $item['to_date'] = ceil(($zero1-$zero2)/86400); //60s*60min*24h
+        //         $order_done[]=$item;
+        //     }
+        // }
+
+        // // print_r($order_done);die;
+
+        // $to_date = array();
+        // foreach ( $order_doing as $key => $row ){
+        //     $to_date[] = $row ['to_date'];
+        // };
+
+        // array_multisort($to_date, SORT_ASC, $order_doing);
+
+
+        // $to_date1 = array();
+        // foreach ( $order_done as $key => $row ){
+        //     $to_date1[] = $row['to_date'];
+        // };
+
+        // array_multisort($to_date1, SORT_ASC, $order_done);
+
+        // if(!empty($order_doing)){
+        //     $t = explode(' ', $order_doing[0]['order_date']);
+        //     $name = "";
+        //     $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+        //     $zero2=strtotime ($order_doing[0]['order_date']);  //订单创建时间
+
+        //     foreach ($order_doing as $key => $value) {
+        //         $order_date = explode(' ', $value['order_date']);
+        //         if($order_date[0] == $t[0]){
+        //             $name .= $value['name'].",";
+        //         };
+        //     };
+        //     $order_nearest['name'] = rtrim($name, ",");
+        //     $order_nearest['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+        //     $order_nearest['order_date'] = $t[0];
+        // };  
+
+        // $order_data2 = array(
+        //         'doing' => $order_doing,
+        //         'done' => $order_done,
+        //         'nearest' => $order_nearest,
+        //     );
+
+
         $order_detail = array();
         $order_detail['order_data'] = $order_data;
         $order_detail['order_show'] = $order_show;
@@ -1858,10 +2227,7 @@ class ResourceController extends InitController
         $order_detail['non_area_product'] = $non_area_product;
         $order_detail['set_data'] = $set_data;
         $order_detail['email_list'] = $email_list;
-
-
-
-
+        // $order_detail['order_doing'] = $order_data2;
         echo json_encode($order_detail);
     }
 
@@ -1879,7 +2245,8 @@ class ResourceController extends InitController
         /************************************************************************/
 
         $staff = Staff::model()->findByPk($_GET['token']);
-        $result = yii::app()->db->createCommand("select * from supplier_product sp where product_show=1 and account_id in (0,".$staff['account_id'].")");
+        $result = yii::app()->db->createCommand("select * from supplier_product sp ".
+            " where product_show=1 and account_id in (0,".$staff['account_id'].")");
         $result = $result->queryAll();
 
         $supplier_type = SupplierType::model()->findAll(array(
@@ -1889,7 +2256,7 @@ class ResourceController extends InitController
                     ),
                 'order' => 'sort ASC'
             ));
-
+        // print_r($supplier_type);die;
         // $product_store = array(
         //         '场地布置' => array(),
         //         '主持' => array(),
@@ -1903,10 +2270,13 @@ class ResourceController extends InitController
         //     );
         $decoration_tap = array();
 
-        $decoration_tap0 = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']." order by sort ASC");
+        $decoration_tap0 = yii::app()->db->createCommand("select id,name ".
+            " from supplier_product_decoration_tap where account_id=0 order by sort ASC");
         $decoration_tap0 = $decoration_tap0->queryAll();
 
-        $decoration_tap_cur = yii::app()->db->createCommand("select id,name from supplier_product_decoration_tap where account_id=".$staff['account_id']." order by sort ASC");
+
+        $decoration_tap_cur = yii::app()->db->createCommand("select id,name ".
+            " from supplier_product_decoration_tap where account_id=".$staff['account_id']." order by sort ASC");
         $decoration_tap_cur = $decoration_tap_cur->queryAll();
 
         foreach ($decoration_tap0 as $key => $value) {
@@ -1916,6 +2286,8 @@ class ResourceController extends InitController
         foreach ($decoration_tap_cur as $key => $value) {
             $decoration_tap[]=$value;
         };
+
+        // print_r($decoration_tap);die;
 
         $product_store = array(
                 0 => array(
@@ -1935,7 +2307,7 @@ class ResourceController extends InitController
                                     ),
                                 1 => array(
                                         'id' => 4,
-                                        'name' => '化妆师',
+                                        'name' => '摄像师',
                                         'list' => array()
                                     ),
                                 2 => array(
@@ -1945,7 +2317,7 @@ class ResourceController extends InitController
                                     ),
                                 3 => array(
                                         'id' => 6,
-                                        'name' => '摄像师',
+                                        'name' => '化妆师',
                                         'list' => array()
                                     ),
                                 4 => array(
@@ -2459,40 +2831,6 @@ class ResourceController extends InitController
             };
         };
 
-
-
-        /*//更新菜品   actual_price
-        $sql = "";
-        foreach ($post->feast->product_list as $key => $value) {
-            $sql .= " when id=".$value['op_id']." then ".$value['actual_price'];
-        };
-        $result = yii::app()->db->createCommand("update order_product set actual_price = case ".$sql." else actual_price end");
-        $result = $result->queryAll();
-
-        //更新菜品   unit
-        $sql = "";
-        foreach ($post->feast->product_list as $key => $value) {
-            $sql .= " when id=".$value['op_id']." then ".$value['unit'];
-        };
-        $result = yii::app()->db->createCommand("update order_product set unit = case ".$sql." else unit end");
-        $result = $result->queryAll();
-
-        //更新菜品   actual_unit_cost
-        $sql = "";
-        foreach ($post->feast->product_list as $key => $value) {
-            $sql .= " when id=".$value['op_id']." then ".$value['actual_unit_cost'];
-        };
-        $result = yii::app()->db->createCommand("update order_product set actual_unit_cost = case ".$sql." else actual_unit_cost end");
-        $result = $result->queryAll();
-
-        //更新菜品   actual_service_ratio
-        $sql = "";
-        foreach ($post->feast->product_list as $key => $value) {
-            $sql .= " when id=".$value['op_id']." then ".$value['actual_service_ratio'];
-        };
-        $result = yii::app()->db->createCommand("update order_product set actual_service_ratio = case ".$sql." else actual_service_ratio end");
-        $result = $result->queryAll();  */
-
         foreach ($post->feast->product_list as $key => $value) {
             OrderProduct::model()->updateByPk($value->product_id,array('actual_price'=>$value->price,'unit'=>$value->amount,'actual_unit_cost'=>$value->cost,'actual_service_ratio'=>$post->feast->actual_service_ratio));
         }; 
@@ -2617,7 +2955,7 @@ class ResourceController extends InitController
         /************************************************************************/
         /************************************************************************/
         /******** CR_ID 构造规则：  ***********************************************/
-        /******** 场地布置 10000000          ＋ sp_id     *************************/
+        /******** 场地布置 20000000          ＋ sp_id     *************************/
         /******** 灯光／音响／视频  30000000   ＋  sp_id    *************************/
         /******** PPT 里的纯“图片” 60000000   ＋   show_id *************************/
         /******** 餐饮零点  90000000          +  sp_id     ************************/
@@ -2626,17 +2964,18 @@ class ResourceController extends InitController
         /************************************************************************/
 
         $post = json_decode(file_get_contents('php://input'));
-        // $post->order_id=1033
 
         $result = yii::app()->db->createCommand("select os.id,os.type,words,osi.img_url,sp.ref_pic_url,show_area,area_sort,sp.id as sp_id,sp.supplier_type_id from order_show os ".
             "left join order_show_img osi on img_id=osi.id ".
             "left join order_product op on order_product_id=op.id ".
             "left join supplier_product sp on op.product_id=sp.id ".
-            "where os.order_id=".$post->order_id.
+            // "where os.order_id=1203 and supplier_type_id!=2".
+            "where os.order_id=".$post->order_id." and supplier_type_id!=2".
             " order by show_area ASC,area_sort ASC");
         $result = $result->queryAll();
 
         $show_data = array();
+        $non_area = array();
         foreach ($result as $key => $value) {
             $item = array();
             $item['id'] = $value['id'];
@@ -2653,7 +2992,7 @@ class ResourceController extends InitController
             if($value['type'] == 2){
                 $item['data'] = "http://file.cike360.com".$value['ref_pic_url'];
                 if($value['supplier_type_id'] == 20){
-                    $item['CR_ID'] = 10000000 + $value['sp_id'];
+                    $item['CR_ID'] = 20000000 + $value['sp_id'];
                 }else if($value['supplier_type_id'] == 8 || $value['supplier_type_id'] == 9 || $value['supplier_type_id'] == 23){
                     $item['CR_ID'] = 30000000 + $value['sp_id'];
                 }else if($value['supplier_type_id'] == 3 || $value['supplier_type_id'] == 4 || $value['supplier_type_id'] == 5 || $value['supplier_type_id'] == 6 || $value['supplier_type_id'] == 7){
@@ -2671,7 +3010,16 @@ class ResourceController extends InitController
                             };
                 }
             };
-            $show_data[] = $item;
+
+            if($value['show_area'] != 0){
+                $show_data[] = $item;
+            }else{
+                $non_area[] = $item;
+            };    
+        };
+
+        foreach ($non_area as $key => $value) {
+            $show_data[] = $value;
         };
 
         echo json_encode($show_data);
@@ -2781,7 +3129,7 @@ class ResourceController extends InitController
             'contact_name' => $post->contact_name,
             'contact_phone' => $post->contact_phone,
         ),'order_id=:order_id',array('order_id'=>$post->order_id));
-        Order::model()->updateByPk($post->order_id,array('order_name'=>$post->groom_name."&".$post->bride_name));
+        Order::model()->updateByPk($post->order_id,array('order_name'=>$post->groom_name."&".$post->bride_name,'order_date'=>$post->order_date,'order_place'=>$post->order_place,'staff_hotel_id'=>$post->hotel_id));
 
         print_r($result);
     }
@@ -2913,6 +3261,8 @@ class ResourceController extends InitController
                         $data->department_list='[2,3]';
                         $data->password = '88888888';
                         $data->save();
+                        $staff_id=$data->attributes['id'];
+                        $this->create_example_order($staff_id);
                         echo 'success_new';
                     }
                 }else{
@@ -3126,9 +3476,106 @@ class ResourceController extends InitController
                 $data->save();
             };
         };
+    }
 
-            
 
+
+    public function create_example_order($staff_id){
+        $order = new Order;
+        $order->account_id=0;
+        $order->designer_id=$staff_id;
+        $order->planner_id=$staff_id;
+        $order->adder_id=$staff_id;
+        $order->staff_hotel_id=0;
+        $order->order_name="李雷&韩梅梅";
+        $order->order_type=2;
+        $order->order_date=date("y-m-d",strtotime("+20 day"));
+        $order->order_status=3;
+        $order->update_time=date("y-m-d",strtotime("-120 day"));
+        $order->other_discount=8.5;
+        $order->discount_range='17,20,3,8,9,10,11,12,13,14,15';
+        $order->feast_discount=9;
+        $order->cut_price=0;
+        $order->save();
+        $order_id = $order->attributes['id'];
+
+        $order_product = OrderProduct::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => 1155,
+                    ),
+            ));
+
+                
+
+        $order_show = OrderShow::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => 1155,
+                    ),
+            ));
+
+
+
+        foreach ($order_show as $key => $value) {
+            $order_product_id = 0;
+            if($value['type'] == 2){
+                foreach ($order_product as $key1 => $value1) {
+                    if($value1['id'] == $value['order_product_id']){
+                        $op = new OrderProduct;
+                        $op->account_id=0;
+                        $op->order_id=$order_id;
+                        $op->product_type=0;
+                        $op->product_id=$value1['product_id'];
+                        $op->order_set_id=$value1['order_set_id'];
+                        $op->sort=$value1['sort'];
+                        $op->actual_price=$value1['actual_price'];
+                        $op->unit=$value1['unit'];
+                        $op->actual_unit_cost=$value1['actual_unit_cost'];
+                        $op->update_time=date('y-m-d h:i:s',time());
+                        $op->actual_service_ratio=$value1['actual_service_ratio'];
+                        $op->remark=$value1['remark'];
+                        $op->save();
+                        $order_product_id = $op->attributes['id'];
+                    };
+                };
+            };
+            $os = new OrderShow;
+            $os->type=$value['type'];
+            $os->img_id=$value['img_id'];
+            $os->order_product_id=$order_product_id;
+            $os->words=$value['words'];
+            $os->order_id=$order_id;
+            $os->show_area=$value['show_area'];
+            $os->area_sort=$value['area_sort'];
+            $os->update_time=date('y-m-d h:i:s',time());
+            $os->save();
+        };
+
+        $order_wedding = OrderWedding::model()->findAll(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                        ':order_id' => 1155,
+                    )
+            ));
+
+        foreach ($order_wedding as $key => $value) {
+            $ow = new OrderWedding;
+            $ow->account_id=0;
+            $ow->order_id=$order_id;
+            $ow->update_time=date('y-m-d h:i:s',time());
+            $ow->groom_name=$value['groom_name'];
+            $ow->groom_phone=$value['groom_phone'];
+            $ow->groom_qq=$value['groom_qq'];
+            $ow->groom_wechat=$value['groom_wechat'];
+            $ow->bride_name=$value['bride_name'];
+            $ow->bride_phone=$value['bride_phone'];
+            $ow->bride_qq=$value['bride_qq'];
+            $ow->bride_wechat=$value['bride_wechat'];
+            $ow->contact_name=$value['contact_name'];
+            $ow->contact_phone=$value['contact_phone'];
+            $ow->save();
+        };
     }
 
     public function actionGoods_fenpei(){
@@ -3175,6 +3622,1547 @@ class ResourceController extends InitController
             echo "fail"; 
         } 
     }
+
+    public function actionOrderDoing()
+    {
+        $result = yii::app()->db->createCommand("select * from `order` where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
+        $result = $result->queryAll();
+
+        // print_r($result);die;
+
+        $order_doing = array();
+        $order_done = array();
+        $order_nearest = array(
+                'name' => '无订单',
+                'to_date' => 0,
+                'order_date' => ""
+            );
+
+        foreach ($result as $key => $value) {
+            $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+            $zero2=strtotime ($value['order_date']);  //订单创建时间
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['order_name'],
+                    'order_date' => $value['order_date'],
+                    'to_date' => 0,
+                );
+            if($zero2 >= $zero1){
+                $item['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                $order_doing[]=$item;
+            }else{
+                $item['to_date'] = ceil(($zero1-$zero2)/86400); //60s*60min*24h
+                $order_done[]=$item;
+            }
+        }
+
+        // print_r($order_done);die;
+
+        $to_date = array();
+        foreach ( $order_doing as $key => $row ){
+            $to_date[] = $row ['to_date'];
+        };
+
+        array_multisort($to_date, SORT_ASC, $order_doing);
+
+
+        $to_date1 = array();
+        foreach ( $order_done as $key => $row ){
+            $to_date1[] = $row['to_date'];
+        };
+
+        array_multisort($to_date1, SORT_ASC, $order_done);
+
+        if(!empty($order_doing)){
+            $t = explode(' ', $order_doing[0]['order_date']);
+            $name = "";
+            $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+            $zero2=strtotime ($order_doing[0]['order_date']);  //订单创建时间
+
+            foreach ($order_doing as $key => $value) {
+                $order_date = explode(' ', $value['order_date']);
+                if($order_date[0] == $t[0]){
+                    $name .= $value['name'].",";
+                };
+            };
+            $order_nearest['name'] = rtrim($name, ",");
+            $order_nearest['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+            $order_nearest['order_date'] = $t[0];
+        };  
+
+        $order_data = array(
+                'doing' => $order_doing,
+                'done' => $order_done,
+                'nearest' => $order_nearest,
+            );
+
+        echo json_encode($order_data);
+    }
+
+    public function actionOrderCalendar()
+    {
+        $staff=Staff::model()->findByPk($_GET['token']);
+        $hotel=StaffHotel::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => $staff['account_id'],
+                    )
+            ));
+        $order_data = array();
+        $hotel_list = array();
+        $date_list = array(
+                '2015' => array(
+                        '01' => array(),
+                        '02' => array(),
+                        '03' => array(),
+                        '04' => array(),
+                        '05' => array(),
+                        '06' => array(),
+                        '07' => array(),
+                        '08' => array(),
+                        '09' => array(),
+                        '10' => array(),
+                        '11' => array(),
+                        '12' => array(),
+                    ),
+                '2016' => array(
+                        '01' => array(),
+                        '02' => array(),
+                        '03' => array(),
+                        '04' => array(),
+                        '05' => array(),
+                        '06' => array(),
+                        '07' => array(),
+                        '08' => array(),
+                        '09' => array(),
+                        '10' => array(),
+                        '11' => array(),
+                        '12' => array(),
+                    ),
+                '2017' => array(
+                        '01' => array(),
+                        '02' => array(),
+                        '03' => array(),
+                        '04' => array(),
+                        '05' => array(),
+                        '06' => array(),
+                        '07' => array(),
+                        '08' => array(),
+                        '09' => array(),
+                        '10' => array(),
+                        '11' => array(),
+                        '12' => array(),
+                    ),
+                '2018' => array(
+                        '01' => array(),
+                        '02' => array(),
+                        '03' => array(),
+                        '04' => array(),
+                        '05' => array(),
+                        '06' => array(),
+                        '07' => array(),
+                        '08' => array(),
+                        '09' => array(),
+                        '10' => array(),
+                        '11' => array(),
+                        '12' => array(),
+                    ),
+            );
+
+        foreach ($hotel as $key_h => $value_h) {
+            $hotel_item = array(
+                    'id' => $value_h['id'],
+                    'name' => $value_h['name']
+                );
+            $hotel_list[] = $hotel_item;
+
+            $hotel_order_item = $date_list;
+
+            $order = Order::model()->findAll(array(
+                    'condition' => 'account_id=:account_id && staff_hotel_id=:staff_hotel_id',
+                    'params' => array(
+                            ':account_id' => $staff['account_id'],
+                            ':staff_hotel_id' => $value_h['id']
+                        ),
+                    'order' => 'order_date ASC'
+                ));
+            $tem1 = explode(' ', $order[0]['order_date']);
+            $tem2 = explode('-', $tem1[0]);
+
+            // print_r($order[0]['order_date']);die;
+            $cur_year = $tem2[0];
+            $cur_month = $tem2[1];
+            $cur_day = $tem2[2];
+            $cur_list = array();
+
+
+
+            foreach ($order as $key => $value) {
+                $t1 = explode(' ', $value['order_date']);
+                $t2 = explode('-', $t1[0]);
+                if($t2[0] == $cur_year && $t2[1] == $cur_month && $t2[2] == $cur_day){
+                    $item = array(
+                            'order_name' => $value['order_name'],
+                            'order_date' => $value['order_date'],
+                            'order_status' => $value['order_status'],
+                            'to_date' => 0
+                        );
+                    $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+                    $zero2=strtotime ($value['order_date']);  //订单创建时间
+                    if($zero1 > $zero2){
+                        $item['to_date']=ceil(($zero1-$zero2)/86400); //60s*60min*24h
+                    }else{
+                        $item['to_date']=ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                    };
+                    $cur_list[] = $item;
+                }else{
+                    $item = array(
+                            $cur_day => $cur_list
+                        );
+                    $hotel_order_item[$cur_year][$cur_month][] = $item;
+
+                    $cur_list = array();
+                    $cur_year = $t2[0];
+                    $cur_month = $t2[1];
+                    $cur_day = $t2[2];
+
+                    $item = array(
+                            'order_name' => $value['order_name'],
+                            'order_date' => $value['order_date'],
+                            'to_date' => 0
+                        );
+                    $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+                    $zero2=strtotime ($value['order_date']);  //订单创建时间
+                    if($zero1 > $zero2){
+                        $item['to_date']=ceil(($zero1-$zero2)/86400); //60s*60min*24h
+                    }else{
+                        $item['to_date']=ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                    };
+                    $cur_list[] = $item;
+                }
+            };
+
+            $temp = array(
+                    'id' => $value_h['id'],
+                    'order_list' => $hotel_order_item
+                );
+
+            $order_data[] = $temp;
+        };  
+
+        $data = array(
+                'order_data' => $order_data,
+                'hotel_list' => $hotel_list
+            );      
+            
+        echo json_encode($data);
+    }
+
+    public function actionFollowInsert()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $staff = Staff::model()->findByPk($post->token);
+        $order = Order::model()->findByPk($post->order_id);
+
+        $follow=new OrderMerchandiser;         
+        $follow->order_id=$post->order_id; 
+        $follow->staff_id=$post->token;
+        $follow->time=$post->time;
+        $follow->remarks=$post->remark;
+        $follow->type=$post->type;
+        $follow->staff_name=$staff['name'];
+        $follow->order_name=$order['order_name'];
+        $follow->order_date=$order['order_date'];
+        $follow->save();
+    }
+
+    public function actionCashInsert()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $payment = OrderPayment::model()->find(array(
+                'condition' => 'order_id=:order_id',
+                'params' => array(
+                    ':order_id' => $post->order_id
+                    )));
+        $order = Order::model()->find(array(
+                'condition' => 'id=:id',
+                'params' => array(
+                    ':id' => $post->order_id
+                    )));
+        $date = explode(' ', $order['order_date']);
+        $hotel = StaffHotel::model()->find(array(
+                'condition' => 'id=:id',
+                'params' => array(
+                    ':id' => $order['staff_hotel_id']
+                    )));   
+        $staff1 = Staff::model()->findByPK($order['designer_id']);
+        $staff2 = Staff::model()->findByPK($order['planner_id']);
+        if ($order['order_type'] == 1) {
+            $order_type = "会议";
+        } else {
+            $order_type = "婚礼";
+        };
+        
+
+        if (empty($payment)) {
+            $touser = "@all";
+            $toparty = "";
+            $content = "成单了！[".$hotel['name']."]
+订单类型：".$order_type."
+日期：".$date[0]."
+策划师：".$staff1['name']."
+统筹师：".$staff2['name'];
+            $staff = Staff::model()->findByPk($post->token);
+            $company = StaffCompany::model()->findByPk($staff['account_id']);  
+            $corpid=$company['corpid'];
+            $corpsecret=$company['corpsecret'];
+            // WPRequest::sendMessage_Text($touser,$toparty,$content,$corpid,$corpsecret);
+            //分享销客接口
+            $appId = $hotel['fxiaoke_AppID'];
+            $appSecret = $hotel['fxiaoke_APPSecret'];
+            $permanentCode = $hotel['permanentCode'];
+            $content2 = array(
+                "content"   => $content,
+                );
+            if ($order['staff_hotel_id'] == 1 || $order['staff_hotel_id'] == 2) {
+                $result = WPRequest::fxiaokesendMessage($appId,$appSecret,$permanentCode,$content2);
+            } else if ($order['staff_hotel_id'] == 4) {
+                $openUserId = WPRequest::idlist();
+                $result = WPRequest::fxiaokedisendMessage($appId,$appSecret,$permanentCode,$content2,$openUserId);
+            };
+        };
+
+        $payment= new OrderPayment;
+        $payment->order_id=$post->order_id;
+        $payment->money=$post->payment;
+        $payment->time=$post->payment_time;
+        $payment->remarks=$post->remarks;
+        $payment->way=$post->payment_way;
+        $payment->type=$post->payment_type;
+        $payment->update_time=date('Y-m-d h:i:s',time());
+        $payment->save();
+
+        if($post->payment_type == 0){
+            Order::model()->updateByPk($post->order_id,array('order_status' => 2));
+        }else if($post->payment_type == 1){
+            Order::model()->updateByPk($post->order_id,array('order_status' => 3));
+        }else if($post->payment_type == 2){
+            Order::model()->updateByPk($post->order_id,array('order_status' => 4));
+        };
+    }
+
+    public function actionLibraryCasePaging()
+    {
+        $web = array();
+        $case = array();
+        $tab = array();
+
+        if($_GET['page'] == 1){
+            //构造网站列表
+            $result = yii::app()->db->createCommand("select * from library_web");
+            $web_data = $result->queryAll();
+            foreach ($web_data as $key => $value) {
+                $item = array();
+                $item['id'] = $value['Web_ID'];
+                $item['name'] = $value['Web_Name'];
+                $web[]=$item;
+            };
+
+            //构造  case_list
+            $result = yii::app()->db->createCommand("select * from library_web_case where Web_ID=".$_GET['web_id']." and Case_ID limit 0,17");
+            $case_data = $result->queryAll();
+            foreach ($case_data as $key1 => $value1) {
+                $item = array();
+                $item['id'] = $value1['Case_ID'];
+                $item['name'] = $value1['Case_Name'];
+                $item['company'] = $value1['Case_Company'];
+                $item['cover_img'] = $value1['cover_img'];
+                $item['page'] = 1;
+                $case[] = $item;
+            };
+
+            //构造  tab
+            $tab_data = LibraryWebTab::model()->findAll(array(
+                    'condition' => 'Web_ID=:Web_ID',
+                    'params' => array(
+                            ':Web_ID' => $_GET['web_id']
+                        )
+                ));
+            $t = array(
+                    'ev' => array(),
+                    'style' => array(),
+                    'color' => array()
+                );
+            foreach ($tab_data as $key2 => $value2) {
+                if($value2['Type_ID'] == 2){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['style'][] = $item;
+                }else if($value2['Type_ID'] == 3){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['color'][] = $item;
+                }else if($value2['Type_ID'] == 1){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['ev'][] = $item;
+                };
+            };
+            $tab = $t;
+
+            //查询case表总页数
+            $result = yii::app()->db->createCommand("select count(*) from  library_web_case where Web_ID=".$_GET['web_id']);
+            $row = $result->queryAll();
+            $page = ceil($row[0]['count(*)']/16);
+
+            $data = array(
+                    'web' => $web,
+                    'case' => $case,
+                    'tab' => $tab,
+                    'page' => $page
+                );
+            echo json_encode($data);
+        }else{
+            //构造  case_list
+            $case = array();
+            $start = ($_GET['page']-1)*16+403;
+            $result = yii::app()->db->createCommand("select * from library_web_case where Web_ID=".$_GET['web_id']." and Case_ID limit ".$start.",16");
+            $case_data = $result->queryAll();
+            // echo  count($case_data);die;
+            foreach ($case_data as $key1 => $value1) {
+                $item = array();
+                $item['id'] = $value1['Case_ID'];
+                $item['name'] = $value1['Case_Name'];
+                $item['company'] = $value1['Case_Company'];
+                $item['cover_img'] = $value1['cover_img'];
+                $item['page'] = $_GET['page'];
+                $case[] = $item;
+            };
+            // echo $start."|".$end;
+            echo json_encode($case);
+        }
+    }
+
+    public function actionLibraryTabCase()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        // $web_id = 1;
+        // $tab = array(309,344);
+        // $page = 2;
+
+        $tab = array();
+        $web = array();
+
+        //构造 web
+        $result = yii::app()->db->createCommand("select * from library_web");
+        $web_data = $result->queryAll();
+        foreach ($web_data as $key => $value) {
+            $item = array();
+            $item['id'] = $value['Web_ID'];
+            $item['name'] = $value['Web_Name'];
+            $web[]=$item;
+        };
+
+        //构造  tab
+        $tab_data = LibraryWebTab::model()->findAll(array(
+                'condition' => 'Web_ID=:Web_ID',
+                'params' => array(
+                        ':Web_ID' => $post->web_id
+                    )
+            ));
+        $t = array(
+                'ev' => array(),
+                'style' => array(),
+                'color' => array()
+            );
+        foreach ($tab_data as $key2 => $value2) {
+            if($value2['Type_ID'] == 2){
+                $item = array();
+                $item['id'] = $value2['Tab_ID'];
+                $item['name'] = $value2['Tab_Name'];
+                $t['style'][] = $item;
+            }else if($value2['Type_ID'] == 3){
+                $item = array();
+                $item['id'] = $value2['Tab_ID'];
+                $item['name'] = $value2['Tab_Name'];
+                $t['color'][] = $item;
+            }else if($value2['Type_ID'] == 1){
+                $item = array();
+                $item['id'] = $value2['Tab_ID'];
+                $item['name'] = $value2['Tab_Name'];
+                $t['ev'][] = $item;
+            };
+        };
+        $tab = $t;
+
+        //构造 case
+        $arr_case_list = array();
+        $result = array();
+        // foreach ($post->tab as $key => $value) {
+        foreach ($post->tab as $key => $value) {
+            $arr_case_list[$key]=array();
+            $case = LibraryTabBind::model()->findAll(array(
+                'condition' => 'Tab_ID=:Tab_ID && Resources_Type=:Resources_Type',
+                'params' => array(
+                        ':Tab_ID' => $value,
+                        ':Resources_Type' => 1
+                    )
+            ));  
+            foreach ($case as $key1 => $value1) {
+                $arr_case_list[$key][] = $value1['Resources_ID'];
+            };  
+        };
+
+        
+        if(count($arr_case_list) == 1){
+            $arr_case_list = $arr_case_list[0];
+        }else{
+            $result = $arr_case_list[0];
+            for ($i=1; $i < count($arr_case_list); $i++) { 
+                $result = array_intersect($result, $arr_case_list[$i]);
+            };
+            $arr_case_list = $result;
+        };
+
+
+        // echo json_encode($arr_case_list);
+        $case = array();
+        $start = 0 ;
+        $end = 16;
+        if($post->page != 1){
+            $start =  ($post->page-1)*16+1;
+            $end = $post->page*16;
+        };
+        // $start = ($post->page-1)*16;
+        $id_list = "(";
+        $i = 0;
+        foreach ($arr_case_list as $key => $value) {
+            if($i >= $start && $i <= $end){
+                $id_list .= $value.",";    
+            };
+            $i++;
+        };
+        // echo $id_list;die;
+
+        $id_list = rtrim($id_list, ",");
+        $id_list .= ")";
+        // print_r($arr_case_list);
+
+        // echo $id_list;die;
+        $result = yii::app()->db->createCommand("select * from library_web_case where Web_ID=".$post->web_id." and Case_ID in ".$id_list);
+        $case_data = $result->queryAll();
+        // echo  count($case_data);die;
+        foreach ($case_data as $key1 => $value1) {
+            $item = array();
+            $item['id'] = $value1['Case_ID'];
+            $item['name'] = $value1['Case_Name'];
+            $item['company'] = $value1['Case_Company'];
+            $item['cover_img'] = $value1['cover_img'];
+            $item['page'] = $post->page;
+            $case[] = $item;
+        };
+        // echo $start."|".$end;
+
+
+        
+
+        $data = array(
+                'web' => $web,
+                'case' => $case,
+                'tab' => $tab
+            );
+        echo json_encode($data);
+    }
+
+    public function actionLibraryCaseList()
+    {
+        $result = yii::app()->db->createCommand("select * from library_web");
+        $web = $result->queryAll();
+
+        $web_data = array();
+        foreach ($web as $key => $value) {
+            $tem_web = array();
+            $tem_web['id'] = $value['Web_ID'];
+            $tem_web['name'] = $value['Web_Name'];
+            $tem_web['case_list'] = array();
+
+            //构造  case_list
+            $result = yii::app()->db->createCommand("select * from library_web_case where Web_ID=".$value['Web_ID']);
+            $case = $result->queryAll();
+            foreach ($case as $key1 => $value1) {
+                $item = array();
+                $item['id'] = $value1['Case_ID'];
+                $item['name'] = $value1['Case_Name'];
+                $item['company'] = $value1['Case_Company'];
+                $item['cover_img'] = $value1['cover_img'];
+                $item['tab'] = array();
+
+                // $result = yii::app()->db->createCommand("select * from library_tab_bind where Resources_ID=".$value1['Case_ID']." and Resources_Type=1");
+                // $tab = $result->queryAll();
+
+                // foreach ($tab as $key2 => $value2) {
+                //     $tab[] = $value2['Tab_ID'];
+                // };
+
+                $tem_web['case_list'][] = $item;
+
+            };
+
+            //构造  tab
+            $tab = LibraryWebTab::model()->findAll(array(
+                    'condition' => 'Web_ID=:Web_ID',
+                    'params' => array(
+                            ':Web_ID' => $value['Web_ID']
+                        )
+                ));
+            $t = array(
+                    '1' => array(),
+                    '2' => array(),
+                    '3' => array()
+                );
+            foreach ($tab as $key2 => $value2) {
+                if($value2['Type_ID'] == 2){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['2'][] = $item;
+                }else if($value2['Type_ID'] == 3){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['3'][] = $item;
+                }else if($value2['Type_ID'] == 1){
+                    $item = array();
+                    $item['id'] = $value2['Tab_ID'];
+                    $item['name'] = $value2['Tab_Name'];
+                    $t['1'][] = $item;
+                };
+            };
+            $tem_web['tab'] = $t;
+
+            $web_data[] = $tem_web;
+        };
+
+        echo json_encode($web_data);
+    }
+
+
+    
+
+    public function actionLibraryCaseDetail()
+    {
+        $img = LibraryWebCaseImg::model()->findAll(array(
+                'condition' => 'Case_ID=:Case_ID',
+                'params' => array(
+                        ':Case_ID' => $_GET['case_id']
+                    )
+            ));
+
+        $case = LibraryWebCase::model()->findByPk($_GET['case_id']);
+
+        $result = array(
+                'case_name' => $case['Case_Name'],
+                'img_list' => array()
+            );
+
+        
+        $start = ($_GET['page'] - 1)*12;
+        $end = $_GET['page']*12 - 1;
+
+        foreach ($img as $key => $value) {
+            if($key >= $start && $key <= $end){
+                $item = array();
+                $item['id'] = $value['Img_ID'];            
+                $item['local_URL'] = "http://file.cike360.com".ltrim($value['local_URL'], ".");
+                $item['local_URL_lg'] = "http://file.cike360.com".ltrim($value['local_URL_lg'], ".");
+                $item['be_liked'] = $value['be_liked'];
+                $result['img_list'][] = $item;
+            };
+        };
+
+        $page = ceil(count($img)/12);
+
+        //取    decoration tab
+        $staff = Staff::model()->findByPk($_GET['token']);
+        $tab = yii::app()->db->createCommand("select * from supplier_product_decoration_tap spdt where account_id in (0,".$staff['account_id'].")");
+        $tab = $tab->queryAll();
+        $tab_list = array();
+        foreach ($tab as $key => $value) {
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['name']
+                );
+            $tab_list[] = $item;
+        };
+
+        //取正在执行的订单
+        $result1 = yii::app()->db->createCommand("select * from `order` where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
+        $result1 = $result1->queryAll();
+
+        $order_doing = array();
+
+        foreach ($result1 as $key => $value) {
+            $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+            $zero2=strtotime ($value['order_date']);  //订单创建时间
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['order_name'],
+                    'order_date' => $value['order_date'],
+                    'to_date' => 0,
+                );
+            if($zero2 >= $zero1){
+                $item['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                $order_doing[]=$item;
+            }
+        }
+
+        //当单排序
+        $to_date = array();
+        foreach ( $order_doing as $key => $row ){
+            $to_date[] = $row ['to_date'];
+        };
+        array_multisort($to_date, SORT_ASC, $order_doing);
+
+
+        //取  show_area
+        $area = OrderShowArea::model()->findAll(array(
+                'condition' => 'type=:type',
+                'params' => array(
+                        ':type' => 1
+                    )
+            ));
+        $area_data = array();
+        foreach ($area as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] =$value['name'];
+            $area_data[] = $item;
+        };
+
+        //取   supplier
+        $supplier = yii::app()->db->createCommand("select supplier.id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$staff['account_id']." and supplier.type_id=20");
+        $supplier = $supplier->queryAll();
+        $supplier_data = array();
+        foreach ($supplier as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            $supplier_data[] = $item;
+        };
+
+        //取 StaffFolder
+        $Folder = LibraryStaffFolder::model()->findAll(array(
+                'condition' => 'Staff_ID=:Staff_ID',
+                'params' => array(
+                        ':Staff_ID' => $_GET['token']
+                    )
+            ));
+        $staff_folder = array();
+        foreach ($Folder as $key => $value) {
+            $item = array();
+            $item['id'] = $value['Folder_ID'];
+            $item['name'] = $value['Folder_Name'];
+
+            $staff_folder[] = $item;
+        };
+
+        //构造最终数据
+        $data = array(
+                'case_name' => $case['Case_Name'],
+                'img' => $result,
+                'order' => $order_doing,
+                'tab' => $tab_list,
+                'page' => $page,
+                'area_list' => $area_data,
+                'supplier' => $supplier_data,
+                'folder' => $staff_folder
+            );
+
+        echo json_encode($data);
+    }
+
+    public function actionLibraryNewProduct()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $staff = Staff::model()->findByPk($post->staff_id);
+
+        $order_show=new OrderShowForm;
+        $order_show->area_sort_batch_add($post->order_id,$post->area,$post->sort);
+        $result = $order_show->new_product_insert($staff['account_id'],$post->supplier_id,$post->supplier_type_id,$post->decoration_tap,$post->name,$post->category,$post->price,$post->cost,$post->unit,$post->remark,$post->url,$post->order_id,$post->amount,$post->area,$post->sort);
+        echo $result;
+    }
+
+    
+
+    public function actionFolderBind()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        // $data = array('Folder_ID'=> "1", 'Img_ID' => "99428"); 
+
+        $test = LibraryFolderBind::model()->findAll(array(
+                'condition' => 'Folder_ID=:Folder_ID && Img_ID=:Img_ID',
+                'params' => array(
+                        ':Folder_ID' => $post->Folder_ID,
+                        ':Img_ID' => $post->Img_ID
+                    )
+            ));
+
+        if(empty($test)){
+            $admin = new LibraryFolderBind;
+            $admin->Folder_ID=$post->Folder_ID;
+            $admin->Img_ID=$post->Img_ID;
+            $admin->update_time=date('Y-m-d h:i:s',time());
+            $admin->save();
+
+            $result = yii::app()->db->createCommand("update library_web_case_img set be_liked = be_liked+1 where Img_ID=".$post->Img_ID);
+            $result = $result->execute();
+
+            echo 1;
+        }else{
+            echo 0;
+        };
+    }
+
+    public function actionNewFolder()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $admin = new LibraryStaffFolder;
+        $admin->Folder_Name=$post->Folder_Name;
+        $admin->Staff_ID=$post->token;
+        $admin->update_time=date('Y-m-d h:i:s',time());
+        $admin->save();
+        $id = $data->attributes['Folder_ID'];
+
+        echo $id;
+    }
+
+    public function actionFolderList()
+    {
+        $folder = LibraryStaffFolder::model()->findAll(array(
+                'condition' => 'Staff_ID=:Staff_ID',
+                'params' => array(
+                        ':Staff_ID' => $_GET['token']
+                    )
+            ));
+        // print_r($folder);die;
+
+        $folderList = array();
+        foreach ($folder as $key => $value) {
+            // $img = LibraryFolderBind::model()->findAll(array(
+            //         'condition' => 'Folder_ID=:Folder_ID',
+            //         'params' => array(
+            //                 ':Folder_ID' => $value['Folder_ID']
+            //             )
+            //     ));
+
+            $result = yii::app()->db->createCommand("select fb.Img_ID,wci.local_URL from library_folder_bind fb ".
+                " left join library_web_case_img wci on fb.Img_ID=wci.Img_ID ".
+                " where fb.Folder_ID=".$value['Folder_ID']);
+            $img = $result->queryAll();
+
+            $item = array();
+            $item['id'] = $value['Folder_ID'];
+            $item['name'] = $value['Folder_Name'];
+            $item['img_amount'] = count($img);
+
+            if(!empty($img)){
+                $t = explode('/', $img[0]['local_URL']);
+                $item['poster'] = "http://file.cike360.com/imgs/".$t[count($t)-1];
+            }else{
+                $item['poster'] = "style/images/cbd.jpg";
+            };
+
+            $folderList[] = $item;
+        };
+
+        echo json_encode($folderList);
+    }
+
+    public function actionFolderDetail()
+    {
+        $result = yii::app()->db->createCommand("select fb.Img_ID,wci.local_URL from library_folder_bind fb ".
+            " left join library_web_case_img wci on fb.Img_ID=wci.Img_ID ".
+            " where fb.Folder_ID=".$_GET['folder_id']);
+        $img = $result->queryAll();
+
+        $img_list = array();
+        foreach ($img as $key => $value) {
+            $t = explode('/', $value['local_URL']);
+
+            $item = array();
+            $item['url'] = "http://file.cike360.com/imgs/".$t[count($t)-1];
+            $item['id'] = $value['Img_ID'];
+
+            $img_list[] = $item;
+        };
+
+        //取    decoration tab
+        $staff = Staff::model()->findByPk($_GET['token']);
+        $tab = yii::app()->db->createCommand("select * from supplier_product_decoration_tap spdt where account_id in (0,".$staff['account_id'].")");
+        $tab = $tab->queryAll();
+        $tab_list = array();
+        foreach ($tab as $key => $value) {
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['name']
+                );
+            $tab_list[] = $item;
+        };
+
+        //取正在执行的订单
+        $result1 = yii::app()->db->createCommand("select * from `order` where designer_id=".$_GET['token']." or planner_id=".$_GET['token']);
+        $result1 = $result1->queryAll();
+
+        $order_doing = array();
+
+        foreach ($result1 as $key => $value) {
+            $zero1=strtotime (date('y-m-d h:i:s')); //当前时间
+            $zero2=strtotime ($value['order_date']);  //订单创建时间
+            $item = array(
+                    'id' => $value['id'],
+                    'name' => $value['order_name'],
+                    'order_date' => $value['order_date'],
+                    'to_date' => 0,
+                );
+            if($zero2 >= $zero1){
+                $item['to_date'] = ceil(($zero2-$zero1)/86400); //60s*60min*24h
+                $order_doing[]=$item;
+            }
+        }
+
+        //当单排序
+        $to_date = array();
+        foreach ( $order_doing as $key => $row ){
+            $to_date[] = $row ['to_date'];
+        };
+        array_multisort($to_date, SORT_ASC, $order_doing);
+
+
+        //取  show_area
+        $area = OrderShowArea::model()->findAll(array(
+                'condition' => 'type=:type',
+                'params' => array(
+                        ':type' => 1
+                    )
+            ));
+        $area_data = array();
+        foreach ($area as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] =$value['name'];
+            $area_data[] = $item;
+        };
+
+        //取   supplier
+        $supplier = yii::app()->db->createCommand("select supplier.id,staff.name from supplier left join staff on staff_id=staff.id where supplier.account_id=".$staff['account_id']." and supplier.type_id=20");
+        $supplier = $supplier->queryAll();
+        $supplier_data = array();
+        foreach ($supplier as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            $supplier_data[] = $item;
+        };
+
+        //取  folder_name
+        $folder = LibraryStaffFolder::model()->findByPk($_GET['folder_id']);
+
+        //构造最终数据
+        $data = array(
+                'img' => $img_list,
+                'order' => $order_doing,
+                'tab' => $tab_list,
+                'area_list' => $area_data,
+                'supplier' => $supplier_data,
+                'folder_name' => $folder['Folder_Name']
+            );
+
+        echo json_encode($data);
+    }
+
+    public function actionGetFolderName()
+    {
+        $folder = LibraryStaffFolder::model()->findByPk($_GET['folder_id']);
+        echo $folder['Folder_Name'];
+    }
+
+    public function actionEditFolder()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        LibraryStaffFolder::model()->updateByPk($post->folder_id,array('Folder_Name'=>$post->folder_name));
+    }
+
+    public function actionDelFolder()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $folder = LibraryStaffFolder::model()->findByPk($post->folder_id);
+
+        $admin = new LibraryStaffFolderDel;
+        $admin->Folder_ID = $folder['Folder_ID'];
+        $admin->Folder_Name = $folder['Folder_Name'];
+        $admin->Staff_ID = $folder['Staff_ID'];
+        $admin->update_time = date('Y-m-d h:i:s',time());
+        $admin->save();
+
+        LibraryStaffFolder::model()->deleteByPk($post->folder_id);
+    }
+
+    public function actionNew_company()
+    {
+        // $post = json_decode(file_get_contents('php://input'));
+        // echo $this->regist_company($post->name,$post->place);
+
+        $name = "ceshi";
+        $place = "ceshi222";
+        echo $this->regist_company($name,$place);
+    }
+
+    public function actionNew_staff()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        echo $this->regist_staff($post->name,$post->company_id,$post->phone,$post->code,$post->password);
+
+        // $name="ceshi3";
+        // $company_id=31;
+        // $phone=13333333304;
+        // $code = 123456;
+        // $password = 88888888;
+        // echo $this->regist_staff($name,$company_id,$phone,$code,$password);
+
+    }
+
+    public function actionNew_independent_designer()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        $company_id = $this->regist_company($post->name,$post->place);
+        echo $this->regist_staff($post->name,$company_id,$post->phone,$post->code,$post->password);
+    }
+
+    public function regist_company($name,$place)
+    {
+        // 1、新增公司
+        $admin=new StaffCompany;
+        // $admin->name=$post->name;
+        // $admin->place=$post->place;
+        $admin->name=$name;
+        $admin->place=$place;
+        $admin->update_time=date('Y-m-d h:i:s',time());
+        $admin->save();
+        $account_id = $admin->attributes['id'];
+
+        // 2、新增门店
+        $first_hotel_id="";
+        $admin=new StaffHotel;
+        // $admin->name=$post->name;
+        $admin->name=$name;
+        $admin->account_id=$account_id;
+        $admin->update_time=date('y-m-d h:i:s',time());
+        $admin->save();
+        $hotel_id = $admin->attributes['id'];
+        $first_hotel_id=$hotel_id;
+
+
+
+        // 4、把所有公共service_person，设为supplier
+        $service_person = ServicePerson::model()->findAll(array(
+                'condition' => 'status=:status',
+                'params' => array(
+                        ':status' => 1
+                    )
+            ));
+        foreach ($service_person as $key => $value) {
+            $admin=new Supplier;
+            $admin->account_id=$account_id;
+            $admin->type_id=$value['service_type'];
+            $admin->staff_id=$value['staff_id'];
+            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->save();
+            $supplier_id = $admin->attributes['id'];
+
+
+            // 5、复制service_product
+            $service_person_product = ServiceProduct::model()->findAll(array(
+                    'condition' => 'service_person_id=:spi',
+                    'params' => array(
+                            ':spi' => $value['id']
+                        )
+                ));
+            foreach ($service_person_product as $key1 => $value1) {
+                $admin=new SupplierProduct;
+                $admin->account_id=$account_id;
+                $admin->supplier_id=$supplier_id;
+                $admin->service_product_id=$value1['id'];
+                $admin->supplier_type_id=$value1['service_type'];
+                $admin->dish_type=0;
+                $admin->decoration_tap=0;
+                $admin->standard_type=0;
+                $admin->name=$value1['product_name'];
+                $admin->category=2;
+                $admin->unit_price=$value1['price'];
+                $admin->unit_cost=$value1['cost'];
+                $admin->unit=$value1['unit'];
+                $admin->service_charge_ratio=0;
+                $admin->ref_pic_url=$value1['ref_pic_url'];
+                $admin->description=$value1['description'];
+                $admin->product_show=$value1['product_show'];
+                $admin->update_time=date('y-m-d h:i:s',time());
+                $admin->save();
+            };
+        };
+
+
+        // 6、复制 公司2的 supplier_product
+        $tar_product = SupplierProduct::model()->findAll(array(
+                'condition' => 'account_id=:account_id',
+                'params' => array(
+                        ':account_id' => 2
+                    )
+            ));
+
+        
+        foreach ($tar_product as $key => $value) {
+            $admin=new SupplierProduct;
+            $admin->ori_id=$value['id'];
+            $admin->account_id=$account_id;
+            $admin->supplier_id=$value['supplier_id'];
+            $admin->service_product_id=$value['service_product_id'];
+            $admin->supplier_type_id=$value['supplier_type_id'];
+            $admin->dish_type=$value['dish_type'];
+            $admin->decoration_tap=$value['decoration_tap'];
+            $admin->standard_type=$value['standard_type'];
+            $admin->name=$value['name'];
+            $admin->category=$value['category'];
+            $admin->unit_price=$value['unit_price'];
+            $admin->unit_cost=$value['unit_cost'];
+            $admin->unit=$value['unit'];
+            $admin->service_charge_ratio=$value['service_charge_ratio'];
+            $admin->ref_pic_url=$value['ref_pic_url'];
+            $admin->description=$value['description'];
+            $admin->product_show=$value['product_show'];
+            $admin->update_time=date('y-m-d h:i:s',time());
+            $admin->save();
+            $supplier_product_id = $admin->attributes['id'];
+        }
+
+        // 7、为新增的第一个门店，复制 公司2（门店8的） wedding_set 
+        $tar_wedding_set = Wedding_set::model()->findAll(array(
+                'condition' => 'staff_hotel_id=:staff_hotel_id',
+                'params' => array(
+                        ':staff_hotel_id' => 8
+                    )
+            ));
+
+        $ws_shift = array(); //存储 原product_id 与 新product_id 的对应关系
+
+        foreach ($tar_wedding_set as $key => $value) {
+            if($value['set_show'] == 1){
+                // (1)复制一个  Wedding_set
+                $admin=new Wedding_set;
+                $admin->ori_id=$value['id'];
+                $admin->staff_hotel_id=$first_hotel_id;
+                $admin->name=$value['name'];
+                $admin->category=$value['category'];
+                $admin->final_price=$value['final_price'];
+                $admin->feast_discount=$value['feast_discount'];
+                $admin->other_discount=$value['other_discount'];
+                $admin->theme_id=$value['theme_id'];
+                $admin->product_list=$value['product_list'];
+                $admin->set_show=$value['set_show'];
+                $admin->update_time=date('y-m-d h:i:s',time());
+                $admin->save();
+                $wedding_set_id = $admin->attributes['id'];
+
+
+                // (2)复制  Wedding_set  对应的  case
+                $case = CaseInfo::model()->find(array(
+                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+                        'params' => array(
+                                ':CI_Type' => 5,
+                                ':CT_ID' => $value['id']
+                            )
+                    ));
+                $admin=new CaseInfo;
+                $admin->CI_Name=$case['CI_Name'];
+                $admin->CI_Pic=$case['CI_Pic'];
+                $admin->CI_CreateTime=date('y-m-d h:i:s',time());
+                $admin->CI_Show=$case['CI_Show'];
+                $admin->CI_Type=$case['CI_Type'];
+                $admin->CT_ID=$wedding_set_id;
+                $admin->save();
+                $case_id = $admin->attributes['CI_ID'];
+
+
+                // (3)插入  case_bind
+                $admin=new CaseBind;
+                $admin->CB_Type=1;
+                $admin->TypeID=$account_id;
+                $admin->CI_ID=$case_id;
+                $admin->save();
+
+
+                // (4)复制  case_resource
+                $case_resources = CaseResources::model()->findAll(array(
+                        'condition' => 'CI_ID=:CI_ID',
+                        'params' => array(
+                                ':CI_ID' => $case['CI_ID']
+                            )
+                    ));
+                foreach ($case_resources as $key1 => $value1) {
+                    if($value1['CR_Show'] == 1){
+                        $admin=new CaseResources;
+                        $admin->CI_ID=$case_id;
+                        $admin->CR_Type=$value1['CR_Type'];
+                        $admin->CR_CreateTime=date('y-m-d h:i:s',time());
+                        $admin->CR_Show=$value1['CR_Show'];
+                        $admin->save();
+                    };
+                };
+            };
+        };
+
+        return $account_id;
+    }
+
+    public function regist_staff($name,$company_id,$phone,$code,$password)
+    {
+
+        $tar_order_id = 1148;
+
+        $result_data = array(
+                'status' => 0,
+                'token' => 0
+            );
+        /********验证code*********/
+        $message_code = MessageCode::model()->findAll(array(
+                'condition' => 'phone=:phone',
+                'params' => array(
+                        // ':phone' => $post->phone
+                        ':phone' => $phone
+                    )
+            ));
+
+        $t = 0;
+        foreach ($message_code as $key => $value) {
+            // if($post->code == $value['code']){
+            if($code == $value['code']){
+                $t=1;
+            };
+        };
+
+        /********判断code是否正确*********/
+        if($t == 0){
+            $result['status'] = "failed";
+        }else{
+            //1、如果手机号已注册，则更改所在公司
+            $staff=Staff::model()->find(array(
+                    'condition' => 'telephone=:telephone',
+                    'params' => array(
+                            // ':telephone' => $post->phone
+                            ':telephone' => $phone
+                        )
+                ));
+            $t = 0;
+            $staff_id = 0;
+            if(!empty($staff)){
+                $t=1;
+                $staff_id = $staff['id'];
+                // Staff::model()->updateByPk($staff['id'],array('account_id'=>$post->company_id));
+                Staff::model()->updateByPk($staff['id'],array('account_id'=>$company_id));
+                $result_data['status'] = "success";
+                $result_data['token'] = $staff_id;
+            }else {
+                //2、手机号未注册，新增一个员工
+                $admin=new Staff;
+                // $admin->name=$post->name;
+                $admin->name=$name;
+                // $admin->account_id=$post->company_id;
+                $admin->account_id=$company_id;
+                // $admin->telephone=$post->phone;
+                $admin->telephone=$phone;
+                $admin->department_list="2,3";
+                // $admin->password=$post->password;
+                $admin->password=$password;
+                $admin->update_time=date('y-m-d h:i:s',time());
+                $admin->save();
+                $staff_id = $admin->attributes['id'];
+
+                //3、为新员工复制  一个订单
+                $tar_order = Order::model()->findByPk($tar_order_id);
+                $tar_order_product = OrderProduct::model()->findAll(array(
+                        'condition' => 'order_id=:order_id',
+                        'params' => array(
+                                ':order_id' => $tar_order_id
+                            )
+                    ));
+                $tar_order_set = OrderSet::model()->findAll(array(
+                        'condition' => 'order_id=:order_id',
+                        'params' => array(
+                                ':order_id' => $tar_order_id
+                            )
+                    ));
+
+                //新增 Order
+                $admin=new Order;
+                // $admin->account_id=$post->company_id;
+                $admin->account_id=$company_id;
+                $admin->designer_id=$staff_id;
+                $admin->planner_id=$staff_id;
+                $admin->adder_id=$staff_id;
+                $admin->staff_hotel_id=$tar_order['staff_hotel_id'];
+                $admin->order_name=$tar_order['order_name'];
+                $admin->order_type=$tar_order['order_type'];
+                $admin->order_date=date("Y-m-d",strtotime("+3 month"));
+                $admin->end_time=$tar_order['end_time'];
+                $admin->order_status=$tar_order['order_status'];
+                $admin->other_discount=$tar_order['other_discount'];
+                $admin->discount_range=$tar_order['discount_range'];
+                $admin->feast_discount=$tar_order['feast_discount'];
+                $admin->update_time=date('y-m-d h:i:s',time());
+                $admin->save();
+                $order_id = $admin->attributes['id'];
+
+                //新增 OrderSet
+                $os_shift = array();
+                foreach ($tar_order_set as $key_tos => $value_tos) {
+                    // $tem_ws_id = "";
+                    // foreach ($ws_shift as $key_wss => $value_wss) {
+                    //     if($value_tos['wedding_set_id'] == $value_wss['tar_id']){
+                    //         $tem_ws_id = $value_wss['id'];
+                    //     };
+                    // };
+                    $staff_hotel = StaffHotel::model()->find(array(
+                            'condition' => 'account_id=:account_id',
+                            'params' => array(
+                                    // ':account_id' => $post->company_id
+                                    ':account_id' => $company_id
+                                )
+                        ));
+                    $wedding_set = Wedding_set::model()->find(array(
+                            'condition' => 'ori_id=:ori_id && staff_hotel_id=:staff_hotel_id',
+                            'params' => array(
+                                    ':ori_id' => $value_tos['wedding_set_id'],
+                                    ':staff_hotel_id' => $staff_hotel['id']
+                                )
+                        ));
+                    if(!empty($wedding_set)){
+                        $admin=new OrderSet;
+                        // $admin->order_id=$post->company_id;
+                        $admin->order_id=$company_id;
+                        $admin->wedding_set_id=$wedding_set['id'];
+                        $admin->amount=$value_tos['amount'];
+                        $admin->remark=$value_tos['remark'];
+                        $admin->actual_service_ratio=$value_tos['actual_service_ratio'];
+                        $admin->order_product_list=$value_tos['order_product_list'];
+                        $admin->final_price=$value_tos['final_price'];
+                        $admin->update_time=date('y-m-d h:i:s',time());
+                        $admin->save();
+                        $order_set_id = $admin->attributes['id'];
+
+                        $item = array();
+                        $item['tar_id'] = $value_tos['id'];
+                        $item['id'] = $order_set_id;
+                        $os_shift[] = $item;
+                    }
+
+                        
+                };
+           
+
+                //新增 OrderProduct
+                foreach ($tar_order_product as $key1 => $value1) {
+                    //转换product_id
+                    // $tem_product_id = "";
+                    // foreach ($sp_shift as $key2 => $value2) {
+                    //     if($value1['product_id'] == $value2['tar_id']){
+                    //         $tem_product_id = $value2['id'];
+                    //     };
+                    // };
+                    $supplier_product = SupplierProduct::model()->find(array(
+                            'condition' => 'ori_id=:ori_id && account_id=:account_id',
+                            'params' => array(
+                                    ':ori_id' => $value1['product_id'],
+                                    // ':account_id' => $post->company_id
+                                    ':account_id' => $company_id
+                                )
+                        ));
+                    //转换order_set_id
+                    $tem_order_set_id = 0;
+                    foreach ($os_shift as $key3 => $value3) {
+                        if($value1['order_set_id'] != 0){
+                            if($value1['order_set_id'] == $value3['tar_id']){
+                                $tem_order_set_id = $value3['id'];
+                            };
+                        };   
+                    };
+
+                    $admin=new OrderProduct;
+                    // $admin->account_id=$post->company_id;
+                    $admin->account_id=$company_id;
+                    $admin->order_id=$order_id;
+                    $admin->product_type=$value1['product_type'];
+                    $admin->product_id=$supplier_product['id'];
+                    $admin->order_set_id=$tem_order_set_id;
+                    $admin->sort=$value1['sort'];
+                    $admin->actual_price=$value1['actual_price'];
+                    $admin->unit=$value1['unit'];
+                    $admin->actual_unit_cost=$value1['actual_unit_cost'];
+                    $admin->actual_service_ratio=$value1['actual_service_ratio'];
+                    $admin->remark=$value1['remark'];
+                    $admin->update_time=date('y-m-d h:i:s',time());
+                    $admin->save();
+                };
+
+                $result_data['status'] = "success";
+                $result_data['token'] = $staff_id;
+            };
+        };
+        return json_encode($result_data);
+    }
+
+    public function actionDelChannel()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        SupplierProduct::model()->updateByPk($post->tuidan_id,array('product_show'=>0));
+    }
+
+    public function actionDelGd()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        OrderMerchandiser::model()->deleteByPk($post->gd_id);
+    }
+
+    public function actionDelCashier()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        OrderPayment::model()->deleteByPk($post->payment_id);
+    }
+
+    public function actionNew_supplier()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $staff = Staff::model()->findByPk($post->token);
+
+        $supplier_staff = Staff::model()->find(array(
+                'condition' => 'phone=:phone',
+                'params' => array(
+                        ':phone' => $post->supplier_phone
+                    )
+            ));
+
+        $supplier_id = 0;
+
+        if(!empty($supplier_staff)){
+            $arr = array(
+                    'account_id' => $supplier_staff['account_id'],
+                    'type_id' => $post->type_id,
+                    'staff_id' => $supplier_staff['id']
+                );
+            $supplier_id = $this->add_supplier($arr);
+        }else{
+            $arr_staff = array(
+                    'account_id' => $staff['account_id'],
+                    'staff_name' => $post->supplier_name,
+                    'telephone' => $post->supplier_phone,
+                    'department_list' => "[4]",
+                    'password' => '88888888'
+                );
+
+            $staff_id = $this->add_staff($arr_staff);
+
+            $arr_supplier = array(
+                    'account_id' => $staff['account_id'],
+                    'type_id' => $post->type_id,
+                    'staff_id' => $staff_id
+                );
+            $supplier_id = $this->add_supplier($arr);
+        };
+        echo $supplier_id;
+    }
+
+    public function actionNew_tap()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+
+        $staff = Staff::model()->findByPk($post->token);
+
+        $tap = SupplierProductDecorationTap::model()->findAll(array(
+                'order' => 'sort DESC',
+            ));
+
+        $model = new SupplierProductDecorationTap;
+        $model->account_id = $staff['account_id'];
+        $model->name = $post->tap_name;
+        $model->sort = $tap[0]['sort']+1;
+        $model->pic = "/upload/daojushoutu220160519141822.jpg";
+        $model->update_time = date('y-m-d h:i:s',time());
+        $model->save();
+        $id = $model->attributes['id'];
+
+        echo $id;
+    }
+
+    public function add_staff($arr)
+    {
+        $model = new Staff; 
+        $model->account_id      = $arr['account_id'];
+        $model->name            = $arr['staff_name'];
+        $model->telephone       = $arr['telephone'];
+        $model->department_list = $arr['department_list'];
+        $model->update_time     = date('y-m-d h:i:s',time());
+        $model->password        = $arr['password'];
+        $model->save();
+        $id = $model->attributes['id'];
+        return $id;
+    }
+
+    public function add_supplier($arr)
+    {
+        $model=new Supplier;
+        $model->account_id = $arr['account_id'];
+        $model->type_id = $arr['type_id'];
+        $model->staff_id = $arr['staff_id'];
+        $model->update_time = date('y-m-d h:i:s',time());
+        $model->save();
+        $id = $model->attributes['id'];
+        return $id;
+    }
+
+    public function actionSearch_company()
+    {
+        $result = yii::app()->db->createCommand("select * from staff_company where name like '%" .$_GET['name']. "%'");
+        $result = $result->queryAll();
+
+        $company = array();
+        foreach ($result as $key => $value) {
+            $item = array();
+            $item['id'] = $value['id'];
+            $item['name'] = $value['name'];
+            $item['place'] = $value['place'];
+            $company[] = $item;
+        };
+
+        echo json_encode($company);
+
+        // $sql = "select * from topics where subject like '%" .$subject. "%'";
+        // $result = mysql_query($sql);
+    }
+
+    public function actionSearch_company_number()
+    {
+        $company = StaffCompany::model()->findAll();
+
+        echo count($company);
+    }
     
     public function array_remove(&$arr,$offset) 
     { 
@@ -3182,8 +5170,10 @@ class ResourceController extends InitController
     } 
 
     public function actionCeshi()
-    {
-
+    {   
+        
+        print_r($result);
+        
     }
 
 

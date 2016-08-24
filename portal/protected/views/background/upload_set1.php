@@ -165,12 +165,12 @@
                         <div class="radio-group-1" style="float: left;margin-top: 1rem;">
                 <?php foreach ($area as $key1 => $value1) {?>
                             <label class="u-radio" area-id="<?php echo $value1['id']?>">
-                                <input name="radio<?php echo $key?>" type="radio" <?php if($value['area']==$value1['id']){echo "checked='true'";}?>>
+                                <input name="radio<?php echo $key?>" type="radio" <?php if($value['area']==$value1['id']){echo "checked='true'";}?> >
                                 <i class="icon"></i>
                                 <span class="text"><?php echo $value1['name']?></span>
                             </label>
                             <?php if($key1%2 != 0){echo "<br>";}?>
-                <? }?>
+                <?php }?>
                         </div>
                     </li>
                     <?php }}}?>
@@ -296,6 +296,7 @@
                                 '<i class="icon"></i>'+
                                 '<span class="text"><?php echo $value['name']?></span>'+
                             '</label>'+
+                            <?php if($key%2 != 0){echo "'<br>'+";}?>
                 <? }?>
                         '</div>'+
                     '</li>';
@@ -395,10 +396,11 @@
                 }else{
 
             <?php if(!isset($_GET['type'])){?>
-                // var r=confirm("套系总价格将设为： ￥" + final_price + "\n原总价为： ￥;"+$("#total_price").html()+"\n继续请[确认]，或点取消修改");
-                // if (r==true){
+                <?php if(isset($_GET['ci_id']) && isset($_GET['ct_id'])){?>
                     location.href = "<?php echo $this->createUrl("background/edit_set2");?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val() + "&ct_id=<?php echo $_GET['ct_id']?>&ci_id=<?php echo $_GET['ci_id']?>&feast_discount=";
-                // }
+                <?php }else{?>
+                    location.href = "<?php echo $this->createUrl("background/edit_set2");?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
+                <?php }?>    
             <?php }else if($_GET['type']=="meeting_set" || $_GET['type']=="theme"){?>
             location.href = "<?php echo $this->createUrl("background/upload_set2");?>&type=<?php echo $_GET['type']?>&product_list=" +product_list+ "&total_price=" +$("#total_price").html()+"&final_price=" + $("#final_price").val();
             <?php }?>  
@@ -476,5 +478,4 @@
     })
 </script>
 </body>
-
 </html>
