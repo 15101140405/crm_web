@@ -655,7 +655,7 @@ class ResourceController extends InitController
 
             " or CI_ID in ( select CI_ID from case_bind where CB_type=4 ))  and".*/
 
-            " CI_Show=1 and CI_Type=5 and CT_ID in (select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=0)) order by CI_Sort Desc");
+            " CI_Show=1 and CI_Type=5 and CT_ID in (select id from wedding_set where staff_hotel_id in (select id from staff_hotel where account_id=2)) order by CI_Sort Desc");
         $set0 = $set0->queryAll();
 
         $set_cur = yii::app()->db->createCommand("select * from case_info where "./*.
@@ -4754,80 +4754,80 @@ class ResourceController extends InitController
         }
 
         // 7、为新增的第一个门店，复制 公司2（门店8的） wedding_set 
-        $tar_wedding_set = Wedding_set::model()->findAll(array(
-                'condition' => 'staff_hotel_id=:staff_hotel_id',
-                'params' => array(
-                        ':staff_hotel_id' => 8
-                    )
-            ));
+        // $tar_wedding_set = Wedding_set::model()->findAll(array(
+        //         'condition' => 'staff_hotel_id=:staff_hotel_id',
+        //         'params' => array(
+        //                 ':staff_hotel_id' => 8
+        //             )
+        //     ));
 
-        $ws_shift = array(); //存储 原product_id 与 新product_id 的对应关系
+        // $ws_shift = array(); //存储 原product_id 与 新product_id 的对应关系
 
-        foreach ($tar_wedding_set as $key => $value) {
-            if($value['set_show'] == 1){
-                // (1)复制一个  Wedding_set
-                $admin=new Wedding_set;
-                $admin->ori_id=$value['id'];
-                $admin->staff_hotel_id=$first_hotel_id;
-                $admin->name=$value['name'];
-                $admin->category=$value['category'];
-                $admin->final_price=$value['final_price'];
-                $admin->feast_discount=$value['feast_discount'];
-                $admin->other_discount=$value['other_discount'];
-                $admin->theme_id=$value['theme_id'];
-                $admin->product_list=$value['product_list'];
-                $admin->set_show=$value['set_show'];
-                $admin->update_time=date('y-m-d h:i:s',time());
-                $admin->save();
-                $wedding_set_id = $admin->attributes['id'];
-
-
-                // (2)复制  Wedding_set  对应的  case
-                $case = CaseInfo::model()->find(array(
-                        'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
-                        'params' => array(
-                                ':CI_Type' => 5,
-                                ':CT_ID' => $value['id']
-                            )
-                    ));
-                $admin=new CaseInfo;
-                $admin->CI_Name=$case['CI_Name'];
-                $admin->CI_Pic=$case['CI_Pic'];
-                $admin->CI_CreateTime=date('y-m-d h:i:s',time());
-                $admin->CI_Show=$case['CI_Show'];
-                $admin->CI_Type=$case['CI_Type'];
-                $admin->CT_ID=$wedding_set_id;
-                $admin->save();
-                $case_id = $admin->attributes['CI_ID'];
+        // foreach ($tar_wedding_set as $key => $value) {
+        //     if($value['set_show'] == 1){
+        //         // (1)复制一个  Wedding_set
+        //         $admin=new Wedding_set;
+        //         $admin->ori_id=$value['id'];
+        //         $admin->staff_hotel_id=$first_hotel_id;
+        //         $admin->name=$value['name'];
+        //         $admin->category=$value['category'];
+        //         $admin->final_price=$value['final_price'];
+        //         $admin->feast_discount=$value['feast_discount'];
+        //         $admin->other_discount=$value['other_discount'];
+        //         $admin->theme_id=$value['theme_id'];
+        //         $admin->product_list=$value['product_list'];
+        //         $admin->set_show=$value['set_show'];
+        //         $admin->update_time=date('y-m-d h:i:s',time());
+        //         $admin->save();
+        //         $wedding_set_id = $admin->attributes['id'];
 
 
-                // (3)插入  case_bind
-                $admin=new CaseBind;
-                $admin->CB_Type=1;
-                $admin->TypeID=$account_id;
-                $admin->CI_ID=$case_id;
-                $admin->save();
+        //         // (2)复制  Wedding_set  对应的  case
+        //         $case = CaseInfo::model()->find(array(
+        //                 'condition' => 'CI_Type=:CI_Type && CT_ID=:CT_ID',
+        //                 'params' => array(
+        //                         ':CI_Type' => 5,
+        //                         ':CT_ID' => $value['id']
+        //                     )
+        //             ));
+        //         $admin=new CaseInfo;
+        //         $admin->CI_Name=$case['CI_Name'];
+        //         $admin->CI_Pic=$case['CI_Pic'];
+        //         $admin->CI_CreateTime=date('y-m-d h:i:s',time());
+        //         $admin->CI_Show=$case['CI_Show'];
+        //         $admin->CI_Type=$case['CI_Type'];
+        //         $admin->CT_ID=$wedding_set_id;
+        //         $admin->save();
+        //         $case_id = $admin->attributes['CI_ID'];
 
 
-                // (4)复制  case_resource
-                $case_resources = CaseResources::model()->findAll(array(
-                        'condition' => 'CI_ID=:CI_ID',
-                        'params' => array(
-                                ':CI_ID' => $case['CI_ID']
-                            )
-                    ));
-                foreach ($case_resources as $key1 => $value1) {
-                    if($value1['CR_Show'] == 1){
-                        $admin=new CaseResources;
-                        $admin->CI_ID=$case_id;
-                        $admin->CR_Type=$value1['CR_Type'];
-                        $admin->CR_CreateTime=date('y-m-d h:i:s',time());
-                        $admin->CR_Show=$value1['CR_Show'];
-                        $admin->save();
-                    };
-                };
-            };
-        };
+        //         // (3)插入  case_bind
+        //         $admin=new CaseBind;
+        //         $admin->CB_Type=1;
+        //         $admin->TypeID=$account_id;
+        //         $admin->CI_ID=$case_id;
+        //         $admin->save();
+
+
+        //         // (4)复制  case_resource
+        //         $case_resources = CaseResources::model()->findAll(array(
+        //                 'condition' => 'CI_ID=:CI_ID',
+        //                 'params' => array(
+        //                         ':CI_ID' => $case['CI_ID']
+        //                     )
+        //             ));
+        //         foreach ($case_resources as $key1 => $value1) {
+        //             if($value1['CR_Show'] == 1){
+        //                 $admin=new CaseResources;
+        //                 $admin->CI_ID=$case_id;
+        //                 $admin->CR_Type=$value1['CR_Type'];
+        //                 $admin->CR_CreateTime=date('y-m-d h:i:s',time());
+        //                 $admin->CR_Show=$value1['CR_Show'];
+        //                 $admin->save();
+        //             };
+        //         };
+        //     };
+        // };
 
         return $account_id;
     }
